@@ -12,6 +12,7 @@ interface FormInputProps {
   defaultValue?: string | number;
   isDisabled?: boolean;
   isReadonly?: boolean;
+  autoFocus?: boolean;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: string;
   onChange?: (value: string | number) => void;
@@ -30,6 +31,7 @@ const FormInput = ({
   onBlur,
   error,
   onChange,
+  autoFocus
 }: FormInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -73,6 +75,7 @@ const FormInput = ({
           type={type}
           placeholder={placeholder}
           value={value}
+          autoFocus={autoFocus}
           onChange={handleChange}
           defaultValue={defaultValue as string}
           disabled={isDisabled}

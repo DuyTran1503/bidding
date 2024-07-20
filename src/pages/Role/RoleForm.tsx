@@ -54,7 +54,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
       await dispatch(
         getAllPermissions({
           query: {
-            pagination: false,
+            _pagination: false,
           },
         }),
       );
@@ -73,6 +73,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
           ...lodash.omit(data, "id"),
           permissions: data.permissions.filter((p) => !p.startsWith("parent-")),
         };
+        console.log(body)
         if (type === "create") {
           dispatch(createRole({ body }));
         } else if (type === "update") {
