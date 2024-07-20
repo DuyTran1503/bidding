@@ -51,7 +51,7 @@ const Login = () => {
       <div className="mx-auto flex h-screen flex-col items-center justify-center px-6 py-8 lg:py-0">
         <a href="#" className="text-gray-900 display-m-semibold mb-6 flex items-center text-2xl">
           <img className="mr-2 h-8 w-8" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
-          Beemely
+          Septenary Solution
         </a>
         <div className="w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0">
           <div className="flex flex-col gap-5 p-8">
@@ -69,6 +69,7 @@ const Login = () => {
                   <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                     <FormInput
                       type="text"
+                      autoFocus
                       value={values.email}
                       error={touched.email ? errors.email : ""}
                       isDisabled={state.status === EFetchStatus.PENDING}
