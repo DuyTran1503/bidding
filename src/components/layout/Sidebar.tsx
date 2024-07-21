@@ -56,12 +56,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "orders",
           permissions: EPermissions.READ_ORDER,
         },
-        {
-          id: "2.1",
-          label: "Products",
-          path: "products",
-          permissions: EPermissions.READ_PRODUCT,
-        },
       ],
     },
     {
@@ -79,7 +73,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "3.2",
           label: "Permissions",
           path: "permissions",
-          permissions: EPermissions.READ_PERMISSION,
+          permissions: EPermissions.LIST_PERMISSION,
         },
         {
           id: "3.3",
@@ -105,7 +99,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           {/* Logo */}
           <div className="flex cursor-pointer items-center gap-3 px-5 py-6" onClick={() => navigate("/")}>
             <img src={logo} alt="" className="h-[34px] w-[34px]" />
-            <div className="display-m-semibold">Beemely</div>
+            <div className="display-m-semibold">Septenary Solution</div>
           </div>
 
           {/* Navbar */}
@@ -114,7 +108,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
               return (
                 <div key={index} className="flex flex-col gap-2">
                   {/* Parent Item */}
-                  {checkPermission(state.profile?.listNamePermission, item.permissions) && (
+                  {checkPermission(state.profile?.permissions, item.permissions) && (
                     <MenuItem
                       onClick={() => {
                         setActiveMenuItemId(activeMenuItemId === item.id ? null : item.id);
@@ -128,18 +122,17 @@ const Sidebar = ({ children }: PropsWithChildren) => {
                     />
                   )}
                   {/* Child Item */}
-                  {activeMenuItemId === item.id &&
-                    item.items?.some((child) => checkPermission(state.profile?.listNamePermission, child.permissions)) && (
-                      <div className="flex flex-col gap-2">
-                        {item.items?.map((child, index) => {
-                          return (
-                            checkPermission(state.profile?.listNamePermission, child.permissions) && (
-                              <MenuItem key={index} {...child} isChild isActive={child.path === activePath} />
-                            )
-                          );
-                        })}
-                      </div>
-                    )}
+                  {activeMenuItemId === item.id && item.items?.some((child) => checkPermission(state.profile?.permissions, child.permissions)) && (
+                    <div className="flex flex-col gap-2">
+                      {item.items?.map((child, index) => {
+                        return (
+                          checkPermission(state.profile?.permissions, child.permissions) && (
+                            <MenuItem key={index} {...child} isChild isActive={child.path === activePath} />
+                          )
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               );
             })}

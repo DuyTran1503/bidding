@@ -1,28 +1,35 @@
 export enum EPermissions {
   // ? Order
-  READ_ORDER = "Read_Order",
-  CREATE_ORDER = "Create_Order",
-  UPDATE_ORDER = "Update_Order",
-  DELETE_ORDER = "Delete_Order",
+  LIST_ORDER = "list_order",
+  DETAIL_ORDER = "detail_order",
+  CREATE_ORDER = "create_order",
+  UPDATE_ORDER = "update_order",
+  DESTROY_ORDER = "destroy_Order",
 
   // ? Role
-  READ_ROLE = "Read_Role",
-  CREATE_ROLE = "Create_Role",
-  UPDATE_ROLE = "Update_Role",
-  DELETE_ROLE = "Delete_Role",
+  LIST_ROLE = "list_role",
+  DETAIL_ROLE = "detail_role",
+  CREATE_ROLE = "create_role",
+  UPDATE_ROLE = "update_role",
+  DESTROY_ROLE = "destroy_role",
 
   // ? Permission
-  READ_PERMISSION = "Read_Permission",
-  CREATE_PERMISSION = "Create_Permission",
-  UPDATE_PERMISSION = "Update_Permission",
-  DELETE_PERMISSION = "Delete_Permission",
-
-  // ? Product
-  READ_PRODUCT = "Read_Product",
+  LIST_PERMISSION = "list_permission",
+  DETAIL_PERMISSION = "detail_permission",
+  CREATE_PERMISSION = "create_permission",
+  UPDATE_PERMISSION = "update_permission",
+  DESTROY_PERMISSION = "destroy_permission",
 
   // ? Tag
-  READ_TAG = "Read_Tag",
-  CREATE_TAG = "Create_Tag",
-  UPDATE_TAG = "Update_Tag",
-  DELETE_TAG = "Delete_Tag",
+  LIST_TAG = "list_tag",
+  DETAIL_TAG = "detail_tag",
+  CREATE_TAG = "create_tag",
+  UPDATE_TAG = "update_tag",
+  DESTROY_TAG = "destroy_tag",
+  // staff
+  LIST_STAFF = "list_staff",
+  DETAIL_STAFF = "detail_staff",
+  CREATE_STAFF = "create_staff",
+  UPDATE_STAFF = "update_staff",
+  DESTROY_STAFF = "destroy_staff",
 }
