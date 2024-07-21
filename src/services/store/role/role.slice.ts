@@ -30,12 +30,15 @@ const roleSlice = createSlice({
   },
   extraReducers(builder) {
     // ? Get all roles
-    builder.addCase(getAllRoles.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole[]>>) => {
-      state.roles = payload.metaData;
+    builder.addCase(getAllRoles.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole[]> | any>) => {
+      if (payload.data) {
+        state.roles = payload.data.data;
+        console.log(payload.data);
+      }
     });
     // ? Get role by id
-    builder.addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole>>) => {
-      state.activeRole = payload.metaData;
+    builder.addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole> | any>) => {
+      state.activeRole = payload.data.data;
     });
     // ? Create role
     builder

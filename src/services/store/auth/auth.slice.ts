@@ -35,7 +35,9 @@ const authSlice = createSlice({
         state.status = EFetchStatus.PENDING;
       })
       .addCase(getProfile.fulfilled, (state, { payload }: PayloadAction<IResponse<IUserProfile>>) => {
-        state.profile = payload.metaData;
+        console.log(payload.data);
+
+        state.profile = payload.data;
         state.isLogin = true;
         state.status = EFetchStatus.FULFILLED;
       })
@@ -48,8 +50,10 @@ const authSlice = createSlice({
         state.status = EFetchStatus.PENDING;
       })
       .addCase(login.fulfilled, (state, { payload }: PayloadAction<IResponse<ILoginResponseData>>) => {
-        localStorage.setItem("accessToken", JSON.stringify(payload.metaData?.accessToken));
-        localStorage.setItem("refreshToken", JSON.stringify(payload.metaData?.refreshToken));
+        console.log(payload.data);
+
+        localStorage.setItem("accessToken", JSON.stringify(payload.data?.access_token));
+        localStorage.setItem("refreshToken", JSON.stringify(payload.data?.refresh_token));
         state.loginTime = new Date().getTime() / 1000;
         state.status = EFetchStatus.FULFILLED;
       })

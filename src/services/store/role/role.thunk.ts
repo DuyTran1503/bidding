@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IRole } from "./role.model";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 
-const prefix = "/api/roles";
+const prefix = "/api/admin/role";
 
 export const getAllRoles = createAsyncThunk("role/get-all-roles", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
@@ -33,7 +33,7 @@ export const createRole = createAsyncThunk("role/create-role", async (payload: I
 });
 
 export const updateRole = createAsyncThunk("role/update-role", async (payload: IThunkPayload, { rejectWithValue }) => {
-  console.log("🦎 ~ updateRole ~ payload:", payload)
+  console.log("🦎 ~ updateRole ~ payload:", payload);
   try {
     const { response, data } = await client.patch(`${prefix}/${payload.param}`, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;

@@ -11,7 +11,6 @@ const { confirm } = Modal;
 
 const UserSettings = () => {
   const { state, dispatch } = useArchive<IAuthInitialState>("auth");
-
   // useFetchStatus({
   //   module: "auth",
   //   reset: resetStatus,
@@ -72,7 +71,7 @@ const UserSettings = () => {
         </div>
         {/* Info */}
         <div className="shrink-0">
-          <div className="text-m-medium text-black-500">{state.profile?.userName}</div>
+          <div className="text-m-medium text-black-500">{state.profile?.name}</div>
           <div className="text-s-medium text-black-400">{state.profile?.listNameRole?.at(0)}</div>
         </div>
         <FaCaretDown className="shrink-0 text-gray-400" />
