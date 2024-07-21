@@ -12,15 +12,22 @@ export interface IUserData {
 
 export interface IUserProfile {
   id: string;
-  userName: string;
+  name: string;
   email: string;
-  listNamePermission: EPermissions[];
+  taxcode?: string;
+  phone?: string;
+  avatar: string;
+  type: string;
+  email_verified: boolean;
+  permissions: EPermissions[];
   listNameRole: string[];
   roles: IRole[];
 }
 
 export interface ILoginResponseData {
+  token_type: string;
+  expires_in: string;
   userData: IUserData;
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
 }

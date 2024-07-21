@@ -37,12 +37,12 @@ const Permissions = () => {
       type: EButtonTypes.UPDATE,
       permission: EPermissions.UPDATE_PERMISSION,
       onClick(record) {
-        navigate(`/permissions/update/${record.key}`)
+        navigate(`/permissions/update/${record.key}`);
       },
     },
     {
       type: EButtonTypes.DELETE,
-      permission: EPermissions.DELETE_PERMISSION,
+      permission: EPermissions.DESTROY_PERMISSION,
       onClick(record) {
         dispatch(deletePermission(record.key));
       },

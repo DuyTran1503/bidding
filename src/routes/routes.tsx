@@ -100,12 +100,12 @@ export const routes: IRoute[] = [
           },
           {
             path: "permissions",
-            middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.READ_PERMISSION]} />,
+            middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
             pages: [
               {
                 path: "/",
                 element: () => <Permissions />,
-                middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.READ_PERMISSION]} />,
+                middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
               },
               {
                 path: "/create",
