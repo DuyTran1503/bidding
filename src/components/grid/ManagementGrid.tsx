@@ -22,7 +22,7 @@ export interface IGridProps {
 
 const ManagementGrid = ({ columns, data, search, buttons, pagination, setFilter }: IGridProps) => {
   const renderColumns = useMemo(() => {
-    return buttons?.some((button) => button.type === EButtonTypes.VIEW || button.type === EButtonTypes.UPDATE || button.type === EButtonTypes.DELETE)
+    return buttons?.some((button) => button.type === EButtonTypes.VIEW || button.type === EButtonTypes.UPDATE || button.type === EButtonTypes.DESTROY)
       ? ([
           ...columns,
           {
