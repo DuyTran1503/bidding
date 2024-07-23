@@ -21,7 +21,7 @@ export const getTreePermissions = (permissions: IPermission[], modules: string[]
   });
 
   permissions.forEach((permission) => {
-    mappingModules[permission.module] && mappingModules[permission.module].children.push({ key: permission.id, title: permission.label });
+    mappingModules[permission.module!] && mappingModules[permission.module!].children.push({ key: permission.id, title: permission.section });
   });
 
   return lodash.values(mappingModules);

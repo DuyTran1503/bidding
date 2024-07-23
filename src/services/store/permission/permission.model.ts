@@ -2,9 +2,9 @@ import { EPermissions } from "@/shared/enums/permissions";
 
 export interface IPermission {
   id: string;
-  name: EPermissions;
-  module: string;
-  label: string;
+  name: EPermissions | string;
+  module?: string;
+  section: string;
 }
 
 export interface IPermissionResponseData {}

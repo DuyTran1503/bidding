@@ -29,11 +29,14 @@ export interface ISearchParams {
 export interface IResponse<MetaDataType> {
   statusCode: number;
   message: string;
-  metaData: MetaDataType;
+  data: MetaDataType;
   limit?: number;
   page?: number;
   totalDocs?: number;
   totalPages?: number;
+}
+export interface ICovertData<IResponse> {
+  data: IResponse;
 }
 
 export interface ClientReturnType<ReturnDataType> {
