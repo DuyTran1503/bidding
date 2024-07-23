@@ -13,7 +13,7 @@ const Orders = () => {
           text: "Export",
           type: "ghost",
           icon: <GoDownload className="text-[18px]" />,
-          permission: EPermissions.READ_ORDER,
+          permission: EPermissions.LIST_ORDER,
         },
         {
           text: "Add Order",
