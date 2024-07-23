@@ -2,18 +2,21 @@ import { commonStaticReducers } from "@/services/shared";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createRole, deleteRole, getAllRoles, getRoleById, updateRole } from "./role.thunk";
+import { createRole, deleteRole, getAllPermissions, getAllRoles, getRoleById, updateRole } from "./role.thunk";
 import { IRole } from "./role.model";
+import { IPermission } from "../permission/permission.model";
 
 export interface IRoleInitialState extends IInitialState {
   roles: IRole[];
   activeRole: IRole | undefined;
+  permissions: IPermission[];
 }
 
 const initialState: IRoleInitialState = {
   status: EFetchStatus.IDLE,
   message: "",
   roles: [],
+  permissions: [],
   activeRole: undefined,
   totalRecords: 0,
   filter: {
@@ -33,7 +36,6 @@ const roleSlice = createSlice({
     builder.addCase(getAllRoles.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole[]> | any>) => {
       if (payload.data) {
         state.roles = payload.data.data;
-        console.log(payload.data);
       }
     });
     // ? Get role by id
@@ -77,6 +79,11 @@ const roleSlice = createSlice({
       .addCase(deleteRole.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
       });
+    builder.addCase(getAllPermissions.fulfilled, (state, { payload }: PayloadAction<IResponse<IPermission[]> | any>) => {
+      if (payload) {
+        state.permissions = payload.permissions;
+      }
+    });
   },
 });
 
