@@ -5,16 +5,27 @@ import UpdateGrid from "@/components/grid/UpdateGrid";
 import { Formik } from "formik";
 import TreeData from "@/components/TreeData";
 import { object, string } from "yup";
-import { getTreePermissions } from "./helpers/getTreePermissions";
 import { DataNode } from "antd/es/tree";
-import { IPermissionInitialState } from "@/services/store/permission/permission.slice";
-import { getAllModules, getAllPermissions } from "@/services/store/permission/permission.thunk";
 import { useEffect, useState } from "react";
-import { createRole, updateRole } from "@/services/store/role/role.thunk";
+import { createRole, getAllPermissions, updateRole } from "@/services/store/role/role.thunk";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { IRole } from "@/services/store/role/role.model";
 import lodash from "lodash";
+import { IRoleInitialState } from "@/services/store/role/role.slice";
+interface Permission {
+  created_at: string;
+  guard_name: string;
+  id: number | null;
+  name: string;
+  section: string;
+  updated_at: string;
+}
 
+interface TreeNode {
+  title: string;
+  key: string;
+  children?: TreeNode[];
+}
 interface IActiveRole extends Omit<IRole, "permissions"> {
   permissions: string[];
 }
@@ -34,8 +45,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
   const [treePermissions, setTreePermissions] = useState<DataNode[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { dispatch, state } = useArchive<IPermissionInitialState>("permission");
-
+  const { dispatch, state } = useArchive<IRoleInitialState>("role");
   const initialValues: IRoleFormInitialValues = {
     name: "",
     permissions: [],
@@ -46,23 +56,38 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
   });
 
   useEffect(() => {
-    setTreePermissions(getTreePermissions(state.permissions, state.modules));
-  }, [JSON.stringify(state.permissions), JSON.stringify(state.modules)]);
+    setTreePermissions(convertPermissionsToTree(state.permissions));
+  }, [JSON.stringify(state.permissions)]);
 
   useEffect(() => {
-    (async () => {
-      await dispatch(
-        getAllPermissions({
-          query: {
-            _pagination: false,
-          },
-        }),
-      );
-      await dispatch(getAllModules());
-      setLoading(false);
-    })();
+    dispatch(getAllPermissions());
+    setLoading(false);
   }, []);
 
+  function convertPermissionsToTree(permissions: any[]): TreeNode[] {
+    // Gom nhóm permissions theo section
+    const sectionMap = permissions.reduce((acc: { [key: string]: Permission[] }, permission) => {
+      if (!acc[permission.section]) {
+        acc[permission.section] = [];
+      }
+      acc[permission.section].push(permission);
+      return acc;
+    }, {});
+
+    // Chuyển đổi thành cấu trúc cây
+    return Object.entries(sectionMap).map(
+      ([section, items], index): TreeNode => ({
+        title: section,
+        key: `0-${index}`,
+        children: items.map(
+          (item, subIndex): TreeNode => ({
+            title: item.name,
+            key: `0-${index}-${subIndex}`,
+          }),
+        ),
+      }),
+    );
+  }
   return (
     <Formik
       innerRef={formikRef}
@@ -73,7 +98,6 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
           ...lodash.omit(data, "id"),
           permissions: data.permissions.filter((p) => !p.startsWith("parent-")),
         };
-        console.log(body)
         if (type === "create") {
           dispatch(createRole({ body }));
         } else if (type === "update") {
@@ -89,14 +113,14 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
             isLoading={loading}
             groups={{
               colLeft: (
-                <FormGroup title="Permissions">
+                <FormGroup title="Vai trò">
                   <TreeData
                     isDisable={type === "view"}
                     expanded={["parent-all"]}
                     treeData={[
                       {
                         key: "parent-all",
-                        title: "All",
+                        title: "Chọn tất cả",
                         children: treePermissions,
                       },
                     ]}
