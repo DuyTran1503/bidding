@@ -32,7 +32,7 @@ const permissionSlice = createSlice({
     // ? Get all permissions
     builder
       .addCase(getAllPermissions.fulfilled, (state, { payload }: PayloadAction<IResponse<IPermission[]>>) => {
-        state.permissions = payload.metaData;
+        state.permissions = payload.data;
         state.totalRecords = payload.totalDocs ?? 0;
       })
       .addCase(getAllPermissions.rejected, (state) => {
@@ -52,8 +52,8 @@ const permissionSlice = createSlice({
       });
     // ? Get all modules
     builder
-      .addCase(getAllModules.fulfilled, (state, { payload }: PayloadAction<IResponse<string[]>>) => {
-        state.modules = payload.metaData;
+      .addCase(getAllModules.fulfilled, (state, { payload }: PayloadAction<IResponse<string[]> | any>) => {
+        state.modules = payload.data.data;
       })
       .addCase(getAllModules.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;

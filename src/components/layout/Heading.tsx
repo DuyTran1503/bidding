@@ -26,7 +26,7 @@ const Heading = ({ title, hasBreadcrumb, buttons = [] }: IHeadingProps) => {
       <div className="flex shrink-0 gap-4">
         {buttons?.map((btn, index) => {
           if (btn.permission) {
-            const userPermissions = state.profile?.listNamePermission;
+            const userPermissions = state.profile?.permissions;
             const canAccess = userPermissions?.includes(btn.permission);
             return canAccess && <Button key={index} {...btn} />;
           }
