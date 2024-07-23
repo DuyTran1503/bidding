@@ -22,7 +22,7 @@ const Roles = () => {
       onClick(record) {
         navigate(`/roles/detail/${record?.key}`);
       },
-      permission: EPermissions.READ_ROLE,
+      permission: EPermissions.DETAIL_ROLE,
     },
     {
       type: EButtonTypes.UPDATE,
@@ -32,11 +32,11 @@ const Roles = () => {
       permission: EPermissions.UPDATE_ROLE,
     },
     {
-      type: EButtonTypes.DELETE,
+      type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteRole(record?.key));
       },
-      permission: EPermissions.DELETE_ROLE,
+      permission: EPermissions.DESTROY_ROLE,
     },
   ];
 
@@ -90,8 +90,8 @@ const Roles = () => {
         search={{ status: [] }}
         buttons={buttons}
         pagination={{
-          current: state.filter.page ?? 1,
-          pageSize: state.filter.size ?? 10,
+          current: state.filter._page! ?? 1,
+          pageSize: state.filter._page! ?? 10,
           total: state.totalRecords,
         }}
         setFilter={setFilter}
