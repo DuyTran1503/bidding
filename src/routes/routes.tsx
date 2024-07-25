@@ -3,7 +3,7 @@ import DefaultLayout from "@/layouts/Default";
 import Dashboard from "@/pages/Dashboard/Dashboard";
 import Components from "@/pages/Components/Components";
 import NoPathMiddleware from "@/middlewares/NoPathMiddleware";
-import Products from "@/pages/Product/Products/Products";
+import Products from "@/pages/Product/Products";
 import Login from "@/pages/Login/Login";
 import GuestMiddleware from "@/middlewares/GuestMiddleware";
 import AuthMiddleware from "@/middlewares/AuthMiddleware";
@@ -49,8 +49,25 @@ export const routes: IRoute[] = [
             element: () => <Dashboard />,
           },
           {
-            path: "products",
-            element: () => <Products />,
+            path: "staffs",
+            pages: [
+              {
+                path: "/",
+                element: () => <Products />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateRole />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateRole />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailRole />,
+              },
+            ],
           },
           {
             path: "orders",

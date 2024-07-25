@@ -40,6 +40,8 @@ const roleSlice = createSlice({
     });
     // ? Get role by id
     builder.addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole> | any>) => {
+      console.log(payload);
+
       state.activeRole = payload.data.data;
     });
     // ? Create role
