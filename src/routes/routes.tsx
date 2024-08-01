@@ -21,6 +21,7 @@ import CreateTag from "@/pages/Tag/CreateTag/CreateTag";
 import UpdateTag from "@/pages/Tag/UpdateTag/UpdateTag";
 import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermission";
 import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
+import FundingSources from "@/pages/FundingSource/FundingSources/FundingSources";
 
 export interface IRoute {
   path: string;
@@ -117,6 +118,24 @@ export const routes: IRoute[] = [
                 element: () => <UpdatePermission />,
                 middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.UPDATE_PERMISSION]} />,
               },
+            ],
+          },
+          
+          {
+            path: "funding_sources",
+            pages: [
+              {
+                path: "/",
+                element: () => <FundingSources />,
+              },
+              // {
+              //   path: "/create",
+              //   element: () => <CreateTag />,
+              // },
+              // {
+              //   path: "/update/:id",
+              //   element: () => <UpdateTag />,
+              // },
             ],
           },
         ],
