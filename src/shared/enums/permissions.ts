@@ -26,10 +26,17 @@ export enum EPermissions {
   CREATE_TAG = "create_tag",
   UPDATE_TAG = "update_tag",
   DESTROY_TAG = "destroy_tag",
-  // staff
+  // ? staff
   LIST_STAFF = "list_staff",
   DETAIL_STAFF = "detail_staff",
   CREATE_STAFF = "create_staff",
   UPDATE_STAFF = "update_staff",
   DESTROY_STAFF = "destroy_staff",
+
+  // ? funding sources
+  LIST_FUNDING_SOURCE = "list_funding_source",
+  DETAIL_FUNDING_SOURCE = "detail_funding_source",
+  CREATE_FUNDING_SOURCE = "create_funding_source",
+  UPDATE_FUNDING_SOURCE = "update_funding_source",
+  DESTROY_FUNDING_SOURCE = "destroy_funding_source",
 }
