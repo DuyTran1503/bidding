@@ -81,6 +81,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "tags",
           permissions: EPermissions.READ_TAG,
         },
+        {
+          id: "3.4",
+          label: "Bidding Fields",
+          path: "bidding-fields",
+          // permissions: EPermissions.LIST_BIDDINGFIELD,
+        },
       ],
     },
     {

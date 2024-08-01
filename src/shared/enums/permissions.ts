@@ -26,6 +26,14 @@ export enum EPermissions {
   CREATE_TAG = "create_tag",
   UPDATE_TAG = "update_tag",
   DESTROY_TAG = "destroy_tag",
+
+  // ? BiddingField
+  LIST_BIDDINGFIELD = "list_biddingField",
+  DETAIL_BIDDINGFIELD = "detail_biddingField",
+  CREATE_BIDDINGFIELD = "create_biddingField",
+  UPDATE_BIDDINGFIELD = "update_biddingField",
+  DESTROY_BIDDINGFIELD = "destroy_biddingField",
+  
   // staff
   LIST_STAFF = "list_staff",
   DETAIL_STAFF = "detail_staff",
