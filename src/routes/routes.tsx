@@ -21,6 +21,10 @@ import CreateTag from "@/pages/Tag/CreateTag/CreateTag";
 import UpdateTag from "@/pages/Tag/UpdateTag/UpdateTag";
 import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermission";
 import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
+import CreateBiddingField from "@/pages/BiddingFields/CreateBiddingField/CreateBiddingField";
+import UpdateBiddingField from "@/pages/BiddingFields/UpdateBiddingField/UpdateBiddingField";
+import DetailBiddingField from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
+import BiddingFields from "@/pages/BiddingFields/BiddingFields/BiddingFields";
 
 export interface IRoute {
   path: string;
@@ -78,6 +82,27 @@ export const routes: IRoute[] = [
               {
                 path: "/detail/:id",
                 element: () => <DetailRole />,
+              },
+            ],
+          },
+          {
+            path: "bidding-fields",
+            pages: [
+              {
+                path: "/",
+                element: () => <BiddingFields />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBiddingField />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBiddingField />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBiddingField />,
               },
             ],
           },
