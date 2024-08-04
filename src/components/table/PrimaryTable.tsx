@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import FilterTableStatus from "./FilterTableStatus";
@@ -23,14 +23,19 @@ interface IPrimaryTableProps {
   data: ITableData[];
   setFilter: ActionCreatorWithPayload<ISearchParams>;
   pagination?: { pageSize: number; current: number; total: number; showSideChanger?: boolean };
+  fetching?: Function;
 }
 
-const PrimaryTable: React.FC<IPrimaryTableProps> = ({ search, columns, data, pagination, setFilter }) => {
+const PrimaryTable: React.FC<IPrimaryTableProps> = ({ search, columns, data, pagination, setFilter, fetching }) => {
   const dispatch = useDispatch();
   const getShowingText = (total: number, range: [number, number]) => {
     return `Showing ${range[0]}-${range[1]} from ${total}`;
   };
-
+  useEffect(() => {
+    if (fetching) {
+      dispatch(fetching());
+    }
+  }, [dispatch]);
   return (
     <div className="primary-table flex w-full flex-col gap-6">
       {search && (

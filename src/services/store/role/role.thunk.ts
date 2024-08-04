@@ -16,7 +16,7 @@ export const getAllRoles = createAsyncThunk("role/get-all-roles", async (payload
 
 export const getRoleById = createAsyncThunk("role/get-role-by-id", async (id: string, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<IRole>(prefix + `/${id}`);
+    const { response, data } = await client.get<IRole>(prefix + `/${id}/edit`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
@@ -34,7 +34,7 @@ export const createRole = createAsyncThunk("role/create-role", async (payload: I
 
 export const updateRole = createAsyncThunk("role/update-role", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.patch(`${prefix}/${payload.param}`, payload);
+    const { response, data } = await client.put(`${prefix}/${payload.id}`, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
