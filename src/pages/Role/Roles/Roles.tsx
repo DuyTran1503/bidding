@@ -78,7 +78,7 @@ const Roles = () => {
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
-            permission: EPermissions.CREATE_ROLE,
+            // permission: EPermissions.CREATE_ROLE,
             text: "Create Role",
             onClick: () => navigate("/roles/create"),
           },
