@@ -38,7 +38,7 @@ const CreateRole = () => {
         buttons={[
           {
             type: "secondary",
-            text: "Cancel",
+            text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
               navigate("/roles");

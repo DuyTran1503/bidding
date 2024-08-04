@@ -1,18 +1,19 @@
 import { useArchive } from "@/hooks/useArchive";
 import Heading from "@/components/layout/Heading";
-import { IRoleInitialState, resetStatus } from "@/services/store/role/role.slice";
+import { fetching, IRoleInitialState, resetStatus, setData } from "@/services/store/role/role.slice";
 import { getRoleById } from "@/services/store/role/role.thunk";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import RoleForm, { IRoleFormInitialValues } from "../RoleForm";
+import RoleForm, { IActiveRole, IRoleFormInitialValues } from "../RoleForm";
 import { IoClose, IoSaveOutline } from "react-icons/io5";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { FormikProps } from "formik";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { convertRolePermissions } from "../helpers/convertRolePermissions";
+import { EPageTypes } from "@/shared/enums/page";
 
 const UpdateRole = () => {
   const { id } = useParams();
+
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IRoleInitialState>("role");
 
@@ -32,19 +33,25 @@ const UpdateRole = () => {
     },
   });
 
+  const memoizedDispatch = useCallback(dispatch, []);
+
   useEffect(() => {
-    if (id) dispatch(getRoleById(id));
-  }, [id]);
+    if (id) memoizedDispatch(getRoleById(id));
+    return () => {
+      memoizedDispatch(setData());
+    };
+  }, [JSON.stringify(id), memoizedDispatch]);
+  const dataUpdate = { id: state.activeRole?.role?.id, name: state.activeRole?.role?.name, permissions: state.activeRole?.permissions };
 
   return (
     <>
       <Heading
-        title="Update Role"
+        title="Cập nhật vai trò"
         hasBreadcrumb
         buttons={[
           {
             type: "secondary",
-            text: "Cancel",
+            text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
               navigate("/roles");
@@ -52,7 +59,7 @@ const UpdateRole = () => {
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
-            text: "Save Change",
+            text: "Lưu",
             icon: <IoSaveOutline className="text-[18px]" />,
             onClick: () => {
               formikRef && formikRef.current && formikRef.current.handleSubmit();
@@ -60,7 +67,7 @@ const UpdateRole = () => {
           },
         ]}
       />
-      {state.activeRole && <RoleForm type="update" formikRef={formikRef} role={convertRolePermissions(state.activeRole)} />}
+      {state.activeRole && <RoleForm type={EPageTypes.UPDATE} formikRef={formikRef} role={state.activeRole as unknown as IActiveRole} />}
     </>
   );
 };
