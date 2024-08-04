@@ -4,11 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import RoleForm from "../ActionModule";
 import { IRoleInitialState } from "@/services/store/role/role.slice";
 import { useArchive } from "@/hooks/useArchive";
-import { convertRolePermissions } from "../helpers/convertRolePermissions";
 import { getRoleById } from "@/services/store/role/role.thunk";
 import { useEffect } from "react";
 
-const DetailRole = () => {
+const DetailStaff = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IRoleInitialState>("role");
@@ -39,4 +38,4 @@ const DetailRole = () => {
   );
 };
 
-export default DetailRole;
+export default DetailStaff;

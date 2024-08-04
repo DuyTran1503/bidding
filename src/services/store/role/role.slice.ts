@@ -3,12 +3,12 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createRole, deleteRole, getAllPermissions, getAllRoles, getRoleById, updateRole } from "./role.thunk";
-import { IRole } from "./role.model";
+import { IRole, IUpdateRole } from "./role.model";
 import { IPermission } from "../permission/permission.model";
 
 export interface IRoleInitialState extends IInitialState {
   roles: IRole[];
-  activeRole: IRole | undefined;
+  activeRole: IUpdateRole | undefined;
   permissions: IPermission[];
 }
 
@@ -19,6 +19,7 @@ const initialState: IRoleInitialState = {
   permissions: [],
   activeRole: undefined,
   totalRecords: 0,
+  loading: false,
   filter: {
     size: 10,
     page: 1,
@@ -30,20 +31,35 @@ const roleSlice = createSlice({
   initialState,
   reducers: {
     ...commonStaticReducers<IRoleInitialState>(),
+    setData: (state) => {
+      state.permissions = [];
+    },
+    fetching(state) {
+      state.loading = true;
+    },
   },
   extraReducers(builder) {
     // ? Get all roles
     builder.addCase(getAllRoles.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole[]> | any>) => {
       if (payload.data) {
         state.roles = payload.data.data;
+        state.status = EFetchStatus.FULFILLED;
+        state.totalRecords = payload?.data?.total_elements;
       }
     });
     // ? Get role by id
-    builder.addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole> | any>) => {
-      console.log(payload);
-
-      state.activeRole = payload.data.data;
-    });
+    builder
+      .addCase(getRoleById.pending, (state) => {
+        // state.status = EFetchStatus.PENDING;
+        state.loading = true;
+      })
+      .addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IUpdateRole> | any) => {
+        state.activeRole = {
+          permissions: payload.id_permission_checked,
+          ...payload.role,
+        };
+        state.loading = false;
+      });
     // ? Create role
     builder
       .addCase(createRole.pending, (state) => {
@@ -89,5 +105,5 @@ const roleSlice = createSlice({
   },
 });
 
-export const { resetStatus, setFilter } = roleSlice.actions;
+export const { resetStatus, setFilter, setData, fetching } = roleSlice.actions;
 export { roleSlice };
