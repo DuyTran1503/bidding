@@ -12,6 +12,8 @@ import { FormikRefType } from "@/shared/utils/shared-types";
 import { IRole } from "@/services/store/role/role.model";
 import lodash from "lodash";
 import { IRoleInitialState } from "@/services/store/role/role.slice";
+import { IPermission } from "@/services/store/permission/permission.model";
+import { EPageTypes } from "@/shared/enums/page";
 interface Permission {
   created_at: string;
   guard_name: string;
@@ -27,13 +29,15 @@ interface TreeNode {
   id: number | null;
   children?: TreeNode[];
 }
-interface IActiveRole extends Omit<IRole, "permissions"> {
+export interface IActiveRole extends Omit<IRole, "permissions"> {
+  id: string;
+  name: string;
   permissions: string[];
 }
 
 interface IRoleFormProps {
   formikRef?: FormikRefType<IRoleFormInitialValues>;
-  type: "create" | "view" | "update";
+  type: EPageTypes;
   role?: IActiveRole;
 }
 
@@ -131,27 +135,30 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
 
     return result;
   }
-
   const mappingKeyWithId = getAllKeysAndIds(convertPermissionsToTree(state.permissions));
-  console.log(mappingKeyWithId);
+  const updateDataChecked = mappingKeyWithId.filter((item: any) => role?.permissions.includes(item.id)).map((item) => item.key);
+
   return (
     <Formik
-      innerRef={formikRef}
-      initialValues={role ?? initialValues}
+      enableReinitialize
+      innerRef={formikRef as any}
+      initialValues={type === EPageTypes.UPDATE ? { ...role, name: role?.name, permissions: updateDataChecked } : initialValues}
       validationSchema={validationSchema}
       onSubmit={(data) => {
         const body = {
           ...lodash.omit(data, "id"),
-          permissions: getIdsForKeys(
-            data.permissions.filter((p) => !p.startsWith("parent-")),
-            mappingKeyWithId,
-          ),
+          permissions: data.permissions
+            ? getIdsForKeys(
+                data.permissions.filter((p: string) => !p.startsWith("parent-")),
+                mappingKeyWithId,
+              )
+            : [],
         };
         if (type === "create") {
           dispatch(createRole({ body }));
-          console.log(body);
         } else if (type === "update") {
-          dispatch(updateRole({ body, param: role?.id }));
+          const updateData = { ...body, id: role?.id };
+          dispatch(updateRole({ body: updateData, id: role?.id }));
         }
       }}
     >
@@ -174,25 +181,24 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
                         children: treePermissions,
                       },
                     ]}
+                    // @ts-ignore
                     checkedKeys={values.permissions}
                     onCheck={(checkedKeys) => {
-                      console.log(checkedKeys);
-
                       setFieldValue("permissions", checkedKeys);
                     }}
                   />
                 </FormGroup>
               ),
               colRight: (
-                <FormGroup title="General Information">
+                <FormGroup title="Thông tin ">
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
-                    label="Role name"
+                    isDisabled={type === EPageTypes.VIEW}
+                    label="Tên vai trò"
                     value={values.name}
                     name="name"
                     error={touched.name ? errors.name : ""}
-                    placeholder="Type role name here..."
+                    placeholder="Nhập tên vai trò..."
                     onChange={(value) => {
                       setFieldValue("name", value);
                     }}

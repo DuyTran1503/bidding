@@ -41,7 +41,7 @@ const GridButtons = ({ buttons, record }: IGridButtonsProps) => {
                 </Tooltip>
               )
             );
-          case EButtonTypes.DELETE:
+          case EButtonTypes.DESTROY:
             return (
               canAccess && (
                 <Tooltip title="Delete" key={index}>

@@ -18,6 +18,7 @@ export interface IThunkPayload {
   query?: ISearchParams;
   param?: string;
   headers?: IFetchHeaders;
+  id?: string;
 }
 
 export interface ISearchParams {
@@ -45,6 +46,7 @@ export interface ClientReturnType<ReturnDataType> {
 }
 
 export interface IInitialState {
+  loading?: boolean;
   status: EFetchStatus;
   message: string;
   filter: ISearchParams;
