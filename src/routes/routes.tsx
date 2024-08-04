@@ -6,7 +6,7 @@ import NoPathMiddleware from "@/middlewares/NoPathMiddleware";
 import Products from "@/pages/Product/Products/Products";
 import Login from "@/pages/Login/Login";
 import GuestMiddleware from "@/middlewares/GuestMiddleware";
-import AuthMiddleware from "@/middlewares/AuthMiddleware";
+// import AuthMiddleware from "@/middlewares/AuthMiddleware";
 import GlobalMiddleware from "@/middlewares/GlobalMiddleware";
 import Orders from "@/pages/Order/Orders/Orders";
 import Roles from "@/pages/Role/Roles/Roles";
@@ -22,6 +22,7 @@ import UpdateTag from "@/pages/Tag/UpdateTag/UpdateTag";
 import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermission";
 import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
 import FundingSources from "@/pages/FundingSource/FundingSources/FundingSources";
+import CreateFundingSource from "@/pages/FundingSource/CreateFundingSource/CreateFundingSource";
 
 export interface IRoute {
   path: string;
@@ -38,7 +39,7 @@ export const routes: IRoute[] = [
     pages: [
       {
         path: "/",
-        middleware: () => <AuthMiddleware />,
+        // middleware: () => <AuthMiddleware />,
         layout: () => <DefaultLayout />,
         pages: [
           {
@@ -128,10 +129,10 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <FundingSources />,
               },
-              // {
-              //   path: "/create",
-              //   element: () => <CreateTag />,
-              // },
+              {
+                path: "/create",
+                element: () => <CreateFundingSource />,
+              },
               // {
               //   path: "/update/:id",
               //   element: () => <UpdateTag />,

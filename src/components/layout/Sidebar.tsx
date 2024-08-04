@@ -83,7 +83,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "3.4",
-          label: "Funding Sources",
+          label: "Nguồn tài trợ",
           path: "funding_sources",
           permissions: EPermissions.READ_FUNDING_SOURCE,
         },
