@@ -18,9 +18,10 @@ export interface IGridProps {
     total: number;
   };
   setFilter: ActionCreatorWithPayload<ISearchParams>;
+  fetching?: Function;
 }
 
-const ManagementGrid = ({ columns, data, search, buttons, pagination, setFilter }: IGridProps) => {
+const ManagementGrid = ({ columns, data, search, buttons, pagination, setFilter, fetching }: IGridProps) => {
   const renderColumns = useMemo(() => {
     return buttons?.some((button) => button.type === EButtonTypes.VIEW || button.type === EButtonTypes.UPDATE || button.type === EButtonTypes.DESTROY)
       ? ([
@@ -39,7 +40,7 @@ const ManagementGrid = ({ columns, data, search, buttons, pagination, setFilter 
         ] as TableColumnsType)
       : columns;
   }, [JSON.stringify(buttons)]);
-  return <PrimaryTable search={search} columns={renderColumns} data={data} pagination={pagination} setFilter={setFilter} />;
+  return <PrimaryTable search={search} columns={renderColumns} data={data} pagination={pagination} setFilter={setFilter} fetching={fetching} />;
 };
 
 export default ManagementGrid;

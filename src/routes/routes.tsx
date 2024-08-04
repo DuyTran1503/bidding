@@ -3,7 +3,6 @@ import DefaultLayout from "@/layouts/Default";
 import Dashboard from "@/pages/Dashboard/Dashboard";
 import Components from "@/pages/Components/Components";
 import NoPathMiddleware from "@/middlewares/NoPathMiddleware";
-import Products from "@/pages/Product/Products";
 import Login from "@/pages/Login/Login";
 import GuestMiddleware from "@/middlewares/GuestMiddleware";
 import AuthMiddleware from "@/middlewares/AuthMiddleware";
@@ -21,6 +20,10 @@ import CreateTag from "@/pages/Tag/CreateTag/CreateTag";
 import UpdateTag from "@/pages/Tag/UpdateTag/UpdateTag";
 import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermission";
 import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
+import Staffs from "@/pages/Staff/Staffs";
+import CreateStaff from "@/pages/Staff/Create";
+import DetailStaff from "@/pages/Staff/Detail";
+import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
 
 export interface IRoute {
   path: string;
@@ -53,19 +56,19 @@ export const routes: IRoute[] = [
             pages: [
               {
                 path: "/",
-                element: () => <Products />,
+                element: () => <Staffs />,
               },
               {
                 path: "/create",
-                element: () => <CreateRole />,
+                element: () => <CreateStaff />,
               },
               {
                 path: "/update/:id",
-                element: () => <UpdateRole />,
+                element: () => <UpdateStaff />,
               },
               {
                 path: "/detail/:id",
-                element: () => <DetailRole />,
+                element: () => <DetailStaff />,
               },
             ],
           },
