@@ -12,6 +12,7 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import fundingData from "./mockData";
 
 const FundingSources = () => {
   const navigate = useNavigate();
@@ -32,38 +33,35 @@ const FundingSources = () => {
   const columns: ColumnsType = [
     {
       dataIndex: "name",
-      title: "Name",
-    },
-    {
-      dataIndex: "description",
-      title: "Description",
-    },
-    {
-      dataIndex: "code",
-      title: "Code",
+      title: "Tên nguồn tài trợ",
     },
     {
       dataIndex: "type",
-      title: "Type",
+      title: "Loại nguồn tài trợ",
     },
-    {
-      dataIndex: "is_active",
-      title: "Active",
-    },
+
   ];
   const data: ITableData[] = useMemo(() => {
     if (state.funfingsources && state.funfingsources.length > 0) {
       return state.funfingsources.map((fundingsource) => ({
         key: fundingsource.id,
         name: fundingsource.name,
-        description: fundingsource.description,
-        code: fundingsource.code,
         type: fundingsource.type,
-        is_active: fundingsource.is_active,
       }));
     }
     return [];
   }, [JSON.stringify(state.funfingsources)]);
+
+  // const data = useMemo(() => {
+  //   return fundingData.map((fundingsource) => ({
+  //     key: fundingsource.id,
+  //     name: fundingsource.name,
+  //     description: fundingsource.description,
+  //     code: fundingsource.code,
+  //     type: fundingsource.type,
+  //     is_active: fundingsource.is_active,
+  //   }));
+  // }, []);
 
   const buttons: IGridButton[] = [
     {
@@ -71,26 +69,26 @@ const FundingSources = () => {
       onClick(record) {
         navigate(`/funding_sources/update/${record?.key}`);
       },
-      permission: EPermissions.UPDATE_FUNDING_SOURCE,
+      // permission: EPermissions.UPDATE_FUNDING_SOURCE,
     },
     {
       type: EButtonTypes.DELETE,
       onClick(record) {
         dispatch(deleteFundingSources(record?.key));
       },
-      permission: EPermissions.UPDATE_FUNDING_SOURCE,
+      // permission: EPermissions.UPDATE_FUNDING_SOURCE,
     },
   ];
   return (
     <>
       <Heading
-        title="Funding Sources"
+        title="Nguồn Tài Trợ"
         hasBreadcrumb
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
-            permission: EPermissions.CREATE_FUNDING_SOURCE,
-            text: "Create Funding Source",
+            // permission: EPermissions.CREATE_FUNDING_SOURCE,
+            text: "Thêm Nguồn Tài Trợ",
             onClick: () => navigate("/funding_sources/create"),
           },
         ]}
