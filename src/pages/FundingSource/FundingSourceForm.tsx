@@ -5,7 +5,6 @@ import { IFundingSourceInitialState } from "@/services/store/funding_source/fund
 import { createFundingSource, updateFundingSource } from "@/services/store/funding_source/funding_source.thunk";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Formik } from "formik";
-import { Form } from "react-router-dom";
 import { object, string } from "yup";
 import lodash from "lodash";
 
@@ -18,10 +17,7 @@ interface IFundingSourceFormProps {
 export interface IFundingSourceFormInitialValues {
     id: string ;
     name: string;
-    description: string;
-    code: string;
     type: string;
-    is_active: boolean;
 }
 
 const FundingSourceForm = ({ formikRef, type, tag }: IFundingSourceFormProps ) => {
@@ -30,17 +26,12 @@ const FundingSourceForm = ({ formikRef, type, tag }: IFundingSourceFormProps ) =
     const initialValues: IFundingSourceFormInitialValues = {
         id: tag?.id || "", // kieu du lieu bat buoc
         name: tag?.name || "",
-        description: tag?.description || "",  
-        code: tag?.code || "",
         type: tag?.type || "",
-        is_active: tag?.is_active ?? false, // Thay 'boolean' bằng giá trị mặc định như false
     };
     
     const fundingsourceSchema = object().shape({
-        name: string().required("Please enter name"),
-        description: string().required("Please enter description"),
-        code: string().required("Please enter code"),
-        type: string().required("Please enter type"),
+        name: string().required("Vui lòng nhập tên"),
+        type: string().required("Vui lòng không để trống"),
          
     }) 
 
@@ -58,28 +49,54 @@ const FundingSourceForm = ({ formikRef, type, tag }: IFundingSourceFormProps ) =
         }}
       >
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
-          <Form>
             <FormGroup title="General information">
               <FormInput
-                label="Tag name"
-                placeholder="Type name tag here..."
+                label="Tên nguồn tài trợ"
+                placeholder="Nhập tên nguồn tài trợ ở đây..."
                 name="name"
                 value={values.name}
                 error={touched.name ? errors.name : ""}
                 onChange={(e) => setFieldValue("name", e)}
                 onBlur={handleBlur}
               />
-              <FormInput
-                label="Tag description"
-                placeholder="Type description tag here..."
+              {/* <FormInput
+                label="Funding Source description"
+                placeholder="Type description funding source here..."
                 name="description"
                 value={values.description}
                 error={touched.description ? errors.description : ""}
                 onChange={(e) => setFieldValue("description", e)}
                 onBlur={handleBlur}
+              /> */}
+              {/* <FormInput
+                label="Funding Source code"
+                placeholder="Type code funding source here..."
+                name="code"
+                value={values.code}
+                error={touched.code ? errors.code : ""}
+                onChange={(e) => setFieldValue("code", e)}
+                onBlur={handleBlur}
+              /> */}
+              <FormInput
+                label="Loại nguồn tài trợ"
+                placeholder="Nhập loại nguồn tài trợ ở đây..."
+                name="type"
+                value={values.type}
+                error={touched.type ? errors.type : ""}
+                onChange={(e) => setFieldValue("type", e)}
+                onBlur={handleBlur}
               />
+              {/* <FormInput
+                label="Funding Source active"
+                placeholder="active active funding source here..."
+                name="active"
+                value={values.is_active ? "true" : "false"} // Chuyển đổi boolean thành chuỗi
+                error={touched.is_active ? errors.is_active : ""}
+                onChange={(e) => setFieldValue("is_active", e.target.value === "true")}
+                onBlur={handleBlur}
+              /> */}
+
             </FormGroup>
-          </Form>
         )}
       </Formik>
     );
