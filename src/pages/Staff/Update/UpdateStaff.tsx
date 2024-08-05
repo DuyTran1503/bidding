@@ -9,6 +9,7 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import ActionModule, { IStaffFormInitialValues } from "../ActionModule";
 import { IAccountInitialState, resetStatus } from "@/services/store/account/account.slice";
 import { getStaffById } from "@/services/store/account/account.thunk";
+import { EPageTypes } from "@/shared/enums/page";
 
 const UpdateStaff = () => {
   const { id } = useParams();
@@ -58,7 +59,7 @@ const UpdateStaff = () => {
       />
       {state.staff && (
         <ActionModule
-          type="update"
+          type={EPageTypes.UPDATE}
           formikRef={formikRef}
           account={{
             ...state.staff,

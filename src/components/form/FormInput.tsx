@@ -59,7 +59,6 @@ const FormInput = ({
       inputRef.current.focus();
     }
   };
-
   return (
     <div>
       {label && <label className="text-m-medium mb-1 block text-black-300">{label}</label>}
@@ -90,16 +89,26 @@ const FormInput = ({
           className={clsx("text-m-regular placeholder:text-m-medium flex-1 grow bg-gray-25 py-[10px] text-black-500 outline-none focus:bg-white", {
             "px-3": !Icon,
             "pl-0": Icon,
-            "border-red-500": error,
-            "select-none !bg-gray-50 !text-black-300": isDisabled,
+            "border-red-500": !!error,
+            "select-none !bg-gray-50 !text-black-300": error,
           })}
         />
+
         {type === "password" && (
           <div onClick={togglePasswordVisibility} className="cursor-pointer pr-3">
             {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" />}
           </div>
         )}
       </div>
+      {!!error && (
+        <div
+          className={clsx(
+            "text-m-regular placeholder:text-m-medium flex-1 grow border-red-500 bg-gray-25 py-[10px] text-black-500 text-red-500 outline-none focus:bg-white",
+          )}
+        >
+          {error}
+        </div>
+      )}
     </div>
   );
 };

@@ -6,22 +6,22 @@ import { ColumnsType } from "antd/es/table";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
-import { IRoleInitialState, setFilter } from "@/services/store/role/role.slice";
+import { setFilter } from "@/services/store/role/role.slice";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
-import { SetStateAction, useEffect, useMemo, useState } from "react";
-import { deleteStaff, getAllStaff } from "@/services/store/account/account.thunk";
-import { Switch } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { useEffect, useMemo, useState } from "react";
+import { changeStatusStaff, deleteStaff, getAllStaff } from "@/services/store/account/account.thunk";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
-import { IAccountInitialState } from "@/services/store/account/account.slice";
+import { IAccountInitialState, resetStatus } from "@/services/store/account/account.slice";
+import useFetchStatus from "@/hooks/useFetchStatus";
 
 const Staffs = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IAccountInitialState>("account");
   const [isModal, setIsModal] = useState(false);
+  const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -56,7 +56,7 @@ const Staffs = () => {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
-            checked={!record.account_ban_at}
+            checked={!!record.account_ban_at}
             title={`Bạn có chắc chắn muốn ${record.account_ban_at ? "bỏ cấm" : "cấm"} tài khoản này?`}
           />
         );
@@ -100,23 +100,27 @@ const Staffs = () => {
         }))
       : [];
   }, [JSON.stringify(state.staffs)]);
-  const handleChangeStatus = (item: string) => {};
+  const handleChangeStatus = (item: ITableData) => {
+    setIsModal(true);
+    setConfirmItem(item);
+  };
   const onConfirmStatus = () => {
-    // const newLockFlag = confirmItem?.lockFlag === '9' ? '0' : '9';
-    // if (confirmItem?.lockFlag) {
-    //   dispatch(
-    //     updateDepartmentStatus({
-    //       ...confirmItem,
-    //       lockFlag: newLockFlag,
-    //       deptId: confirmItem.deptId,
-    //     })
-    //   );
-    // }
+    if (confirmItem && confirmItem.key) {
+      dispatch(changeStatusStaff(String(confirmItem.key)));
+      dispatch(getAllStaff({ query: state.filter }));
+    }
   };
   useEffect(() => {
     dispatch(getAllStaff({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-
+  useFetchStatus({
+    module: "account",
+    reset: resetStatus,
+    actions: {
+      success: { message: state.message },
+      error: { message: state.message },
+    },
+  });
   return (
     <>
       <Heading
