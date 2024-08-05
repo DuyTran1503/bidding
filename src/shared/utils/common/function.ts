@@ -1,6 +1,6 @@
 import { ETYPEFILE } from "@/shared/enums/fileType";
 
-export const phoneRegex = /^0[1-9]{1}([0-9]{8})$/;
+export const phoneRegex = /^(?:\+84|0084|0)?[235789][0-9]{8}$/;
 //chặn khoảng trắng
 export const removeMultipleSpaces = function (value: any) {
   return Object.keys(value)?.reduce((prev: any, key: string, index: number) => {
@@ -25,23 +25,23 @@ export const getFileExtension = (url: string): ETYPEFILE => {
   const audioExtensions = ["mp3", "wma", "wav"];
 
   if (imageExtensions.includes(ext)) {
-    return ETYPEFILE.image;
+    return ETYPEFILE.IMAGE;
   }
 
   if (wordExtensions.includes(ext)) {
-    return ETYPEFILE.word;
+    return ETYPEFILE.WORD;
   }
 
   if (excelExtensions.includes(ext)) {
-    return ETYPEFILE.excel;
+    return ETYPEFILE.EXCEL;
   }
 
   if (powerpointExtensions.includes(ext)) {
-    return ETYPEFILE.powerpoint;
+    return ETYPEFILE.POWERPOINT;
   }
 
   if (ext === "pdf") {
-    return ETYPEFILE.pdf;
+    return ETYPEFILE.PDF;
   }
 
   if (audioExtensions.includes(ext)) {
