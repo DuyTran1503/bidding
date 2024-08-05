@@ -57,7 +57,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
   };
 
   const validationSchema = object().shape({
-    name: string().required("Please enter role name"),
+    name: string().required("Vui lòng không để trống trường này"),
   });
 
   useEffect(() => {
@@ -154,9 +154,9 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
               )
             : [],
         };
-        if (type === "create") {
+        if (type === EPageTypes.CREATE) {
           dispatch(createRole({ body }));
-        } else if (type === "update") {
+        } else if (type === EPageTypes.UPDATE) {
           const updateData = { ...body, id: role?.id };
           dispatch(updateRole({ body: updateData, id: role?.id }));
         }

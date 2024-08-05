@@ -1,27 +1,22 @@
 import { useArchive } from "@/hooks/useArchive";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import UpdateGrid from "@/components/grid/UpdateGrid";
-import { Formik } from "formik";
-import TreeData from "@/components/TreeData";
+import { Form, Formik } from "formik";
 import { object, string } from "yup";
-import { DataNode } from "antd/es/tree";
 import { useEffect, useState } from "react";
-import { createRole, getAllPermissions, getAllRoles, updateRole } from "@/services/store/role/role.thunk";
+import { getAllPermissions, getAllRoles } from "@/services/store/role/role.thunk";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import lodash from "lodash";
-import { ETYPESTAFF } from "@/shared/enums/typeStaff";
 import { IAccountInitialState } from "@/services/store/account/account.slice";
 import { Col, Row } from "antd";
 import { phoneRegex } from "@/shared/utils/common/function";
 import FormSwitch from "@/components/form/FormSwitch";
 import { createStaff, updateStaff } from "@/services/store/account/account.thunk";
 import FormSelect from "@/components/form/FormSelect";
-import { IRoleInitialState } from "@/services/store/role/role.slice";
 import { RootStateType } from "@/services/reducers";
 import { useSelector } from "react-redux";
 import { EPageTypes } from "@/shared/enums/page";
-import { EPAGES } from "@/shared/enums/pages";
+import { useRoutes } from "react-router-dom";
 
 interface TreeNode {
   title: string;
@@ -32,7 +27,7 @@ interface TreeNode {
 
 interface IAccountFormProps {
   formikRef?: FormikRefType<IStaffFormInitialValues>;
-  type: "create" | "view" | "update";
+  type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
   account?: IStaffFormInitialValues;
 }
 
@@ -75,7 +70,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
       .max(255, "Số ký tự tối đa là 255 ký tự"),
     email: string()
       .trim()
-      .nullable()
+      .required("Vui lòng nhập địa chỉ email")
       .email("Địa chỉ email không hợp lệ")
       .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Vui lòng nhập lại! định dạng email chưa đúng")
       .max(255, "Số ký tự tối đa là 255 ký tự"),
@@ -198,10 +193,13 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
         const body = {
           ...lodash.omit(data, "id_user"),
           account_ban_at: data.account_ban_at ? new Date().toISOString() : null,
+          role_id: data.id_role,
         };
-        if (type === "create") {
-          // dispatch(createStaff({ body }));
-        } else if (type === "update") {
+        const { id_role, ...newObj } = body;
+        if (type === EPageTypes.CREATE) {
+          dispatch(createStaff(body as any));
+          console.log(newObj);
+        } else if (type === EPageTypes.UPDATE) {
           const newValue = {
             role_id: body.id_role,
             id_staff: body.staff_id,
@@ -219,9 +217,9 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
-          <>
+          <Form>
             <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tên tài khoản">
                   <FormInput
                     type="text"
@@ -237,7 +235,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Email">
                   <FormInput
                     type="text"
@@ -255,10 +253,10 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
               </Col>
             </Row>
             <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Số điện thoại">
                   <FormInput
-                    type="number"
+                    type="text"
                     isDisabled={type === "view"}
                     value={values.phone ?? ""}
                     name="phone"
@@ -272,7 +270,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </FormGroup>
               </Col>
               {type === EPageTypes.CREATE && (
-                <Col xs={24} sm={24} md={12} xl={12}>
+                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                   <FormGroup title="Password">
                     <FormInput
                       type="password"
@@ -289,9 +287,9 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </Col>
               )}
             </Row>
-            <Row gutter={[24, 24]}>
+            <Row gutter={[24, 0]}>
               <Col xs={24} sm={24} md={24} xl={24}></Col>
-              <Col xs={24} sm={24} md={12} xl={12}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Vai trò">
                   <FormSelect
                     isMultiple={true}
@@ -302,7 +300,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Mã số thuế">
                   <FormInput
                     type="number"
@@ -319,7 +317,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </FormGroup>
               </Col>
             </Row>
-            <Col xs={24} sm={24} md={12} xl={12}>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
               <FormGroup title="Trạng thái hoạt động">
                 <FormSwitch
                   checked={!!values.account_ban_at ? true : false}
@@ -329,7 +327,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 />
               </FormGroup>
             </Col>
-          </>
+          </Form>
         );
       }}
     </Formik>
