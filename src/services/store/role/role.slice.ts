@@ -67,7 +67,7 @@ const roleSlice = createSlice({
       })
       .addCase(createRole.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Created successfully";
+        state.message = "Tạo mới vai trò thành công";
       })
       .addCase(createRole.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
