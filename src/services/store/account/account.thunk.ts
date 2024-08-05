@@ -26,6 +26,8 @@ export const getStaffById = createAsyncThunk("staff/get-staff-by-id", async (id:
 export const createStaff = createAsyncThunk("staff/create-staff", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.post(prefix, payload);
+    console.log({ response, data });
+
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
@@ -44,6 +46,14 @@ export const updateStaff = createAsyncThunk("staff/update-staff", async (payload
 export const deleteStaff = createAsyncThunk("staff/delete-staff", async (id: string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.delete(`${prefix}/${id}`);
+    return response.status >= 400 ? rejectWithValue(data) : id;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+export const changeStatusStaff = createAsyncThunk("staff/change-status-staff", async (id: string, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.post(`${prefix}/ban/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : id;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
