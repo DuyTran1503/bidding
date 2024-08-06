@@ -58,7 +58,7 @@ const accountSlice = createSlice({
       })
       .addCase(updateStaff.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Updated successfully";
+        state.message = "Tạo mới thành công";
       })
       .addCase(updateStaff.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;

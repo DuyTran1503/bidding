@@ -16,6 +16,7 @@ import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import { IAccountInitialState, resetStatus } from "@/services/store/account/account.slice";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 
 const Staffs = () => {
   const navigate = useNavigate();
@@ -86,7 +87,15 @@ const Staffs = () => {
       permission: EPermissions.DESTROY_STAFF,
     },
   ];
-
+  const search : ISearchTypeTable[] = [
+    {
+      id: 'name',
+      placeholder: 'Nhập tên vai trò...',
+      title: 'Tên vai trò',
+      type: 'text',
+    },
+  
+  ]
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.staffs)
       ? state.staffs.map(({ id_user, name, avatar, email, phone, account_ban_at }, index) => ({
@@ -151,7 +160,7 @@ const Staffs = () => {
       <ManagementGrid
         columns={columns}
         data={data}
-        search={{ status: [] }}
+        search={search}
         buttons={buttons}
         pagination={{
           current: state.filter._page! ?? 1,
@@ -159,6 +168,7 @@ const Staffs = () => {
           total: state.totalRecords,
         }}
         setFilter={setFilter}
+        filter={state.filter}
       />
     </>
   );
