@@ -56,7 +56,6 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue, resetForm, handleSubmit }) => {
-        console.log(values);
         return (
           <div className={`${isShow ? "hidden" : ""} row-gap-3 flex flex-col px-4 py-3`}>
             <Row className="row-gap-2 row-gap-lg-3">
@@ -76,7 +75,6 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         // error={errors[item.id]}
                         placeholder="Nhập ..."
                         onChange={(data) => {
-                          console.log(data);
 
                           setFieldValue(item.id, data).then();
                           item.onChange && item.onChange(String(data));
@@ -147,10 +145,8 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                             item.childItems?.forEach((child) => {
                               setFieldValue(child, "").then(() => {});
                             });
-                            console.log("sdfsd");
                           }
                           const result = data ? data.format("YYYY-MM-DD") : null;
-                          console.log(result);
 
                           setFieldValue(item.id, result).then();
                           item.onChange && item.onChange(result as any);
