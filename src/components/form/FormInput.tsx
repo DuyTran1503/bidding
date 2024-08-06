@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { IconType } from "react-icons";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 interface FormInputProps {
+  id?: string;
   label?: string;
   icon?: IconType;
   placeholder?: string;

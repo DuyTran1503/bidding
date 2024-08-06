@@ -8,6 +8,7 @@ import DateRangePicker from "../form/FormDateRangePicker";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { ISearchParams } from "@/shared/utils/shared-interfaces";
 import { useDispatch } from "react-redux";
+import SearchComponent, { ISearchProps } from "./SearchComponent";
 
 export interface ITableData {
   key: React.Key;
@@ -17,8 +18,7 @@ export interface ITableData {
 export interface ISearchTable {
   status: { value: string; label: string }[];
 }
-interface IPrimaryTableProps {
-  search?: ISearchTable | false;
+interface IPrimaryTableProps<T extends ISearchParams> extends ISearchProps<T> {
   columns: ColumnsType;
   data: ITableData[];
   setFilter: ActionCreatorWithPayload<ISearchParams>;
@@ -26,7 +26,16 @@ interface IPrimaryTableProps {
   fetching?: Function;
 }
 
-const PrimaryTable: React.FC<IPrimaryTableProps> = ({ search, columns, data, pagination, setFilter, fetching }) => {
+const PrimaryTable = <T extends ISearchParams>({
+  search,
+  columns,
+  data,
+  pagination,
+  setFilter,
+  fetching,
+  filter,
+  ...rest // This allows you to spread any additional props from ISearchProps
+}: IPrimaryTableProps<T>) => {
   const dispatch = useDispatch();
   const getShowingText = (total: number, range: [number, number]) => {
     return `Showing ${range[0]}-${range[1]} from ${total}`;
@@ -39,13 +48,14 @@ const PrimaryTable: React.FC<IPrimaryTableProps> = ({ search, columns, data, pag
   return (
     <div className="primary-table flex w-full flex-col gap-6">
       {search && (
-        <div className="flex justify-between">
-          <FilterTableStatus options={search.status} />
-          <div className="flex gap-4">
-            <FormInput icon={IoSearchOutline} placeholder="Search product. . ." type="text" />
-            <DateRangePicker />
-          </div>
-        </div>
+        <>
+          {/* <FilterTableStatus options={search.status} /> */}
+          <SearchComponent search={search} setFilter={setFilter} filter={filter} />
+          {/* <div className="flex gap-4"> */}
+          {/* <FormInput icon={IoSearchOutline} placeholder="Search product. . ." type="text" /> */}
+          {/* <DateRangePicker /> */}
+          {/* </div> */}
+        </>
       )}
       <Table
         onChange={(newPagination) => {
