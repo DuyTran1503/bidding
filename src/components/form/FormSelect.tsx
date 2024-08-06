@@ -8,6 +8,7 @@ interface IFormSelect {
   isMultiple?: boolean;
   isDisabled?: boolean;
   onChange?: (value: string | string[]) => void;
+  id?:string;
 }
 
 const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isMultiple, onChange }: IFormSelect) => {
