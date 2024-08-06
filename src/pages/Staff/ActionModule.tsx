@@ -198,7 +198,6 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
         const { id_role, ...newObj } = body;
         if (type === EPageTypes.CREATE) {
           dispatch(createStaff(body as any));
-          console.log(newObj);
         } else if (type === EPageTypes.UPDATE) {
           const newValue = {
             role_id: body.id_role,
