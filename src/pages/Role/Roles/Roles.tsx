@@ -12,6 +12,7 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 
 const Roles = () => {
   const navigate = useNavigate();
@@ -74,7 +75,14 @@ const Roles = () => {
   useEffect(() => {
     dispatch(getAllRoles({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-
+  const search: ISearchTypeTable[] = [
+    {
+      id: "name",
+      placeholder: "Nhập tên vai trò...",
+      label: "Tên vai trò",
+      type: "text",
+    },
+  ];
   return (
     <>
       <Heading
@@ -92,7 +100,7 @@ const Roles = () => {
       <ManagementGrid
         columns={columns}
         data={data}
-        search={{ status: [] }}
+        search={search}
         buttons={buttons}
         pagination={{
           current: state.filter._page! ?? 1,
@@ -100,6 +108,7 @@ const Roles = () => {
           total: state.totalRecords,
         }}
         setFilter={setFilter}
+        filter={state.filter}
         fetching={fetching}
       />
     </>
