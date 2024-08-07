@@ -24,6 +24,9 @@ import Staffs from "@/pages/Staff/Staffs";
 import CreateStaff from "@/pages/Staff/Create";
 import DetailStaff from "@/pages/Staff/Detail";
 import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
+import BusinessActivities from "@/pages/BusinessActivities";
+import CreateBusinessActivity from "@/pages/BusinessActivities/Create";
+import UpdateBusinessActivity from "@/pages/BusinessActivities/Update";
 
 export interface IRoute {
   path: string;
@@ -115,6 +118,23 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateTag />,
+              },
+            ],
+          },
+          {
+            path: "business_activity",
+            pages: [
+              {
+                path: "/",
+                element: () => <BusinessActivities />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBusinessActivity />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBusinessActivity />,
               },
             ],
           },

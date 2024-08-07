@@ -7,6 +7,7 @@ export const commonStaticReducers = <StateType extends IInitialState>() => {
     resetStatus(state: StateType) {
       state.status = EFetchStatus.IDLE;
       state.message = "";
+      
     },
     setFilter: (state: StateType, { payload }: PayloadAction<ISearchParams>) => {
       state.filter = payload;
