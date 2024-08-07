@@ -3,12 +3,12 @@ import { Modal } from "antd";
 
 interface IFormModalProps {
     title?: string;
-    open: boolean; // Đổi tên từ isopen thành open
-    onOk?: () => void;
+    open: boolean;
+    onSubmit?: () => void;
     onCancel?: () => void;
-    okText?: string;
+    submitText?: string;
     cancelText?: string;
-    isOkDisabled?: boolean;
+    isSubmitDisabled?: boolean;
     isCancelDisabled?: boolean;
     children?: React.ReactNode;
 }
@@ -16,23 +16,23 @@ interface IFormModalProps {
 const FormModal = ({
     title,
     open,
-    onOk,
+    onSubmit,
     onCancel,
-    okText = "OK",
+    submitText = "SUBMIT",
     cancelText = "Cancel",
-    isOkDisabled = false,
+    isSubmitDisabled = false,
     isCancelDisabled = false,
     children,
 }: IFormModalProps) => {
     return (
         <Modal
             title={title}
-            open={open} // Sử dụng visible thay vì isVisible
-            onOk={onOk}
+            open={open}
+            onOk={onSubmit}
             onCancel={onCancel}
-            okText={okText}
+            okText={submitText}
             cancelText={cancelText}
-            okButtonProps={{ disabled: isOkDisabled }}
+            okButtonProps={{ disabled: isSubmitDisabled }}
             cancelButtonProps={{ disabled: isCancelDisabled }}
         >
             {children}
