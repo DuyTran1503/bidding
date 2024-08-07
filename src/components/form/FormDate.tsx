@@ -7,14 +7,16 @@ import clsx from "clsx";
 
 interface FormDateProps {
   label?: string;
-  onChange?: (date: Dayjs | null, dateString: string) => void;
-  defaultValue?: Dayjs | null;
-
+  onChange?: (date: Dayjs, dateString: string) => void;
+  defaultValue?: Dayjs;
+  id?: string;
   value?: Dayjs | null;
+  minDate?: Dayjs;
+  maxDate?: Dayjs;
   disabled?: boolean;
 }
 
-const FormDate: React.FC<FormDateProps> = ({ label, onChange, defaultValue, value, disabled }: FormDateProps) => {
+const FormDate: React.FC<FormDateProps> = ({ label, onChange, defaultValue, value, disabled, minDate, maxDate }: FormDateProps) => {
   const handleChange: DatePickerProps<Dayjs>["onChange"] = (date, dateString) => {
     if (onChange) {
       onChange(date, dateString as string);
@@ -28,6 +30,8 @@ const FormDate: React.FC<FormDateProps> = ({ label, onChange, defaultValue, valu
       <DatePicker
         onChange={handleChange}
         defaultValue={defaultValue}
+        minDate={minDate}
+        maxDate={maxDate}
         value={value}
         disabled={disabled}
         className="custom-datepicker w-full rounded-md bg-gray-25 py-2"

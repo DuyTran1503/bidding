@@ -3,7 +3,7 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import Heading from "@/components/layout/Heading";
-import { IRoleInitialState, resetStatus, setFilter } from "@/services/store/role/role.slice";
+import { fetching, IRoleInitialState, resetStatus, setData, setFilter } from "@/services/store/role/role.slice";
 import { deleteRole, getAllRoles } from "@/services/store/role/role.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
@@ -12,6 +12,7 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 
 const Roles = () => {
   const navigate = useNavigate();
@@ -42,6 +43,10 @@ const Roles = () => {
 
   const columns: ColumnsType = [
     {
+      dataIndex: "index",
+      title: "STT",
+    },
+    {
       dataIndex: "name",
       title: "Name",
     },
@@ -49,7 +54,8 @@ const Roles = () => {
 
   const data: ITableData[] = useMemo(() => {
     if (state.roles && state.roles.length > 0) {
-      return state.roles.map((role) => ({
+      return state.roles.map((role, index) => ({
+        index: index + 1,
         key: role.id,
         name: role.name,
       }));
@@ -69,17 +75,24 @@ const Roles = () => {
   useEffect(() => {
     dispatch(getAllRoles({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-
+  const search: ISearchTypeTable[] = [
+    {
+      id: "name",
+      placeholder: "Nhập tên vai trò...",
+      label: "Tên vai trò",
+      type: "text",
+    },
+  ];
   return (
     <>
       <Heading
-        title="Roles"
+        title="Vai trò"
         hasBreadcrumb
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
             permission: EPermissions.CREATE_ROLE,
-            text: "Create Role",
+            text: "Tạo mới",
             onClick: () => navigate("/roles/create"),
           },
         ]}
@@ -87,7 +100,7 @@ const Roles = () => {
       <ManagementGrid
         columns={columns}
         data={data}
-        search={{ status: [] }}
+        search={search}
         buttons={buttons}
         pagination={{
           current: state.filter._page! ?? 1,
@@ -95,6 +108,8 @@ const Roles = () => {
           total: state.totalRecords,
         }}
         setFilter={setFilter}
+        filter={state.filter}
+        fetching={fetching}
       />
     </>
   );
