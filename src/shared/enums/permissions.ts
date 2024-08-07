@@ -41,9 +41,9 @@ export enum EPermissions {
   UPDATE_STAFF = "update_staff",
   DESTROY_STAFF = "destroy_staff",
   // Lĩnh vực hoạt động
-  LIST_BUSINESS_ACTIVITY_TYPE = "list_business-activity_type",
-  DETAIL_BUSINESS_ACTIVITY_TYPE = "detail_business-activity_type",
-  CREATE_BUSINESS_ACTIVITY_TYPE = "create_business-activity_type",
-  UPDATE_BUSINESS_ACTIVITY_TYPE = "update_business-activity_type",
-  DESTROY_BUSINESS_ACTIVITY_TYPE = "destroy_business-activity_type",
+  LIST_BUSINESS_ACTIVITY_TYPE = "list_business_activity_type",
+  DETAIL_BUSINESS_ACTIVITY_TYPE = "detail_business_activity_type",
+  CREATE_BUSINESS_ACTIVITY_TYPE = "create_business_activity_type",
+  UPDATE_BUSINESS_ACTIVITY_TYPE = "update_business_activity_type",
+  DESTROY_BUSINESS_ACTIVITY_TYPE = "destroy_business_activity_type",
 }
