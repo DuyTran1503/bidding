@@ -18,7 +18,7 @@ const CreateBiddingField = () => {
     module: "biddingfield",
     reset: resetStatus,
     actions: {
-      success: { message: state.message, navigate: "/bidding-fields", },
+      success: { message: state.message, navigate: "/bidding-fields" },
       error: { message: state.message },
     },
   });
@@ -26,7 +26,7 @@ const CreateBiddingField = () => {
   return (
     <>
       <Heading
-        title="Create Bidding Fields"
+        title="Create Lĩnh vực đấu thầu"
         hasBreadcrumb
         buttons={[
           {
@@ -42,12 +42,12 @@ const CreateBiddingField = () => {
             onClick: () => {
               formikRef && formikRef.current && formikRef.current.handleSubmit();
             },
-          }
+          },
         ]}
       />
       <BiddingFieldForm formikRef={formikRef} type="create" />
     </>
   );
-}
+};
 
 export default CreateBiddingField;
