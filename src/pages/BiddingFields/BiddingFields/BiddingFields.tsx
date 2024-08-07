@@ -9,6 +9,7 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { IBiddingFieldInitialState, resetStatus, setFilter } from "@/services/store/biddingField/biddingField.slice";
 import { changeStatusBiddingField, deleteBiddingField, getAllBiddingFields } from "@/services/store/biddingField/biddingField.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
@@ -58,7 +59,7 @@ const BiddingFields = () => {
       permission: EPermissions.UPDATE_BIDDING_FIELD,
     },
     {
-      type: EButtonTypes.DELETE,
+      type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteBiddingField(record?.key));
       },
@@ -84,14 +85,14 @@ const BiddingFields = () => {
       title: "Description",
     },
     {
-      title: "Trạng thái tài khoản",
+      title: "Trạng thái",
       dataIndex: "is_active",
       render(_, record) {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
             checked={!!record.is_active}
-            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
+            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} lĩnh vực này?`}
           />
         );
       },
@@ -102,10 +103,8 @@ const BiddingFields = () => {
     setConfirmItem(item);
   };
   const onConfirmStatus = () => {
-
     if (confirmItem && confirmItem.key) {
-        dispatch(changeStatusBiddingField(String(confirmItem.key)));
-      //   dispatch(getAllBiddingFields({ query: state.filter }));
+      dispatch(changeStatusBiddingField(String(confirmItem.key)));
     }
   };
   const handleSubmit = () => {
@@ -139,7 +138,11 @@ const BiddingFields = () => {
       error: { message: state.message },
     },
   });
-
+  useEffect(() => {
+    if (state.status === EFetchStatus.FULFILLED) {
+      dispatch(getAllBiddingFields({ query: state.filter }));
+    }
+  }, [JSON.stringify(state.status)]);
   useEffect(() => {
     dispatch(getAllBiddingFields({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
