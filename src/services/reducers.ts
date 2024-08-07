@@ -7,6 +7,7 @@ import { roleSlice } from "./store/role/role.slice";
 import { permissionSlice } from "./store/permission/permission.slice";
 import { tagSlice } from "./store/tag/tag.slice";
 import { biddingFieldSlice } from "./store/biddingField/biddingField.slice";
+import { businessActivitySlice } from "./store/business-activity/business-activity.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -16,6 +17,7 @@ export const reducers = combineReducers({
   permission: permissionSlice.reducer,
   biddingfield: biddingFieldSlice.reducer,
   tag: tagSlice.reducer,
+  business: businessActivitySlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
