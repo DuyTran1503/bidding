@@ -13,7 +13,6 @@ import { EPageTypes } from "@/shared/enums/page";
 
 const UpdateRole = () => {
   const { id } = useParams();
-
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IRoleInitialState>("role");
 
@@ -41,7 +40,6 @@ const UpdateRole = () => {
       memoizedDispatch(setData());
     };
   }, [JSON.stringify(id), memoizedDispatch]);
-  const dataUpdate = { id: state.activeRole?.role?.id, name: state.activeRole?.role?.name, permissions: state.activeRole?.permissions };
 
   return (
     <>
