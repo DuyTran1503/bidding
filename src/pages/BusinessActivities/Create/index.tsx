@@ -8,7 +8,7 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ITagInitialState, resetStatus } from "@/services/store/tag/tag.slice";
 import { useArchive } from "@/hooks/useArchive";
-import  BusinessActivityForm, { IIBusinessActivityInitialValues } from "../ActionModule";
+import BusinessActivityForm, { IIBusinessActivityInitialValues } from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
 const CreateBusinessActivity = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const CreateBusinessActivity = () => {
     actions: {
       success: {
         message: state.message,
-        navigate: "/business_activity",
+        navigate: "/business-activity",
       },
       error: {
         message: state.message,
@@ -41,7 +41,7 @@ const CreateBusinessActivity = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/business_activity");
+              navigate("/business-activity");
             },
           },
           {

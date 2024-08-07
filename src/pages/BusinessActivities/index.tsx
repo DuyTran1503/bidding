@@ -60,14 +60,14 @@ const BusinessActivities = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/business_activity/detail/${record?.key}`);
+        navigate(`/business-activity/detail/${record?.key}`);
       },
       permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/business_activity/update/${record?.key}`);
+        navigate(`/business-activity/update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },
@@ -148,7 +148,7 @@ const BusinessActivities = () => {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
-              navigate("/business_activity/create");
+              navigate("/business-activity/create");
             },
           },
         ]}
