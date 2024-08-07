@@ -28,12 +28,12 @@ export enum EPermissions {
   DESTROY_TAG = "destroy_tag",
 
   // ? BiddingField
-  LIST_BIDDINGFIELD = "list_biddingField",
-  DETAIL_BIDDINGFIELD = "detail_biddingField",
-  CREATE_BIDDINGFIELD = "create_biddingField",
-  UPDATE_BIDDINGFIELD = "update_biddingField",
-  DESTROY_BIDDINGFIELD = "destroy_biddingField",
-  
+  LIST_BIDDING_FIELD = "list_bidding_field",
+  DETAIL_BIDDING_FIELD = "detail_bidding_field",
+  CREATE_BIDDING_FIELD = "create_bidding_field",
+  UPDATE_BIDDING_FIELD = "update_bidding_field",
+  DESTROY_BIDDING_FIELD = "destroy_bidding_field",
+
   // staff
   LIST_STAFF = "list_staff",
   DETAIL_STAFF = "detail_staff",
