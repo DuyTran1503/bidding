@@ -34,7 +34,7 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
     is_active: businessActivity?.is_active ?? "",
   };
   const tagSchema = object().shape({
-    name: string().required("Vui lòng không để trống trường này"),
+    name: string().trim().required("Vui lòng không để trống trường này"),
   });
   return (
     <Formik
