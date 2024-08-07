@@ -33,8 +33,6 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
     description: businessActivity?.description ?? "",
     is_active: businessActivity?.is_active ?? "",
   };
-  console.log(initialValues);
-
   const tagSchema = object().shape({
     name: string().required("Vui lòng không để trống trường này"),
   });
