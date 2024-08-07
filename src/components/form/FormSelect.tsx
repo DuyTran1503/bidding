@@ -4,11 +4,12 @@ interface IFormSelect {
   label?: string;
   placeholder?: string;
   options: { value: string; label: string }[];
-  defaultValue?: string | string[];
+  defaultValue?: number[];
   isMultiple?: boolean;
   error?: string;
   isDisabled?: boolean;
   onChange?: (value: string | string[]) => void;
+  id?:string;
 }
 
 const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isMultiple, onChange }: IFormSelect) => {
@@ -38,7 +39,7 @@ const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isM
           className={clsx("text-m-medium w-full", isDisabled && "opacity-65")}
           mode={isMultiple ? "multiple" : undefined}
           defaultValue={defaultValue}
-          onChange={(value) => !isDisabled && handleChange(value)}
+          onChange={(value) => !isDisabled && handleChange(value as any)}
           showSearch
           placeholder={placeholder}
           optionFilterProp="label"
