@@ -27,7 +27,8 @@ const initialState: IBusinessActivityInitialState = {
     page: 1,
     size: 10,
   },
-  totalRecords: 50,
+  totalRecords: 0,
+  number_of_elements: 0,
 };
 
 const businessActivitySlice = createSlice({
@@ -45,6 +46,7 @@ const businessActivitySlice = createSlice({
       if (payload.data) {
         state.businessActivities = payload.data.data;
         state.totalRecords = payload?.data?.total_elements;
+        state.number_of_elements = payload?.data?.number_of_elements;
       }
     });
     builder.addCase(getBusinessActivityById.fulfilled, (state, { payload }: PayloadAction<IBusinessActivity> | any) => {

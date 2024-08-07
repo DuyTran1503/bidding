@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/es/table";
-import PrimaryTable, { ISearchTable, ITableData } from "../table/PrimaryTable";
+import PrimaryTable, { ITableData } from "../table/PrimaryTable";
 import { IGridButton, ISearchParams } from "@/shared/utils/shared-interfaces";
 import { useMemo } from "react";
 import { EButtonTypes } from "@/shared/enums/button";
@@ -18,6 +18,8 @@ export interface IGridProps<T extends ISearchParams> {
     pageSize: number;
     current: number;
     total: number;
+    showSideChanger?: boolean;
+    number_of_elements?: number;
   };
   setFilter: ActionCreatorWithPayload<ISearchParams>;
   fetching?: Function;
@@ -32,24 +34,24 @@ const ManagementGrid = <T extends ISearchParams>({
   pagination,
   setFilter,
   fetching,
-  filter
+  filter,
 }: IGridProps<T>) => {
   const renderColumns = useMemo(() => {
     return buttons?.some((button) => button.type === EButtonTypes.VIEW || button.type === EButtonTypes.UPDATE || button.type === EButtonTypes.DESTROY)
       ? ([
-          ...columns,
-          {
-            title: "Actions",
-            width: "150px",
-            dataIndex: "actions",
-            key: "actions",
-            fixed: "right",
-            align: "center",
-            render(_, record) {
-              return <GridButtons buttons={buttons} record={record} />;
-            },
+        ...columns,
+        {
+          title: "Actions",
+          width: "150px",
+          dataIndex: "actions",
+          key: "actions",
+          fixed: "right",
+          align: "center",
+          render(_, record) {
+            return <GridButtons buttons={buttons} record={record} />;
           },
-        ] as TableColumnsType)
+        },
+      ] as TableColumnsType)
       : columns;
   }, [JSON.stringify(buttons)]);
   return (
