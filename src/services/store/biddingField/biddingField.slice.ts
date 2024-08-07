@@ -100,7 +100,7 @@ const biddingFieldSlice = createSlice({
       .addCase(deleteBiddingField.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Deleted successfully";
-        state.biddingFields = state.biddingFields.filter((field) => field.id !== payload);
+        state.biddingFields = state.biddingFields?.filter((field) => field.id !== payload);
       })
       .addCase(deleteBiddingField.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
