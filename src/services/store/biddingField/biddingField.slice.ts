@@ -3,7 +3,14 @@ import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { IBiddingField } from "./biddingField.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
-import { getAllBiddingFields, createBiddingField, updateBiddingField, deleteBiddingField, getBiddingFieldById, changeStatusBiddingField } from "./biddingField.thunk";
+import { 
+  changeStatusBiddingField, 
+  createBiddingField, 
+  deleteBiddingField, 
+  getAllBiddingFields, 
+  getBiddingFieldById, 
+  updateBiddingField 
+} from './biddingField.thunk';
 
 export interface IBiddingFieldInitialState extends IInitialState {
   biddingFields: IBiddingField[];

@@ -2,7 +2,6 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useArchive } from "@/hooks/useArchive";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
 import UpdateGrid from "@/components/grid/UpdateGrid";
 import { Formik } from "formik";
@@ -73,11 +72,6 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
         setLoading(false);
       });
   }, [dispatch, state.filter]);
-
-  const isActiveOptions = [
-    { value: "0", label: "Không" },
-    { value: "1", label: "Có" },
-  ];
 
   return (
     <Formik
