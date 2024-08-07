@@ -20,8 +20,8 @@ const initialState: IBiddingFieldInitialState = {
   pageSize: 10,    // Số lượng mục trên mỗi trang
   currentPage: 1,  // Trang hiện tại
   filter: {
-    _size: 10,
-    _page: 1,
+    size: 10,
+    page: 1,
   },
 };
 
@@ -93,7 +93,7 @@ const biddingFieldSlice = createSlice({
       .addCase(deleteBiddingField.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Deleted successfully";
-        state.biddingFields = state.biddingFields.filter((field) => field.id !== payload);
+        state.biddingFields = state.biddingFields?.filter((field) => field.id !== payload);
       })
       .addCase(deleteBiddingField.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
