@@ -1,13 +1,14 @@
 import clsx from "clsx";
 import { useState, useRef } from "react";
 import { IconType } from "react-icons";
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 interface FormInputProps {
+  id?: string;
   label?: string;
   icon?: IconType;
   placeholder?: string;
   name?: string;
-  type?: "text" | "number" | "password";
+  type?: "text" | "number" | "password" | "file";
   value?: string | number;
   defaultValue?: string | number;
   isDisabled?: boolean;
@@ -31,10 +32,11 @@ const FormInput = ({
   onBlur,
   error,
   onChange,
-  autoFocus
+  autoFocus,
 }: FormInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -43,7 +45,9 @@ const FormInput = ({
       onChange(newValue);
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleFocus = () => setIsFocused(true);
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -56,10 +60,9 @@ const FormInput = ({
       inputRef.current.focus();
     }
   };
-
   return (
     <div>
-      {label && <label className="text-m-medium mb-1 text-black-300">{label}</label>}
+      {label && <label className="text-m-medium mb-1 block text-black-300">{label}</label>}
       <div
         className={clsx("flex shrink-0 items-center gap-1 overflow-hidden rounded-[8px] border border-gray-100 bg-gray-25", isFocused && "bg-white")}
       >
@@ -72,7 +75,7 @@ const FormInput = ({
           />
         )}
         <input
-          type={type}
+          type={type === "password" && showPassword ? "text" : type}
           placeholder={placeholder}
           value={value}
           autoFocus={autoFocus}
@@ -84,15 +87,29 @@ const FormInput = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           ref={inputRef}
-          className={clsx("text-m-regular placeholder:text-m-medium flex-1 grow bg-gray-25 py-[8.5px] text-black-500 outline-none focus:bg-white", {
+          className={clsx("text-m-regular placeholder:text-m-medium flex-1 grow bg-gray-25 py-[10px] text-black-500 outline-none focus:bg-white", {
             "px-3": !Icon,
             "pl-0": Icon,
-            "border-red-500": error,
-            "select-none !bg-gray-50 !text-black-300": isDisabled,
+            "border-red-500": !!error,
+            "select-none !bg-gray-50 !text-black-300": error,
           })}
         />
+
+        {type === "password" && (
+          <div onClick={togglePasswordVisibility} className="cursor-pointer pr-3">
+            {showPassword ? <FaEyeSlash className="text-gray-400" /> : <FaEye className="text-gray-400" />}
+          </div>
+        )}
       </div>
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      {!!error && (
+        <div
+          className={clsx(
+            "text-m-regular placeholder:text-m-medium flex-1 grow border-red-500 bg-gray-25 py-[10px] text-red-500 outline-none focus:bg-white",
+          )}
+        >
+          {error}
+        </div>
+      )}
     </div>
   );
 };
