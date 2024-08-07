@@ -15,6 +15,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.3",
     "antd": "^5.17.3",
+    "axios": "^1.7.3",
     "clsx": "^2.1.1",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
