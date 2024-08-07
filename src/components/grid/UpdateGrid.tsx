@@ -6,6 +6,7 @@ export interface IUpdateGridProps {
   groups: {
     colLeft?: ReactNode;
     colRight?: ReactNode;
+    colFull?: ReactNode; // Add a full-width column
   };
   isLoading?: boolean;
 }
@@ -22,21 +23,37 @@ const UpdateGrid = ({ colNumber = "1", rate = "1", groups, isLoading }: IUpdateG
   if (isLoading) {
     return (
       <div className="flex h-full gap-6">
-        <div className="flex animate-pulse flex-col gap-6 rounded-lg bg-gray-50" style={{ width: colLeftWidth }}></div>
-        {colNumber === "2" && <div className="flex animate-pulse flex-col gap-6 rounded-lg bg-gray-50" style={{ width: colRightWidth }}></div>}
+        {groups.colFull ? (
+          <div className="flex animate-pulse flex-col gap-6 rounded-lg bg-gray-50" style={{ width: "100%" }}></div>
+        ) : (
+          <>
+            <div className="flex animate-pulse flex-col gap-6 rounded-lg bg-gray-50" style={{ width: colLeftWidth }}></div>
+            {colNumber === "2" && (
+              <div className="flex animate-pulse flex-col gap-6 rounded-lg bg-gray-50" style={{ width: colRightWidth }}></div>
+            )}
+          </>
+        )}
       </div>
     );
   }
 
   return (
     <div className="flex gap-6">
-      <div className="flex flex-col gap-6" style={{ width: colLeftWidth }}>
-        {groups?.colLeft}
-      </div>
-      {colNumber === "2" && (
-        <div className="flex flex-col gap-6" style={{ width: colRightWidth }}>
-          {groups?.colRight}
+      {groups.colFull ? (
+        <div className="flex flex-col gap-6" style={{ width: "100%" }}>
+          {groups.colFull}
         </div>
+      ) : (
+        <>
+          <div className="flex flex-col gap-6" style={{ width: colLeftWidth }}>
+            {groups.colLeft}
+          </div>
+          {colNumber === "2" && (
+            <div className="flex flex-col gap-6" style={{ width: colRightWidth }}>
+              {groups.colRight}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -1,7 +1,7 @@
+import React from "react";
 import { Modal, Tooltip } from "antd";
 import { HiOutlinePencil } from "react-icons/hi2";
 import { IoEyeOutline, IoTrashBinOutline } from "react-icons/io5";
-
 import { EButtonTypes } from "@/shared/enums/button";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { useArchive } from "@/hooks/useArchive";
@@ -15,8 +15,9 @@ interface IGridButtonsProps {
 
 const { confirm } = Modal;
 
-const GridButtons = ({ buttons, record }: IGridButtonsProps) => {
+const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record }) => {
   const { state } = useArchive<IAuthInitialState>("auth");
+
   return (
     <div className="flex items-center justify-center gap-3">
       {buttons.map((button, index) => {
@@ -58,6 +59,8 @@ const GridButtons = ({ buttons, record }: IGridButtonsProps) => {
                 </Tooltip>
               )
             );
+          default:
+            return null;
         }
       })}
     </div>
