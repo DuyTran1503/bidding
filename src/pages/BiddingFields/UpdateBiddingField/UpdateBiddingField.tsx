@@ -36,7 +36,7 @@ const UpdateBiddingField = () => {
   return (
     <>
       <Heading
-        title="Update Bidding Field"
+        title="Cập nhật lĩnh vực đấu thầu"
         hasBreadcrumb
         buttons={[
           {

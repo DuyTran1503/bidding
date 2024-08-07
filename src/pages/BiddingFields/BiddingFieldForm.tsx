@@ -11,8 +11,10 @@ import { createBiddingField, getBiddingFieldAllIds, updateBiddingField } from "@
 import lodash from "lodash";
 import { IBiddingFieldInitialState } from "@/services/store/biddingField/biddingField.slice";
 import { IBiddingField } from "@/services/store/biddingField/biddingField.model";
-import { Col } from "antd";
+import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
+import { Form } from "react-router-dom";
+import FormInputArea from "@/components/form/FormInputArea";
 
 interface IActiveBiddingField extends Omit<IBiddingField, "parent"> {
   parent: string[];
@@ -92,13 +94,10 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => (
-        <UpdateGrid
-          colNumber="2"
-          rate="1-3"
-          isLoading={loading}
-          groups={{
-            colFull: (
-              <FormGroup title="Thông tin chung">
+        <div>
+          <FormGroup title="Thông tin chung">
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormInput
                   type="text"
                   isDisabled={type === "view"}
@@ -110,36 +109,8 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                   onChange={(value) => setFieldValue("name", value)}
                   onBlur={handleBlur}
                 />
-                <FormInput
-                  type="text"
-                  isDisabled={type === "view"}
-                  label="Mô tả của lĩnh vực đấu thầu"
-                  value={values.description}
-                  name="description"
-                  error={touched.description ? errors.description : ""}
-                  placeholder="Nhập mô tả của lĩnh vực đấu thầu..."
-                  onChange={(value) => setFieldValue("description", value)}
-                  onBlur={handleBlur}
-                />
-                <FormInput
-                  type="number"
-                  isDisabled={type === "view"}
-                  label="Mã duy nhất cho lĩnh vực đấu thầu"
-                  value={values.code}
-                  name="code"
-                  onChange={(value) => setFieldValue("code", value)}
-                  onBlur={handleBlur}
-                />
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormGroup title="Trạng thái hoạt động">
-                    <FormSwitch
-                      checked={!!values.is_active ? true : false}
-                      onChange={(value) => {
-                        setFieldValue("is_active", value);
-                      }}
-                    />
-                  </FormGroup>
-                </Col>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormTreeSelect
                   label="Lĩnh vực cha"
                   isDisabled={type === "view"}
@@ -150,10 +121,46 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                     setFieldValue("parent_id", value as string);
                   }}
                 />
-              </FormGroup>
-            ),
-          }}
-        />
+              </Col>
+            </Row>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormInput
+                  type="number"
+                  isDisabled={type === "view"}
+                  label="Mã duy nhất cho lĩnh vực đấu thầu"
+                  value={values.code}
+                  name="code"
+                  onChange={(value) => setFieldValue("code", value)}
+                  onBlur={handleBlur}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormSwitch
+                  label="Trạng thái "
+                  checked={!!values.is_active ? true : false}
+                  onChange={(value) => {
+                    setFieldValue("is_active", value);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormGroup title="Mô tả">
+                  <FormInputArea
+                    label="Mô tả"
+                    placeholder="Nhập mô tả..."
+                    name="description"
+                    value={values.description}
+                    error={touched.description ? errors.description : ""}
+                    onChange={(e) => setFieldValue("description", e)}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+          </FormGroup>
+        </div>
       )}
     </Formik>
   );
