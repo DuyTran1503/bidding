@@ -1,30 +1,28 @@
 import { useArchive } from "@/hooks/useArchive";
 import Heading from "@/components/layout/Heading";
-import { fetching, IRoleInitialState, resetStatus, setData } from "@/services/store/role/role.slice";
-import { getRoleById } from "@/services/store/role/role.thunk";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import RoleForm, { IActiveRole, IRoleFormInitialValues } from "../RoleForm";
 import { IoClose, IoSaveOutline } from "react-icons/io5";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { FormikProps } from "formik";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import ActionModule, { IStaffFormInitialValues } from "../ActionModule";
+import { IAccountInitialState, resetStatus } from "@/services/store/account/account.slice";
+import { getStaffById } from "@/services/store/account/account.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 
-const UpdateRole = () => {
+const UpdateStaff = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IRoleInitialState>("role");
-
-  const formikRef = useRef<FormikProps<IRoleFormInitialValues>>(null);
-
+  const { state, dispatch } = useArchive<IAccountInitialState>("account");
+  const formikRef = useRef<FormikProps<IStaffFormInitialValues>>(null);
   useFetchStatus({
-    module: "role",
+    module: "account",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/roles",
+        navigate: "/staffs",
       },
       error: {
         message: state.message,
@@ -32,19 +30,13 @@ const UpdateRole = () => {
     },
   });
 
-  const memoizedDispatch = useCallback(dispatch, []);
-
   useEffect(() => {
-    if (id) memoizedDispatch(getRoleById(id));
-    return () => {
-      memoizedDispatch(setData());
-    };
-  }, [JSON.stringify(id), memoizedDispatch]);
-
+    if (id) dispatch(getStaffById(id));
+  }, [id]);
   return (
     <>
       <Heading
-        title="Cập nhật vai trò"
+        title="Cập nhật tài khoản"
         hasBreadcrumb
         buttons={[
           {
@@ -52,7 +44,7 @@ const UpdateRole = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/roles");
+              navigate("/staffs");
             },
           },
           {
@@ -65,9 +57,18 @@ const UpdateRole = () => {
           },
         ]}
       />
-      {state.activeRole && <RoleForm type={EPageTypes.UPDATE} formikRef={formikRef} role={state.activeRole as unknown as IActiveRole} />}
+      {state.staff && (
+        <ActionModule
+          type={EPageTypes.UPDATE}
+          formikRef={formikRef}
+          account={{
+            ...state.staff,
+            id_role: state.staff.list_role.map((item: any) => item.id),
+          }}
+        />
+      )}
     </>
   );
 };
 
-export default UpdateRole;
+export default UpdateStaff;

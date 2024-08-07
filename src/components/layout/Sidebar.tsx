@@ -15,6 +15,7 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { checkPermission } from "@/helpers/checkPermission";
+import { MdOutlineFactory } from "react-icons/md";
 
 export interface IMenuItem {
   id: string;
@@ -54,32 +55,45 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "2.3",
           label: "Orders",
           path: "orders",
-          permissions: EPermissions.READ_ORDER,
+          permissions: EPermissions.LIST_ORDER,
         },
       ],
     },
     {
       id: "3",
+      label: "Doanh nghiệp",
+      icon: { component: MdOutlineFactory },
+      items: [
+        {
+          id: "3.1",
+          label: "Lĩnh vực hoạt động",
+          path: "business_activity",
+          // permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
+        },
+      ],
+    },
+    {
+      id: "4",
       label: "System",
       icon: { component: IoSettingsOutline },
       items: [
         {
-          id: "3.1",
-          label: "Roles",
+          id: "4.1",
+          label: "Vai trò",
           path: "roles",
-          permissions: EPermissions.READ_ROLE,
+          permissions: EPermissions.LIST_ROLE,
         },
         {
-          id: "3.2",
-          label: "Permissions",
-          path: "permissions",
-          permissions: EPermissions.LIST_PERMISSION,
+          id: "4.2",
+          label: "Nhân viên",
+          path: "staffs",
+          permissions: EPermissions.LIST_STAFF,
         },
         {
-          id: "3.3",
+          id: "4.3",
           label: "Tags",
           path: "tags",
-          permissions: EPermissions.READ_TAG,
+          permissions: EPermissions.LIST_TAG,
         },
         {
           id: "3.4",

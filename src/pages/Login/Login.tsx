@@ -42,8 +42,8 @@ const Login = () => {
   const loginFormInitialValues: ILoginFormData = { email: "", password: "" };
 
   const validateSchema = object().shape({
-    email: string().email("Invalid email!").required("Please enter your email!"),
-    password: string().required("Please enter your password"),
+    email: string().email("Vui lòng nhập đúng định dạng email!").required("Vui lòng nhập email!"),
+    password: string().required("Vui lòng nhập mật khẩu"),
   });
 
   return (
@@ -55,9 +55,9 @@ const Login = () => {
         </a>
         <div className="w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0">
           <div className="flex flex-col gap-5 p-8">
-            <h1 className="text-gray-900 display-m-bold md:text-xl-semibold">Login to your account</h1>
+            <h1 className="text-gray-900 display-m-bold md:text-xl-semibold text-center">Chào mừng bạn đến với Septenary Solution</h1>
             <Formik
-              validationSchema={validateSchema}
+              // validationSchema={validateSchema}
               initialValues={loginFormInitialValues}
               validateOnBlur
               onSubmit={(data) => {
@@ -78,7 +78,7 @@ const Login = () => {
                         setFieldValue("email", value);
                       }}
                       onBlur={handleBlur}
-                      placeholder="Enter your email..."
+                      placeholder="Nhập email của bạn..."
                     />
                     <FormInput
                       type="password"
@@ -90,7 +90,7 @@ const Login = () => {
                       onChange={(value) => {
                         setFieldValue("password", value);
                       }}
-                      placeholder="Enter your password..."
+                      placeholder="Nhập mật khẩu..."
                     />
                     <Button text="Login" isLoading={state.status === EFetchStatus.PENDING} className="mt-3" />
                     <Link
