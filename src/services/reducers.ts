@@ -17,7 +17,7 @@ export const reducers = combineReducers({
   permission: permissionSlice.reducer,
   biddingfield: biddingFieldSlice.reducer,
   tag: tagSlice.reducer,
-  business:businessActivitySlice.reducer
+  business: businessActivitySlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
