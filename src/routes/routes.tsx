@@ -3,7 +3,6 @@ import DefaultLayout from "@/layouts/Default";
 import Dashboard from "@/pages/Dashboard/Dashboard";
 import Components from "@/pages/Components/Components";
 import NoPathMiddleware from "@/middlewares/NoPathMiddleware";
-import Products from "@/pages/Product/Products/Products";
 import Login from "@/pages/Login/Login";
 import GuestMiddleware from "@/middlewares/GuestMiddleware";
 import AuthMiddleware from "@/middlewares/AuthMiddleware";
@@ -25,6 +24,13 @@ import CreateBiddingField from "@/pages/BiddingFields/CreateBiddingField/CreateB
 import UpdateBiddingField from "@/pages/BiddingFields/UpdateBiddingField/UpdateBiddingField";
 import DetailBiddingField from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
 import BiddingFields from "@/pages/BiddingFields/BiddingFields/BiddingFields";
+import Staffs from "@/pages/Staff/Staffs";
+import CreateStaff from "@/pages/Staff/Create";
+import DetailStaff from "@/pages/Staff/Detail";
+import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
+import BusinessActivities from "@/pages/BusinessActivities";
+import CreateBusinessActivity from "@/pages/BusinessActivities/Create";
+import UpdateBusinessActivity from "@/pages/BusinessActivities/Update";
 
 export interface IRoute {
   path: string;
@@ -53,8 +59,25 @@ export const routes: IRoute[] = [
             element: () => <Dashboard />,
           },
           {
-            path: "products",
-            element: () => <Products />,
+            path: "staffs",
+            pages: [
+              {
+                path: "/",
+                element: () => <Staffs />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateStaff />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateStaff />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailStaff />,
+              },
+            ],
           },
           {
             path: "orders",
@@ -120,6 +143,23 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateTag />,
+              },
+            ],
+          },
+          {
+            path: "business_activity",
+            pages: [
+              {
+                path: "/",
+                element: () => <BusinessActivities />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBusinessActivity />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBusinessActivity />,
               },
             ],
           },
