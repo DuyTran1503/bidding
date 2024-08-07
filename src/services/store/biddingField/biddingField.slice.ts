@@ -20,8 +20,8 @@ const initialState: IBiddingFieldInitialState = {
   pageSize: 10,    // Số lượng mục trên mỗi trang
   currentPage: 1,  // Trang hiện tại
   filter: {
-    _size: 10,
-    _page: 1,
+    size: 10,
+    page: 1,
   },
 };
 
