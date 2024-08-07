@@ -147,7 +147,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "business_activity",
+            path: "business-activity",
             pages: [
               {
                 path: "/",
