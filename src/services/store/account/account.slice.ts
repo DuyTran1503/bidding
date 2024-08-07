@@ -81,7 +81,7 @@ const accountSlice = createSlice({
       })
       .addCase(deleteStaff.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Deleted successfully";
+        state.message = "Xóa thành công";
         state.staffs = state.staffs.filter((item) => String(item.id_user) !== payload);
       })
       .addCase(deleteStaff.rejected, (state) => {
