@@ -18,7 +18,7 @@ const ConfirmModal: React.FC<IConfirmModalProps> = ({ title, content, onAbort, o
   return (
     <Modal
       title={title}
-      visible={visible}
+      open={visible}
       onCancel={onClose}
       footer={[
         <Button
