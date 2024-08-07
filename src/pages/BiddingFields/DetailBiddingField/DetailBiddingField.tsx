@@ -1,7 +1,9 @@
 
 const DetailBiddingField = () => {
+  
   return (
     <div>DetailBiddingField</div>
+   
   )
 }
 
