@@ -22,9 +22,9 @@ export interface IThunkPayload {
 }
 
 export interface ISearchParams {
-  _page?: number;
-  _size?: number;
-  _element?: number;
+  page?: number;
+  size?: number;
+  element?: number;
   [key: string]: unknown;
 }
 
@@ -52,6 +52,7 @@ export interface IInitialState {
   message: string;
   filter: ISearchParams;
   totalRecords: number;
+  number_of_elements?:number;
   [key: string]: unknown;
 }
 
