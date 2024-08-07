@@ -2,28 +2,28 @@ import Heading from "@/components/layout/Heading";
 import { FaPlus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import RoleForm, { IRoleFormInitialValues } from "../RoleForm";
+import ActionModule, { IStaffFormInitialValues } from "../ActionModule";
 import { FormikProps } from "formik";
 import { useRef } from "react";
 import { useArchive } from "@/hooks/useArchive";
-import { IRoleInitialState, resetStatus } from "@/services/store/role/role.slice";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { IAccountInitialState, resetStatus } from "@/services/store/account/account.slice";
 import { EPageTypes } from "@/shared/enums/page";
+import { EPermissions } from "@/shared/enums/permissions";
 
-const CreateRole = () => {
+const CreateStaff = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IRoleFormInitialValues>>(null);
-
-  const { state } = useArchive<IRoleInitialState>("role");
+  const formikRef = useRef<FormikProps<IStaffFormInitialValues>>(null);
+  const { state } = useArchive<IAccountInitialState>("account");
 
   useFetchStatus({
-    module: "role",
+    module: "account",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/roles",
+        navigate: "/staffs",
       },
       error: {
         message: state.message,
@@ -34,30 +34,31 @@ const CreateRole = () => {
   return (
     <>
       <Heading
-        title="Create Role"
+        title="Tạo mới tài khoản"
         hasBreadcrumb
         buttons={[
           {
             type: "secondary",
-            text: "Hủy",
+            text: "Cancel",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/roles");
+              navigate("/staffs");
             },
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
-            text: "Create Role",
+            text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_STAFF,
             onClick: () => {
               formikRef && formikRef.current && formikRef.current.handleSubmit();
             },
           },
         ]}
       />
-      <RoleForm formikRef={formikRef} type={EPageTypes.CREATE} />
+      <ActionModule formikRef={formikRef} type={EPageTypes.CREATE} />
     </>
   );
 };
 
-export default CreateRole;
+export default CreateStaff;

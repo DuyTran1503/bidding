@@ -18,12 +18,13 @@ export interface IThunkPayload {
   query?: ISearchParams;
   param?: string;
   headers?: IFetchHeaders;
+  id?: string;
 }
 
 export interface ISearchParams {
-  _page?: number;
-  _size?: number;
-  _element?: number;
+  page?: number;
+  size?: number;
+  element?: number;
   [key: string]: unknown;
 }
 
@@ -46,10 +47,12 @@ export interface ClientReturnType<ReturnDataType> {
 }
 
 export interface IInitialState {
+  loading?: boolean;
   status: EFetchStatus;
   message: string;
   filter: ISearchParams;
   totalRecords: number;
+  number_of_elements?:number;
   [key: string]: unknown;
 }
 
