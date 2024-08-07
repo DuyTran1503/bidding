@@ -99,7 +99,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
     });
   }
 
-  function getIdsForKeys(keys: string[], mappingKeyWithId: { key: string; id: number }[]): number[] {
+  const getIdsForKeys = (keys: string[], mappingKeyWithId: { key: string; id: number }[]): number[] => {
     const idsForKeys: number[] = [];
 
     for (const key of keys) {
@@ -110,9 +110,9 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
     }
 
     return idsForKeys;
-  }
+  };
 
-  function getAllKeysAndIds(permissionNodes: TreeNode[]): { key: string; id: number }[] {
+  const getAllKeysAndIds = (permissionNodes: TreeNode[]): { key: string; id: number }[] => {
     let result: { key: string; id: number }[] = [];
     const seenIds = new Set<number>();
 
@@ -134,9 +134,9 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
     }
 
     return result;
-  }
+  };
   const mappingKeyWithId = getAllKeysAndIds(convertPermissionsToTree(state.permissions));
-  const updateDataChecked = mappingKeyWithId.filter((item: any) => role?.permissions.includes(item.id)).map((item) => item.key);
+  const updateDataChecked = mappingKeyWithId.filter((item: any) => role?.permissions.map((ele) => +ele).includes(item.id)).map((item) => item.key);
 
   return (
     <Formik
