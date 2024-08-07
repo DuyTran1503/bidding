@@ -16,6 +16,7 @@ export interface IGridProps {
     pageSize: number;
     current: number;
     total: number;
+    showSizeChanger?: boolean;
   };
   setFilter: ActionCreatorWithPayload<ISearchParams>;
 }
@@ -24,22 +25,31 @@ const ManagementGrid = ({ columns, data, search, buttons, pagination, setFilter 
   const renderColumns = useMemo(() => {
     return buttons?.some((button) => button.type === EButtonTypes.VIEW || button.type === EButtonTypes.UPDATE || button.type === EButtonTypes.DESTROY)
       ? ([
-          ...columns,
-          {
-            title: "Actions",
-            width: "150px",
-            dataIndex: "actions",
-            key: "actions",
-            fixed: "right",
-            align: "center",
-            render(_, record) {
-              return <GridButtons buttons={buttons} record={record} />;
-            },
+        ...columns,
+        {
+          title: "Actions",
+          width: "150px",
+          dataIndex: "actions",
+          key: "actions",
+          fixed: "right",
+          align: "center",
+          render(_, record) {
+            return <GridButtons buttons={buttons} record={record} />;
           },
-        ] as TableColumnsType)
+        },
+      ] as TableColumnsType)
       : columns;
   }, [JSON.stringify(buttons)]);
-  return <PrimaryTable search={search} columns={renderColumns} data={data} pagination={pagination} setFilter={setFilter} />;
+
+  return (
+    <PrimaryTable
+      search={search}
+      columns={renderColumns}
+      data={data}
+      pagination={pagination}
+      setFilter={setFilter}
+    />
+  );
 };
 
 export default ManagementGrid;

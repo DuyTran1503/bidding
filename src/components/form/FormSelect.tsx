@@ -6,6 +6,7 @@ interface IFormSelect {
   options: { value: string; label: string }[];
   defaultValue?: string | string[];
   isMultiple?: boolean;
+  error?: string;
   isDisabled?: boolean;
   onChange?: (value: string | string[]) => void;
 }

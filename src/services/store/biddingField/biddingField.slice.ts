@@ -3,7 +3,7 @@ import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { IBiddingField } from "./biddingField.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
-import { getAllBiddingFields, createBiddingField, updateBiddingField, deleteBiddingField } from "./biddingField.thunk";
+import { getAllBiddingFields, createBiddingField, updateBiddingField, deleteBiddingField, getBiddingFieldById } from "./biddingField.thunk";
 
 export interface IBiddingFieldInitialState extends IInitialState {
   biddingFields: IBiddingField[];
@@ -15,10 +15,13 @@ const initialState: IBiddingFieldInitialState = {
   message: "",
   biddingFields: [],
   activeBiddingField: undefined,
-  totalRecords: 0,
+  totalRecords: 0, // Tổng số lượng mục
+  totalPages: 0,   // Tổng số trang
+  pageSize: 10,    // Số lượng mục trên mỗi trang
+  currentPage: 1,  // Trang hiện tại
   filter: {
-    size: 10,
-    page: 1,
+    _size: 10,
+    _page: 1,
   },
 };
 
@@ -30,12 +33,23 @@ const biddingFieldSlice = createSlice({
   },
   extraReducers: (builder) => {
     // ? Get all bidding fields
-    builder.addCase(getAllBiddingFields.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingField[]> | any>) => {
+    builder.addCase(getAllBiddingFields.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
       if (payload.data) {
-        state.biddingFields = payload.data.biddingFields;
-        state.totalRecords = payload.totalDocs || 0;
+          state.biddingFields = payload.data.data;
+          state.totalRecords = payload.data.total_elements;  // Tổng số lượng mục
+          state.totalPages = payload.data.total_pages;      // Tổng số trang
+          state.pageSize = payload.data.page_size;          // Số lượng mục trên mỗi trang
+          state.currentPage = payload.data.current_page;    // Trang hiện tại
       }
-    });
+  });
+    builder.addCase(
+      getBiddingFieldById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingField> | any>) => {
+        if (payload.data) {
+          state.activeBiddingField = payload.data;
+        }
+      }
+    );
+
     // ? Create bidding field
     builder
       .addCase(createBiddingField.pending, (state) => {

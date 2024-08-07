@@ -5,5 +5,6 @@ export interface IBiddingField {
     code: number;
     is_active: string;
     parent_id: string;
-    parent_name?: string;
+    parent_name: string;
+    parent: string[];
 }
