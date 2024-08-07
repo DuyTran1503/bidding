@@ -3,7 +3,7 @@ import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { IBiddingField } from "./biddingField.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
-import { getAllBiddingFields, createBiddingField, updateBiddingField, deleteBiddingField, getBiddingFieldById } from "./biddingField.thunk";
+import { getAllBiddingFields, createBiddingField, updateBiddingField, deleteBiddingField, getBiddingFieldById, changeStatusBiddingField } from "./biddingField.thunk";
 
 export interface IBiddingFieldInitialState extends IInitialState {
   biddingFields: IBiddingField[];
@@ -98,6 +98,17 @@ const biddingFieldSlice = createSlice({
       .addCase(deleteBiddingField.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
         state.message = "Deletion failed";
+      });
+      builder
+      .addCase(changeStatusBiddingField.pending, (state) => {
+        state.status = EFetchStatus.PENDING;
+      })
+      .addCase(changeStatusBiddingField.fulfilled, (state, { payload }) => {
+        state.status = EFetchStatus.FULFILLED;
+        state.message = "Thay đổi trạng thái thành công";
+      })
+      .addCase(changeStatusBiddingField.rejected, (state) => {
+        state.status = EFetchStatus.REJECTED;
       });
   },
 });
