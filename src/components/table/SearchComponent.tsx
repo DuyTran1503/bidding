@@ -164,7 +164,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                 text={"Hủy"}
                 onClick={() => {
                   const resetFilter: ISearchParams = {
-                    page: 0,
+                    page: 1,
                     size: 10,
                   };
                   dispatch(setFilter(resetFilter));

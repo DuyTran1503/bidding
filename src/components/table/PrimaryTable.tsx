@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
+import React, { useEffect, useState } from "react";
+import { Pagination, Table } from "antd";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import FilterTableStatus from "./FilterTableStatus";
 import FormInput from "../form/FormInput";
 import { IoSearchOutline } from "react-icons/io5";
@@ -22,7 +22,13 @@ interface IPrimaryTableProps<T extends ISearchParams> extends ISearchProps<T> {
   columns: ColumnsType;
   data: ITableData[];
   setFilter: ActionCreatorWithPayload<ISearchParams>;
-  pagination?: { pageSize: number; current: number; total: number; showSideChanger?: boolean };
+  pagination?: {
+    pageSize: number;
+    current: number;
+    total: number;
+    showSideChanger?: boolean;
+    number_of_elements?: number;
+  };
   fetching?: Function;
 }
 
@@ -34,12 +40,13 @@ const PrimaryTable = <T extends ISearchParams>({
   setFilter,
   fetching,
   filter,
-  ...rest // This allows you to spread any additional props from ISearchProps
+  ...rest
 }: IPrimaryTableProps<T>) => {
   const dispatch = useDispatch();
   const getShowingText = (total: number, range: [number, number]) => {
     return `Showing ${range[0]}-${range[1]} from ${total}`;
   };
+
   useEffect(() => {
     if (fetching) {
       dispatch(fetching());
@@ -58,16 +65,21 @@ const PrimaryTable = <T extends ISearchParams>({
         </>
       )}
       <Table
-        onChange={(newPagination) => {
-          dispatch(
-            setFilter({
-              _page: newPagination.current,
-              _size: newPagination.pageSize,
-            }),
-          );
+        onChange={(newPagination: TablePaginationConfig) => {
+          const newFilter: ISearchParams = {
+            page: newPagination.current,
+            size: newPagination.pageSize,
+          };
+
+          dispatch(setFilter(newFilter));
+
+          if (fetching) {
+            dispatch(fetching());
+          }
         }}
         columns={columns}
         dataSource={data}
+        // pagination={false}
         pagination={
           pagination
             ? {
@@ -79,6 +91,23 @@ const PrimaryTable = <T extends ISearchParams>({
         }
         className="shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]"
       />
+      {/* <div className="flex items-center justify-between">
+        <div>
+          Hiển thị {pagination?.current} - {pagination?.pageSize} trên tổng {pagination?.total}
+        </div>
+        <Pagination
+          className="justify-end"
+          onChange={(value) => {
+            dispatch(setFilter({ page: value, size: 10 }));
+            if (fetching) {
+              dispatch(fetching());
+            }
+          }}
+          showSizeChanger={pagination?.showSideChanger ?? false}
+          defaultCurrent={1}
+          total={pagination?.total}
+        />
+      </div> */}
     </div>
   );
 };
