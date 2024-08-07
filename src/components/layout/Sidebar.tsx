@@ -66,9 +66,9 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       items: [
         {
           id: "3.1",
-          label: "Lĩnh vực hoạt động",
-          path: "business_activity",
-          // permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
+          label: "Loại hình kinh doanh",
+          path: "business-activity",
+          permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
         },
       ],
     },
@@ -97,9 +97,9 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "3.4",
-          label: "Bidding Fields",
+          label: "Lĩnh vực đấu thầu",
           path: "bidding-fields",
-          // permissions: EPermissions.LIST_BIDDINGFIELD,
+          permissions: EPermissions.LIST_BIDDING_FIELD,
         },
       ],
     },
