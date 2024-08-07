@@ -18,6 +18,8 @@ export interface IGridProps<T extends ISearchParams> {
     pageSize: number;
     current: number;
     total: number;
+    showSideChanger?: boolean;
+    number_of_elements?: number;
   };
   setFilter: ActionCreatorWithPayload<ISearchParams>;
   fetching?: Function;
@@ -32,7 +34,7 @@ const ManagementGrid = <T extends ISearchParams>({
   pagination,
   setFilter,
   fetching,
-  filter
+  filter,
 }: IGridProps<T>) => {
   const renderColumns = useMemo(() => {
     return buttons?.some((button) => button.type === EButtonTypes.VIEW || button.type === EButtonTypes.UPDATE || button.type === EButtonTypes.DESTROY)
