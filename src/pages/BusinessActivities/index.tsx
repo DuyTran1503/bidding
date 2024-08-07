@@ -28,6 +28,7 @@ const BusinessActivities = () => {
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [isDelete, setIsDelete] = useState(false);
+
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -126,6 +127,12 @@ const BusinessActivities = () => {
       error: { message: state.message },
     },
   });
+  useEffect(() => {
+    return () => {
+      setFilter({ page: 1, size: 10 });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <>
       <Heading
@@ -159,9 +166,11 @@ const BusinessActivities = () => {
         search={search}
         buttons={buttons}
         pagination={{
-          current: state.filter._page! ?? 1,
-          pageSize: state.filter._page! ?? 10,
+          current: state.filter.page ?? 1,
+          pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
+          number_of_elements: state.number_of_elements && state.number_of_elements,
+          // showSideChanger:true
         }}
         setFilter={setFilter}
         filter={state.filter}
