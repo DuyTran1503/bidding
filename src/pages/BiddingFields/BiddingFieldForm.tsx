@@ -1,13 +1,14 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import { useArchive } from "@/hooks/useArchive";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect"; // Import FormSelect
+import FormSelect from "@/components/form/FormSelect";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 import UpdateGrid from "@/components/grid/UpdateGrid";
 import { Formik } from "formik";
 import { object, string, number } from "yup";
 import { useEffect, useState } from "react";
-import { createBiddingField, updateBiddingField } from "@/services/store/biddingField/biddingField.thunk";
-import { FormikRefType } from "@/shared/utils/shared-types";
+import { createBiddingField, getBiddingFieldAllIds, updateBiddingField } from "@/services/store/biddingField/biddingField.thunk";
 import lodash from "lodash";
 import { IBiddingFieldInitialState } from "@/services/store/biddingField/biddingField.slice";
 import { IBiddingField } from "@/services/store/biddingField/biddingField.model";
@@ -17,7 +18,7 @@ interface IActiveBiddingField extends Omit<IBiddingField, "parent"> {
 }
 
 interface IBiddingFieldFormProps {
-    formikRef?: FormikRefType<IBiddingFieldFormInitialValues>;
+    formikRef?: any;
     type: "create" | "view" | "update";
     biddingField?: IActiveBiddingField;
 }
@@ -30,47 +31,62 @@ export interface IBiddingFieldFormInitialValues {
     parent_id: string;
 }
 
-const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormProps) => {
-    const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
-    const [loading, setLoading] = useState(true);
+const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
+    return data.map(item => ({
+        title: item.name,
+        value: item.id.toString(),
+        key: item.id.toString(),
+        children: item.children ? formatTreeData(item.children) : [],
+    }));
+};
 
+const BiddingFieldForm = ({
+    formikRef,
+    type,
+    biddingField,
+}: IBiddingFieldFormProps) => {
+    const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+    const [loading, setLoading] = useState(true);
     const { dispatch, state } = useArchive<IBiddingFieldInitialState>("biddingfield");
+
     const initialValues: IBiddingFieldFormInitialValues = {
-        name: "",
-        description: "",
-        code: 0,
-        is_active: "0",
-        parent_id: "",
+        name: biddingField?.name || "",
+        description: biddingField?.description || "",
+        code: biddingField?.code || 0,
+        is_active: biddingField?.is_active ? "1" : "0",
+        parent_id: biddingField?.parent_id || "",
     };
 
     const validationSchema = object().shape({
-        name: string().required("Please enter the bidding field name"),
-        description: string().required("Please enter the bidding field description"),
-        code: number().required("Please enter a code"),
+        name: string().required("Vui lòng nhập tên trường đấu giá"),
+        description: string().required("Vui lòng nhập mô tả trường đấu giá"),
+        code: number().required("Vui lòng nhập mã"),
     });
 
     useEffect(() => {
-        const options = state.biddingFields.map(field => ({
-            value: field.id.toString(),
-            label: field.name
-        }));
-        setOptions(options);
-    }, [state.biddingFields]);
-
-    useEffect(() => {
-        setLoading(false);
-    }, []);
+        dispatch(getBiddingFieldAllIds({ query: state.filter }))
+            .then(unwrapResult)
+            .then((result) => {
+                const fields = result.data;
+                const formattedData = formatTreeData(fields);
+                setTreeData(formattedData);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [dispatch, state.filter]);
 
     const isActiveOptions = [
-        { value: '0', label: 'Không' },
-        { value: '1', label: 'Có' },
+        { value: "0", label: "Không" },
+        { value: "1", label: "Có" },
     ];
 
     return (
         <Formik
             innerRef={formikRef}
-            initialValues={biddingField ?? initialValues}
+            initialValues={initialValues}
             validationSchema={validationSchema}
+            enableReinitialize={true}
             onSubmit={(data) => {
                 const body = {
                     ...lodash.omit(data, "id"),
@@ -83,78 +99,68 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                 }
             }}
         >
-            {({ values, errors, touched, handleBlur, setFieldValue }) => {
-                return (
-                    <UpdateGrid
-                        colNumber="2"
-                        rate="1-3"
-                        isLoading={loading}
-                        groups={{
-                            colFull: (
-                                <FormGroup title="General Information">
-                                    <FormInput
-                                        type="text"
-                                        isDisabled={type === "view"}
-                                        label="Tên của lĩnh vực đấu thầu"
-                                        value={values.name}
-                                        name="name"
-                                        error={touched.name ? errors.name : ""}
-                                        placeholder="Nhập tên của lĩnh vực đấu thầu..."
-                                        onChange={(value) => {
-                                            setFieldValue("name", value);
-                                        }}
-                                        onBlur={handleBlur}
-                                    />
-                                    <FormInput
-                                        type="text"
-                                        isDisabled={type === "view"}
-                                        label="Mô tả của lĩnh vực đấu thầu"
-                                        value={values.description}
-                                        name="description"
-                                        error={touched.description ? errors.description : ""}
-                                        placeholder="Nhập mô tả của lĩnh vực đấu thầu..."
-                                        onChange={(value) => {
-                                            setFieldValue("description", value);
-                                        }}
-                                        onBlur={handleBlur}
-                                    />
-                                    <FormInput
-                                        type="number"
-                                        isDisabled={type === "view"}
-                                        label="Mã duy nhất cho  lĩnh vực đấu thầu"
-                                        value={values.code}
-                                        name="code"
-                                        onChange={(value) => {
-                                            setFieldValue("code", value);
-                                        }}
-                                        onBlur={handleBlur}
-                                    />
-                                    <FormSelect
-                                        label="Chỉ ra nguồn vốn đang hoạt động hay không"
-                                        isDisabled={type === "view"}
-                                        placeholder="Select active status"
-                                        options={isActiveOptions}
-                                        defaultValue={values.is_active}
-                                        onChange={(value) => {
-                                            setFieldValue("is_active", value as string);
-                                        }}
-                                    />
-                                    <FormSelect
-                                        label="ID của lĩnh vực cha"
-                                        isDisabled={type === "view"}
-                                        placeholder="Chọn lĩnh vực cha"
-                                        options={options}
-                                        defaultValue={values.parent_id}
-                                        onChange={(value) => {
-                                            setFieldValue("parent_id", value as string);
-                                        }}
-                                    />
-                                </FormGroup>
-                            ),
-                        }}
-                    />
-                );
-            }}
+            {({ values, errors, touched, handleBlur, setFieldValue }) => (
+                <UpdateGrid
+                    colNumber="2"
+                    rate="1-3"
+                    isLoading={loading}
+                    groups={{
+                        colFull: (
+                            <FormGroup title="Thông tin chung">
+                                <FormInput
+                                    type="text"
+                                    isDisabled={type === "view"}
+                                    label="Tên của lĩnh vực đấu thầu"
+                                    value={values.name}
+                                    name="name"
+                                    error={touched.name ? errors.name : ""}
+                                    placeholder="Nhập tên của lĩnh vực đấu thầu..."
+                                    onChange={(value) => setFieldValue("name", value)}
+                                    onBlur={handleBlur}
+                                />
+                                <FormInput
+                                    type="text"
+                                    isDisabled={type === "view"}
+                                    label="Mô tả của lĩnh vực đấu thầu"
+                                    value={values.description}
+                                    name="description"
+                                    error={touched.description ? errors.description : ""}
+                                    placeholder="Nhập mô tả của lĩnh vực đấu thầu..."
+                                    onChange={(value) => setFieldValue("description", value)}
+                                    onBlur={handleBlur}
+                                />
+                                <FormInput
+                                    type="number"
+                                    isDisabled={type === "view"}
+                                    label="Mã duy nhất cho lĩnh vực đấu thầu"
+                                    value={values.code}
+                                    name="code"
+                                    onChange={(value) => setFieldValue("code", value)}
+                                    onBlur={handleBlur}
+                                />
+                                <FormSelect
+                                    label="Trạng thái hoạt động"
+                                    isDisabled={type === "view"}
+                                    placeholder="Chọn trạng thái hoạt động"
+                                    options={isActiveOptions}
+                                    defaultValue={values.is_active}
+                                    onChange={(value) => setFieldValue("is_active", value as string)}
+                                />
+                                <FormTreeSelect
+                                    label="Lĩnh vực cha"
+                                    isDisabled={type === "view"}
+                                    placeholder="Chọn lĩnh vực cha"
+                                    treeData={treeData}
+                                    defaultValue={values.parent_id}
+                                    onChange={(value) => {
+                                        setFieldValue("parent_id", value as string);
+                                    }}
+                                />
+                            </FormGroup>
+                        ),
+                    }}
+                />
+            )}
         </Formik>
     );
 };

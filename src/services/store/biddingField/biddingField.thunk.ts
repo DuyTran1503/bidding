@@ -16,12 +16,23 @@ export const getAllBiddingFields = createAsyncThunk("bidding-field/get-all-biddi
 
 export const getBiddingFieldById = createAsyncThunk("bidding-field/get-bidding-field-by-id", async (id: number | string, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.get<IBiddingField[]>(prefix+ `${id}`);
+      const { response, data } = await client.get<IBiddingField[]>(`${prefix}/${id}`);
       return response.status >= 400 ? rejectWithValue(data) : data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
   });
+
+  export const getBiddingFieldAllIds = createAsyncThunk(
+    "bidding-field/get-bidding-field-all-ids", 
+    async (payload: IThunkPayload, { rejectWithValue }) => {
+      try {
+        const { response, data } = await client.get<IBiddingField[]>(`${prefix}/all-ids`, payload);
+        return response.status >= 400 ? rejectWithValue(data) : data;
+      } catch (error: any) {
+        return rejectWithValue(error.response.data);
+      }
+    });
 
   export const createBiddingField = createAsyncThunk("bidding-field/create-bidding-field", async (payload: IThunkPayload, { rejectWithValue }) => {
     try {

@@ -25,11 +25,11 @@ const BiddingFields = () => {
             onClick(record) {
                 setModalContent(
                     <>
-                        <p><strong>Name:</strong> {record.name}</p>
-                        <p><strong>Description:</strong> {record.description}</p>
+                        <p><strong>Tên của lĩnh vực đấu thầu:</strong> {record.name}</p>
+                        <p><strong>Mô tả của lĩnh vực đấu thầu:</strong> {record.description}</p>
                         <p><strong>Code:</strong> {record.code}</p>
-                        <p><strong>is_active:</strong> {record.is_active}</p>
-                        <p><strong>parent_id:</strong> {record.parent_name}</p>
+                        <p><strong>is_active:</strong> {record.is_active ? "Có" : "Không"}</p>
+                        <p><strong>Lĩnh vực cha:</strong> {record.parent_name}</p>
                     </>
                 );
                 setIsModalOpen(true);
@@ -44,7 +44,7 @@ const BiddingFields = () => {
             // permission: EPermissions.UPDATE_BIDDINGFIELD,
         },
         {
-            type: EButtonTypes.DESTROY,
+            type: EButtonTypes.DELETE,
             onClick(record) {
                 dispatch(deleteBiddingField(record?.key));
             },
@@ -58,12 +58,16 @@ const BiddingFields = () => {
             title: "Name",
         },
         {
+            dataIndex: "code",
+            title: "Code",
+        },
+        {
             dataIndex: "description",
             title: "Description",
         },
     ];
 
-    const handleOk = () => {
+    const handleSubmit = () => {
         setIsModalOpen(false);
     };
 
@@ -115,9 +119,9 @@ const BiddingFields = () => {
             <FormModal
                 title="Bidding Field Details"
                 open={isModalOpen}
-                onOk={handleOk}
+                onSubmit={handleSubmit}
                 onCancel={handleCancel}
-                okText="Submit"
+                submitText="Submit"
             >
                 {modalContent}
             </FormModal>
@@ -127,9 +131,9 @@ const BiddingFields = () => {
                 search={{ status: [] }}
                 buttons={buttons}
                 pagination={{
-                    current: state.filter._page ?? 1,
-                    pageSize: state.filter._size ?? 10,
-                    total: state.totalRecords,
+                    current: state.filter._page! ?? 1,
+                    pageSize: state.filter._size! ?? 10,
+                    total: state.totalRecords!,
                 }}
                 setFilter={setFilter}
             />
