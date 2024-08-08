@@ -2,7 +2,6 @@ import { useArchive } from "@/hooks/useArchive";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import { Formik } from "formik";
-import { object, string } from "yup";
 import lodash from "lodash";
 import { IBiddingTypeInitialState } from "@/services/store/biddingtype/biddingType.slice";
 import { IBiddingType } from "@/services/store/biddingtype/biddingType.model";
@@ -32,25 +31,30 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
         is_active: biddingType?.is_active ? "1" : "0",
     };
 
-    const validationSchema = object().shape({
-        name: string().required("Vui lòng nhập tên loại đấu thầu"),
-        description: string().required("Vui lòng nhập mô tả loại đấu thầu"),
-    });
-
     return (
         <Formik
             innerRef={formikRef}
             initialValues={initialValues}
-            validationSchema={validationSchema}
             enableReinitialize={true}
-            onSubmit={(data) => {
+
+            onSubmit={(data, { setErrors }) => {
                 const body = {
                     ...lodash.omit(data, "id"),
                 };
                 if (type === "create") {
-                    dispatch(createBiddingType({ body }));
+                    dispatch(createBiddingType({ body }))
+                        .unwrap()
+                        .catch((error) => {
+                            const apiErrors = error?.errors || {};
+                            setErrors(apiErrors);
+                        })
                 } else if (type === "update") {
-                    dispatch(updateBiddingType({ body, param: biddingType?.id }));
+                    dispatch(updateBiddingType({ body, param: biddingType?.id }))
+                        .unwrap()
+                        .catch((error) => {
+                            const apiErrors = error?.errors || {};
+                            setErrors(apiErrors);
+                        })
                 }
             }}
         >

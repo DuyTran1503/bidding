@@ -9,7 +9,7 @@ interface IFormSelect {
   error?: string;
   isDisabled?: boolean;
   onChange?: (value: string | string[]) => void;
-  id?:string;
+  id?: string;
 }
 
 const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isMultiple, onChange }: IFormSelect) => {
@@ -21,7 +21,7 @@ const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isM
 
   return (
     <div>
-      <div className="text-m-medium mb-1 text-black-300">{label}</div>
+      <div className="text-base mb-1 text-black-300">{label}</div>
       <ConfigProvider
         theme={{
           components: {
@@ -36,7 +36,7 @@ const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isM
           allowClear
           maxTagCount={"responsive"}
           disabled={isDisabled}
-          className={clsx("text-m-medium w-full", isDisabled && "opacity-65")}
+          className={clsx("text-base w-full", isDisabled && "opacity-65")}
           mode={isMultiple ? "multiple" : undefined}
           defaultValue={defaultValue}
           onChange={(value) => !isDisabled && handleChange(value as any)}
