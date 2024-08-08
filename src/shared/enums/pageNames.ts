@@ -7,4 +7,7 @@ export enum EPageNames {
   customers = "Customers",
   update = "Update",
   detail = "Detail",
+  funding_sources = "Nguồn tài trợ",
+  ckbox = "Quản lý file"
+
 }

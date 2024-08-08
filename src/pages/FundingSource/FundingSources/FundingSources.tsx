@@ -6,13 +6,13 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { IFundingSourceInitialState, resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
 import { deleteFundingSources, getAllFundingSources } from "@/services/store/funding_source/funding_source.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
-import { EPermissions } from "@/shared/enums/permissions";
+// import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import fundingData from "./mockData";
+// import fundingData from "./mockData";
 
 const FundingSources = () => {
   const navigate = useNavigate();

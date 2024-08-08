@@ -23,6 +23,7 @@ import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermissi
 import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
 import FundingSources from "@/pages/FundingSource/FundingSources/FundingSources";
 import CreateFundingSource from "@/pages/FundingSource/CreateFundingSource/CreateFundingSource";
+import Ckbox from "@/pages/CKBOX/Ckbox";
 
 export interface IRoute {
   path: string;
@@ -49,6 +50,10 @@ export const routes: IRoute[] = [
           {
             path: "dashboard",
             element: () => <Dashboard />,
+          },
+          {
+            path: "ckbox",
+            element: () => <Ckbox />,
           },
           {
             path: "products",
@@ -137,24 +142,7 @@ export const routes: IRoute[] = [
                 element: () => <UpdateTag />,
               },
             ],
-          },
-          {
-            path: "funding_sources",
-            pages: [
-              {
-                path: "/",
-                element: () => <FundingSources />,
-              },
-              {
-                path: "/create",
-                element: () => <CreateFundingSource />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateTag />,
-              },
-            ],
-          },
+          }
         ],
       },
       {

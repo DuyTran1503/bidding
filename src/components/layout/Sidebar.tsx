@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
 // Icons
-import { IoCartOutline, IoPieChartOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoCartOutline, IoFileTray, IoFileTrayFullOutline, IoFileTrayStackedSharp, IoFilterCircle, IoPieChartOutline, IoPower, IoSettingsOutline } from "react-icons/io5";
 
 // Images
 import logo from "@/assets/images/logo.png";
@@ -44,6 +44,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       label: "Dashboard",
       path: "dashboard",
       icon: { component: IoPieChartOutline },
+    },
+    {
+      id: "4",
+      label: "Quản Lý File ",
+      path: "ckbox",
+      icon: { component: IoFileTrayStackedSharp },
     },
     {
       id: "2",
@@ -86,13 +92,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Nguồn Tài Trợ",
           path: "funding_sources",
           permissions: EPermissions.READ_FUNDING_SOURCE,
-        },
-        // {
-        //   id: "3.5",
-        //   label: "Loại Hình Hoạt Động",
-        //   path: "field_of_activity",
-        //   permissions: EPermissions.READ_FIELD_OF_ACTIVITY,
-        // },
+        }
       ],
     },
     {
