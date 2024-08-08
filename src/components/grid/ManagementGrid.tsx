@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/es/table";
-import PrimaryTable, { ITableData } from "../table/PrimaryTable";
+import PrimaryTable, { ITableData, ScrollProps } from "../table/PrimaryTable";
 import { IGridButton, ISearchParams } from "@/shared/utils/shared-interfaces";
 import { useMemo } from "react";
 import { EButtonTypes } from "@/shared/enums/button";
@@ -24,6 +24,7 @@ export interface IGridProps<T extends ISearchParams> {
   setFilter: ActionCreatorWithPayload<ISearchParams>;
   fetching?: Function;
   filter?: T;
+  scroll?: ScrollProps;
 }
 
 const ManagementGrid = <T extends ISearchParams>({
@@ -35,27 +36,29 @@ const ManagementGrid = <T extends ISearchParams>({
   setFilter,
   fetching,
   filter,
+  scroll,
 }: IGridProps<T>) => {
   const renderColumns = useMemo(() => {
     return buttons?.some((button) => button.type === EButtonTypes.VIEW || button.type === EButtonTypes.UPDATE || button.type === EButtonTypes.DESTROY)
       ? ([
-        ...columns,
-        {
-          title: "Actions",
-          width: "150px",
-          dataIndex: "actions",
-          key: "actions",
-          fixed: "right",
-          align: "center",
-          render(_, record) {
-            return <GridButtons buttons={buttons} record={record} />;
+          ...columns,
+          {
+            title: "Actions",
+            width: "150px",
+            dataIndex: "actions",
+            key: "actions",
+            fixed: "right",
+            align: "center",
+            render(_, record) {
+              return <GridButtons buttons={buttons} record={record} />;
+            },
           },
-        },
-      ] as TableColumnsType)
+        ] as TableColumnsType)
       : columns;
   }, [JSON.stringify(buttons)]);
   return (
     <PrimaryTable
+      scroll={scroll}
       search={search!}
       columns={renderColumns}
       data={data}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {Table } from "antd";
+import { Table } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { ISearchParams } from "@/shared/utils/shared-interfaces";
@@ -10,7 +10,15 @@ export interface ITableData {
   key: React.Key;
   [key: string]: unknown;
 }
-
+export interface ScrollProps {
+  x?: number | string | true;
+  y?: number | string;
+  scrollToFirstRowOnChange?: boolean;
+  scrollbar?: {
+    virtual?: boolean;
+    nativeOn?: boolean;
+  };
+}
 export interface ISearchTable {
   status: { value: string; label: string }[];
 }
@@ -18,6 +26,7 @@ interface IPrimaryTableProps<T extends ISearchParams> extends ISearchProps<T> {
   columns: ColumnsType;
   data: ITableData[];
   setFilter: ActionCreatorWithPayload<ISearchParams>;
+  scroll?: ScrollProps;
   pagination?: {
     pageSize: number;
     current: number;
@@ -36,6 +45,7 @@ const PrimaryTable = <T extends ISearchParams>({
   setFilter,
   fetching,
   filter,
+  scroll,
   ...rest
 }: IPrimaryTableProps<T>) => {
   const dispatch = useDispatch();
@@ -49,7 +59,7 @@ const PrimaryTable = <T extends ISearchParams>({
       setFilter({
         _page: pagination.current,
         _size: pagination.pageSize,
-      })
+      }),
     );
   };
 
@@ -89,17 +99,18 @@ const PrimaryTable = <T extends ISearchParams>({
         pagination={
           pagination
             ? {
-              current: pagination.current,
-              pageSize: pagination.pageSize,
-              total: pagination.total,
-              showSizeChanger: pagination.showSideChanger ?? false,
-              showTotal: (total, [start, end]) => getShowingText(total, [start, end]),
-              onChange: handleTableChange,
-            }
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                total: pagination.total,
+                showSizeChanger: pagination.showSideChanger ?? false,
+                showTotal: (total, [start, end]) => getShowingText(total, [start, end]),
+                onChange: handleTableChange,
+              }
             : false
         }
         className="shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]"
         rowKey="key"
+        scroll={scroll}
       />
       {/* <div className="flex items-center justify-between">
         <div>
