@@ -30,6 +30,9 @@ import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
 import BusinessActivities from "@/pages/BusinessActivities";
 import CreateBusinessActivity from "@/pages/BusinessActivities/Create";
 import UpdateBusinessActivity from "@/pages/BusinessActivities/Update";
+import Industry from "@/pages/Industry";
+import UpdateIndustry from "@/pages/Industry/Update";
+import CreateIndustry from "@/pages/Industry/Create";
 
 export interface IRoute {
   path: string;
@@ -155,6 +158,23 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBusinessActivity />,
+              },
+            ],
+          },
+          {
+            path: "industry",
+            pages: [
+              {
+                path: "/",
+                element: () => <Industry />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateIndustry />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateIndustry />,
               },
             ],
           },
