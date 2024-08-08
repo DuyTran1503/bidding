@@ -4,7 +4,6 @@ import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
 import { Formik } from "formik";
-import { object, string, number } from "yup";
 import { useEffect, useState } from "react";
 import { createBiddingField, getBiddingFieldAllIds, updateBiddingField } from "@/services/store/biddingField/biddingField.thunk";
 import lodash from "lodash";
@@ -53,12 +52,6 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
         parent_id: biddingField?.parent_id || "",
     };
 
-    const validationSchema = object().shape({
-        name: string().required("Vui lòng nhập tên trường đấu giá"),
-        description: string().required("Vui lòng nhập mô tả trường đấu giá"),
-        code: number().required("Vui lòng nhập mã"),
-    });
-
     useEffect(() => {
         dispatch(getBiddingFieldAllIds({ query: state.filter }))
             .then(unwrapResult)
@@ -66,24 +59,33 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                 const fields = result.data;
                 const formattedData = formatTreeData(fields);
                 setTreeData(formattedData);
-            })
+            });
     }, [dispatch, state.filter]);
 
     return (
         <Formik
             innerRef={formikRef}
             initialValues={initialValues}
-            validationSchema={validationSchema}
             enableReinitialize={true}
-            onSubmit={(data) => {
+            onSubmit={(data, { setErrors }) => {
                 const body = {
                     ...lodash.omit(data, "id"),
                     parent: data.parent_id ? [data.parent_id] : [],
                 };
                 if (type === "create") {
-                    dispatch(createBiddingField({ body }));
+                    dispatch(createBiddingField({ body }))
+                        .unwrap()
+                        .catch((error) => {
+                            const apiErrors = error?.errors || {};
+                            setErrors(apiErrors);
+                        })
                 } else if (type === "update") {
-                    dispatch(updateBiddingField({ body, param: biddingField?.id }));
+                    dispatch(updateBiddingField({ body, param: biddingField?.id }))
+                        .unwrap()
+                        .catch((error) => {
+                            const apiErrors = error?.errors || {};
+                            setErrors(apiErrors);
+                        })
                 }
             }}
         >
@@ -127,11 +129,12 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                                     name="code"
                                     onChange={(value) => setFieldValue("code", value)}
                                     onBlur={handleBlur}
+                                    error={touched.code ? errors.code : ""}
                                 />
                             </Col>
                             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                                 <FormSwitch
-                                    label="Trạng thái "
+                                    label="Trạng thái"
                                     checked={values.is_active === "1"}
                                     onChange={(value) => {
                                         setFieldValue("is_active", value ? "1" : "0");
@@ -141,16 +144,14 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                         </Row>
                         <Row gutter={[24, 24]}>
                             <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                                <FormGroup title="Mô tả">
-                                    <FormInputArea
-                                        label="Mô tả"
-                                        placeholder="Nhập mô tả..."
-                                        name="description"
-                                        value={values.description}
-                                        error={touched.description ? errors.description : ""}
-                                        onChange={(e) => setFieldValue("description", e)}
-                                    />
-                                </FormGroup>
+                                <FormInputArea
+                                    label="Mô tả"
+                                    placeholder="Nhập mô tả..."
+                                    name="description"
+                                    value={values.description}
+                                    error={touched.description ? errors.description : ""}
+                                    onChange={(e) => setFieldValue("description", e)}
+                                />
                             </Col>
                         </Row>
                     </FormGroup>
