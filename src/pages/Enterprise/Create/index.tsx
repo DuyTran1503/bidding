@@ -7,22 +7,22 @@ import Heading from "@/components/layout/Heading";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
-import BusinessActivityForm, { IIBusinessActivityInitialValues } from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
-import { IBusinessActivityInitialState, resetStatus } from "@/services/store/business-activity/business-activity.slice";
-const CreateBusinessActivity = () => {
+import { IEnterpriseInitialState, resetStatus } from "@/services/store/enterprise/enterprise.slice";
+import EnterpriseForm, { IEnterpriseInitialValues } from "../ActionModule";
+const CreateEnterprise = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IIBusinessActivityInitialValues>>(null);
+  const formikRef = useRef<FormikProps<IEnterpriseInitialValues>>(null);
 
-  const { state } = useArchive<IBusinessActivityInitialState>("business");
+  const { state } = useArchive<IEnterpriseInitialState>("enterprise");
 
   useFetchStatus({
-    module: "business",
+    module: "enterprise",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/business-activity",
+        navigate: "/enterprise",
       },
       error: {
         message: state.message,
@@ -41,7 +41,7 @@ const CreateBusinessActivity = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/business-activity");
+              navigate("/enterprise");
             },
           },
           {
@@ -56,9 +56,9 @@ const CreateBusinessActivity = () => {
           },
         ]}
       />
-      <BusinessActivityForm type={EPageTypes.CREATE} formikRef={formikRef} />
+      <EnterpriseForm type={EPageTypes.CREATE} formikRef={formikRef} />
     </>
   );
 };
 
-export default CreateBusinessActivity;
+export default CreateEnterprise;
