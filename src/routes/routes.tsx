@@ -30,6 +30,9 @@ import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
 import BusinessActivities from "@/pages/BusinessActivities";
 import CreateBusinessActivity from "@/pages/BusinessActivities/Create";
 import UpdateBusinessActivity from "@/pages/BusinessActivities/Update";
+import BiddingTypes from "@/pages/BiddingTypes/BiddingTypes/BiddingTypes";
+import CreateBiddingType from "@/pages/BiddingTypes/CreateBiddingType/CreateBiddingType";
+import UpdateBiddingType from "@/pages/BiddingTypes/UpdateBiddingType/UpdateBiddingType";
 
 export interface IRoute {
   path: string;
@@ -79,6 +82,40 @@ export const routes: IRoute[] = [
             ],
           },
           {
+            path: "bidding-fields",
+            pages: [
+              {
+                path: "/",
+                element: () => <BiddingFields />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBiddingField />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBiddingField />,
+              }
+            ],
+          },
+          {
+            path: "bidding-types",
+            pages: [
+              {
+                path: "/",
+                element: () => <BiddingTypes />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBiddingType />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBiddingType />,
+              }
+            ],
+          },
+          {
             path: "orders",
             element: () => <Orders />,
           },
@@ -105,23 +142,6 @@ export const routes: IRoute[] = [
                 path: "/detail/:id",
                 element: () => <DetailRole />,
               },
-            ],
-          },
-          {
-            path: "bidding-fields",
-            pages: [
-              {
-                path: "/",
-                element: () => <BiddingFields />,
-              },
-              {
-                path: "/create",
-                element: () => <CreateBiddingField />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateBiddingField />,
-              }
             ],
           },
           {
