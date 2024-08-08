@@ -5,6 +5,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createRole, deleteRole, getAllPermissions, getAllRoles, getRoleById, updateRole } from "./role.thunk";
 import { IRole, IUpdateRole } from "./role.model";
 import { IPermission } from "../permission/permission.model";
+import { IError } from "@/shared/interface/error";
+import { transformPayloadErrors } from "@/shared/utils/common/function";
 
 export interface IRoleInitialState extends IInitialState {
   roles: IRole[];
@@ -40,13 +42,18 @@ const roleSlice = createSlice({
   },
   extraReducers(builder) {
     // ? Get all roles
-    builder.addCase(getAllRoles.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole[]> | any>) => {
-      if (payload.data) {
-        state.roles = payload.data.data;
-        state.status = EFetchStatus.FULFILLED;
-        state.totalRecords = payload?.data?.total_elements;
-      }
-    });
+    builder
+      .addCase(getAllRoles.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole[]> | any>) => {
+        if (payload.data) {
+          state.roles = payload.data.data;
+          state.status = EFetchStatus.FULFILLED;
+          state.totalRecords = payload?.data?.total_elements;
+        }
+      })
+      .addCase(getAllRoles.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
     // ? Get role by id
     builder
       .addCase(getRoleById.pending, (state) => {
@@ -54,11 +61,16 @@ const roleSlice = createSlice({
         state.loading = true;
       })
       .addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IUpdateRole> | any) => {
+        state.status = EFetchStatus.FULFILLED;
         state.activeRole = {
           permissions: payload.id_permission_checked,
           ...payload.role,
         };
         state.loading = false;
+      })
+      .addCase(getRoleById.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Create role
     builder
@@ -69,8 +81,9 @@ const roleSlice = createSlice({
         state.status = EFetchStatus.FULFILLED;
         state.message = "Tạo mới vai trò thành công";
       })
-      .addCase(createRole.rejected, (state) => {
+      .addCase(createRole.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Update role
     builder
@@ -79,10 +92,11 @@ const roleSlice = createSlice({
       })
       .addCase(updateRole.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Updated successfully";
+        state.message = "Cập nhật vai trò thành công";
       })
-      .addCase(updateRole.rejected, (state) => {
+      .addCase(updateRole.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Delete role
     builder
@@ -91,14 +105,16 @@ const roleSlice = createSlice({
       })
       .addCase(deleteRole.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Deleted successfully";
+        state.message = "Xóa vai trò thành công";
         state.roles = state.roles.filter((role) => role.id !== payload);
       })
-      .addCase(deleteRole.rejected, (state) => {
+      .addCase(deleteRole.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     builder.addCase(getAllPermissions.fulfilled, (state, { payload }: PayloadAction<IResponse<IPermission[]> | any>) => {
       if (payload) {
+        state.status = EFetchStatus.FULFILLED;
         state.permissions = payload.permissions;
       }
     });
