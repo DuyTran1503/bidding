@@ -50,9 +50,10 @@ export interface IInitialState {
   loading?: boolean;
   status: EFetchStatus;
   message: string;
+  error?: { [key: string]: string };
   filter: ISearchParams;
   totalRecords: number;
-  number_of_elements?:number;
+  number_of_elements?: number;
   [key: string]: unknown;
 }
 
