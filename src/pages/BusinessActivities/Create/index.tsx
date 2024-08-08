@@ -6,15 +6,15 @@ import { FormikProps } from "formik";
 import Heading from "@/components/layout/Heading";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { ITagInitialState, resetStatus } from "@/services/store/tag/tag.slice";
 import { useArchive } from "@/hooks/useArchive";
 import BusinessActivityForm, { IIBusinessActivityInitialValues } from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
+import { IBusinessActivityInitialState, resetStatus } from "@/services/store/business-activity/business-activity.slice";
 const CreateBusinessActivity = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IIBusinessActivityInitialValues>>(null);
 
-  const { state } = useArchive<ITagInitialState>("business");
+  const { state } = useArchive<IBusinessActivityInitialState>("business");
 
   useFetchStatus({
     module: "business",
