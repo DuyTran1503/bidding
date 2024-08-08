@@ -10,6 +10,7 @@ import BiddingFieldForm, { IBiddingFieldFormInitialValues } from "../BiddingFiel
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IoClose } from "react-icons/io5";
 import { getBiddingFieldById } from "@/services/store/biddingField/biddingField.thunk";
+import { EPageTypes } from "@/shared/enums/page";
 
 const UpdateBiddingField = () => {
   const { id } = useParams();
@@ -56,7 +57,7 @@ const UpdateBiddingField = () => {
       {state.activeBiddingField ? (
         <BiddingFieldForm
           formikRef={formikRef}
-          type="update"
+          type={EPageTypes.UPDATE}
           biddingField={state.activeBiddingField}
         />
       ) : (

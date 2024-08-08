@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {Table } from "antd";
+import { Table } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { ISearchParams } from "@/shared/utils/shared-interfaces";
@@ -36,7 +36,7 @@ const PrimaryTable = <T extends ISearchParams>({
   setFilter,
   fetching,
   filter,
-  ...rest
+  // ...rest
 }: IPrimaryTableProps<T>) => {
   const dispatch = useDispatch();
 
