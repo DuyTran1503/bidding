@@ -58,7 +58,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
       {({ values, errors, touched, handleBlur, setFieldValue, resetForm, handleSubmit }) => {
         return (
           <div className={`${isShow ? "hidden" : ""} row-gap-3 flex flex-col px-4 py-3`}>
-            <Row className="row-gap-2 row-gap-lg-3">
+            <Row className="row-gap-2 row-gap-lg-3 items-center gap-4">
               {search.length &&
                 search?.map((item, index) => {
                   if (item.type === "text") {
@@ -66,7 +66,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                     const value: any = values && [item.id] ? values[item.id] : "";
 
                     return (
-                      <Col xs={12} sm={12} md={6} lg={4} key={index}>
+                      <Col xs={24} sm={24} md={12} lg={6} key={index}>
                         <FormInput
                           id={item.id}
                           // icon={IoSearchOutline}
@@ -94,11 +94,11 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         : null;
                     const options = item.parentItem ? (values[item.parentItem] ? item.options : []) : item.options;
                     return (
-                      <Col key={index} xs={12}>
+                      <Col key={index} xs={24} sm={24} md={12} lg={6}>
                         <FormSelect
                           // isClearable={item?.isClearable ?? true}
                           id={item.id!}
-                          label={item.title}
+                          label={item.label}
                           placeholder={item.placeholder}
                           // value={value}
                           options={options!}
@@ -132,7 +132,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                     const value = values && values[item.id] ? values[item.id] : null;
 
                     return (
-                      <Col key={index} xs={12}>
+                      <Col key={index} xs={24} sm={24} md={12} lg={6}>
                         <FormDate
                           id={item.id}
                           label={item.title}

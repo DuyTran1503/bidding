@@ -42,23 +42,23 @@ const Sidebar = ({ children }: PropsWithChildren) => {
   const menuItems: IMenuItem[] = [
     {
       id: "1",
-      label: "Dashboard",
+      label: "Bảng điều khiển",
       path: "dashboard",
       icon: { component: IoPieChartOutline },
     },
-    {
-      id: "2",
-      label: "E-Commerce",
-      icon: { component: IoCartOutline },
-      items: [
-        {
-          id: "2.3",
-          label: "Orders",
-          path: "orders",
-          permissions: EPermissions.LIST_ORDER,
-        },
-      ],
-    },
+    // {
+    //   id: "2",
+    //   label: "E-Commerce",
+    //   icon: { component: IoCartOutline },
+    //   items: [
+    //     {
+    //       id: "2.3",
+    //       label: "Orders",
+    //       path: "orders",
+    //       permissions: EPermissions.LIST_ORDER,
+    //     },
+    //   ],
+    // },
     {
       id: "3",
       label: "Doanh nghiệp",
@@ -66,15 +66,33 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       items: [
         {
           id: "3.1",
+          label: "Doanh nghiệp",
+          path: "enterprise",
+          permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
+        },
+        {
+          id: "3.2",
           label: "Loại hình kinh doanh",
           path: "business-activity",
           permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
+        },
+        {
+          id: "3.3",
+          label: "Ngành kinh doanh",
+          path: "industry",
+          // permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
+        },
+        {
+          id: "3.5",
+          label: "Lĩnh vực đấu thầu",
+          path: "bidding-fields",
+          permissions: EPermissions.LIST_BIDDING_FIELD,
         },
       ],
     },
     {
       id: "4",
-      label: "System",
+      label: "Hệ thống",
       icon: { component: IoSettingsOutline },
       items: [
         {
@@ -94,12 +112,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Tags",
           path: "tags",
           permissions: EPermissions.LIST_TAG,
-        },
-        {
-          id: "3.4",
-          label: "Lĩnh vực đấu thầu",
-          path: "bidding-fields",
-          permissions: EPermissions.LIST_BIDDING_FIELD,
         },
       ],
     },
