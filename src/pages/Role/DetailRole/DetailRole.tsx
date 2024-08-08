@@ -7,6 +7,7 @@ import { useArchive } from "@/hooks/useArchive";
 import { convertRolePermissions } from "../helpers/convertRolePermissions";
 import { getRoleById } from "@/services/store/role/role.thunk";
 import { useEffect } from "react";
+import { EPageTypes } from "@/shared/enums/page";
 
 const DetailRole = () => {
   const { id } = useParams();
@@ -16,16 +17,15 @@ const DetailRole = () => {
   useEffect(() => {
     if (id) dispatch(getRoleById(id));
   }, [id]);
-
   return (
     <>
       <Heading
-        title="Detail Role"
+        title="Cập nhật vai trò"
         hasBreadcrumb
         buttons={[
           {
             type: "secondary",
-            text: "Cancel",
+            text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
               navigate("/roles");
@@ -34,7 +34,7 @@ const DetailRole = () => {
         ]}
       />
 
-      {state.activeRole && <RoleForm type="view" role={convertRolePermissions(state.activeRole)} />}
+      {state.activeRole && <RoleForm type={EPageTypes.UPDATE} role={convertRolePermissions(state.activeRole)} />}
     </>
   );
 };
