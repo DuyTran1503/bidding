@@ -5,6 +5,8 @@ import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
 import { IStaff } from "./account.model";
 import { changeStatusStaff, createStaff, deleteStaff, getAllStaff, getStaffById, updateStaff } from "./account.thunk";
+import { IError } from "@/shared/interface/error";
+import { transformPayloadErrors } from "@/shared/utils/common/function";
 
 export interface IAccountInitialState extends IInitialState {
   staffs: IStaff[];
@@ -31,16 +33,27 @@ const accountSlice = createSlice({
   },
 
   extraReducers(builder) {
-    builder.addCase(getAllStaff.fulfilled, (state, { payload }: PayloadAction<IResponse<IStaff[]> | any>) => {
-      if (payload.data) {
-        state.staffs = payload.data.data;
-        state.totalRecords = payload?.data?.total_elements;
-      }
-    });
-    builder.addCase(getStaffById.fulfilled, (state, { payload }: PayloadAction<IStaff> | any) => {
-      state.staff = { ...payload?.staff, list_role: payload?.list_role };
-      state.loading = false;
-    });
+    builder
+      .addCase(getAllStaff.fulfilled, (state, { payload }: PayloadAction<IResponse<IStaff[]> | any>) => {
+        state.status = EFetchStatus.FULFILLED;
+        if (payload.data) {
+          state.staffs = payload.data.data;
+          state.totalRecords = payload?.data?.total_elements;
+        }
+      })
+      .addCase(getAllStaff.rejected, (state, { payload }: PayloadAction<IError[] | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+    builder
+      .addCase(getStaffById.fulfilled, (state, { payload }: PayloadAction<IStaff> | any) => {
+        state.staff = { ...payload?.staff, list_role: payload?.list_role };
+        state.loading = false;
+      })
+      .addCase(getStaffById.rejected, (state, { payload }: PayloadAction<IError> | any) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
     builder
       .addCase(createStaff.pending, (state) => {
         state.status = EFetchStatus.PENDING;
@@ -49,8 +62,9 @@ const accountSlice = createSlice({
         state.status = EFetchStatus.FULFILLED;
         state.message = "Tạo mới thành công ";
       })
-      .addCase(createStaff.rejected, (state) => {
+      .addCase(createStaff.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     builder
       .addCase(updateStaff.pending, (state) => {
@@ -58,10 +72,11 @@ const accountSlice = createSlice({
       })
       .addCase(updateStaff.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Tạo mới thành công";
+        state.message = "Cập nhật thành công";
       })
-      .addCase(updateStaff.rejected, (state) => {
+      .addCase(updateStaff.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     builder
       .addCase(changeStatusStaff.pending, (state) => {
@@ -71,8 +86,9 @@ const accountSlice = createSlice({
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })
-      .addCase(changeStatusStaff.rejected, (state) => {
+      .addCase(changeStatusStaff.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Delete tag
     builder
@@ -84,8 +100,9 @@ const accountSlice = createSlice({
         state.message = "Xóa thành công";
         state.staffs = state.staffs.filter((item) => String(item.id_user) !== payload);
       })
-      .addCase(deleteStaff.rejected, (state) => {
+      .addCase(deleteStaff.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
   },
 });
