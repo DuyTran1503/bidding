@@ -104,7 +104,7 @@ const FormInput = ({
       {!!error && (
         <div
           className={clsx(
-            "text-m-regular placeholder:text-m-medium flex-1 grow border-red-500 bg-gray-25 py-[10px] text-black-500 text-red-500 outline-none focus:bg-white",
+            "text-m-regular placeholder:text-m-medium flex-1 grow border-red-500 bg-gray-25 py-[10px] text-red-500 outline-none focus:bg-white",
           )}
         >
           {error}
