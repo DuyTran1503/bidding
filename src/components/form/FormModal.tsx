@@ -1,14 +1,12 @@
 import React from "react";
-import { Modal } from "antd";
+import { Modal, Button } from "antd";
 
 interface IFormModalProps {
     title?: string;
     open: boolean;
     onSubmit?: () => void;
     onCancel?: () => void;
-    submitText?: string;
     cancelText?: string;
-    isSubmitDisabled?: boolean;
     isCancelDisabled?: boolean;
     children?: React.ReactNode;
 }
@@ -16,11 +14,8 @@ interface IFormModalProps {
 const FormModal = ({
     title,
     open,
-    onSubmit,
     onCancel,
-    submitText = "SUBMIT",
     cancelText = "Cancel",
-    isSubmitDisabled = false,
     isCancelDisabled = false,
     children,
 }: IFormModalProps) => {
@@ -28,12 +23,16 @@ const FormModal = ({
         <Modal
             title={title}
             open={open}
-            onOk={onSubmit}
             onCancel={onCancel}
-            okText={submitText}
-            cancelText={cancelText}
-            okButtonProps={{ disabled: isSubmitDisabled }}
-            cancelButtonProps={{ disabled: isCancelDisabled }}
+            footer={
+                <Button
+                    type="default"
+                    onClick={onCancel}
+                    disabled={isCancelDisabled}
+                >
+                    {cancelText}
+                </Button>
+            }
         >
             {children}
         </Modal>
