@@ -4,6 +4,7 @@ import FormModal from "@/components/form/FormModal";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IBiddingFieldInitialState, resetStatus, setFilter } from "@/services/store/biddingField/biddingField.slice";
@@ -19,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 const BiddingFields = () => {
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IBiddingFieldInitialState>("biddingfield");
+  const { state, dispatch } = useArchive<IBiddingFieldInitialState>("bidding_field");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<ReactNode>(null);
   const [isModal, setIsModal] = useState(false);
@@ -131,7 +132,7 @@ const BiddingFields = () => {
   }, [JSON.stringify(state.biddingFields)]);
 
   useFetchStatus({
-    module: "biddingfield",
+    module: "bidding_field",
     reset: resetStatus,
     actions: {
       success: { message: state.message },
@@ -146,7 +147,14 @@ const BiddingFields = () => {
   useEffect(() => {
     dispatch(getAllBiddingFields({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-
+  const search: ISearchTypeTable[] = [
+    {
+      id: "name",
+      placeholder: "Nhập tên lĩnh vực ...",
+      label: "Lĩnh vực đấu thầu",
+      type: "text",
+    },
+  ];
   return (
     <>
       <Heading
@@ -174,7 +182,7 @@ const BiddingFields = () => {
       <ManagementGrid
         columns={columns}
         data={data}
-        search={[]}
+        search={search}
         buttons={buttons}
         pagination={{
           current: state.filter.page ?? 1,
