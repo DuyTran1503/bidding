@@ -47,7 +47,7 @@ const formatTreeData = (data: any[]): { title: string; value: string; key: strin
 const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormProps) => {
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
   const [loading, setLoading] = useState(true);
-  const { dispatch, state } = useArchive<IBiddingFieldInitialState>("biddingfield");
+  const { dispatch, state } = useArchive<IBiddingFieldInitialState>("bidding_field");
 
   const initialValues: IBiddingFieldFormInitialValues = {
     name: biddingField?.name || "",
