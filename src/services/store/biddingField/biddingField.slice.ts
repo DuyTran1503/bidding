@@ -42,6 +42,8 @@ const biddingFieldSlice = createSlice({
           state.currentPage = payload.data.current_page;    // Trang hiện tại
       }
   });
+
+  // ? Get By ID
     builder.addCase(
       getBiddingFieldById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingField> | any>) => {
         if (payload.data) {
