@@ -48,7 +48,7 @@ const Roles = () => {
     },
     {
       dataIndex: "name",
-      title: "Name",
+      title: "Tên vai trò",
     },
   ];
 
@@ -103,8 +103,8 @@ const Roles = () => {
         search={search}
         buttons={buttons}
         pagination={{
-          current: state.filter._page! ?? 1,
-          pageSize: state.filter._page! ?? 10,
+          current: state.filter.page! ?? 1,
+          pageSize: state.filter.page! ?? 10,
           total: state.totalRecords,
         }}
         setFilter={setFilter}

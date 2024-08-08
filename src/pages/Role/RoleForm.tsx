@@ -12,7 +12,6 @@ import { FormikRefType } from "@/shared/utils/shared-types";
 import { IRole } from "@/services/store/role/role.model";
 import lodash from "lodash";
 import { IRoleInitialState } from "@/services/store/role/role.slice";
-import { IPermission } from "@/services/store/permission/permission.model";
 import { EPageTypes } from "@/shared/enums/page";
 interface Permission {
   created_at: string;
