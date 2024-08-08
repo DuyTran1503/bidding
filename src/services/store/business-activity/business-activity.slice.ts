@@ -12,6 +12,8 @@ import {
   getBusinessActivityById,
   updateBusinessActivity,
 } from "./business-activity.thunk";
+import { IError } from "@/shared/interface/error";
+import { transformPayloadErrors } from "@/shared/utils/common/function";
 
 export interface IBusinessActivityInitialState extends IInitialState {
   businessActivities: IBusinessActivity[];
@@ -23,6 +25,7 @@ const initialState: IBusinessActivityInitialState = {
   businessActivities: [],
   businessActivity: undefined,
   message: "",
+  error: undefined,
   filter: {
     page: 1,
     size: 10,
@@ -39,20 +42,33 @@ const businessActivitySlice = createSlice({
     fetching(state) {
       state.loading = true;
     },
+    resetMessageError(state) {
+      state.message = "";
+    },
   },
 
   extraReducers(builder) {
-    builder.addCase(getAllBusinessActivity.fulfilled, (state, { payload }: PayloadAction<IResponse<IBusinessActivity[]> | any>) => {
-      if (payload.data) {
-        state.businessActivities = payload.data.data;
-        state.totalRecords = payload?.data?.total_elements;
-        state.number_of_elements = payload?.data?.number_of_elements;
-      }
-    });
-    builder.addCase(getBusinessActivityById.fulfilled, (state, { payload }: PayloadAction<IBusinessActivity> | any) => {
-      state.businessActivity = payload.data;
-      state.loading = false;
-    });
+    builder
+      .addCase(getAllBusinessActivity.fulfilled, (state, { payload }: PayloadAction<IResponse<IBusinessActivity[]> | any>) => {
+        if (payload.data) {
+          state.businessActivities = payload.data.data;
+          state.totalRecords = payload?.data?.total_elements;
+          state.number_of_elements = payload?.data?.number_of_elements;
+        }
+      })
+      .addCase(getAllBusinessActivity.rejected, (state, { payload }: PayloadAction<IResponse<IBusinessActivity[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+    builder
+      .addCase(getBusinessActivityById.fulfilled, (state, { payload }: PayloadAction<IBusinessActivity> | any) => {
+        state.businessActivity = payload.data;
+        state.loading = false;
+      })
+      .addCase(getBusinessActivityById.rejected, (state, { payload }: PayloadAction<IBusinessActivity> | any) => {
+        state.businessActivity = payload.data;
+        state.message = transformPayloadErrors(payload?.errors);
+        state.loading = true;
+      });
     builder
       .addCase(createBusinessActivity.pending, (state) => {
         state.status = EFetchStatus.PENDING;
@@ -61,8 +77,10 @@ const businessActivitySlice = createSlice({
         state.status = EFetchStatus.FULFILLED;
         state.message = "Tạo mới thành công ";
       })
-      .addCase(createBusinessActivity.rejected, (state) => {
+      .addCase(createBusinessActivity.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+        console.log(transformPayloadErrors(payload?.errors));
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     builder
       .addCase(updateBusinessActivity.pending, (state) => {
@@ -72,8 +90,9 @@ const businessActivitySlice = createSlice({
         state.status = EFetchStatus.FULFILLED;
         state.message = "Cập nhật thành công";
       })
-      .addCase(updateBusinessActivity.rejected, (state) => {
+      .addCase(updateBusinessActivity.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     builder
       .addCase(changeStatusBusinessActivity.pending, (state) => {
@@ -83,8 +102,9 @@ const businessActivitySlice = createSlice({
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })
-      .addCase(changeStatusBusinessActivity.rejected, (state) => {
+      .addCase(changeStatusBusinessActivity.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Delete tag
     builder
@@ -101,5 +121,5 @@ const businessActivitySlice = createSlice({
       });
   },
 });
-export const { setFilter, resetStatus } = businessActivitySlice.actions;
+export const { fetching, setFilter, resetStatus, resetMessageError } = businessActivitySlice.actions;
 export { businessActivitySlice };
