@@ -3,7 +3,14 @@ import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { IBiddingField } from "./biddingField.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
-import { getAllBiddingFields, createBiddingField, updateBiddingField, deleteBiddingField, getBiddingFieldById, changeStatusBiddingField } from "./biddingField.thunk";
+import { 
+  getAllBiddingFields, 
+  createBiddingField, 
+  updateBiddingField, 
+  deleteBiddingField, 
+  getBiddingFieldById, 
+  changeStatusBiddingField 
+} from "./biddingField.thunk";
 
 export interface IBiddingFieldInitialState extends IInitialState {
   biddingFields: IBiddingField[];
@@ -105,7 +112,7 @@ const biddingFieldSlice = createSlice({
       .addCase(changeStatusBiddingField.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusBiddingField.fulfilled, (state, { payload }) => {
+      .addCase(changeStatusBiddingField.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })

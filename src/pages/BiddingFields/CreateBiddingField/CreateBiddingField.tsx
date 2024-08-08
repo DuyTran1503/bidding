@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import BiddingFieldForm, { IBiddingFieldFormInitialValues } from "../BiddingFieldForm";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IoClose } from "react-icons/io5";
+import { EPageTypes } from "@/shared/enums/page";
 
 const CreateBiddingField = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const CreateBiddingField = () => {
           },
         ]}
       />
-      <BiddingFieldForm formikRef={formikRef} type="create" />
+      <BiddingFieldForm formikRef={formikRef} type={EPageTypes.CREATE} />
     </>
   );
 };

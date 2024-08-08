@@ -13,10 +13,11 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo, useState, ReactNode } from "react"; // Import ReactNode
+import { useEffect, useMemo, useState, ReactNode } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import BiddingFieldDetail from "../DetailBiddingField/DetailBiddingField";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 
 const BiddingFields = () => {
     const navigate = useNavigate();
@@ -24,7 +25,8 @@ const BiddingFields = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState<ReactNode>(null);
     const [isModal, setIsModal] = useState(false);
-    const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+    const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
+
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
@@ -81,37 +83,45 @@ const BiddingFields = () => {
             },
         },
     ];
+
     const handleChangeStatus = (item: ITableData) => {
         setIsModal(true);
         setConfirmItem(item);
     };
+
     const onConfirmStatus = () => {
         if (confirmItem && confirmItem.key) {
             dispatch(changeStatusBiddingField(String(confirmItem.key)));
         }
-    };
-    const handleSubmit = () => {
-        setIsModalOpen(false);
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
     };
 
-    const data: ITableData[] = useMemo(() => {
-        if (state.biddingFields && state.biddingFields.length > 0) {
-            return state.biddingFields.map((field, index) => ({
+    const search: ISearchTypeTable[] = [
+        {
+            id: "name",
+            placeholder: "Nhập tên lĩnh vực...",
+            label: "Tên lĩnh vực",
+            type: "text",
+        },
+    ];
+
+    const data: ITableData[] = useMemo(() =>
+        state.biddingFields && state.biddingFields.length > 0
+            ? state.biddingFields.map(({ id, name, description, code, is_active, parent_name }, index) => ({
                 index: index + 1,
-                key: field.id,
-                name: field.name,
-                description: field.description,
-                code: field.code,
-                is_active: field.is_active,
-                parent_name: field.parent_name,
-            }));
-        }
-        return [];
-    }, [JSON.stringify(state.biddingFields)]);
+                key: id,
+                name,
+                description,
+                code,
+                is_active,
+                parent_name,
+            }))
+            : [],
+        [JSON.stringify(state.biddingFields)]
+    );
 
     useFetchStatus({
         module: "biddingfield",
@@ -121,13 +131,16 @@ const BiddingFields = () => {
             error: { message: state.message },
         },
     });
+
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
             dispatch(getAllBiddingFields({ query: state.filter }));
         }
     }, [JSON.stringify(state.status)]);
+
     useEffect(() => {
         dispatch(getAllBiddingFields({ query: state.filter }));
+
     }, [JSON.stringify(state.filter)]);
 
     return (
@@ -144,7 +157,7 @@ const BiddingFields = () => {
                     },
                 ]}
             />
-            <FormModal title="Bidding Field Details" open={isModalOpen} onSubmit={handleSubmit} onCancel={handleCancel} submitText="Submit">
+            <FormModal open={isModalOpen} onCancel={handleCancel}>
                 {modalContent}
             </FormModal>
             <ConfirmModal
@@ -157,7 +170,7 @@ const BiddingFields = () => {
             <ManagementGrid
                 columns={columns}
                 data={data}
-                search={[]}
+                search={search}
                 buttons={buttons}
                 pagination={{
                     current: state.filter.page ?? 1,
@@ -165,6 +178,7 @@ const BiddingFields = () => {
                     total: state.totalRecords!,
                 }}
                 setFilter={setFilter}
+                filter={state.filter}
             />
         </>
     );
