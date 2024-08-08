@@ -14,9 +14,9 @@ import { EPageTypes } from "@/shared/enums/page";
 const CreateBiddingField = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IBiddingFieldFormInitialValues>>(null);
-  const { state } = useArchive<IBiddingFieldInitialState>("biddingfield");
+  const { state } = useArchive<IBiddingFieldInitialState>("bidding_field");
   useFetchStatus({
-    module: "biddingfield",
+    module: "bidding_field",
     reset: resetStatus,
     actions: {
       success: { message: state.message, navigate: "/bidding-fields" },
