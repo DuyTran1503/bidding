@@ -78,7 +78,6 @@ const businessActivitySlice = createSlice({
         state.message = "Tạo mới thành công ";
       })
       .addCase(createBusinessActivity.rejected, (state, { payload }: PayloadAction<IError | any>) => {
-        console.log(transformPayloadErrors(payload?.errors));
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });

@@ -45,7 +45,6 @@ const biddingFieldSlice = createSlice({
     builder
       .addCase(getAllBiddingFields.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingField[] | any>>) => {
         if (payload.data) {
-          state.status = EFetchStatus.FULFILLED;
           state.biddingFields = payload.data.data;
           state.totalRecords = payload.data.total_elements; // Tổng số lượng mục
           state.totalPages = payload.data.total_pages; // Tổng số trang
@@ -62,7 +61,6 @@ const biddingFieldSlice = createSlice({
     builder
       .addCase(getBiddingFieldById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingField> | any>) => {
         if (payload.data) {
-          state.status = EFetchStatus.FULFILLED;
           state.activeBiddingField = payload.data;
         }
       })
