@@ -45,8 +45,7 @@ const PrimaryTable = <T extends ISearchParams>({
   setFilter,
   fetching,
   filter,
-  scroll,
-  ...rest
+  // ...rest
 }: IPrimaryTableProps<T>) => {
   const dispatch = useDispatch();
 

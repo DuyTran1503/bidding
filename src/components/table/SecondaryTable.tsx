@@ -36,7 +36,7 @@ export const columns: ColumnsType<DataType> = [
     title: "Order ID",
     dataIndex: "key",
     key: "key",
-    render: (text: string) => <a className="text-m-semibold text-primary-500">{text}</a>,
+    render: (text: string) => <a className="font-semibold text-primary-500">{text}</a>,
   },
   {
     title: "Product",
@@ -51,7 +51,7 @@ export const columns: ColumnsType<DataType> = [
     dataIndex: "total",
     key: "total",
     sorter: (a: DataType, b: DataType) => a.total - b.total,
-    render: (total: number) => <span className="text-m-medium text-gray-500">${total.toFixed(2)}</span>,
+    render: (total: number) => <span className="text-base text-gray-500">${total.toFixed(2)}</span>,
   },
   {
     title: "Status",
@@ -67,7 +67,7 @@ export const columns: ColumnsType<DataType> = [
     key: "date",
     render: (record: DataType) => (
       <Space size="middle">
-        <span className="text-m-medium text-gray-500">{record.date}</span>
+        <span className="text-base text-gray-500">{record.date}</span>
       </Space>
     ),
   },

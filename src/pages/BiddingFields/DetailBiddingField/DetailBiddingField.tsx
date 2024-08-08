@@ -1,30 +1,28 @@
 import React from "react";
 import { ITableData } from "@/components/table/PrimaryTable";
-import { IBiddingField } from "@/services/store/biddingField/biddingField.model";
-
 interface BiddingFieldDetailProps {
   record: IBiddingField;
 }
 
 const BiddingFieldDetail: React.FC<BiddingFieldDetailProps> = ({ record }: IBiddingField | any) => {
   return (
-    <>
-      <p>
-        <strong>Tên của lĩnh vực đấu thầu:</strong> {record?.name}
-      </p>
-      <p>
-        <strong>Mô tả của lĩnh vực đấu thầu:</strong> {record?.description}
-      </p>
-      <p>
-        <strong>Code:</strong> {record?.code}
-      </p>
-      <p>
-        <strong>Trạng thái:</strong> {record?.is_active ? "True" : "False"}
-      </p>
-      <p>
-        <strong>Lĩnh vực cha:</strong> {record?.parent_name}
-      </p>
-    </>
+    <div className="p-6 bg-white">
+      <h2 className="text-3xl font-semibold mb-4">Chi tiết lĩnh vực đấu thầu</h2>
+      <div className="space-y-6 text-base">
+        <div className="flex items-start">
+          <span className="font-semibold text-gray-700 w-2/5">Tên của lĩnh vực đấu thầu:</span>
+          <span className="ml-2 text-gray-900">{record.name}</span>
+        </div>
+        <div className="flex items-start">
+          <span className="font-semibold text-gray-700 w-2/5">Mô tả của lĩnh vực đấu thầu:</span>
+          <span className="ml-2 text-gray-900">{record.description}</span>
+        </div>
+        <div className="flex items-start">
+          <span className="font-semibold text-gray-700 w-2/5">Trạng thái:</span>
+          <span className="ml-2 text-gray-900">{record.is_active ? "Đang hoạt động" : "Không hoạt động"}</span>
+        </div>
+      </div>
+    </div>
   );
 };
 
