@@ -2,9 +2,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { useArchive } from "@/hooks/useArchive";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
-import UpdateGrid from "@/components/grid/UpdateGrid";
 import { Formik } from "formik";
 import { object, string, number } from "yup";
 import { useEffect, useState } from "react";
@@ -14,7 +12,6 @@ import { IBiddingFieldInitialState } from "@/services/store/biddingField/bidding
 import { IBiddingField } from "@/services/store/biddingField/biddingField.model";
 import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
-import { Form } from "react-router-dom";
 import FormInputArea from "@/components/form/FormInputArea";
 
 interface IActiveBiddingField extends Omit<IBiddingField, "parent"> {
@@ -75,11 +72,6 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
         setLoading(false);
       });
   }, [dispatch, state.filter]);
-
-  const isActiveOptions = [
-    { value: "0", label: "Không" },
-    { value: "1", label: "Có" },
-  ];
 
   return (
     <Formik
@@ -144,9 +136,9 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormSwitch
                   label="Trạng thái "
-                  checked={!!values.is_active ? true : false}
+                  checked={values.is_active === "1"}
                   onChange={(value) => {
-                    setFieldValue("is_active", value);
+                    setFieldValue("is_active", value ? "1" : "0");
                   }}
                 />
               </Col>

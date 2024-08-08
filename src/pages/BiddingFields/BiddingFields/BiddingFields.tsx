@@ -17,6 +17,8 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState, ReactNode } from "react"; // Import ReactNode
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import BiddingFieldDetail from "../DetailBiddingField/DetailBiddingField";
+import { IBiddingField } from "../../../services/store/biddingField/biddingField.model";
 
 const BiddingFields = () => {
   const navigate = useNavigate();
@@ -28,26 +30,8 @@ const BiddingFields = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
-      onClick(record) {
-        setModalContent(
-          <>
-            <p>
-              <strong>Tên của lĩnh vực đấu thầu:</strong> {record.name}
-            </p>
-            <p>
-              <strong>Mô tả của lĩnh vực đấu thầu:</strong> {record.description}
-            </p>
-            <p>
-              <strong>Code:</strong> {record.code}
-            </p>
-            <p>
-              <strong>is_active:</strong> {record.is_active ? "Có" : "Không"}
-            </p>
-            <p>
-              <strong>Lĩnh vực cha:</strong> {record.parent_name}
-            </p>
-          </>,
-        );
+      onClick(record: IBiddingField | any) {
+        setModalContent(<BiddingFieldDetail record={record} />);
         setIsModalOpen(true);
       },
       permission: EPermissions.DETAIL_BIDDING_FIELD,
@@ -147,14 +131,7 @@ const BiddingFields = () => {
   useEffect(() => {
     dispatch(getAllBiddingFields({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-  const search: ISearchTypeTable[] = [
-    {
-      id: "name",
-      placeholder: "Nhập tên lĩnh vực ...",
-      label: "Lĩnh vực đấu thầu",
-      type: "text",
-    },
-  ];
+
   return (
     <>
       <Heading
@@ -182,7 +159,7 @@ const BiddingFields = () => {
       <ManagementGrid
         columns={columns}
         data={data}
-        search={search}
+        search={[]}
         buttons={buttons}
         pagination={{
           current: state.filter.page ?? 1,

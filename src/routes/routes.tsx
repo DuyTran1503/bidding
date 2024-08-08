@@ -22,7 +22,6 @@ import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermissi
 import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
 import CreateBiddingField from "@/pages/BiddingFields/CreateBiddingField/CreateBiddingField";
 import UpdateBiddingField from "@/pages/BiddingFields/UpdateBiddingField/UpdateBiddingField";
-import DetailBiddingField from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
 import BiddingFields from "@/pages/BiddingFields/BiddingFields/BiddingFields";
 import Staffs from "@/pages/Staff/Staffs";
 import CreateStaff from "@/pages/Staff/Create";
@@ -125,11 +124,7 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBiddingField />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailBiddingField />,
-              },
+              }
             ],
           },
           {
