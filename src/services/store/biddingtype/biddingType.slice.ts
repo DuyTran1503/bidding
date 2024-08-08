@@ -11,6 +11,8 @@ import {
   getBiddingTypeById, 
   changeStatusBiddingType 
 } from "./biddingType.thunk";
+import { transformPayloadErrors } from '@/shared/utils/common/function';
+import { IError } from '@/shared/interface/error';
 
 export interface IBiddingTypeInitialState extends IInitialState {
   biddingTypes: IBiddingType[];
@@ -55,6 +57,7 @@ const biddingTypeSlice = createSlice({
       getBiddingTypeById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingType> | any>) => {
         if (payload.data) {
           state.activeBiddingType = payload.data;
+          state.message = transformPayloadErrors(payload?.errors);
         }
       }
     );
@@ -66,14 +69,14 @@ const biddingTypeSlice = createSlice({
       })
       .addCase(createBiddingType.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingType> | any>) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Created successfully";
+        state.message = "Tạo mới thành công";
         if (payload.data) {
           state.biddingTypes.push(payload.data);
         }
       })
-      .addCase(createBiddingType.rejected, (state) => {
+      .addCase(createBiddingType.rejected, (state, {payload}: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = "Creation failed";
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Update bidding type
     builder
@@ -82,7 +85,7 @@ const biddingTypeSlice = createSlice({
       })
       .addCase(updateBiddingType.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingType> | any>) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Updated successfully";
+        state.message = "Cập nhập thành công";
         if (payload.data) {
           const index = state.biddingTypes.findIndex((type) => type.id === payload.data.id);
           if (index !== -1) {
@@ -90,9 +93,9 @@ const biddingTypeSlice = createSlice({
           }
         }
       })
-      .addCase(updateBiddingType.rejected, (state) => {
+      .addCase(updateBiddingType.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = "Update failed";
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Delete bidding type
     builder
@@ -101,12 +104,12 @@ const biddingTypeSlice = createSlice({
       })
       .addCase(deleteBiddingType.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Deleted successfully";
+        state.message = "Xóa thành công";
         state.biddingTypes = state.biddingTypes?.filter((type) => type.id !== payload);
       })
-      .addCase(deleteBiddingType.rejected, (state) => {
+      .addCase(deleteBiddingType.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = "Deletion failed";
+        state.message = transformPayloadErrors(payload?.errors);
       });
       builder
       .addCase(changeStatusBiddingType.pending, (state) => {
@@ -116,8 +119,9 @@ const biddingTypeSlice = createSlice({
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })
-      .addCase(changeStatusBiddingType.rejected, (state) => {
+      .addCase(changeStatusBiddingType.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
   },
 });
