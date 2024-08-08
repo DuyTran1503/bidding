@@ -18,6 +18,7 @@ const FormTreeSelect = ({
     treeData,
     defaultValue,
     onChange,
+    error,
 }: IFormTreeSelect) => {
     const handleChange = (value: string | string[]) => {
         if (onChange) {
@@ -27,7 +28,7 @@ const FormTreeSelect = ({
 
     return (
         <div>
-            {label && <div className="text-m-medium mb-1 text-black-300">{label}</div>}
+            {label && <div className="text-base mb-1 text-black-300">{label}</div>}
             <ConfigProvider
                 theme={{
                     components: {
@@ -40,7 +41,7 @@ const FormTreeSelect = ({
                 <TreeSelect
                     allowClear
                     disabled={isDisabled}
-                    className={clsx("text-m-medium w-full", isDisabled && "opacity-65")}
+                    className={clsx(" w-full", isDisabled && "opacity-65")}
                     value={defaultValue}
                     onChange={(value) => !isDisabled && handleChange(value)}
                     showSearch
@@ -50,6 +51,16 @@ const FormTreeSelect = ({
                     multiple={false} // Chọn chế độ đơn chọn hoặc nhiều tùy thuộc vào yêu cầu
                 />
             </ConfigProvider>
+
+            {!!error && (
+                <div
+                    className={clsx(
+                        "font-normal placeholder:font-medium flex-1 grow border-red-500 py-[10px] text-red-500 outline-none focus:bg-white",
+                    )}
+                >
+                    {error}
+                </div>
+            )}
         </div>
     );
 };
