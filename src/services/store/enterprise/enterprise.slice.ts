@@ -33,8 +33,8 @@ const initialState: IEnterpriseInitialState = {
   number_of_elements: 0,
 };
 
-const businessActivitySlice = createSlice({
-  name: "business",
+const enterpriseSlice = createSlice({
+  name: "enterprise",
   initialState,
   reducers: {
     ...commonStaticReducers<IEnterpriseInitialState>(),
@@ -119,5 +119,5 @@ const businessActivitySlice = createSlice({
       });
   },
 });
-export const { fetching, setFilter, resetStatus, resetMessageError } = businessActivitySlice.actions;
-export { businessActivitySlice };
+export const { fetching, setFilter, resetStatus, resetMessageError } = enterpriseSlice.actions;
+export { enterpriseSlice };
