@@ -14,17 +14,14 @@ import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import {
-  changeStatusBusinessActivity,
-  deleteBusinessActivity,
-  getAllBusinessActivity,
-} from "@/services/store/business-activity/business-activity.thunk";
-import { IBusinessActivityInitialState, resetStatus, setFilter } from "@/services/store/business-activity/business-activity.slice";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
 
-const BusinessActivities = () => {
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { IEnterpriseInitialState, resetStatus, setFilter } from "@/services/store/enterprise/enterprise.slice";
+import { changeStatusEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+
+const Enterprise = () => {
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IBusinessActivityInitialState>("business");
+  const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [isDelete, setIsDelete] = useState(false);
@@ -36,14 +33,31 @@ const BusinessActivities = () => {
     },
     {
       dataIndex: "name",
-      title: "Tên loại hình doanh nghiệp",
+      title: "Tên doanh nghiệp",
     },
     {
-      dataIndex: "description",
-      title: "Mô tả",
+      dataIndex: "representative",
+      title: "Tên người đại diện",
     },
     {
-      title: "Trạng thái tài khoản",
+      dataIndex: "contact_phone",
+      title: "Điện thoại",
+    },
+    {
+      dataIndex: "email",
+      title: "Email",
+    },
+    {
+      dataIndex: "address",
+      title: "Địa chỉ",
+    },
+    {
+      dataIndex: "id_field_of_activity",
+      title: "Lĩnh vực hoạt động",
+    },
+
+    {
+      title: "Trạng thái",
       dataIndex: "is_active",
       render(_, record) {
         return (
@@ -55,6 +69,19 @@ const BusinessActivities = () => {
         );
       },
     },
+    {
+      title: "Trạng thái blacklist",
+      dataIndex: "is_blacklisted",
+      render(_, record) {
+        return (
+          <CommonSwitch
+            onChange={() => handleChangeStatus(record)}
+            checked={!!record.is_blacklisted}
+            title={`Bạn có chắc chắn muốn ${record.is_blacklisted ? "bỏ cấm" : "cấm"} tài khoản này?`}
+          />
+        );
+      },
+    },
   ];
   const buttons: IGridButton[] = [
     {
@@ -62,22 +89,22 @@ const BusinessActivities = () => {
       onClick(record) {
         navigate(`/business-activity/detail/${record?.key}`);
       },
-      permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
+      // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/business-activity/update/${record?.key}`);
       },
-      permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
+      // permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteBusinessActivity(record?.key));
+        dispatch(deleteEnterprise(record?.key));
         setIsDelete(true);
       },
-      permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
+      // permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
     },
   ];
   const search: ISearchTypeTable[] = [
@@ -89,32 +116,36 @@ const BusinessActivities = () => {
     },
   ];
   const data: ITableData[] = useMemo(() => {
-    return Array.isArray(state.businessActivities)
-      ? state.businessActivities.map(({ id, name, description, is_active }, index) => ({
+    return Array.isArray(state.enterprises)
+      ? state.enterprises.map(({ id, name, representative, contact_phone, email, address, is_active, is_blacklisted }, index) => ({
           index: index + 1,
           key: id,
           name,
-          description,
+          representative,
+          contact_phone,
+          email,
+          address,
           is_active,
+          is_blacklisted,
         }))
       : [];
-  }, [JSON.stringify(state.businessActivities)]);
+  }, [JSON.stringify(state.enterprises)]);
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
   };
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusBusinessActivity(String(confirmItem.key)));
-      dispatch(getAllBusinessActivity({ query: state.filter }));
+      dispatch(changeStatusEnterprise(String(confirmItem.key)));
+      dispatch(getAllEnterprise({ query: state.filter }));
     }
   };
   useEffect(() => {
-    dispatch(getAllBusinessActivity({ query: state.filter }));
+    dispatch(getAllEnterprise({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
-      dispatch(getAllBusinessActivity({ query: state.filter }));
+      dispatch(getAllEnterprise({ query: state.filter }));
       setIsDelete(false);
     }
   }, [JSON.stringify(state.status)]);
@@ -136,7 +167,7 @@ const BusinessActivities = () => {
   return (
     <>
       <Heading
-        title="Loại hình hoạt động"
+        title="Doanh nghiệp"
         hasBreadcrumb
         buttons={[
           {
@@ -148,7 +179,7 @@ const BusinessActivities = () => {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
-              navigate("/business-activity/create");
+              navigate("/enterprise/create");
             },
           },
         ]}
@@ -174,9 +205,10 @@ const BusinessActivities = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
+        scroll={{ x: 1600 }}
       />
     </>
   );
 };
 
-export default BusinessActivities;
+export default Enterprise;
