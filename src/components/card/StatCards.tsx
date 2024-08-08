@@ -25,7 +25,7 @@ const StatCard: React.FC<IStatsCardProps> = ({ title, value, percentageChange, c
           <div className={clsx("text-m-bold flex items-center", isPositive ? "text-green-600" : "text-red-600")}>
             {percentageChange}% {isPositive ? <GoTriangleUp /> : <GoTriangleDown />}
           </div>
-          <div className="text-m-medium text-gray-400">{changeValue}</div>
+          <div className="text-base text-gray-400">{changeValue}</div>
         </div>
       </div>
     </div>
