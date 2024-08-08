@@ -60,9 +60,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
       validationSchema={tagSchema}
       onSubmit={(data) => {
         if (type === EPageTypes.CREATE) {
-          console.log(data);
-
-          // dispatch(createIndustry({ body: lodash.omit(data, "id") }));
+          dispatch(createIndustry({ body: lodash.omit(data, "id") }));
         } else if (type === EPageTypes.UPDATE && industry?.id) {
           dispatch(updateIndustry({ body: lodash.omit(data, "id"), param: industry.id }));
         }
