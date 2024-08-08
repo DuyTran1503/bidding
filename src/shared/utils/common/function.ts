@@ -1,4 +1,5 @@
 import { ETYPEFILE } from "@/shared/enums/fileType";
+import { PayloadErrors } from "@/shared/interface/error";
 
 export const phoneRegex = /^(?:\+84|0084|0)?[235789][0-9]{8}$/;
 //chặn khoảng trắng
@@ -53,4 +54,13 @@ export const getFileExtension = (url: string): ETYPEFILE => {
   }
 
   return ETYPEFILE.unknow;
+};
+export const transformPayloadErrors = (arr: PayloadErrors): string => {
+  for (const key in arr) {
+    if (arr.hasOwnProperty(key) && arr[key].length > 0) {
+      return arr[key][0]; // Trả về giá trị đầu tiên từ mảng của key đầu tiên
+    }
+  }
+
+  return ""; // Trả về undefined nếu không có giá trị hợp lệ
 };
