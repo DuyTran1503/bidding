@@ -16,8 +16,7 @@ import FormSelect from "@/components/form/FormSelect";
 import { RootStateType } from "@/services/reducers";
 import { useSelector } from "react-redux";
 import { EPageTypes } from "@/shared/enums/page";
-import { useRoutes } from "react-router-dom";
-
+import dayjs from "dayjs";
 interface TreeNode {
   title: string;
   key: string;
@@ -43,7 +42,7 @@ export interface IStaffFormInitialValues {
   phone: string;
   account_ban_at?: string | null;
   password: "";
-  taxcode: "";
+  taxcode: number | null;
 }
 
 const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
@@ -59,7 +58,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
     phone: "",
     account_ban_at: "",
     password: "",
-    taxcode: "",
+    taxcode: null,
   };
 
   const validationSchema = object().shape({
@@ -195,10 +194,13 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
           account_ban_at: data.account_ban_at ? new Date().toISOString() : null,
           role_id: data.id_role,
         };
+
         const { id_role, ...newObj } = body;
         if (type === EPageTypes.CREATE) {
-          dispatch(createStaff(body as any));
-        } else if (type === EPageTypes.UPDATE) {
+          const newValue = { ...newObj, account_ban_at: dayjs(body.account_ban_at).format(" YYYY-MM-DD HH:mm:ss") };
+          return dispatch(createStaff({ body: newValue as any }));
+        }
+        if (type === EPageTypes.UPDATE) {
           const newValue = {
             role_id: body.id_role,
             id_staff: body.staff_id,
@@ -210,7 +212,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
             taxcode: body.taxcode,
             account_ban_at: body.account_ban_at ? new Date().toISOString() : null,
           };
-          dispatch(updateStaff({ body: newValue, param: String(newValue?.id_user) }));
+          return dispatch(updateStaff({ body: newValue, param: String(newValue?.id_user) }));
         }
       }}
     >
