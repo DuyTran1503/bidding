@@ -2,6 +2,7 @@ import { client } from "@/services/config/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IBusinessActivity } from "./business-activity.model";
+import { IError } from "@/shared/interface/error";
 
 const prefix = "/api/admin/business-activity-types";
 
@@ -37,7 +38,7 @@ export const createBusinessActivity = createAsyncThunk(
 
       return response.status >= 400 ? rejectWithValue(data) : data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data as IError);
     }
   },
 );

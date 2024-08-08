@@ -10,7 +10,11 @@ import FormSwitch from "@/components/form/FormSwitch";
 import { createBusinessActivity, updateBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
 import FormInputArea from "@/components/form/FormInputArea";
 import { Col, Row } from "antd";
-import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
+import { IBusinessActivityInitialState, resetMessageError } from "@/services/store/business-activity/business-activity.slice";
+import { transformPayloadErrors } from "@/shared/utils/common/function";
+import useFetchStatus from "@/hooks/useFetchStatus";
+import { resetStatus } from "@/services/store/account/account.slice";
+import { useEffect } from "react";
 
 interface IBusinessActivityFormProps {
   formikRef?: FormikRefType<IIBusinessActivityInitialValues>;
@@ -36,6 +40,11 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
   const tagSchema = object().shape({
     name: string().trim().required("Vui lòng không để trống trường này"),
   });
+  useEffect(() => {
+    return () => {
+      dispatch(resetMessageError());
+    };
+  }, []);
   return (
     <Formik
       innerRef={formikRef}
