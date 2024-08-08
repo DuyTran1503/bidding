@@ -9,7 +9,7 @@ import { useArchive } from "@/hooks/useArchive";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import useFetchStatus from "@/hooks/useFetchStatus";
@@ -21,13 +21,16 @@ import {
 } from "@/services/store/business-activity/business-activity.thunk";
 import { IBusinessActivityInitialState, resetStatus, setFilter } from "@/services/store/business-activity/business-activity.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import DetailBusinessActivity from "./Detail";
+import FormModal from "@/components/form/FormModal";
 
 const BusinessActivities = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBusinessActivityInitialState>("business");
   const [isModal, setIsModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<ReactNode>(null);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const [isDelete, setIsDelete] = useState(false);
 
   const columns: ColumnsType = [
     {
@@ -60,7 +63,8 @@ const BusinessActivities = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/business-activity/detail/${record?.key}`);
+        setModalContent(<DetailBusinessActivity record={record} />);
+        setIsModalOpen(true);
       },
       permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
     },
@@ -75,7 +79,6 @@ const BusinessActivities = () => {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteBusinessActivity(record?.key));
-        setIsDelete(true);
       },
       permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
     },
@@ -91,12 +94,12 @@ const BusinessActivities = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.businessActivities)
       ? state.businessActivities.map(({ id, name, description, is_active }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          description,
-          is_active,
-        }))
+        index: index + 1,
+        key: id,
+        name,
+        description,
+        is_active,
+      }))
       : [];
   }, [JSON.stringify(state.businessActivities)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -109,13 +112,16 @@ const BusinessActivities = () => {
       dispatch(getAllBusinessActivity({ query: state.filter }));
     }
   };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   useEffect(() => {
     dispatch(getAllBusinessActivity({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllBusinessActivity({ query: state.filter }));
-      setIsDelete(false);
     }
   }, [JSON.stringify(state.status)]);
 
@@ -131,7 +137,6 @@ const BusinessActivities = () => {
     return () => {
       setFilter({ page: 1, size: 10 });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
@@ -153,6 +158,9 @@ const BusinessActivities = () => {
           },
         ]}
       />
+      <FormModal open={isModalOpen} onCancel={handleCancel}>
+        {modalContent}
+      </FormModal>
       <ConfirmModal
         title={"Xác nhận"}
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
