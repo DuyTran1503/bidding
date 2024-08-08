@@ -1,10 +1,12 @@
 // ? [key: path]: name
 export enum EPageNames {
-  dashboard = "Dashboard",
+  dashboard = "Bảng điều khiển",
   products = "Products",
   categories = "Categories",
   orders = "Orders",
   customers = "Customers",
-  update = "Update",
-  detail = "Detail",
+  update = "Cập nhật",
+  detail = "Chi tiết",
+  create = "Tạo mới",
+  enterprise = "Doanh nghiệp",
 }
