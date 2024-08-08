@@ -3,9 +3,9 @@ import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IFundingSource } from "./funding_source.model";
 
-const prefix = "/api/fundingsources";
+const prefix = "http://localhost:4000/funding_sources";
 
-export const getAllFundingSources = createAsyncThunk("funding_source/get-all-funding_sources", async(payload: IThunkPayload, { rejectWithValue }) => {
+export const getAllFundingSources = createAsyncThunk("funding-source/get-all-funding-sources", async(payload: IThunkPayload, { rejectWithValue }) => {
     try {
         const {response, data} = await client.get<IFundingSource>(prefix, payload);
         return response.status >= 400 ? rejectWithValue(data) : data;
@@ -14,7 +14,7 @@ export const getAllFundingSources = createAsyncThunk("funding_source/get-all-fun
     }
 });
 
-export const getFundingSourceById = createAsyncThunk("funding_source/get-funding_sources-by-id", async(id: string, { rejectWithValue }) => {
+export const getFundingSourceById = createAsyncThunk("funding-source/get-funding-sources-by-id", async(id: string, { rejectWithValue }) => {
     try {
         const {response, data} = await client.get<IFundingSource>(prefix +  `/${id}`);
         return response.status >= 400 ? rejectWithValue(data) : data;
@@ -23,7 +23,7 @@ export const getFundingSourceById = createAsyncThunk("funding_source/get-funding
     }
 });
 
-export const createFundingSource = createAsyncThunk("funding_source/create-funding_source", async(payload: IThunkPayload, { rejectWithValue }) => {
+export const createFundingSource = createAsyncThunk("funding-source/create-funding-source", async(payload: IThunkPayload, { rejectWithValue }) => {
     try {
         const {response, data} = await client.post<IFundingSource[]>(prefix, payload);
         return response.status >= 400 ? rejectWithValue(data) : data;
@@ -32,7 +32,7 @@ export const createFundingSource = createAsyncThunk("funding_source/create-fundi
     }
 });
 
-export const updateFundingSource = createAsyncThunk("funding_source/update-funding_source", async(payload: IThunkPayload, { rejectWithValue }) => {
+export const updateFundingSource = createAsyncThunk("funding-source/update-funding-source", async(payload: IThunkPayload, { rejectWithValue }) => {
     try {
         const {response, data} = await client.patch<IFundingSource[]>(`${prefix}/${payload.param}`, payload);
         return response.status >= 400 ? rejectWithValue(data) : data;
@@ -41,7 +41,7 @@ export const updateFundingSource = createAsyncThunk("funding_source/update-fundi
     }
 });
 
-export const deleteFundingSources = createAsyncThunk("funding_source/delete-funding_source", async(id: string, { rejectWithValue }) => {
+export const deleteFundingSources = createAsyncThunk("funding-source/delete-funding-source", async(id: string, { rejectWithValue }) => {
     try {
         const {response, data} = await client.delete(`${prefix}/${id}`);
         return response.status >= 400 ? rejectWithValue(data) : id;

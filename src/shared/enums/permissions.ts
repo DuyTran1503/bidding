@@ -39,4 +39,11 @@ export enum EPermissions {
   CREATE_FUNDING_SOURCE = "create_funding_source",
   UPDATE_FUNDING_SOURCE = "update_funding_source",
   DESTROY_FUNDING_SOURCE = "destroy_funding_source",
+
+  // ? field of activity
+  LIST_FIELD_OF_ACTIVITY = "list_funding_source",
+  DETAIL_FIELD_OF_ACTIVITY = "detail_funding_source",
+  CREATE_FIELD_OF_ACTIVITY = "create_funding_source",
+  UPDATE_FIELD_OF_ACTIVITY = "update_funding_source",
+  DESTROY_FIELD_OF_ACTIVITY = "destroy_funding_source",
 }

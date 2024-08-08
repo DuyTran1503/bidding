@@ -59,24 +59,6 @@ const FundingSourceForm = ({ formikRef, type, tag }: IFundingSourceFormProps ) =
                 onChange={(e) => setFieldValue("name", e)}
                 onBlur={handleBlur}
               />
-              {/* <FormInput
-                label="Funding Source description"
-                placeholder="Type description funding source here..."
-                name="description"
-                value={values.description}
-                error={touched.description ? errors.description : ""}
-                onChange={(e) => setFieldValue("description", e)}
-                onBlur={handleBlur}
-              /> */}
-              {/* <FormInput
-                label="Funding Source code"
-                placeholder="Type code funding source here..."
-                name="code"
-                value={values.code}
-                error={touched.code ? errors.code : ""}
-                onChange={(e) => setFieldValue("code", e)}
-                onBlur={handleBlur}
-              /> */}
               <FormInput
                 label="Loại nguồn tài trợ"
                 placeholder="Nhập loại nguồn tài trợ ở đây..."
@@ -86,15 +68,6 @@ const FundingSourceForm = ({ formikRef, type, tag }: IFundingSourceFormProps ) =
                 onChange={(e) => setFieldValue("type", e)}
                 onBlur={handleBlur}
               />
-              {/* <FormInput
-                label="Funding Source active"
-                placeholder="active active funding source here..."
-                name="active"
-                value={values.is_active ? "true" : "false"} // Chuyển đổi boolean thành chuỗi
-                error={touched.is_active ? errors.is_active : ""}
-                onChange={(e) => setFieldValue("is_active", e.target.value === "true")}
-                onBlur={handleBlur}
-              /> */}
 
             </FormGroup>
         )}

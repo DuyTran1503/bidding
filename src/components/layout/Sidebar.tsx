@@ -83,10 +83,16 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "3.4",
-          label: "Nguồn tài trợ",
+          label: "Nguồn Tài Trợ",
           path: "funding_sources",
           permissions: EPermissions.READ_FUNDING_SOURCE,
         },
+        // {
+        //   id: "3.5",
+        //   label: "Loại Hình Hoạt Động",
+        //   path: "field_of_activity",
+        //   permissions: EPermissions.READ_FIELD_OF_ACTIVITY,
+        // },
       ],
     },
     {
