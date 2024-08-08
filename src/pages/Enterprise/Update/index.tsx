@@ -7,24 +7,24 @@ import Heading from "@/components/layout/Heading";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
-import BusinessActivityForm, { IIBusinessActivityInitialValues } from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
-import { getBusinessActivityById } from "@/services/store/business-activity/business-activity.thunk";
-import { IBusinessActivityInitialState, resetStatus } from "@/services/store/business-activity/business-activity.slice";
-const UpdateBusinessActivity = () => {
+import EnterpriseForm, { IEnterpriseInitialValues } from "../ActionModule";
+import { IEnterpriseInitialState, resetStatus } from "@/services/store/enterprise/enterprise.slice";
+import { getEnterpriseById } from "@/services/store/enterprise/enterprise.thunk";
+const UpdateEnterprise = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IIBusinessActivityInitialValues>>(null);
-  const { state, dispatch } = useArchive<IBusinessActivityInitialState>("business");
-  const [data, setData] = useState<IIBusinessActivityInitialValues>();
+  const formikRef = useRef<FormikProps<IEnterpriseInitialValues>>(null);
+  const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
+  const [data, setData] = useState<IEnterpriseInitialValues>();
   const { id } = useParams();
 
   useFetchStatus({
-    module: "business",
+    module: "enterprise",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/business-activity",
+        navigate: "/enterprise",
       },
       error: {
         message: state.message,
@@ -33,22 +33,35 @@ const UpdateBusinessActivity = () => {
   });
   useEffect(() => {
     if (id) {
-      dispatch(getBusinessActivityById(id));
+      dispatch(getEnterpriseById(id));
     }
   }, [id]);
   useEffect(() => {
-    if (!!state.businessActivity) {
-      setData(state.businessActivity);
+    if (!!state.enterprise) {
+      setData(state.enterprise);
     }
-  }, [JSON.stringify(state.businessActivity)]);
+  }, [JSON.stringify(state.enterprise)]);
 
   useEffect(() => {
     if (data) {
       if (formikRef.current) {
         formikRef.current.setValues({
           name: data.name,
+          address: data.address,
+          representative: data.representative,
+          contact_phone: data.contact_phone,
+          email: data.email,
+          website: data.website,
+          join_date: data.join_date,
+          id_business_activity: data.id_business_activity,
           description: data.description,
+          tax_code: data.tax_code,
+          organization_type: data.organization_type,
+          representative_name: data.representative_name,
+          business_registration_date: data.business_registration_date,
+          business_registration_number: data.business_registration_number,
           is_active: data.is_active,
+          is_blacklisted: data.is_blacklisted,
         });
       }
     }
@@ -56,7 +69,7 @@ const UpdateBusinessActivity = () => {
   return (
     <>
       <Heading
-        title="Cập nhật loại hình doanh nghiệp"
+        title="Cập nhật  doanh nghiệp"
         hasBreadcrumb
         buttons={[
           {
@@ -64,7 +77,7 @@ const UpdateBusinessActivity = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/business-activity");
+              navigate("/enterprise");
             },
           },
           {
@@ -79,9 +92,9 @@ const UpdateBusinessActivity = () => {
           },
         ]}
       />
-      <BusinessActivityForm type={EPageTypes.UPDATE} formikRef={formikRef} businessActivity={data} />
+      <EnterpriseForm type={EPageTypes.UPDATE} formikRef={formikRef} enterprise={data} />
     </>
   );
 };
 
-export default UpdateBusinessActivity;
+export default UpdateEnterprise;

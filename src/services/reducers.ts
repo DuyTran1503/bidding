@@ -9,6 +9,7 @@ import { tagSlice } from "./store/tag/tag.slice";
 import { biddingFieldSlice } from "./store/biddingField/biddingField.slice";
 import { businessActivitySlice } from "./store/business-activity/business-activity.slice";
 import { industrySlice } from "./store/industry/industry.slice";
+import { enterpriseSlice } from "./store/enterprise/enterprise.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -20,6 +21,7 @@ export const reducers = combineReducers({
   tag: tagSlice.reducer,
   business: businessActivitySlice.reducer,
   industry: industrySlice.reducer,
+  enterprise: enterpriseSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
