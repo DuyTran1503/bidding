@@ -41,7 +41,7 @@ const OrderInforCard: React.FC<IOrderInforCardProps> = ({ title, icon: TitleIcon
     <div className="flex w-full flex-col gap-5 rounded-xl bg-white p-6">
       <div className="flex items-center justify-between">
         <div className="flex gap-3">
-          <div className="text-m-semibold flex items-center gap-2">
+          <div className="font-semibold flex items-center gap-2">
             <div>{title}</div>
           </div>
           {status && <StatusBadge {...status} />}

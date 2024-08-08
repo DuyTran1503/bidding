@@ -29,7 +29,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ label, onChange, defa
       }}
     >
       <div>
-        {label && <div className="text-m-medium mb-1 text-black-300">{label}</div>}
+        {label && <div className="text-base mb-1 text-black-300">{label}</div>}
         <DatePicker.RangePicker
           className="custom-datepicker w-full rounded-md bg-gray-25 py-2"
           onChange={handleChange}
