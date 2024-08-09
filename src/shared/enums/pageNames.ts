@@ -11,4 +11,5 @@ export enum EPageNames {
   enterprise = "Doanh nghiệp",
   staffs = "Nhân viên",
   business_activity = "Loại hình hoạt động",
+  industry = "Ngành kinh doanh",
 }
