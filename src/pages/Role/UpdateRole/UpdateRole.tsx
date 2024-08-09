@@ -44,7 +44,7 @@ const UpdateRole = () => {
   return (
     <>
       <Heading
-        title="Cập nhật vai trò"
+        title="Chi tiết vai trò"
         hasBreadcrumb
         buttons={[
           {

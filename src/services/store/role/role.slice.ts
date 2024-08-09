@@ -114,7 +114,6 @@ const roleSlice = createSlice({
       });
     builder.addCase(getAllPermissions.fulfilled, (state, { payload }: PayloadAction<IResponse<IPermission[]> | any>) => {
       if (payload) {
-        state.status = EFetchStatus.FULFILLED;
         state.permissions = payload.permissions;
       }
     });

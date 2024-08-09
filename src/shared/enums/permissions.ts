@@ -32,7 +32,7 @@ export enum EPermissions {
   DETAIL_BIDDING_FIELD = "detail_bidding_field",
   CREATE_BIDDING_FIELD = "create_bidding_field",
   UPDATE_BIDDING_FIELD = "update_bidding_field",
-  DESTROY_BIDDING_FIELD = "destroy_bidding_type",
+  DESTROY_BIDDING_FIELD = "destroy_bidding_field",
 
   // ? BiddingType
   LIST_BIDDING_TYPE = "list_bidding_type",
