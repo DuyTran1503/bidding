@@ -34,6 +34,7 @@ import BiddingTypes from "@/pages/BiddingTypes/BiddingTypes/BiddingTypes";
 import CreateBiddingType from "@/pages/BiddingTypes/CreateBiddingType/CreateBiddingType";
 import UpdateBiddingType from "@/pages/BiddingTypes/UpdateBiddingType/UpdateBiddingType";
 
+
 export interface IRoute {
   path: string;
   layout?: () => ReactNode;
@@ -175,6 +176,40 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBusinessActivity />,
+              },
+            ],
+          },
+          {
+            path: "industry",
+            pages: [
+              {
+                path: "/",
+                element: () => <Industry />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateIndustry />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateIndustry />,
+              },
+            ],
+          },
+          {
+            path: "enterprise",
+            pages: [
+              {
+                path: "/",
+                element: () => <Enterprise />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateEnterprise />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateEnterprise />,
               },
             ],
           },
