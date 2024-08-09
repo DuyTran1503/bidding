@@ -69,7 +69,7 @@ const OrderStatusCard: React.FC<OrderStatusCardProps> = ({ itemSteps, currentSte
             description={
               <div className="flex flex-col gap-2">
                 <div className="text-black-400">{itemStep.description}</div>
-                <div className="text-m-regular text-gray-400">{itemStep.date}</div>
+                <div className="font-normal text-gray-400">{itemStep.date}</div>
               </div>
             }
             status={status}
