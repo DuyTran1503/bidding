@@ -157,9 +157,9 @@ const BiddingFields = () => {
           },
         ]}
       />
-      {/* <FormModal open={isModalOpen} onCancel={handleCancel}>
+      <FormModal open={isModalOpen} onCancel={handleCancel}>
         {modalContent}
-      </FormModal> */}
+      </FormModal>
       <ConfirmModal
         title={"Xác nhận"}
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
