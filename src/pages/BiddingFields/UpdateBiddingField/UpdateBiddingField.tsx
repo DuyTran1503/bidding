@@ -16,11 +16,11 @@ const UpdateBiddingField = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IBiddingFieldFormInitialValues>>(null);
-  const { state, dispatch } = useArchive<IBiddingFieldInitialState>("biddingfield");
+  const { state, dispatch } = useArchive<IBiddingFieldInitialState>("bidding_field");
 
   // Hook to handle status of fetch requests
   useFetchStatus({
-    module: "biddingfield",
+    module: "bidding_field",
     reset: resetStatus,
     actions: {
       success: { message: state.message, navigate: "/bidding-fields" },
@@ -51,7 +51,7 @@ const UpdateBiddingField = () => {
             text: "Update Field",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => formikRef.current?.handleSubmit(),
-          }
+          },
         ]}
       />
       {state.activeBiddingField ? (

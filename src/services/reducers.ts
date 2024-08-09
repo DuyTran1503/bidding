@@ -20,6 +20,8 @@ export const reducers = combineReducers({
   biddingtype: biddingTypeSlice.reducer,
   tag: tagSlice.reducer,
   business: businessActivitySlice.reducer,
+  industry: industrySlice.reducer,
+  enterprise: enterpriseSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
