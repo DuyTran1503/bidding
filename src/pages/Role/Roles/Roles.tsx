@@ -25,7 +25,6 @@ const Roles = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        console.log(record?.key);
 
         setModalContent(<DetailRole id={record?.key} />);
         setIsModalOpen(true);
