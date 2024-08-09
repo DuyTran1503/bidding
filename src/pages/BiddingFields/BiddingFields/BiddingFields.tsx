@@ -27,61 +27,66 @@ const BiddingFields = () => {
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
-  const buttons: IGridButton[] = [
-    {
-      type: EButtonTypes.VIEW,
-      onClick(record) {
-        navigate(`/bidding-fields/detail/${record?.key}`);
-      },
-      permission: EPermissions.DETAIL_BIDDING_FIELD,
-    },
-    {
-      type: EButtonTypes.UPDATE,
-      onClick(record) {
-        navigate(`/bidding-fields/update/${record?.key}`);
-      },
-      permission: EPermissions.UPDATE_BIDDING_FIELD,
-    },
-    {
-      type: EButtonTypes.DESTROY,
-      onClick(record) {
-        dispatch(deleteBiddingField(record?.key));
-      },
-      permission: EPermissions.DESTROY_BIDDING_FIELD,
-    },
-  ];
+    const buttons: IGridButton[] = [
+        {
+            type: EButtonTypes.VIEW,    
+            onClick(record) {
+                setModalContent(<BiddingFieldDetail record={record} />);
+                setIsModalOpen(true);
+            },
+            permission: EPermissions.DETAIL_BIDDING_FIELD,
+        },
+        {
+            type: EButtonTypes.UPDATE,
+            onClick(record) {
+                navigate(`/bidding-fields/update/${record?.key}`);
+            },
+            permission: EPermissions.UPDATE_BIDDING_FIELD,
+        },
+        {
+            type: EButtonTypes.DESTROY,
+            onClick(record) {
+                dispatch(deleteBiddingField(record?.key));
+            },
+            permission: EPermissions.DESTROY_BIDDING_FIELD,
+        },
+    ];
 
-  const columns: ColumnsType<ITableData> = [
-    {
-      dataIndex: "index",
-      title: "STT",
-    },
-    {
-      dataIndex: "name",
-      title: "Name",
-    },
-    {
-      dataIndex: "code",
-      title: "Code",
-    },
-    {
-      dataIndex: "description",
-      title: "Description",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "is_active",
-      render(_, record) {
-        return (
-          <CommonSwitch
-            onChange={() => handleChangeStatus(record)}
-            checked={!!record.is_active}
-            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} lĩnh vực này?`}
-          />
-        );
-      },
-    },
-  ];
+    const columns: ColumnsType<ITableData> = [
+        {
+            dataIndex: "index",
+            title: "STT",
+        },
+        {
+            dataIndex: "name",
+            title: "Name",
+        },
+        {
+            dataIndex: "code",
+            title: "Code",
+        },
+        {
+            dataIndex: "description",
+            title: "Description",
+        },
+        {
+            dataIndex: "parent_name",
+            title: "Lĩnh vực cha",
+        },
+        {
+            title: "Trạng thái",
+            dataIndex: "is_active",
+            render(_, record) {
+                return (
+                    <CommonSwitch
+                        onChange={() => handleChangeStatus(record)}
+                        checked={!!record.is_active}
+                        title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} lĩnh vực này?`}
+                    />
+                );
+            },
+        },
+    ];
 
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
@@ -94,9 +99,9 @@ const BiddingFields = () => {
     }
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
   const search: ISearchTypeTable[] = [
     {
