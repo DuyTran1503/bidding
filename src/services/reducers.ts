@@ -9,6 +9,8 @@ import { tagSlice } from "./store/tag/tag.slice";
 import { biddingFieldSlice } from "./store/biddingField/biddingField.slice";
 import { businessActivitySlice } from "./store/business-activity/business-activity.slice";
 import { biddingTypeSlice } from "./store/biddingtype/biddingType.slice";
+import { enterpriseSlice } from "./store/enterprise/enterprise.slice";
+import { industrySlice } from "./store/industry/industry.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,

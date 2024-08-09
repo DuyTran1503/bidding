@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 import { ITableData } from "@/components/table/PrimaryTable";
 interface BiddingFieldDetailProps {
-  record: IBiddingField;
+  record: ITableData;
 }
 
-const BiddingFieldDetail: React.FC<BiddingFieldDetailProps> = ({ record }: IBiddingField | any) => {
+const BiddingFieldDetail: React.FC<BiddingFieldDetailProps> = ({ record }: ITableData | any) => {
   return (
     <div className="p-6 bg-white">
       <h2 className="text-3xl font-semibold mb-4">Chi tiết lĩnh vực đấu thầu</h2>

@@ -5,7 +5,7 @@ interface TypeProps {
     record: ITableData;
 }
 
-const DetailBiddingType: React.FC<TypeProps> = ({ record }) => {
+const DetailBiddingType: React.FC<TypeProps> = ({ record }: ITableData | any) => {
     return (
         <div className="p-4 bg-white">
             <h2 className="text-3xl font-semibold mb-4">Thông tin lĩnh vực đấu thầu</h2>
