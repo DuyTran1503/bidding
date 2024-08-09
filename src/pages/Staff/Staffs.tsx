@@ -10,17 +10,21 @@ import { setFilter } from "@/services/store/role/role.slice";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { changeStatusStaff, deleteStaff, getAllStaff } from "@/services/store/account/account.thunk";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import { IAccountInitialState, resetStatus } from "@/services/store/account/account.slice";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
+import DetailStaff from "./Detail";
+import FormModal from "@/components/form/FormModal";
 
 const Staffs = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IAccountInitialState>("account");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<ReactNode>(null);
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const columns: ColumnsType = [
@@ -68,7 +72,8 @@ const Staffs = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/staffs/detail/${record?.key}`);
+        setModalContent(<DetailStaff record={record} />);
+        setIsModalOpen(true);
       },
       permission: EPermissions.DETAIL_STAFF,
     },
@@ -87,26 +92,28 @@ const Staffs = () => {
       permission: EPermissions.DESTROY_STAFF,
     },
   ];
-  const search : ISearchTypeTable[] = [
+  const search: ISearchTypeTable[] = [
     {
       id: 'name',
       placeholder: 'Nhập tên vai trò...',
       title: 'Tên vai trò',
       type: 'text',
     },
-  
+
   ]
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.staffs)
-      ? state.staffs.map(({ id_user, name, avatar, email, phone, account_ban_at }, index) => ({
-          index: index + 1,
-          key: id_user,
-          name,
-          avatar,
-          email,
-          phone,
-          account_ban_at,
-        }))
+      ? state.staffs.map(({ id_user, name, type, role_name, avatar, email, phone, account_ban_at }, index) => ({
+        index: index + 1,
+        key: id_user,
+        name,
+        avatar,
+        email,
+        type,
+        role_name,
+        phone,
+        account_ban_at,
+      }))
       : [];
   }, [JSON.stringify(state.staffs)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -119,9 +126,15 @@ const Staffs = () => {
       dispatch(getAllStaff({ query: state.filter }));
     }
   };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     dispatch(getAllStaff({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
+
   useFetchStatus({
     module: "account",
     reset: resetStatus,
@@ -150,6 +163,9 @@ const Staffs = () => {
           },
         ]}
       />
+      <FormModal open={isModalOpen} onCancel={handleCancel}>
+        {modalContent}
+      </FormModal>
       <ConfirmModal
         title={"Xác nhận"}
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
@@ -163,8 +179,8 @@ const Staffs = () => {
         search={search}
         buttons={buttons}
         pagination={{
-          current: state.filter._page! ?? 1,
-          pageSize: state.filter._page! ?? 10,
+          current: state.filter.page ?? 1,
+          pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
         }}
         setFilter={setFilter}

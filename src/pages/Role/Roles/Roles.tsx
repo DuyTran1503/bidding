@@ -9,19 +9,24 @@ import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
+import DetailRole from "../DetailRole/DetailRole";
+import FormModal from "@/components/form/FormModal";
 
 const Roles = () => {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<ReactNode>(null);
   const { state, dispatch } = useArchive<IRoleInitialState>("role");
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/roles/detail/${record?.key}`);
+        setModalContent(<DetailRole record={record} />);
+        setIsModalOpen(true);
       },
       permission: EPermissions.DETAIL_ROLE,
     },
@@ -63,6 +68,10 @@ const Roles = () => {
     return [];
   }, [JSON.stringify(state.roles)]);
 
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   useFetchStatus({
     module: "role",
     reset: resetStatus,
@@ -97,6 +106,9 @@ const Roles = () => {
           },
         ]}
       />
+      <FormModal open={isModalOpen} onCancel={handleCancel}>
+        {modalContent}
+      </FormModal>
       <ManagementGrid
         columns={columns}
         data={data}
