@@ -70,8 +70,6 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(selectedData(businessState?.listBusinessActivities, values.business_activity_type_id)?.name);
-
         return (
           <Form>
             <Row gutter={[24, 24]}>
