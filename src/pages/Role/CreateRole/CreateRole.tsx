@@ -34,7 +34,7 @@ const CreateRole = () => {
   return (
     <>
       <Heading
-        title="Create Role"
+        title="Tạo mới vai trò"
         hasBreadcrumb
         buttons={[
           {
@@ -47,7 +47,7 @@ const CreateRole = () => {
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
-            text: "Create Role",
+            text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
               formikRef && formikRef.current && formikRef.current.handleSubmit();

@@ -73,7 +73,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         {
           id: "3.2",
           label: "Loại hình kinh doanh",
-          path: "business-activity",
+          path: "business_activity",
           permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
         },
         {
