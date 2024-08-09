@@ -72,8 +72,7 @@ const Staffs = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        setModalContent(<DetailStaff record={record} />);
-        setIsModalOpen(true);
+        navigate(`/staffs/detail/${record?.key}`);
       },
       permission: EPermissions.DETAIL_STAFF,
     },
@@ -94,26 +93,25 @@ const Staffs = () => {
   ];
   const search: ISearchTypeTable[] = [
     {
-      id: 'name',
-      placeholder: 'Nhập tên vai trò...',
-      title: 'Tên vai trò',
-      type: 'text',
+      id: "name",
+      placeholder: "Nhập tên vai trò...",
+      title: "Tên vai trò",
+      type: "text",
     },
-
-  ]
+  ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.staffs)
       ? state.staffs.map(({ id_user, name, type, role_name, avatar, email, phone, account_ban_at }, index) => ({
-        index: index + 1,
-        key: id_user,
-        name,
-        avatar,
-        email,
-        type,
-        role_name,
-        phone,
-        account_ban_at,
-      }))
+          index: index + 1,
+          key: id_user,
+          name,
+          avatar,
+          email,
+          type,
+          role_name,
+          phone,
+          account_ban_at,
+        }))
       : [];
   }, [JSON.stringify(state.staffs)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -163,9 +161,6 @@ const Staffs = () => {
           },
         ]}
       />
-      <FormModal open={isModalOpen} onCancel={handleCancel}>
-        {modalContent}
-      </FormModal>
       <ConfirmModal
         title={"Xác nhận"}
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
