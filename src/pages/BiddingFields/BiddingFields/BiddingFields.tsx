@@ -131,7 +131,14 @@ const BiddingFields = () => {
   useEffect(() => {
     dispatch(getAllBiddingFields({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-
+  const search: ISearchTypeTable[] = [
+    {
+      id: "name",
+      placeholder: "Nhập tên lĩnh vực...",
+      label: "Tên lĩnh vực",
+      type: "text",
+    },
+  ];
   return (
     <>
       <Heading
@@ -159,7 +166,7 @@ const BiddingFields = () => {
       <ManagementGrid
         columns={columns}
         data={data}
-        search={[]}
+        search={search}
         buttons={buttons}
         pagination={{
           current: state.filter.page ?? 1,

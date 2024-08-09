@@ -3,7 +3,7 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import Heading from "@/components/layout/Heading";
-import { fetching, IRoleInitialState, resetStatus, setData, setFilter } from "@/services/store/role/role.slice";
+import { fetching, IRoleInitialState, resetStatus, setFilter } from "@/services/store/role/role.slice";
 import { deleteRole, getAllRoles } from "@/services/store/role/role.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
@@ -103,8 +103,8 @@ const Roles = () => {
         search={search}
         buttons={buttons}
         pagination={{
-          current: state.filter.page! ?? 1,
-          pageSize: state.filter.page! ?? 10,
+          current: state.filter.page ?? 1,
+          pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
         }}
         setFilter={setFilter}
