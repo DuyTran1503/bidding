@@ -1,10 +1,12 @@
+import { IOption } from "@/shared/utils/shared-interfaces";
 import { ConfigProvider, Select } from "antd";
 import clsx from "clsx";
+
 interface IFormSelect {
   label?: string;
   placeholder?: string;
-  options: { value: string; label: string }[];
-  defaultValue?: number[];
+  options: IOption[];
+  defaultValue?: number[] | string;
   isMultiple?: boolean;
   error?: string;
   isDisabled?: boolean;
