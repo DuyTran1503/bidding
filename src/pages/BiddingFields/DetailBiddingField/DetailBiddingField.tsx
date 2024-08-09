@@ -30,4 +30,4 @@ const BiddingFieldDetail: React.FC<BiddingFieldDetailProps> = ({ record }: ITabl
   );
 };
 
-export default BiddingFieldDetail;
+export default DetailBiddingField;
