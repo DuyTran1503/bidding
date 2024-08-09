@@ -97,8 +97,6 @@ const BiddingFields = () => {
     },
   ];
   const data: ITableData[] = useMemo(() => {
-    console.log(state.biddingFields);
-
     return state.biddingFields && state.biddingFields.length > 0
       ? state.biddingFields.map(({ id, name, is_active, parent }, index) => ({
           index: index + 1,
