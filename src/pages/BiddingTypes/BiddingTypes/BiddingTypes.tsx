@@ -1,6 +1,5 @@
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
-import FormModal from "@/components/form/FormModal";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
@@ -11,19 +10,17 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 // import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo, useState, ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import BiddingTypeDetail from "../DetailBiddingType/DetailBiddingType";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IBiddingTypeInitialState, resetStatus, setFilter } from "@/services/store/biddingType/biddingType.slice";
 import { changeStatusBiddingType, deleteBiddingType, getAllBiddingTypes } from "@/services/store/biddingType/biddingType.thunk";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const BiddingTypes = () => {
     const navigate = useNavigate();
     const { state, dispatch } = useArchive<IBiddingTypeInitialState>("bidding_type");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalContent, setModalContent] = useState<ReactNode>(null);
     const [isModal, setIsModal] = useState(false);
     const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
@@ -31,24 +28,23 @@ const BiddingTypes = () => {
         {
             type: EButtonTypes.VIEW,
             onClick(record) {
-                setModalContent(<BiddingTypeDetail record={record} />);
-                setIsModalOpen(true);
+                navigate(`/bidding_types/update/${record?.key}`);
             },
-            // permission: EPermissions.DETAIL_BIDDING_TYPE,
+            permission: EPermissions.DETAIL_BIDDING_TYPE,
         },
         {
             type: EButtonTypes.UPDATE,
             onClick(record) {
-                navigate(`/bidding-types/update/${record?.key}`);
+                navigate(`/bidding_types/update/${record?.key}`);
             },
-            // permission: EPermissions.UPDATE_BIDDING_TYPE,
+            permission: EPermissions.UPDATE_BIDDING_TYPE,
         },
         {
             type: EButtonTypes.DESTROY,
             onClick(record) {
                 dispatch(deleteBiddingType(record?.key));
             },
-            // permission: EPermissions.DESTROY_BIDDING_TYPE,
+            permission: EPermissions.DESTROY_BIDDING_TYPE,
         },
     ];
 
@@ -89,10 +85,6 @@ const BiddingTypes = () => {
         if (confirmItem && confirmItem.key) {
             dispatch(changeStatusBiddingType(String(confirmItem.key)));
         }
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
     };
 
     // Update the search state and dispatch actions
@@ -141,20 +133,17 @@ const BiddingTypes = () => {
     return (
         <>
             <Heading
-                title="Lĩnh vực đấu thầu"
+                title="Loại hình đấu thầu"
                 hasBreadcrumb
                 buttons={[
                     {
                         icon: <FaPlus className="text-[18px]" />,
                         // permission: EPermissions.CREATE_BIDDINGTYPE,
                         text: "Create Bidding Type",
-                        onClick: () => navigate("/bidding-types/create"),
+                        onClick: () => navigate("/bidding_types/create"),
                     },
                 ]}
             />
-            <FormModal title="Bidding Type Details" open={isModalOpen} onCancel={handleCancel}>
-                {modalContent}
-            </FormModal>
             <ConfirmModal
                 title={"Xác nhận"}
                 content={"Bạn chắc chắn muốn thay đổi trạng thái không"}

@@ -65,8 +65,11 @@ export const transformPayloadErrors = (arr: PayloadErrors): string => {
   return ""; // Trả về undefined nếu không có giá trị hợp lệ
 };
 export const convertDataOption = (data: any[]) => {
-  return data?.map((item: any, index: number) => ({
+  return data?.map((item: any) => ({
     value: item.id,
     label: item.name,
   }));
+};
+export const selectedData = (data: any[], id: string | number) => {
+  return data?.find((item: any) => item.id === +id);
 };
