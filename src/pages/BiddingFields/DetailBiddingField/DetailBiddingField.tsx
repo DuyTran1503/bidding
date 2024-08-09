@@ -21,6 +21,10 @@ const BiddingFieldDetail: React.FC<BiddingFieldDetailProps> = ({ record }) => {
           <span className="font-semibold text-gray-700 w-2/5">Trạng thái:</span>
           <span className="ml-2 text-gray-900">{record.is_active ? "Đang hoạt động" : "Không hoạt động"}</span>
         </div>
+        <div className="flex items-start">
+          <span className="font-semibold text-gray-700 w-2/5">Lĩnh vực cha:</span>
+          <span className="ml-2 text-gray-900">{record.parent_name ?? "Null"}</span>
+        </div>
       </div>
     </div>
   );

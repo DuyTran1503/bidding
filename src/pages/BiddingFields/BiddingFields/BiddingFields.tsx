@@ -70,6 +70,10 @@ const BiddingFields = () => {
             title: "Description",
         },
         {
+            dataIndex: "parent_name",
+            title: "Lĩnh vực cha",
+        },
+        {
             title: "Trạng thái",
             dataIndex: "is_active",
             render(_, record) {
