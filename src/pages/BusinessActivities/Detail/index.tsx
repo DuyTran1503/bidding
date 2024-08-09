@@ -6,8 +6,6 @@ interface DetailBusinessActivityProps {
 }
 
 const DetailBusinessActivity: React.FC<DetailBusinessActivityProps> = ({ record }) => {
-  console.log(record);
-
   return (
     <div className="bg-white p-6">
       <h2 className="mb-4 text-2xl font-semibold">Chi tiết loại hình hoạt động</h2>
