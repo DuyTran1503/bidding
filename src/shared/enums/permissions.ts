@@ -53,4 +53,18 @@ export enum EPermissions {
   CREATE_BUSINESS_ACTIVITY_TYPE = "create_business_activity_type",
   UPDATE_BUSINESS_ACTIVITY_TYPE = "update_business_activity_type",
   DESTROY_BUSINESS_ACTIVITY_TYPE = "destroy_business_activity_type",
+
+  // Lĩnh vực hoạt động
+  LIST_INDUSTRY = "list_industry",
+  DETAIL_INDUSTRY = "detail_industry",
+  CREATE_INDUSTRY = "create_industry",
+  UPDATE_INDUSTRY = "update_industry",
+  DESTROY_INDUSTRY = "destroy_industry",
+
+  // Doanh nghiệp
+  LIST_ENTERPRISE = "list_enterprise",
+  DETAIL_ENTERPRISE = "detail_enterprise",
+  CREATE_ENTERPRISE = "create_enterprise",
+  UPDATE_ENTERPRISE = "update_enterprise",
+  DESTROY_ENTERPRISE = "destroy_enterprise",
 }

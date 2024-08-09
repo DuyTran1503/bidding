@@ -26,7 +26,6 @@ export const getStaffById = createAsyncThunk("staff/get-staff-by-id", async (id:
 export const createStaff = createAsyncThunk("staff/create-staff", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.post(prefix, payload);
-
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
