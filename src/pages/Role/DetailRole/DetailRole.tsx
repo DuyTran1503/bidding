@@ -33,7 +33,6 @@ const DetailRole: React.FC<{ id: string }> = ({ id }) => {
     }
     return [];
   }, [JSON.stringify(permission)]);
-
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "STT",
