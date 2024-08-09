@@ -1,22 +1,58 @@
-import React from 'react';
+import React, { useCallback, useEffect, useMemo } from "react";
+import { IRoleInitialState, setData } from "@/services/store/role/role.slice";
+import { useArchive } from "@/hooks/useArchive";
+import { getAllPermissions, getRoleById } from "@/services/store/role/role.thunk";
+import { Table, TableProps } from "antd";
 import { ITableData } from "@/components/table/PrimaryTable";
-interface DetailRoleProps {
-  record: ITableData;
-}
+import { ColumnsType } from "antd/es/table";
 
-const DetailRole: React.FC<DetailRoleProps> = ({ record }) => {
+interface DataType {
+  key: string;
+  name: string;
+}
+const DetailRole: React.FC<{ id: string }> = ({ id }) => {
+  const { state, dispatch } = useArchive<IRoleInitialState>("role");
+  const memoizedDispatch = useCallback(dispatch, []);
+  useEffect(() => {
+    if (id) memoizedDispatch(getRoleById(id));
+    dispatch(getAllPermissions());
+    return () => {
+      memoizedDispatch(setData());
+    };
+  }, [JSON.stringify(id), memoizedDispatch]);
+  const permission = state?.permissions
+    ?.filter((item: any) => state.activeRole?.permissions?.map((ele) => +ele).includes(item.id))
+    .map((item) => item.name);
+  const data: ITableData[] = useMemo(() => {
+    if (permission && permission.length > 0) {
+      return permission.map((item, index) => ({
+        index: index + 1,
+        key: index + 1,
+        name: item,
+      }));
+    }
+    return [];
+  }, [JSON.stringify(permission)]);
+  console.log(permission);
+
+  const columns: TableProps<DataType>["columns"] = [
+    {
+      title: "STT",
+      dataIndex: "key",
+      key: "key",
+    },
+    {
+      title: "Tên vai trò",
+      dataIndex: "name",
+      key: "name",
+    },
+  ];
   return (
-    <div className="p-6 bg-white">
-      <h2 className="text-3xl font-semibold mb-4">Chi tiết vai trò</h2>
-      <div className="space-y-6 text-base">
-        <div className="flex items-start">
-          <span className="font-semibold text-gray-700 w-2/5">Tên của vai trò:</span>
-          <span className="ml-2 text-gray-900">{record.name}</span>
-        </div>
-        {/* <div className="flex items-start">
-          <span className="font-semibold text-gray-700 w-2/5">Mô tả của vai trò:</span>
-          <span className="ml-2 text-gray-900">{record.description}</span>
-        </div> */}
+    <div className="bg-white p-4">
+      <h2 className="mb-4 text-3xl font-semibold">Thông tin chi tiết</h2>
+      <div>
+        <div className="text-m-medium mb-1 block text-black-300">Tên vai trò: {state?.activeRole?.name}</div>
+        {!!state?.activeRole && permission?.length > 0 && <Table columns={columns as ColumnsType<any>} dataSource={data} />}
       </div>
     </div>
   );

@@ -44,9 +44,9 @@ const roleSlice = createSlice({
     // ? Get all roles
     builder
       .addCase(getAllRoles.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole[]> | any>) => {
+        // state.status = EFetchStatus.FULFILLED;
         if (payload.data) {
           state.roles = payload.data.data;
-          state.status = EFetchStatus.FULFILLED;
           state.totalRecords = payload?.data?.total_elements;
         }
       })
@@ -61,7 +61,7 @@ const roleSlice = createSlice({
         state.loading = true;
       })
       .addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IUpdateRole> | any) => {
-        state.status = EFetchStatus.FULFILLED;
+        // state.status = EFetchStatus.FULFILLED;
         state.activeRole = {
           permissions: payload.id_permission_checked,
           ...payload.role,
@@ -114,7 +114,6 @@ const roleSlice = createSlice({
       });
     builder.addCase(getAllPermissions.fulfilled, (state, { payload }: PayloadAction<IResponse<IPermission[]> | any>) => {
       if (payload) {
-        state.status = EFetchStatus.FULFILLED;
         state.permissions = payload.permissions;
       }
     });

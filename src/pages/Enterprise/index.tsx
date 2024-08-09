@@ -87,14 +87,14 @@ const Enterprise = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/business-activity/detail/${record?.key}`);
+        navigate(`/business_activity/detail/${record?.key}`);
       },
       // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/business-activity/update/${record?.key}`);
+        navigate(`/business_activity/update/${record?.key}`);
       },
       // permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },

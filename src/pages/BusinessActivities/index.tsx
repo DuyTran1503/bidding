@@ -23,6 +23,7 @@ import { IBusinessActivityInitialState, resetStatus, setFilter } from "@/service
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import DetailBusinessActivity from "./Detail";
 import FormModal from "@/components/form/FormModal";
+import { IBusinessActivity } from "@/services/store/business-activity/business-activity.model";
 
 const BusinessActivities = () => {
   const navigate = useNavigate();
@@ -40,13 +41,16 @@ const BusinessActivities = () => {
     {
       dataIndex: "name",
       title: "Tên loại hình doanh nghiệp",
+      className: "w-[250px]",
     },
     {
       dataIndex: "description",
       title: "Mô tả",
+      className: " text-compact-3 h-[90px]",
     },
     {
       title: "Trạng thái tài khoản",
+      className: "w-[250px]",
       dataIndex: "is_active",
       render(_, record) {
         return (
@@ -63,7 +67,7 @@ const BusinessActivities = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        setModalContent(<DetailBusinessActivity record={record} />);
+        setModalContent(<DetailBusinessActivity record={record as unknown as IBusinessActivity} />);
         setIsModalOpen(true);
       },
       permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
@@ -71,7 +75,7 @@ const BusinessActivities = () => {
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/business-activity/update/${record?.key}`);
+        navigate(`/business_activity/update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },
@@ -94,12 +98,12 @@ const BusinessActivities = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.businessActivities)
       ? state.businessActivities.map(({ id, name, description, is_active }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        description,
-        is_active,
-      }))
+          index: index + 1,
+          key: id,
+          name,
+          description,
+          is_active,
+        }))
       : [];
   }, [JSON.stringify(state.businessActivities)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -153,7 +157,7 @@ const BusinessActivities = () => {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
-              navigate("/business-activity/create");
+              navigate("/business_activity/create");
             },
           },
         ]}
@@ -178,7 +182,7 @@ const BusinessActivities = () => {
           pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
           number_of_elements: state.number_of_elements && state.number_of_elements,
-          // showSideChanger:true
+          showSideChanger: true,
         }}
         setFilter={setFilter}
         filter={state.filter}
