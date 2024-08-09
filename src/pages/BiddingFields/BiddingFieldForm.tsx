@@ -14,43 +14,43 @@ import FormSwitch from "@/components/form/FormSwitch";
 import FormInputArea from "@/components/form/FormInputArea";
 
 interface IActiveBiddingField extends Omit<IBiddingField, "parent"> {
-    parent: string[];
+  parent: string[];
 }
 
 interface IBiddingFieldFormProps {
-    formikRef?: any;
-    type: "create" | "view" | "update";
-    biddingField?: IActiveBiddingField;
+  formikRef?: any;
+  type: "create" | "view" | "update";
+  biddingField?: IActiveBiddingField;
 }
 
 export interface IBiddingFieldFormInitialValues {
-    name: string;
-    description: string;
-    code: number;
-    is_active: string;
-    parent_id: string;
+  name: string;
+  description: string;
+  code: number;
+  is_active: string;
+  parent_id: string;
 }
 
 const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
-    return data.map((item) => ({
-        title: item.name,
-        value: item.id.toString(),
-        key: item.id.toString(),
-        children: item.children ? formatTreeData(item.children) : [],
-    }));
+  return data.map((item) => ({
+    title: item.name,
+    value: item.id.toString(),
+    key: item.id.toString(),
+    children: item.children ? formatTreeData(item.children) : [],
+  }));
 };
 
 const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormProps) => {
     const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
     const { dispatch, state } = useArchive<IBiddingFieldInitialState>("biddingfield");
 
-    const initialValues: IBiddingFieldFormInitialValues = {
-        name: biddingField?.name || "",
-        description: biddingField?.description || "",
-        code: biddingField?.code || 0,
-        is_active: biddingField?.is_active ? "1" : "0",
-        parent_id: biddingField?.parent_id || "",
-    };
+  const initialValues: IBiddingFieldFormInitialValues = {
+    name: biddingField?.name || "",
+    description: biddingField?.description || "",
+    code: biddingField?.code || 0,
+    is_active: biddingField?.is_active ? "1" : "0",
+    parent_id: biddingField?.parent_id || "",
+  };
 
     useEffect(() => {
         dispatch(getBiddingFieldAllIds({ query: state.filter }))
@@ -159,6 +159,7 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
             )}
         </Formik>
     );
+
 };
 
 export default BiddingFieldForm;

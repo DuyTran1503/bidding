@@ -4,6 +4,7 @@ import FormModal from "@/components/form/FormModal";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IBiddingFieldInitialState, resetStatus, setFilter } from "@/services/store/biddingField/biddingField.slice";
@@ -99,9 +100,9 @@ const BiddingFields = () => {
         }
     };
 
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
     const search: ISearchTypeTable[] = [
         {

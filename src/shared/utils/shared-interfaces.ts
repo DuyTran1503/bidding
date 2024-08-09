@@ -62,3 +62,7 @@ export interface IGridButton {
   onClick: (record: { key: string; [key: string]: any }) => unknown;
   permission?: EPermissions;
 }
+export interface IOption {
+  value: string;
+  label: string;
+}
