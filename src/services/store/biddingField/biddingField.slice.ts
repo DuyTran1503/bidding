@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { IBiddingField } from "./biddingField.model";
+import { IBiddingField, INewBiddingField } from "./biddingField.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
 import {
@@ -15,7 +15,7 @@ import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
 
 export interface IBiddingFieldInitialState extends IInitialState {
-  biddingFields: IBiddingField[];
+  biddingFields: INewBiddingField[];
   activeBiddingField: IBiddingField | undefined;
 }
 
@@ -43,7 +43,7 @@ const biddingFieldSlice = createSlice({
   extraReducers: (builder) => {
     // ? Get all bidding fields
     builder
-      .addCase(getAllBiddingFields.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingField[] | any>>) => {
+      .addCase(getAllBiddingFields.fulfilled, (state, { payload }: PayloadAction<IResponse<INewBiddingField[] | any>>) => {
         if (payload.data) {
           state.biddingFields = payload.data.data;
 
@@ -60,8 +60,7 @@ const biddingFieldSlice = createSlice({
         }
       });
     builder
-      .addCase(getBiddingFieldById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingField> | any>) => {
-
+      .addCase(getBiddingFieldById.fulfilled, (state, { payload }: PayloadAction<IResponse<INewBiddingField> | any>) => {
         if (payload.data) {
           state.activeBiddingField = payload.data;
         }

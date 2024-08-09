@@ -22,7 +22,7 @@ const UpdateBiddingType = () => {
     actions: {
       success: {
         message: state.message,
-        navigate: "/bidding-types",
+        navigate: "/bidding_types",
       },
       error: {
         message: state.message,
@@ -33,7 +33,7 @@ const UpdateBiddingType = () => {
   return (
     <>
       <Heading
-        title="Tạo mới loại đấu thầu"
+        title="Tạo mới loại hình đấu thầu"
         hasBreadcrumb
         buttons={[
           {
@@ -41,7 +41,7 @@ const UpdateBiddingType = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/bidding-types");
+              navigate("/bidding_types");
             },
           },
           {

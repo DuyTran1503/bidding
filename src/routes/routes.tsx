@@ -38,7 +38,8 @@ import UpdateIndustry from "@/pages/Industry/Update";
 import Enterprise from "@/pages/Enterprise";
 import CreateEnterprise from "@/pages/Enterprise/Create";
 import UpdateEnterprise from "@/pages/Enterprise/Update";
-import DetailBiddingField from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
+import DetailIndustry from "@/pages/Industry/Detail";
+import BiddingFieldDetail from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
 
 export interface IRoute {
   path: string;
@@ -88,7 +89,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "bidding-fields",
+            path: "bidding_fields",
             pages: [
               {
                 path: "/",
@@ -104,12 +105,12 @@ export const routes: IRoute[] = [
               },
               {
                 path: "/detail/:id",
-                element: () => <DetailBiddingField />,
+                element: () => <BiddingFieldDetail />,
               },
             ],
           },
           {
-            path: "bidding-types",
+            path: "bidding_types",
             pages: [
               {
                 path: "/",
@@ -198,6 +199,10 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateIndustry />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailIndustry />,
               },
             ],
           },
