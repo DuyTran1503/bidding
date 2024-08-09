@@ -1,6 +1,6 @@
 import { useArchive } from "@/hooks/useArchive";
 import Heading from "@/components/layout/Heading";
-import { fetching, IRoleInitialState, resetStatus, setData } from "@/services/store/role/role.slice";
+import { IRoleInitialState, resetStatus, setData } from "@/services/store/role/role.slice";
 import { getRoleById } from "@/services/store/role/role.thunk";
 import { useCallback, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
