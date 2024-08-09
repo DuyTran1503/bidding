@@ -20,6 +20,8 @@ import { IIndustryInitialState, resetStatus, setFilter } from "@/services/store/
 import { changeStatusIndustry, deleteIndustry, getAllIndustry } from "@/services/store/industry/industry.thunk";
 import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
 import { convertDataOption } from "@/shared/utils/common/function";
+import { getListBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
+import { IBusinessActivity } from "@/services/store/business-activity/business-activity.model";
 
 const Industry = () => {
   const navigate = useNavigate();
@@ -29,7 +31,10 @@ const Industry = () => {
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [isDelete, setIsDelete] = useState(false);
-
+  const business = (value: number) => {
+    if (businessState?.listBusinessActivities?.length > 0 && !!value)
+      return businessState?.listBusinessActivities!.find((item) => item.id === value)?.name;
+  };
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -41,11 +46,12 @@ const Industry = () => {
     },
     {
       dataIndex: "business_activity_type_id",
-      title: "Tên loại hình doanh nghiệp",
+      title: "Loại hình doanh nghiệp",
     },
     {
       dataIndex: "description",
       title: "Mô tả",
+      className: " text-compact-3 h-[90px]",
     },
     {
       title: "Trạng thái ",
@@ -65,14 +71,14 @@ const Industry = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/business-activity/detail/${record?.key}`);
+        navigate(`/industry/detail/${record?.key}`);
       },
-      permission: EPermissions.CREATE_INDUSTRY,
+      permission: EPermissions.DETAIL_INDUSTRY,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/business-activity/update/${record?.key}`);
+        navigate(`/industry/update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_INDUSTRY,
     },
@@ -97,7 +103,7 @@ const Industry = () => {
       placeholder: "Nhập ...",
       label: "Loại hình kinh doanh",
       type: "select",
-      options: convertDataOption(businessState.businessActivities),
+      options: convertDataOption(businessState?.listBusinessActivities!),
     },
   ];
   const data: ITableData[] = useMemo(() => {
@@ -106,7 +112,7 @@ const Industry = () => {
           index: index + 1,
           key: id,
           name,
-          business_activity_type_id,
+          business_activity_type_id: business(+business_activity_type_id),
           description,
           is_active,
         }))
@@ -126,6 +132,9 @@ const Industry = () => {
     dispatch(getAllIndustry({ query: industryState.filter }));
   }, [JSON.stringify(industryState.filter)]);
   useEffect(() => {
+    dispatch(getListBusinessActivity());
+  }, [dispatch]);
+  useEffect(() => {
     if (industryState.status === EFetchStatus.FULFILLED) {
       dispatch(getAllIndustry({ query: industryState.filter }));
       setIsDelete(false);
@@ -133,7 +142,7 @@ const Industry = () => {
   }, [JSON.stringify(industryState.status)]);
 
   useFetchStatus({
-    module: "business",
+    module: "industry",
     reset: resetStatus,
     actions: {
       success: { message: industryState.message },
@@ -149,7 +158,7 @@ const Industry = () => {
   return (
     <>
       <Heading
-        title="Loại hình hoạt động"
+        title="Ngành kinh doanh"
         hasBreadcrumb
         buttons={[
           {
