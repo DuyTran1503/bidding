@@ -37,7 +37,7 @@ const FormCheck = ({ label, onChange, isDefaultChecked, name, isDisable }: FormC
           onChange={(e) => !isDisable && handleChange(e)}
           className="rounded-md"
         />
-        {label && <label className="text-m-semibold text-primary-500">{label}</label>}
+        {label && <label className="font-semibold text-primary-500">{label}</label>}
       </div>
     </ConfigProvider>
   );

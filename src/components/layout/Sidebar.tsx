@@ -77,16 +77,16 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
         },
         {
-          id: "3.3",
-          label: "Ngành kinh doanh",
-          path: "industry",
-          // permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
-        },
-        {
-          id: "3.5",
+          id: "3.2",
           label: "Lĩnh vực đấu thầu",
           path: "bidding-fields",
           permissions: EPermissions.LIST_BIDDING_FIELD,
+        },
+        {
+          id: "3.3",
+          label: "Loại hình đấu thầu",
+          path: "bidding-types",
+          // permissions: EPermissions.LIST_BIDDING_TYPE,
         },
       ],
     },

@@ -71,7 +71,7 @@ const UserSettings = () => {
         </div>
         {/* Info */}
         <div className="shrink-0">
-          <div className="text-m-medium text-black-500">{state.profile?.name}</div>
+          <div className="text-base text-black-500">{state.profile?.name}</div>
           <div className="text-s-medium text-black-400">{state.profile?.listNameRole?.at(0)}</div>
         </div>
         <FaCaretDown className="shrink-0 text-gray-400" />
