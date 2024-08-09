@@ -26,27 +26,27 @@ const Breadcrumb = () => {
   return (
     <div className="flex items-center gap-2">
       <div
-        className={clsx("text-m-medium cursor-pointer text-primary-500")}
+        className={clsx("text-base cursor-pointer text-primary-500")}
         onClick={() => {
           navigate("/dashboard");
         }}
       >
         <GoHome className="text-[18px]" />
       </div>
-      {!!arrayPath.length && <FaCaretRight className="text-m-medium text-primary-200" />}
+      {!!arrayPath.length && <FaCaretRight className="text-base text-primary-200" />}
       {arrayPath.map((path, index) => {
         const isActive = index === arrayPath.length - 1;
         return (
           <Fragment key={index}>
             <div
-              className={clsx("text-m-medium cursor-pointer text-primary-500", isActive && "cursor-default !text-gray-500")}
+              className={clsx("text-base cursor-pointer text-primary-500", isActive && "cursor-default !text-gray-500")}
               onClick={() => {
                 !isActive && navigate(`/${arrayPath.slice(0, index + 1).join("/")}`);
               }}
             >
               {EPageNames[path as PageNameKeys] ?? path.at(0)?.toUpperCase() + path.slice(1)}
             </div>
-            {!isActive && <FaCaretRight className="text-m-medium text-primary-200" />}
+            {!isActive && <FaCaretRight className="text-base text-primary-200" />}
           </Fragment>
         );
       })}
