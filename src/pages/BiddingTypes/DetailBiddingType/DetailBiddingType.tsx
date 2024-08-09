@@ -22,10 +22,6 @@ const DetailBiddingType: React.FC<TypeProps> = ({ record }) => {
                     <span className="font-semibold text-gray-700 w-2/5">Trạng thái:</span>
                     <span className="ml-2 text-gray-900">{record.is_active ? "Kích hoạt" : "Không kích hoạt"}</span>
                 </div>
-                <div className="flex items-start">
-                    <span className="font-semibold text-gray-700 w-2/5">Lĩnh vực cha:</span>
-                    <span className="ml-2 text-gray-900">{record.parent_name || "Không có"}</span>
-                </div>
             </div>
         </div>
     );
