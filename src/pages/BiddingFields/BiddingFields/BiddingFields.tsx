@@ -20,12 +20,12 @@ import { useNavigate } from "react-router-dom";
 import BiddingFieldDetail from "../DetailBiddingField/DetailBiddingField";
 
 const BiddingFields = () => {
-    const navigate = useNavigate();
-    const { state, dispatch } = useArchive<IBiddingFieldInitialState>("biddingfield");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalContent, setModalContent] = useState<ReactNode>(null);
-    const [isModal, setIsModal] = useState(false);
-    const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
+  const navigate = useNavigate();
+  const { state, dispatch } = useArchive<IBiddingFieldInitialState>("bidding_field");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<ReactNode>(null);
+  const [isModal, setIsModal] = useState(false);
+  const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
     const buttons: IGridButton[] = [
         {
@@ -88,104 +88,99 @@ const BiddingFields = () => {
         },
     ];
 
-    const handleChangeStatus = (item: ITableData) => {
-        setIsModal(true);
-        setConfirmItem(item);
-    };
+  const handleChangeStatus = (item: ITableData) => {
+    setIsModal(true);
+    setConfirmItem(item);
+  };
 
-    const onConfirmStatus = () => {
-        if (confirmItem && confirmItem.key) {
-            dispatch(changeStatusBiddingField(String(confirmItem.key)));
-        }
-    };
+  const onConfirmStatus = () => {
+    if (confirmItem && confirmItem.key) {
+      dispatch(changeStatusBiddingField(String(confirmItem.key)));
+    }
+  };
 
     const handleCancel = () => {
         setIsModalOpen(false);
     };
 
-    const search: ISearchTypeTable[] = [
-        {
-            id: "name",
-            placeholder: "Nhập tên lĩnh vực...",
-            label: "Tên lĩnh vực",
-            type: "text",
-        },
-    ];
+  const search: ISearchTypeTable[] = [
+    {
+      id: "name",
+      placeholder: "Nhập tên lĩnh vực...",
+      label: "Tên lĩnh vực",
+      type: "text",
+    },
+  ];
+  const data: ITableData[] = useMemo(
+    () =>
+      state.biddingFields && state.biddingFields.length > 0
+        ? state.biddingFields.map(({ id, name, description, code, is_active, parent_name }, index) => ({
+            index: index + 1,
+            key: id,
+            name,
+            description,
+            code,
+            is_active,
+            parent_name,
+          }))
+        : [],
+    [JSON.stringify(state.biddingFields)],
+  );
+  useFetchStatus({
+    module: "bidding_field",
+    reset: resetStatus,
+    actions: {
+      success: { message: state.message },
+      error: { message: state.message },
+    },
+  });
+  useEffect(() => {
+    if (state.status === EFetchStatus.FULFILLED) {
+      dispatch(getAllBiddingFields({ query: state.filter }));
+    }
+  }, [JSON.stringify(state.status)]);
+  useEffect(() => {
+    dispatch(getAllBiddingFields({ query: state.filter }));
+  }, [JSON.stringify(state.filter)]);
 
-    const data: ITableData[] = useMemo(() =>
-        state.biddingFields && state.biddingFields.length > 0
-            ? state.biddingFields.map(({ id, name, description, code, is_active, parent_name }, index) => ({
-                index: index + 1,
-                key: id,
-                name,
-                description,
-                code,
-                is_active,
-                parent_name,
-            }))
-            : [],
-        [JSON.stringify(state.biddingFields)]
-    );
-
-    useFetchStatus({
-        module: "biddingfield",
-        reset: resetStatus,
-        actions: {
-            success: { message: state.message },
-            error: { message: state.message },
-        },
-    });
-
-    useEffect(() => {
-        if (state.status === EFetchStatus.FULFILLED) {
-            dispatch(getAllBiddingFields({ query: state.filter }));
-        }
-    }, [JSON.stringify(state.status)]);
-
-    useEffect(() => {
-        dispatch(getAllBiddingFields({ query: state.filter }));
-
-    }, [JSON.stringify(state.filter)]);
-
-    return (
-        <>
-            <Heading
-                title="Lĩnh vực đấu thầu"
-                hasBreadcrumb
-                buttons={[
-                    {
-                        icon: <FaPlus className="text-[18px]" />,
-                        // permission: EPermissions.CREATE_BIDDINGFIELD,
-                        text: "Create Bidding Field",
-                        onClick: () => navigate("/bidding-fields/create"),
-                    },
-                ]}
-            />
-            <FormModal open={isModalOpen} onCancel={handleCancel}>
-                {modalContent}
-            </FormModal>
-            <ConfirmModal
-                title={"Xác nhận"}
-                content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
-                visible={isModal}
-                setVisible={setIsModal}
-                onConfirm={onConfirmStatus}
-            />
-            <ManagementGrid
-                columns={columns}
-                data={data}
-                search={search}
-                buttons={buttons}
-                pagination={{
-                    current: state.filter.page ?? 1,
-                    pageSize: state.filter.size ?? 10,
-                    total: state.totalRecords!,
-                }}
-                setFilter={setFilter}
-                filter={state.filter}
-            />
-        </>
-    );
+  return (
+    <>
+      <Heading
+        title="Lĩnh vực đấu thầu"
+        hasBreadcrumb
+        buttons={[
+          {
+            icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_BIDDING_FIELD,
+            text: "Tạo mới",
+            onClick: () => navigate("/bidding-fields/create"),
+          },
+        ]}
+      />
+      {/* <FormModal open={isModalOpen} onCancel={handleCancel}>
+        {modalContent}
+      </FormModal> */}
+      <ConfirmModal
+        title={"Xác nhận"}
+        content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
+        visible={isModal}
+        setVisible={setIsModal}
+        onConfirm={onConfirmStatus}
+      />
+      <ManagementGrid
+        columns={columns}
+        data={data}
+        search={search}
+        buttons={buttons}
+        pagination={{
+          current: state.filter.page ?? 1,
+          pageSize: state.filter.size ?? 10,
+          total: state.totalRecords!,
+        }}
+        setFilter={setFilter}
+      />
+    </>
+  );
 };
 
 export default BiddingFields;

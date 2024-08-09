@@ -24,7 +24,7 @@ const UpdateBusinessActivity = () => {
     actions: {
       success: {
         message: state.message,
-        navigate: "/business-activity",
+        navigate: "/business_activity",
       },
       error: {
         message: state.message,
@@ -64,7 +64,7 @@ const UpdateBusinessActivity = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/business-activity");
+              navigate("/business_activity");
             },
           },
           {
