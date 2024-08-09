@@ -77,3 +77,14 @@ export const changeStatusBusinessActivity = createAsyncThunk(
     }
   },
 );
+export const getListBusinessActivity = createAsyncThunk(
+  "business-activity-types/get_list_business-activity-types",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { response, data } = await client.get(`${prefix}/all-ids`);
+      return response.status >= 400 ? rejectWithValue(data) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
