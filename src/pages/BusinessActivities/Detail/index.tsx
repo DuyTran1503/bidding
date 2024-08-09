@@ -4,7 +4,7 @@ interface DetailBusinessActivityProps {
   record: ITableData;
 }
 
-const DetailBusinessActivity: React.FC<DetailBusinessActivityProps> = ({ record }) => {
+const DetailBusinessActivity: React.FC<DetailBusinessActivityProps> = ({ record }: ITableData | any) => {
   return (
     <div className="p-6 bg-white">
       <h2 className="text-2xl font-semibold mb-4">Chi tiết loại hình doanh nghiệp</h2>

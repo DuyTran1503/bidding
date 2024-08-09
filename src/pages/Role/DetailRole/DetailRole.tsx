@@ -4,7 +4,7 @@ interface DetailRoleProps {
   record: ITableData;
 }
 
-const DetailRole: React.FC<DetailRoleProps> = ({ record }) => {
+const DetailRole: React.FC<DetailRoleProps> = ({ record }: ITableData | any) => {
   return (
     <div className="p-6 bg-white">
       <h2 className="text-3xl font-semibold mb-4">Chi tiết vai trò</h2>
