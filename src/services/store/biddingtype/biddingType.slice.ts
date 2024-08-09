@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { IBiddingType } from "./biddingType.model";
+import { IBiddingType } from "./biddingType.model"
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
 import { 
