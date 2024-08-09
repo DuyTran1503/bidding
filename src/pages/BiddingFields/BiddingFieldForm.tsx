@@ -20,7 +20,7 @@ interface IActiveBiddingField extends Omit<IBiddingField, "parent"> {
 
 interface IBiddingFieldFormProps {
   formikRef?: any;
-  type: "create" | "view" | "update";
+  type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
   biddingField?: IActiveBiddingField;
 }
 
@@ -113,7 +113,7 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                   isDisabled={type === EPageTypes.VIEW}
                   placeholder="Chọn lĩnh vực cha"
                   treeData={treeData}
-                  defaultValue={values.parent_id}
+                  defaultValue={values.parent_id || undefined}
                   onChange={(value) => {
                     setFieldValue("parent_id", value as string);
                   }}

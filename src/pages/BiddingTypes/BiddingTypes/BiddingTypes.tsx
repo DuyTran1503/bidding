@@ -18,6 +18,7 @@ import BiddingTypeDetail from "../DetailBiddingType/DetailBiddingType";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IBiddingTypeInitialState, resetStatus, setFilter } from "@/services/store/biddingType/biddingType.slice";
 import { changeStatusBiddingType, deleteBiddingType, getAllBiddingTypes } from "@/services/store/biddingType/biddingType.thunk";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const BiddingTypes = () => {
   const navigate = useNavigate();
@@ -31,24 +32,23 @@ const BiddingTypes = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        // setModalContent(<BiddingTypeDetail record={record} />);
-        setIsModalOpen(true);
+        navigate(`/bidding-types/update/${record?.key}`);
       },
-      // permission: EPermissions.DETAIL_BIDDING_TYPE,
+      permission: EPermissions.DETAIL_BIDDING_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/bidding-types/update/${record?.key}`);
       },
-      // permission: EPermissions.UPDATE_BIDDING_TYPE,
+      permission: EPermissions.UPDATE_BIDDING_TYPE,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteBiddingType(record?.key));
       },
-      // permission: EPermissions.DESTROY_BIDDING_TYPE,
+      permission: EPermissions.DESTROY_BIDDING_TYPE,
     },
   ];
 

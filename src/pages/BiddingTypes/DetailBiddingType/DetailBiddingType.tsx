@@ -1,43 +1,90 @@
-import React from "react";
-import { ITableData } from "@/components/table/PrimaryTable"; // Ensure this path is correct
+import { useEffect, useRef, useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
+import { useNavigate, useParams } from "react-router-dom";
+import { FormikProps } from "formik";
+import Heading from "@/components/layout/Heading";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import useFetchStatus from "@/hooks/useFetchStatus";
+import { useArchive } from "@/hooks/useArchive";
+import { EPageTypes } from "@/shared/enums/page";
+import { getBiddingTypeById } from "@/services/store/biddingType/biddingType.thunk";
+import { IBiddingTypeInitialState, resetStatus } from "@/services/store/biddingType/biddingType.slice";
+import BiddingTypeForm, { IBiddingTypeFormInitialValues } from "../BiddingTypeForm";
 
-interface IDetailBiddingType {
-  record: ITableData; // record is of type ITableData
-}
+const DetailBiddingType = () => {
+  const navigate = useNavigate();
+  const formikRef = useRef<FormikProps<IBiddingTypeFormInitialValues>>(null);
+  const { state, dispatch } = useArchive<IBiddingTypeInitialState>("bidding_type");
+  const [data, setData] = useState<IBiddingTypeFormInitialValues>();
+  const { id } = useParams();
 
-const DetailBiddingType: React.FC<TypeProps> = ({ record }: ITableData | any) => {
-    return (
-        <div className="p-4 bg-white">
-            <h2 className="text-3xl font-semibold mb-4">Thông tin lĩnh vực đấu thầu</h2>
-            <div className="space-y-4 text-base">
-                <div className="flex items-start">
-                    <span className="font-semibold text-gray-700 w-2/5">Tên của lĩnh vực đấu thầu:</span>
-                    <span className="ml-2 text-gray-900">{record.name}</span>
-                </div>
-                <div className="flex items-start">
-                    <span className="font-semibold text-gray-700 w-2/5">Mô tả của lĩnh vực đấu thầu:</span>
-                    <span className="ml-2 text-gray-900">{record.description}</span>
-                </div>
-                <div className="flex items-start">
-                    <span className="font-semibold text-gray-700 w-2/5">Trạng thái:</span>
-                    <span className="ml-2 text-gray-900">{record.is_active ? "Kích hoạt" : "Không kích hoạt"}</span>
-                </div>
-            </div>
-        </div>
-        <div className="flex items-start">
-          <span className="text-gray-700 w-2/5 font-semibold">Mô tả của lĩnh vực đấu thầu:</span>
-          <span className="text-gray-900 ml-2">{record.description}</span>
-        </div>
-        <div className="flex items-start">
-          <span className="text-gray-700 w-2/5 font-semibold">Trạng thái:</span>
-          <span className="text-gray-900 ml-2">{record.is_active ? "Kích hoạt" : "Không kích hoạt"}</span>
-        </div>
-        <div className="flex items-start">
-          <span className="text-gray-700 w-2/5 font-semibold">Lĩnh vực cha:</span>
-          <span className="text-gray-900 ml-2">{record.parent_name || "Không có"}</span>
-        </div>
-      </div>
-    </div>
+  useFetchStatus({
+    module: "bidding_type",
+    reset: resetStatus,
+    actions: {
+      success: {
+        message: state.message,
+        navigate: "/bidding-types",
+      },
+      error: {
+        message: state.message,
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getBiddingTypeById(id));
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (!!state.activeBiddingType) {
+      setData(state.activeBiddingType);
+    }
+  }, [JSON.stringify(state.biddingType)]);
+
+  useEffect(() => {
+    if (data) {
+      if (formikRef.current) {
+        formikRef.current.setValues({
+          name: data.name,
+          description: data.description,
+          is_active: data.is_active,
+        });
+      }
+    }
+  }, [data]);
+
+  return (
+    <>
+      <Heading
+        title="Cập nhật loại đấu thầu"
+        hasBreadcrumb
+        buttons={[
+          {
+            type: "secondary",
+            text: "Hủy",
+            icon: <IoClose className="text-[18px]" />,
+            onClick: () => {
+              navigate("/bidding-types");
+            },
+          },
+          {
+            isLoading: state.status === EFetchStatus.PENDING,
+            text: "Cập nhật",
+            icon: <FaPlus className="text-[18px]" />,
+            onClick: () => formikRef.current?.handleSubmit(),
+          },
+        ]}
+      />
+      {state.activeBiddingType ? (
+        <BiddingTypeForm type={EPageTypes.VIEW} formikRef={formikRef} biddingType={state.activeBiddingType} />
+      ) : (
+        <div>Loading...</div>
+      )}
+    </>
   );
 };
 
