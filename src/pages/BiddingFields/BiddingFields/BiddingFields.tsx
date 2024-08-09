@@ -22,71 +22,60 @@ import BiddingFieldDetail from "../DetailBiddingField/DetailBiddingField";
 const BiddingFields = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBiddingFieldInitialState>("bidding_field");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<ReactNode>(null);
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
-    const buttons: IGridButton[] = [
-        {
-            type: EButtonTypes.VIEW,    
-            onClick(record) {
-                setModalContent(<BiddingFieldDetail record={record} />);
-                setIsModalOpen(true);
-            },
-            permission: EPermissions.DETAIL_BIDDING_FIELD,
-        },
-        {
-            type: EButtonTypes.UPDATE,
-            onClick(record) {
-                navigate(`/bidding-fields/update/${record?.key}`);
-            },
-            permission: EPermissions.UPDATE_BIDDING_FIELD,
-        },
-        {
-            type: EButtonTypes.DESTROY,
-            onClick(record) {
-                dispatch(deleteBiddingField(record?.key));
-            },
-            permission: EPermissions.DESTROY_BIDDING_FIELD,
-        },
-    ];
+  const buttons: IGridButton[] = [
+    {
+      type: EButtonTypes.VIEW,
+      onClick(record) {
+        navigate(`/bidding-fields/detail/${record?.key}`);
+      },
+      permission: EPermissions.DETAIL_BIDDING_FIELD,
+    },
+    {
+      type: EButtonTypes.UPDATE,
+      onClick(record) {
+        navigate(`/bidding-fields/update/${record?.key}`);
+      },
+      permission: EPermissions.UPDATE_BIDDING_FIELD,
+    },
+    {
+      type: EButtonTypes.DESTROY,
+      onClick(record) {
+        dispatch(deleteBiddingField(record?.key));
+      },
+      permission: EPermissions.DESTROY_BIDDING_FIELD,
+    },
+  ];
 
-    const columns: ColumnsType<ITableData> = [
-        {
-            dataIndex: "index",
-            title: "STT",
-        },
-        {
-            dataIndex: "name",
-            title: "Name",
-        },
-        {
-            dataIndex: "code",
-            title: "Code",
-        },
-        {
-            dataIndex: "description",
-            title: "Description",
-        },
-        {
-            dataIndex: "parent_name",
-            title: "Lĩnh vực cha",
-        },
-        {
-            title: "Trạng thái",
-            dataIndex: "is_active",
-            render(_, record) {
-                return (
-                    <CommonSwitch
-                        onChange={() => handleChangeStatus(record)}
-                        checked={!!record.is_active}
-                        title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} lĩnh vực này?`}
-                    />
-                );
-            },
-        },
-    ];
+  const columns: ColumnsType<ITableData> = [
+    {
+      dataIndex: "index",
+      title: "STT",
+    },
+    {
+      dataIndex: "name",
+      title: "Tên lĩnh vực đấu thầu",
+    },
+    {
+      dataIndex: "parent_name",
+      title: "Lĩnh vực cha",
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "is_active",
+      render(_, record) {
+        return (
+          <CommonSwitch
+            onChange={() => handleChangeStatus(record)}
+            checked={!!record.is_active}
+            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} lĩnh vực này?`}
+          />
+        );
+      },
+    },
+  ];
 
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
@@ -99,10 +88,6 @@ const BiddingFields = () => {
     }
   };
 
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-
   const search: ISearchTypeTable[] = [
     {
       id: "name",
@@ -111,21 +96,19 @@ const BiddingFields = () => {
       type: "text",
     },
   ];
-  const data: ITableData[] = useMemo(
-    () =>
-      state.biddingFields && state.biddingFields.length > 0
-        ? state.biddingFields.map(({ id, name, description, code, is_active, parent_name }, index) => ({
-            index: index + 1,
-            key: id,
-            name,
-            description,
-            code,
-            is_active,
-            parent_name,
-          }))
-        : [],
-    [JSON.stringify(state.biddingFields)],
-  );
+  const data: ITableData[] = useMemo(() => {
+    console.log(state.biddingFields);
+
+    return state.biddingFields && state.biddingFields.length > 0
+      ? state.biddingFields.map(({ id, name, is_active, parent }, index) => ({
+          index: index + 1,
+          key: id,
+          name,
+          is_active,
+          parent_name: parent?.name,
+        }))
+      : [];
+  }, [JSON.stringify(state.biddingFields)]);
   useFetchStatus({
     module: "bidding_field",
     reset: resetStatus,
@@ -157,9 +140,6 @@ const BiddingFields = () => {
           },
         ]}
       />
-      {/* <FormModal open={isModalOpen} onCancel={handleCancel}>
-        {modalContent}
-      </FormModal> */}
       <ConfirmModal
         title={"Xác nhận"}
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
