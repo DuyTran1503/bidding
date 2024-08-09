@@ -21,7 +21,7 @@ import BiddingFieldDetail from "../DetailBiddingField/DetailBiddingField";
 
 const BiddingFields = () => {
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IBiddingFieldInitialState>("biddingfield");
+  const { state, dispatch } = useArchive<IBiddingFieldInitialState>("bidding_field");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<ReactNode>(null);
   const [isModal, setIsModal] = useState(false);
@@ -31,8 +31,7 @@ const BiddingFields = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        setModalContent(<BiddingFieldDetail record={record} />);
-        setIsModalOpen(true);
+        navigate(`/bidding-fields/detail/${record?.key}`);
       },
       permission: EPermissions.DETAIL_BIDDING_FIELD,
     },
@@ -147,15 +146,15 @@ const BiddingFields = () => {
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
-            // permission: EPermissions.CREATE_BIDDINGFIELD,
-            text: "Create Bidding Field",
+            permission: EPermissions.CREATE_BIDDING_FIELD,
+            text: "Tạo mới",
             onClick: () => navigate("/bidding-fields/create"),
           },
         ]}
       />
-      <FormModal open={isModalOpen} onCancel={handleCancel}>
+      {/* <FormModal open={isModalOpen} onCancel={handleCancel}>
         {modalContent}
-      </FormModal>
+      </FormModal> */}
       <ConfirmModal
         title={"Xác nhận"}
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}

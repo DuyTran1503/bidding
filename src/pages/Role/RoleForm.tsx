@@ -66,7 +66,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
   useEffect(() => {
     dispatch(getAllPermissions());
     setLoading(false);
-  }, []);
+  }, [dispatch]);
 
   function convertPermissionsToTree(permissions: any[]): TreeNode[] {
     // Gom nhóm permissions theo section
