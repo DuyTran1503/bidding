@@ -4,6 +4,7 @@
 
 @import "./fonts";
 @import "./overwrite/index.scss";
+@import "./common/index.scss";
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -22,6 +23,6 @@
   background: #ccc;
 }
 
-:-webkit-autofill{
+:-webkit-autofill {
   box-shadow: 0 0 0 999px #f9f9fc inset;
 }

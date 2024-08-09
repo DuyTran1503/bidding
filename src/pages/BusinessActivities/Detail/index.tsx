@@ -1,26 +1,25 @@
-import React from 'react';
+import React from "react";
 import { ITableData } from "@/components/table/PrimaryTable";
+import { IBusinessActivity } from "@/services/store/business-activity/business-activity.model";
 interface DetailBusinessActivityProps {
-  record: ITableData;
+  record: IBusinessActivity;
 }
 
 const DetailBusinessActivity: React.FC<DetailBusinessActivityProps> = ({ record }) => {
+  console.log(record);
+
   return (
-    <div className="p-6 bg-white">
-      <h2 className="text-2xl font-semibold mb-4">Chi tiết loại hình doanh nghiệp</h2>
-      <div className="space-y-6 text-base">
-        <div className="flex items-start">
-          <span className="font-semibold text-gray-700 w-2/5">Tên loại hình doanh nghiệp:</span>
-          <span className="ml-2 text-gray-900">{record.name}</span>
+    <div className="bg-white p-6">
+      <h2 className="mb-4 text-2xl font-semibold">Chi tiết loại hình hoạt động</h2>
+      <div className="flex flex-col gap-3">
+        <div className="text-m-medium mb-1 block font-semibold text-black-900">Tên loại hình hoạt động: {record?.name}</div>
+        <div>
+          <span className="text-m-medium mb-1 font-semibold text-black-900">
+            Mô tả:
+            <span className="mb-1 ml-2 text-sm text-black-300">{record?.description}</span>
+          </span>
         </div>
-        <div className="flex items-start">
-          <span className="font-semibold text-gray-700 w-2/5">Mô tả của loại hình doanh nghiệp:</span>
-          <span className="ml-2 text-gray-900">{record.description || "Null"}</span>
-        </div>
-        <div className="flex items-start">
-          <span className="font-semibold text-gray-700 w-2/5">Trạng thái:</span>
-          <span className="ml-2 text-gray-900">{record.is_active ? "Đang hoạt động" : "Không hoạt động"}</span>
-        </div>
+        <div className="text-m-medium mb-1 block font-semibold text-black-900">Trạng thái</div>
       </div>
     </div>
   );

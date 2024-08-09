@@ -20,8 +20,9 @@ const FilterTableStatus: React.FC<IFilterTableStatusProps> = ({ options }) => {
         {fullOptions.map((option, index) => (
           <div
             key={index}
-            className={`text-base h-full px-3 py-[6px] ${selectedOption.value === option.value ? "font-semibold rounded-md bg-primary-50 text-primary-500" : "text-gray-500"
-              } outline-none`}
+            className={`text-m-medium h-full px-3 py-[6px] ${
+              selectedOption.value === option.value ? "rounded-md bg-primary-50 font-semibold text-primary-500" : "text-gray-500"
+            } outline-none`}
             onClick={() => setSelectedOption(option)}
           >
             {option.label}
