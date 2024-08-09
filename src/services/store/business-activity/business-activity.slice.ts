@@ -10,6 +10,7 @@ import {
   deleteBusinessActivity,
   getAllBusinessActivity,
   getBusinessActivityById,
+  getListBusinessActivity,
   updateBusinessActivity,
 } from "./business-activity.thunk";
 import { IError } from "@/shared/interface/error";
@@ -18,11 +19,13 @@ import { transformPayloadErrors } from "@/shared/utils/common/function";
 export interface IBusinessActivityInitialState extends IInitialState {
   businessActivities: IBusinessActivity[];
   businessActivity?: IBusinessActivity | any;
+  listBusinessActivities: IBusinessActivity[];
 }
 
 const initialState: IBusinessActivityInitialState = {
   status: EFetchStatus.IDLE,
   businessActivities: [],
+  listBusinessActivities: [],
   businessActivity: undefined,
   message: "",
   error: undefined,
@@ -117,6 +120,15 @@ const businessActivitySlice = createSlice({
       })
       .addCase(deleteBusinessActivity.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
+      });
+    builder
+      .addCase(getListBusinessActivity.fulfilled, (state, { payload }: PayloadAction<IResponse<IBusinessActivity[]> | any>) => {
+        if (payload.data) {
+          state.listBusinessActivities = payload.data;
+        }
+      })
+      .addCase(getListBusinessActivity.rejected, (state, { payload }: PayloadAction<IResponse<IBusinessActivity[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors);
       });
   },
 });

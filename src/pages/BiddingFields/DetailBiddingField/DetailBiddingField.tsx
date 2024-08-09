@@ -1,32 +1,57 @@
-import React from 'react';
-import { ITableData } from "@/components/table/PrimaryTable";
-interface BiddingFieldDetailProps {
-  record: ITableData;
-}
+import Heading from "@/components/layout/Heading";
+import { useArchive } from "@/hooks/useArchive";
+import useFetchStatus from "@/hooks/useFetchStatus";
+import { IBiddingFieldInitialState, resetStatus } from "@/services/store/biddingField/biddingField.slice";
+import { FormikProps } from "formik";
+import { useEffect, useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import BiddingFieldForm, { IBiddingFieldFormInitialValues } from "../BiddingFieldForm";
+import { IoClose } from "react-icons/io5";
+import { getBiddingFieldById } from "@/services/store/biddingField/biddingField.thunk";
+import { EPageTypes } from "@/shared/enums/page";
 
-const BiddingFieldDetail: React.FC<BiddingFieldDetailProps> = ({ record }: ITableData | any) => {
+const BiddingFieldDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const formikRef = useRef<FormikProps<IBiddingFieldFormInitialValues>>(null);
+  const { state, dispatch } = useArchive<IBiddingFieldInitialState>("bidding_field");
+
+  // Hook to handle status of fetch requests
+  useFetchStatus({
+    module: "bidding_field",
+    reset: resetStatus,
+    actions: {
+      success: { message: state.message, navigate: "/bidding_fields" },
+      error: { message: state.message },
+    },
+  });
+
+  useEffect(() => {
+    if (id) {
+      dispatch(getBiddingFieldById(id));
+    }
+  }, [id, dispatch]);
+
   return (
-    <div className="p-6 bg-white">
-      <h2 className="text-3xl font-semibold mb-4">Chi tiết lĩnh vực đấu thầu</h2>
-      <div className="space-y-6 text-base">
-        <div className="flex items-start">
-          <span className="font-semibold text-gray-700 w-2/5">Tên của lĩnh vực đấu thầu:</span>
-          <span className="ml-2 text-gray-900">{record.name}</span>
-        </div>
-        <div className="flex items-start">
-          <span className="font-semibold text-gray-700 w-2/5">Mô tả của lĩnh vực đấu thầu:</span>
-          <span className="ml-2 text-gray-900">{record.description}</span>
-        </div>
-        <div className="flex items-start">
-          <span className="font-semibold text-gray-700 w-2/5">Trạng thái:</span>
-          <span className="ml-2 text-gray-900">{record.is_active ? "Đang hoạt động" : "Không hoạt động"}</span>
-        </div>
-        <div className="flex items-start">
-          <span className="font-semibold text-gray-700 w-2/5">Lĩnh vực cha:</span>
-          <span className="ml-2 text-gray-900">{record.parent_name ?? "Null"}</span>
-        </div>
-      </div>
-    </div>
+    <>
+      <Heading
+        title="Chi tiết lĩnh vực đấu thầu"
+        hasBreadcrumb
+        buttons={[
+          {
+            type: "secondary",
+            text: "Hủy",
+            icon: <IoClose className="text-[18px]" />,
+            onClick: () => navigate("/bidding_fields"),
+          },
+        ]}
+      />
+      {state.activeBiddingField ? (
+        <BiddingFieldForm formikRef={formikRef} type={EPageTypes.VIEW} biddingField={state.activeBiddingField} />
+      ) : (
+        <div>Loading...</div>
+      )}
+    </>
   );
 };
 
