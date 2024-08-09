@@ -10,11 +10,12 @@ import { useArchive } from "@/hooks/useArchive";
 import { EPageTypes } from "@/shared/enums/page";
 import IndustryForm, { IndustryInitialValues } from "../ActionModule";
 import { IIndustryInitialState, resetStatus } from "@/services/store/industry/industry.slice";
+import { getIndustryById } from "@/services/store/industry/industry.thunk";
 const UpdateIndustry = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IndustryInitialValues>>(null);
   const { state, dispatch } = useArchive<IIndustryInitialState>("industry");
-  const [data, setData] = useState<IIndustryInitialState>();
+  const [data, setData] = useState<IndustryInitialValues>();
   const { id } = useParams();
 
   useFetchStatus({
@@ -32,7 +33,7 @@ const UpdateIndustry = () => {
   });
   useEffect(() => {
     if (id) {
-      dispatch(getBusinessActivityById(id));
+      dispatch(getIndustryById(id));
     }
   }, [id]);
   useEffect(() => {
@@ -46,6 +47,7 @@ const UpdateIndustry = () => {
       if (formikRef.current) {
         formikRef.current.setValues({
           name: data.name,
+          business_activity_type_id: data.business_activity_type_id,
           description: data.description,
           is_active: data.is_active,
         });

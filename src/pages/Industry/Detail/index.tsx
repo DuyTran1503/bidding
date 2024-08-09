@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,54 +6,58 @@ import { FormikProps } from "formik";
 import Heading from "@/components/layout/Heading";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { ITagInitialState, resetStatus } from "@/services/store/tag/tag.slice";
 import { useArchive } from "@/hooks/useArchive";
-import BusinessActivityForm, { IIBusinessActivityInitialValues } from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
-import { getBusinessActivityById } from "@/services/store/business-activity/business-activity.thunk";
-import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
-
-const index = () => {
+import IndustryForm, { IndustryInitialValues } from "../ActionModule";
+import { IIndustryInitialState, resetStatus } from "@/services/store/industry/industry.slice";
+import { getIndustryById } from "@/services/store/industry/industry.thunk";
+const DetailIndustry = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IIBusinessActivityInitialValues>>(null);
+  const formikRef = useRef<FormikProps<IndustryInitialValues>>(null);
+  const { state, dispatch } = useArchive<IIndustryInitialState>("industry");
+  const [data, setData] = useState<IndustryInitialValues>();
   const { id } = useParams();
 
-  const { state, dispatch } = useArchive<IBusinessActivityInitialState>("business");
-
   useFetchStatus({
-    module: "business",
+    module: "industry",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/business-activity",
+        navigate: "/industry",
       },
       error: {
         message: state.message,
       },
     },
   });
-  // useEffect(() => {
-  //   if (id) {
-  //     dispatch(getBusinessActivityById(id));
-  //   }
-  // }, [id]);
+  useEffect(() => {
+    if (id) {
+      dispatch(getIndustryById(id));
+    }
+  }, [id]);
+  useEffect(() => {
+    if (!!state.businessActivity) {
+      setData(state.businessActivity);
+    }
+  }, [JSON.stringify(state.businessActivity)]);
 
   useEffect(() => {
-    if (state.businessActivity) {
+    if (data) {
       if (formikRef.current) {
         formikRef.current.setValues({
-          name: state.businessActivity.name,
-          description: state.businessActivity.description,
-          is_active: state.businessActivity.is_active,
+          name: data.name,
+          business_activity_type_id: data.business_activity_type_id,
+          description: data.description,
+          is_active: data.is_active,
         });
       }
     }
-  }, [state.activeTag]);
+  }, [data]);
   return (
     <>
       <Heading
-        title="Cập nhật loại hình doanh nghiệp"
+        title="Cập nhật ngành kinh doanh"
         hasBreadcrumb
         buttons={[
           {
@@ -61,7 +65,7 @@ const index = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/business-activity");
+              navigate("/industry");
             },
           },
           {
@@ -76,9 +80,9 @@ const index = () => {
           },
         ]}
       />
-      <BusinessActivityForm type={EPageTypes.CREATE} formikRef={formikRef} />
+      <IndustryForm type={EPageTypes.UPDATE} formikRef={formikRef} industry={data} />
     </>
   );
 };
 
-export default index;
+export default DetailIndustry;

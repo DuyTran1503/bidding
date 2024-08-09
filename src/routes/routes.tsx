@@ -11,7 +11,6 @@ import Orders from "@/pages/Order/Orders/Orders";
 import Roles from "@/pages/Role/Roles/Roles";
 import CreateRole from "@/pages/Role/CreateRole/CreateRole";
 import UpdateRole from "@/pages/Role/UpdateRole/UpdateRole";
-import DetailRole from "@/pages/Role/DetailRole/DetailRole";
 import Permissions from "@/pages/Permission/Permissions/Permissions";
 import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
 import { EPermissions } from "@/shared/enums/permissions";
@@ -33,7 +32,13 @@ import UpdateBusinessActivity from "@/pages/BusinessActivities/Update";
 import BiddingTypes from "@/pages/BiddingTypes/BiddingTypes/BiddingTypes";
 import CreateBiddingType from "@/pages/BiddingTypes/CreateBiddingType/CreateBiddingType";
 import UpdateBiddingType from "@/pages/BiddingTypes/UpdateBiddingType/UpdateBiddingType";
-
+import Industry from "@/pages/Industry";
+import CreateIndustry from "@/pages/Industry/Create";
+import UpdateIndustry from "@/pages/Industry/Update";
+import Enterprise from "@/pages/Enterprise";
+import CreateEnterprise from "@/pages/Enterprise/Create";
+import UpdateEnterprise from "@/pages/Enterprise/Update";
+import DetailBiddingField from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
 
 export interface IRoute {
   path: string;
@@ -96,7 +101,11 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBiddingField />,
-              }
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBiddingField />,
+              },
             ],
           },
           {
@@ -113,7 +122,7 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBiddingType />,
-              }
+              },
             ],
           },
           {
@@ -139,10 +148,6 @@ export const routes: IRoute[] = [
                 path: "/update/:id",
                 element: () => <UpdateRole />,
               },
-              {
-                path: "/detail/:id",
-                element: () => <DetailRole />,
-              },
             ],
           },
           {
@@ -163,7 +168,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "business-activity",
+            path: "business_activity",
             pages: [
               {
                 path: "/",

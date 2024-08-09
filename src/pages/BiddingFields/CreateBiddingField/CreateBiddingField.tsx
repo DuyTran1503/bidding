@@ -27,7 +27,7 @@ const CreateBiddingField = () => {
   return (
     <>
       <Heading
-        title="Create Lĩnh vực đấu thầu"
+        title="Tạo mới lĩnh vực đấu thầu"
         hasBreadcrumb
         buttons={[
           {
@@ -38,7 +38,7 @@ const CreateBiddingField = () => {
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
-            text: "Create Fields",
+            text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
               formikRef && formikRef.current && formikRef.current.handleSubmit();
