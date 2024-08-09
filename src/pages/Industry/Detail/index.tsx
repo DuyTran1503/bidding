@@ -68,19 +68,9 @@ const DetailIndustry = () => {
               navigate("/industry");
             },
           },
-          {
-            isLoading: state.status === EFetchStatus.PENDING,
-            text: "Cập nhật",
-            icon: <FaPlus className="text-[18px]" />,
-            onClick: () => {
-              if (formikRef.current) {
-                formikRef.current.handleSubmit();
-              }
-            },
-          },
         ]}
       />
-      <IndustryForm type={EPageTypes.UPDATE} formikRef={formikRef} industry={data} />
+      <IndustryForm type={EPageTypes.VIEW} formikRef={formikRef} industry={data} />
     </>
   );
 };
