@@ -1,13 +1,10 @@
 import React from "react";
 import { ITableData } from "@/components/table/PrimaryTable";
-import { IBusinessActivity } from "@/services/store/business-activity/business-activity.model";
 interface DetailBusinessActivityProps {
-  record: IBusinessActivity;
+  record: ITableData;
 }
 
-const DetailBusinessActivity: React.FC<DetailBusinessActivityProps> = ({ record }) => {
-  console.log(record);
-
+const DetailBusinessActivity: React.FC<DetailBusinessActivityProps> = ({ record }: ITableData | any) => {
   return (
     <div className="bg-white p-6">
       <h2 className="mb-4 text-2xl font-semibold">Chi tiết loại hình hoạt động</h2>
