@@ -9,4 +9,6 @@ export enum EPageNames {
   detail = "Chi tiết",
   create = "Tạo mới",
   enterprise = "Doanh nghiệp",
+  staffs = "Nhân viên",
+  business_activity = "Loại hình hoạt động",
 }

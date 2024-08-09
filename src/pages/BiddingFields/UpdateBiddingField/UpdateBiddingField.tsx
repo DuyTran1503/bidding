@@ -42,24 +42,20 @@ const UpdateBiddingField = () => {
         buttons={[
           {
             type: "secondary",
-            text: "Cancel",
+            text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => navigate("/bidding-fields"),
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
-            text: "Update Field",
+            text: "Cập nhật",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => formikRef.current?.handleSubmit(),
           },
         ]}
       />
       {state.activeBiddingField ? (
-        <BiddingFieldForm
-          formikRef={formikRef}
-          type={EPageTypes.UPDATE}
-          biddingField={state.activeBiddingField}
-        />
+        <BiddingFieldForm formikRef={formikRef} type={EPageTypes.UPDATE} biddingField={state.activeBiddingField} />
       ) : (
         <div>Loading...</div>
       )}

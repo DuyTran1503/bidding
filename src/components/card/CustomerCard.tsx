@@ -62,11 +62,11 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ image, title, status, order
       <div className="flex h-[42px] w-full items-center justify-between gap-[10px]">
         <div className="flex w-full flex-col items-center justify-center gap-1">
           <span className="text-s-regular text-gray-500">Orders</span>
-          <span className="text-base">{orders}</span>
+          <span className="text-m-medium">{orders}</span>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-1">
           <span className="text-s-regular text-gray-500">Balance</span>
-          <span className="text-base">${balance}</span>
+          <span className="text-m-medium">${balance}</span>
         </div>
       </div>
     </div>
