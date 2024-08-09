@@ -18,7 +18,6 @@ import { useEffect, useMemo, useState, ReactNode } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import BiddingFieldDetail from "../DetailBiddingField/DetailBiddingField";
-import { ISearchTypeTable } from "@/components/table/SearchComponent";
 
 const BiddingFields = () => {
     const navigate = useNavigate();
@@ -30,7 +29,7 @@ const BiddingFields = () => {
 
     const buttons: IGridButton[] = [
         {
-            type: EButtonTypes.VIEW,
+            type: EButtonTypes.VIEW,    
             onClick(record) {
                 setModalContent(<BiddingFieldDetail record={record} />);
                 setIsModalOpen(true);
@@ -100,9 +99,9 @@ const BiddingFields = () => {
         }
     };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
     const search: ISearchTypeTable[] = [
         {

@@ -5,7 +5,7 @@ interface IDetailStaffProps {
   record: ITableData;
 }
 
-const DetailStaff: React.FC<IDetailStaffProps> = ({ record }) => {
+const DetailStaff: React.FC<IDetailStaffProps> = ({ record }: ITableData | any) => {
   return (
     <div className="p-6 bg-white">
       <h2 className="text-3xl font-semibold mb-4">Chi tiết nhân viên</h2>
