@@ -89,7 +89,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "bidding-fields",
+            path: "bidding_fields",
             pages: [
               {
                 path: "/",
@@ -110,7 +110,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "bidding-types",
+            path: "bidding_types",
             pages: [
               {
                 path: "/",

@@ -69,7 +69,7 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
                   value={values.name}
                   name="name"
                   error={touched.name ? errors.name : ""}
-                  placeholder="Nhập tên loại đấu thầu..."
+                  placeholder="Nhập tên loại hình đấu thầu..."
                   onChange={(value) => setFieldValue("name", value)}
                   onBlur={handleBlur}
                 />

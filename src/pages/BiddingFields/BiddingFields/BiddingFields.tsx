@@ -1,6 +1,5 @@
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
-import FormModal from "@/components/form/FormModal";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
@@ -8,47 +7,51 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IBiddingFieldInitialState, resetStatus, setFilter } from "@/services/store/biddingField/biddingField.slice";
-import { changeStatusBiddingField, deleteBiddingField, getAllBiddingFields } from "@/services/store/biddingField/biddingField.thunk";
+import { changeStatusBiddingField, deleteBiddingField, getAllBiddingFields, getBiddingFieldAllIds } from "@/services/store/biddingField/biddingField.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
+import { convertDataOption } from "@/shared/utils/common/function";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo, useState, ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import BiddingFieldDetail from "../DetailBiddingField/DetailBiddingField";
 
 const BiddingFields = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBiddingFieldInitialState>("bidding_field");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
+  const [parentOptions, setParentOptions] = useState<{ label: string; value: string }[]>([]);
 
+  // Define buttons for grid actions
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/bidding-fields/detail/${record?.key}`);
+        navigate(`/bidding_fields/detail/${record?.key}`);
       },
       permission: EPermissions.DETAIL_BIDDING_FIELD,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/bidding-fields/update/${record?.key}`);
+        navigate(`/bidding_fields/update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_BIDDING_FIELD,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteBiddingField(record?.key));
+        setConfirmItem(record);
+        setIsModal(true);
       },
       permission: EPermissions.DESTROY_BIDDING_FIELD,
     },
   ];
 
+  // Define columns for the grid
   const columns: ColumnsType<ITableData> = [
     {
       dataIndex: "index",
@@ -77,17 +80,21 @@ const BiddingFields = () => {
     },
   ];
 
+  // Handle status change
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
   };
 
+  // Confirm status change
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
       dispatch(changeStatusBiddingField(String(confirmItem.key)));
+      setIsModal(false);
     }
   };
 
+  // Define search filters
   const search: ISearchTypeTable[] = [
     {
       id: "name",
@@ -95,18 +102,36 @@ const BiddingFields = () => {
       label: "Tên lĩnh vực",
       type: "text",
     },
+    {
+      id: "code",
+      placeholder: "Mã lĩnh vực...",
+      label: "Mã lĩnh vực",
+      type: "text",
+    },
+    {
+      id: "parent_id",
+      placeholder: "Nhập lĩnh vực cha...",
+      label: "Lĩnh vực cha",
+      type: "select",
+      options: parentOptions, // Use the state for parent options
+    },
   ];
+
+  // Convert data for table
   const data: ITableData[] = useMemo(() => {
     return state.biddingFields && state.biddingFields.length > 0
-      ? state.biddingFields.map(({ id, name, is_active, parent }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          is_active,
-          parent_name: parent?.name,
-        }))
+      ? state.biddingFields.map(({ id, name, is_active, code, parent }, index) => ({
+        index: index + 1,
+        key: id,
+        name,
+        is_active,
+        code,
+        parent_name: parent?.name || "", // Ensure parent name is displayed
+      }))
       : [];
-  }, [JSON.stringify(state.biddingFields)]);
+  }, [state.biddingFields]);
+
+  // Fetch data and handle status changes
   useFetchStatus({
     module: "bidding_field",
     reset: resetStatus,
@@ -115,14 +140,22 @@ const BiddingFields = () => {
       error: { message: state.message },
     },
   });
+
   useEffect(() => {
-    if (state.status === EFetchStatus.FULFILLED) {
-      dispatch(getAllBiddingFields({ query: state.filter }));
-    }
-  }, [JSON.stringify(state.status)]);
-  useEffect(() => {
+    // Fetch all bidding fields data
     dispatch(getAllBiddingFields({ query: state.filter }));
-  }, [JSON.stringify(state.filter)]);
+
+    // Fetch all parent field data
+    dispatch(getBiddingFieldAllIds({ query: state.filter }))
+      .unwrap()
+      .then(result => {
+        const formattedOptions = result.data.map(field => ({
+          label: field.name,
+          value: field.id.toString(),
+        }));
+        setParentOptions(formattedOptions);
+      });
+  }, [dispatch, state.filter]);
 
   return (
     <>
@@ -134,7 +167,7 @@ const BiddingFields = () => {
             icon: <FaPlus className="text-[18px]" />,
             permission: EPermissions.CREATE_BIDDING_FIELD,
             text: "Tạo mới",
-            onClick: () => navigate("/bidding-fields/create"),
+            onClick: () => navigate("/bidding_fields/create"),
           },
         ]}
       />
@@ -156,6 +189,7 @@ const BiddingFields = () => {
           total: state.totalRecords!,
         }}
         setFilter={setFilter}
+        filter={state.filter}
       />
     </>
   );
