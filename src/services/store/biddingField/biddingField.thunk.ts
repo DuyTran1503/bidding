@@ -1,7 +1,7 @@
 import { client } from "@/services/config/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { IBiddingField, INewBiddingField } from "./biddingField.model";
+import { INewBiddingField } from "./biddingField.model";
 
 const prefix = "/api/admin/bidding-fields";
 
