@@ -54,7 +54,7 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ image, title, status, order
           </div>
         </div>
         <div className="flex h-12 w-full flex-col items-center gap-1">
-          <div className="text-m-semibold">{title}</div>
+          <div className="font-semibold">{title}</div>
           <StatusBadge text={status.text} color={status.color} />
         </div>
       </div>

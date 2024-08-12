@@ -9,6 +9,7 @@ import { useArchive } from "@/hooks/useArchive";
 import { IRoleInitialState, resetStatus } from "@/services/store/role/role.slice";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { EPageTypes } from "@/shared/enums/page";
 
 const CreateRole = () => {
   const navigate = useNavigate();
@@ -33,12 +34,12 @@ const CreateRole = () => {
   return (
     <>
       <Heading
-        title="Create Role"
+        title="Tạo mới vai trò"
         hasBreadcrumb
         buttons={[
           {
             type: "secondary",
-            text: "Cancel",
+            text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
               navigate("/roles");
@@ -46,7 +47,7 @@ const CreateRole = () => {
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
-            text: "Create Role",
+            text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
               formikRef && formikRef.current && formikRef.current.handleSubmit();
@@ -54,7 +55,7 @@ const CreateRole = () => {
           },
         ]}
       />
-      <RoleForm formikRef={formikRef} type="create" />
+      <RoleForm formikRef={formikRef} type={EPageTypes.CREATE} />
     </>
   );
 };

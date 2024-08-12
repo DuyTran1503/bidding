@@ -36,7 +36,7 @@ export const columns: ColumnsType<DataType> = [
     title: "Order ID",
     dataIndex: "key",
     key: "key",
-    render: (text: string) => <a className="text-m-semibold text-primary-500">{text}</a>,
+    render: (text: string) => <a className="font-semibold text-primary-500">{text}</a>,
   },
   {
     title: "Product",

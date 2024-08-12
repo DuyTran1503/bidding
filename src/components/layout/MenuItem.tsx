@@ -52,7 +52,7 @@ const MenuItem = ({
         )}
         {isChild && <IoPieChartOutline className="invisible text-2xl" />}
         <span
-          className={clsx("text-m-semibold text-black-400 group-hover:text-primary-500", (isActive || isChildActive || isOpen) && "text-primary-500")}
+          className={clsx("font-semibold text-black-400 group-hover:text-primary-500", (isActive || isChildActive || isOpen) && "text-primary-500")}
         >
           {label}
         </span>
