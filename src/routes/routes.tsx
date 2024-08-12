@@ -40,6 +40,9 @@ import CreateEnterprise from "@/pages/Enterprise/Create";
 import UpdateEnterprise from "@/pages/Enterprise/Update";
 import DetailIndustry from "@/pages/Industry/Detail";
 import BiddingFieldDetail from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
+import StatisticalReports from "@/pages/StatisticalReports/StatisticalReports/StatisticalReports";
+import CreateStatisticalReport from "@/pages/StatisticalReports/CreateStatisticalReport/CreateStatisticalReport";
+import UpdateStatisticalReport from "@/pages/StatisticalReports/UpdateStatisticalReport/UpdateStatisticalReport";
 
 export interface IRoute {
   path: string;
@@ -220,6 +223,23 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateEnterprise />,
+              },
+            ],
+          },
+          {
+            path: "statistical_reports",
+            pages: [
+              {
+                path: "/",
+                element: () => <StatisticalReports />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateStatisticalReport />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateStatisticalReport />,
               },
             ],
           },

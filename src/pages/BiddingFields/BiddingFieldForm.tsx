@@ -54,7 +54,7 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
   };
 
   useEffect(() => {
-    dispatch(getBiddingFieldAllIds({ query: state.filter }))
+    dispatch(getBiddingFieldAllIds())
       .then(unwrapResult)
       .then((result) => {
         const fields = result.data;
