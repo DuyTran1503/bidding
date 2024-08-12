@@ -8,7 +8,7 @@ import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
 import FormInputArea from "@/components/form/FormInputArea";
 import { createStatisticalReport, updateStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.thunk";
-import { IStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.motel";
+import { IStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.model";
 
 interface IStatisticalReportFormProps {
   formikRef?: any;
