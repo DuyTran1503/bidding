@@ -13,5 +13,6 @@ export enum EPageNames {
   business_activity = "Loại hình hoạt động",
   bidding_fields = "Lĩnh vực đấu thầu",
   bidding_types = "Loại hình đấu thầu",
+  statistical_reports = "Báo cáo thống kê",
   industry = "Ngành kinh doanh",
 }
