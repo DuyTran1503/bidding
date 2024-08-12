@@ -16,7 +16,7 @@ import { IStatisticalReport } from "./statisticalReport.model";
 
 export interface IStatisticalReportInitialState extends IInitialState {
   statisticalReports: IStatisticalReport[];
-  activeStatisticalReport: IStatisticalReport | undefined;
+  activeStatisticalReport?: IStatisticalReport;
 }
 
 const initialState: IStatisticalReportInitialState = {
