@@ -10,21 +10,17 @@ import { setFilter } from "@/services/store/role/role.slice";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { changeStatusStaff, deleteStaff, getAllStaff } from "@/services/store/account/account.thunk";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import { IAccountInitialState, resetStatus } from "@/services/store/account/account.slice";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import DetailStaff from "./Detail";
-import FormModal from "@/components/form/FormModal";
 
 const Staffs = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IAccountInitialState>("account");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<ReactNode>(null);
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const columns: ColumnsType = [
@@ -102,16 +98,16 @@ const Staffs = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.staffs)
       ? state.staffs.map(({ id_user, name, type, role_name, avatar, email, phone, account_ban_at }, index) => ({
-          index: index + 1,
-          key: id_user,
-          name,
-          avatar,
-          email,
-          type,
-          role_name,
-          phone,
-          account_ban_at,
-        }))
+        index: index + 1,
+        key: id_user,
+        name,
+        avatar,
+        email,
+        type,
+        role_name,
+        phone,
+        account_ban_at,
+      }))
       : [];
   }, [JSON.stringify(state.staffs)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -123,10 +119,6 @@ const Staffs = () => {
       dispatch(changeStatusStaff(String(confirmItem.key)));
       dispatch(getAllStaff({ query: state.filter }));
     }
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
   };
 
   useEffect(() => {

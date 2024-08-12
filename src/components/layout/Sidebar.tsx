@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
 // Icons
-import { IoCartOutline, IoPieChartOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoPieChartOutline, IoSettingsOutline } from "react-icons/io5";
 
 // Images
 import logo from "@/assets/images/logo.png";
@@ -79,14 +79,14 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         {
           id: "3.2",
           label: "Lĩnh vực đấu thầu",
-          path: "bidding-fields",
+          path: "bidding_fields",
           permissions: EPermissions.LIST_BIDDING_FIELD,
         },
         {
           id: "3.3",
           label: "Loại hình đấu thầu",
-          path: "bidding-types",
-          permissions: EPermissions.LIST_BIDDING_TYPE,
+          path: "bidding_types",
+          // permissions: EPermissions.LIST_BIDDING_TYPE,
         },
         {
           id: "3.4",
