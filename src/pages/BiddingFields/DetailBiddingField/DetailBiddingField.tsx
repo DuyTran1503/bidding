@@ -10,7 +10,7 @@ import { IoClose } from "react-icons/io5";
 import { getBiddingFieldById } from "@/services/store/biddingField/biddingField.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 
-const DetailBiddingField = () => {
+const BiddingFieldDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IBiddingFieldFormInitialValues>>(null);
@@ -21,7 +21,7 @@ const DetailBiddingField = () => {
     module: "bidding_field",
     reset: resetStatus,
     actions: {
-      success: { message: state.message, navigate: "/bidding-fields" },
+      success: { message: state.message, navigate: "/bidding_fields" },
       error: { message: state.message },
     },
   });
@@ -42,7 +42,7 @@ const DetailBiddingField = () => {
             type: "secondary",
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
-            onClick: () => navigate("/bidding-fields"),
+            onClick: () => navigate("/bidding_fields"),
           },
         ]}
       />
@@ -55,4 +55,4 @@ const DetailBiddingField = () => {
   );
 };
 
-export default DetailBiddingField;
+export default BiddingFieldDetail;

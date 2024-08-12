@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { IBiddingType } from "./biddingType.model";
+import { IBiddingType } from "./biddingType.model"
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
 import { 
@@ -24,10 +24,10 @@ const initialState: IBiddingTypeInitialState = {
   message: "",
   biddingTypes: [],
   activeBiddingType: undefined,
-  totalRecords: 0, // Tổng số lượng mục
-  totalPages: 0,   // Tổng số trang
-  pageSize: 10,    // Số lượng mục trên mỗi trang
-  currentPage: 1,  // Trang hiện tại
+  totalRecords: 0,
+  totalPages: 0,
+  pageSize: 10,
+  currentPage: 1,
   filter: {
     size: 10,
     page: 1,
@@ -45,10 +45,10 @@ const biddingTypeSlice = createSlice({
     builder.addCase(getAllBiddingTypes.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
       if (payload.data) {
           state.biddingTypes = payload.data.data;
-          state.totalRecords = payload.data.total_elements;  // Tổng số lượng mục
-          state.totalPages = payload.data.total_pages;      // Tổng số trang
-          state.pageSize = payload.data.page_size;          // Số lượng mục trên mỗi trang
-          state.currentPage = payload.data.current_page;    // Trang hiện tại
+          state.totalRecords = payload.data.total_elements;
+          state.totalPages = payload.data.total_pages;
+          state.pageSize = payload.data.page_size;
+          state.currentPage = payload.data.current_page;
       }
   });
 

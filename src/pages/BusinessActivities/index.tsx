@@ -23,7 +23,6 @@ import { IBusinessActivityInitialState, resetStatus, setFilter } from "@/service
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import DetailBusinessActivity from "./Detail";
 import FormModal from "@/components/form/FormModal";
-import { IBusinessActivity } from "@/services/store/business-activity/business-activity.model";
 
 const BusinessActivities = () => {
   const navigate = useNavigate();
@@ -67,7 +66,7 @@ const BusinessActivities = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        setModalContent(<DetailBusinessActivity record={record as unknown as IBusinessActivity} />);
+        setModalContent(<DetailBusinessActivity record={record} />);
         setIsModalOpen(true);
       },
       permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
@@ -98,12 +97,12 @@ const BusinessActivities = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.businessActivities)
       ? state.businessActivities.map(({ id, name, description, is_active }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          description,
-          is_active,
-        }))
+        index: index + 1,
+        key: id,
+        name,
+        description,
+        is_active,
+      }))
       : [];
   }, [JSON.stringify(state.businessActivities)]);
   const handleChangeStatus = (item: ITableData) => {
