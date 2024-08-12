@@ -119,6 +119,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "tags",
           permissions: EPermissions.LIST_TAG,
         },
+        {
+          id: "4.4",
+          label: "Báo cáo thống kê",
+          path: "statistical_reports",
+          // permissions: EPermissions.LIST_STATISTICAL_REPORT,
+        },
       ],
     },
     {
