@@ -14,14 +14,18 @@ import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IBiddingTypeInitialState, resetStatus, setFilter } from "@/services/store/biddingType/biddingType.slice";
-import { changeStatusBiddingType, deleteBiddingType, getAllBiddingTypes } from "@/services/store/biddingType/biddingType.thunk";
+import { IStatisticalReportInitialState, resetStatus, setFilter } from "@/services/store/statisticalReport/statisticalReport.slice";
 import { EPermissions } from "@/shared/enums/permissions";
+import {
+    changeStatusStatisticalReport,
+    deleteStatisticalReport,
+    getAllStatisticalReports
+} from "@/services/store/statisticalReport/statisticalReport.thunk";
 import { GoDownload } from "react-icons/go";
 
-const BiddingTypes = () => {
+const StatisticalReports = () => {
     const navigate = useNavigate();
-    const { state, dispatch } = useArchive<IBiddingTypeInitialState>("bidding_type");
+    const { state, dispatch } = useArchive<IStatisticalReportInitialState>("statistical_report");
     const [isModal, setIsModal] = useState(false);
     const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
@@ -29,23 +33,23 @@ const BiddingTypes = () => {
         {
             type: EButtonTypes.VIEW,
             onClick(record) {
-                navigate(`/bidding_types/update/${record?.key}`);
+                navigate(`/statistical_reports/update/${record?.key}`);
             },
-            permission: EPermissions.DETAIL_BIDDING_TYPE,
+            permission: EPermissions.DETAIL_STATISTICAL_REPORT,
         },
         {
             type: EButtonTypes.UPDATE,
             onClick(record) {
-                navigate(`/bidding_types/update/${record?.key}`);
+                navigate(`/statistical_reports/update/${record?.key}`);
             },
-            permission: EPermissions.UPDATE_BIDDING_TYPE,
+            permission: EPermissions.UPDATE_STATISTICAL_REPORT,
         },
         {
             type: EButtonTypes.DESTROY,
             onClick(record) {
-                dispatch(deleteBiddingType(record?.key));
+                dispatch(deleteStatisticalReport(record?.key));
             },
-            permission: EPermissions.DESTROY_BIDDING_TYPE,
+            permission: EPermissions.DESTROY_STATISTICAL_REPORT,
         },
     ];
 
@@ -84,11 +88,10 @@ const BiddingTypes = () => {
 
     const onConfirmStatus = () => {
         if (confirmItem && confirmItem.key) {
-            dispatch(changeStatusBiddingType(String(confirmItem.key)));
+            dispatch(changeStatusStatisticalReport(String(confirmItem.key)));
         }
     };
 
-    // Update the search state and dispatch actions
     const search: ISearchTypeTable[] = [
         {
             id: "name",
@@ -100,8 +103,8 @@ const BiddingTypes = () => {
 
     const data: ITableData[] = useMemo(
         () =>
-            state.biddingTypes && state.biddingTypes.length > 0
-                ? state.biddingTypes.map(({ id, name, description, is_active }, index) => ({
+            state.statisticalReports && state.statisticalReports.length > 0
+                ? state.statisticalReports.map(({ id, name, description, is_active }, index) => ({
                     index: index + 1,
                     key: id,
                     name,
@@ -109,11 +112,11 @@ const BiddingTypes = () => {
                     is_active,
                 }))
                 : [],
-        [JSON.stringify(state.biddingTypes)],
+        [JSON.stringify(state.statisticalReports)],
     );
 
     useFetchStatus({
-        module: "bidding_type",
+        module: "statistical_report",
         reset: resetStatus,
         actions: {
             success: { message: state.message },
@@ -123,18 +126,18 @@ const BiddingTypes = () => {
 
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
-            dispatch(getAllBiddingTypes({ query: state.filter }));
+            dispatch(getAllStatisticalReports({ query: state.filter }));
         }
     }, [JSON.stringify(state.status)]);
 
     useEffect(() => {
-        dispatch(getAllBiddingTypes({ query: state.filter }));
+        dispatch(getAllStatisticalReports({ query: state.filter }));
     }, [JSON.stringify(state.filter)]);
 
     return (
         <>
             <Heading
-                title="Loại hình đấu thầu"
+                title="Thông báo thống kê"
                 hasBreadcrumb
                 buttons={[
                     {
@@ -144,9 +147,9 @@ const BiddingTypes = () => {
                     },
                     {
                         icon: <FaPlus className="text-[18px]" />,
-                        // permission: EPermissions.CREATE_BIDDINGTYPE,
+                        // permission: EPermissions.CREATE_STATISTICALREPORT,
                         text: "Thêm mới",
-                        onClick: () => navigate("/bidding_types/create"),
+                        onClick: () => navigate("/statistical_reports/create"),
                     },
                 ]}
             />
@@ -174,4 +177,4 @@ const BiddingTypes = () => {
     );
 };
 
-export default BiddingTypes;
+export default StatisticalReports;
