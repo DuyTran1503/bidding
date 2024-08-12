@@ -11,7 +11,7 @@ import { EPageTypes } from "@/shared/enums/page";
 import { IBiddingTypeInitialState, resetStatus } from "@/services/store/biddingType/biddingType.slice";
 import BiddingTypeForm, { IBiddingTypeFormInitialValues } from "../BiddingTypeForm";
 
-const UpdateBiddingType = () => {
+const CreateBiddingType = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IBiddingTypeFormInitialValues>>(null);
   const { state } = useArchive<IBiddingTypeInitialState>("bidding_type");
@@ -61,4 +61,4 @@ const UpdateBiddingType = () => {
   );
 };
 
-export default UpdateBiddingType;
+export default CreateBiddingType;
