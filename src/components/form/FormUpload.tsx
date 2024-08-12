@@ -57,7 +57,7 @@ const UpdateImage: React.FC = () => {
             </div>
           ))}
         </div>
-        {fileList.length === 0 && <div className="text-m-regular mt-3 text-center text-gray-400">Drag and drop image here, or click add image</div>}
+        {fileList.length === 0 && <div className="mt-3 text-center font-normal text-gray-400">Drag and drop image here, or click add image</div>}
         <div className="mt-4 flex justify-center">
           <label
             htmlFor="file-upload"

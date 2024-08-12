@@ -18,11 +18,13 @@ export interface IThunkPayload {
   query?: ISearchParams;
   param?: string ;
   headers?: IFetchHeaders;
+  id?: string;
 }
 
 export interface ISearchParams {
-  _page?: number;
-  _size?: number;
+  page?: number;
+  size?: number;
+  element?: number;
   [key: string]: unknown;
 }
 
@@ -45,10 +47,13 @@ export interface ClientReturnType<ReturnDataType> {
 }
 
 export interface IInitialState {
+  loading?: boolean;
   status: EFetchStatus;
   message: string;
+  error?: { [key: string]: string };
   filter: ISearchParams;
   totalRecords: number;
+  number_of_elements?: number;
   [key: string]: unknown;
 }
 
@@ -56,4 +61,8 @@ export interface IGridButton {
   type: EButtonTypes;
   onClick: (record: { key: string; [key: string]: any }) => unknown;
   permission?: EPermissions;
+}
+export interface IOption {
+  value: string;
+  label: string;
 }
