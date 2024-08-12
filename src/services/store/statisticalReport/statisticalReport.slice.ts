@@ -12,7 +12,7 @@ import {
 } from "./statisticalReport.thunk";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
-import { IStatisticalReport } from "./statisticalReport.motel";
+import { IStatisticalReport } from "./statisticalReport.model";
 
 export interface IStatisticalReportInitialState extends IInitialState {
   statisticalReports: IStatisticalReport[];
@@ -35,7 +35,7 @@ const initialState: IStatisticalReportInitialState = {
 };
 
 const statisticalReportSlice = createSlice({
-  name: "statisticalReport",
+  name: "statistical_report",
   initialState,
   reducers: {
     ...commonStaticReducers<IStatisticalReportInitialState>(),
