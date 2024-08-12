@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import React from "react";
 
 export interface ISearchTypeTable {
-  type: "text" | "select" | "treeSelect" | "datetime" | "custom";
+  type: "text" | "select" | "treeSelect" | "datetime";
   value?: string;
   onChange?: (value: string | string[]) => void;
   isMultiple?: boolean;
@@ -74,16 +74,6 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         }}
                         onBlur={handleBlur}
                       />
-                    </Col>
-                  );
-                }
-                if (item.type === "custom") {
-
-                  return (
-                    <Col xs={24} sm={24} md={12} lg={6} key={index}>
-                      <div>
-
-                      </div>
                     </Col>
                   );
                 }
