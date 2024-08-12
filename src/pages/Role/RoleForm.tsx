@@ -12,6 +12,7 @@ import { FormikRefType } from "@/shared/utils/shared-types";
 import { IRole } from "@/services/store/role/role.model";
 import lodash from "lodash";
 import { IRoleInitialState } from "@/services/store/role/role.slice";
+import { EPageTypes } from "@/shared/enums/page";
 interface Permission {
   created_at: string;
   guard_name: string;
@@ -24,15 +25,18 @@ interface Permission {
 interface TreeNode {
   title: string;
   key: string;
+  id: number | null;
   children?: TreeNode[];
 }
-interface IActiveRole extends Omit<IRole, "permissions"> {
+export interface IActiveRole extends Omit<IRole, "permissions"> {
+  id: string;
+  name: string;
   permissions: string[];
 }
 
 interface IRoleFormProps {
   formikRef?: FormikRefType<IRoleFormInitialValues>;
-  type: "create" | "view" | "update";
+  type: EPageTypes;
   role?: IActiveRole;
 }
 
@@ -52,7 +56,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
   };
 
   const validationSchema = object().shape({
-    name: string().required("Please enter role name"),
+    name: string().required("Vui lòng không để trống trường này"),
   });
 
   useEffect(() => {
@@ -62,7 +66,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
   useEffect(() => {
     dispatch(getAllPermissions());
     setLoading(false);
-  }, []);
+  }, [dispatch]);
 
   function convertPermissionsToTree(permissions: any[]): TreeNode[] {
     // Gom nhóm permissions theo section
@@ -75,33 +79,85 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
     }, {});
 
     // Chuyển đổi thành cấu trúc cây
-    return Object.entries(sectionMap).map(
-      ([section, items], index): TreeNode => ({
+    return Object.entries(sectionMap).map(([section, items], index): TreeNode => {
+      // Tìm id của section (nếu có)
+      const sectionId = items.find((item) => item.section === section)?.id || null;
+
+      return {
         title: section,
         key: `0-${index}`,
+        id: sectionId,
         children: items.map(
           (item, subIndex): TreeNode => ({
             title: item.name,
             key: `0-${index}-${subIndex}`,
+            id: item.id,
           }),
         ),
-      }),
-    );
+      };
+    });
   }
+
+  const getIdsForKeys = (keys: string[], mappingKeyWithId: { key: string; id: number }[]): number[] => {
+    const idsForKeys: number[] = [];
+
+    for (const key of keys) {
+      const matchingPair = mappingKeyWithId.find((pair) => pair.key === key);
+      if (matchingPair) {
+        idsForKeys.push(matchingPair.id);
+      }
+    }
+
+    return idsForKeys;
+  };
+
+  const getAllKeysAndIds = (permissionNodes: TreeNode[]): { key: string; id: number }[] => {
+    let result: { key: string; id: number }[] = [];
+    const seenIds = new Set<number>();
+
+    for (const node of permissionNodes) {
+      if (!seenIds.has(node.id!)) {
+        seenIds.add(node.id!);
+        result.push({ key: node.key, id: node.id! });
+      }
+
+      if (node.children && node.children.length > 0) {
+        const childrenResult = getAllKeysAndIds(node.children);
+        for (const { key, id } of childrenResult) {
+          if (!seenIds.has(id)) {
+            seenIds.add(id);
+            result.push({ key, id });
+          }
+        }
+      }
+    }
+
+    return result;
+  };
+  const mappingKeyWithId = getAllKeysAndIds(convertPermissionsToTree(state.permissions));
+  const updateDataChecked = mappingKeyWithId.filter((item: any) => role?.permissions.map((ele) => +ele).includes(item.id)).map((item) => item.key);
+
   return (
     <Formik
-      innerRef={formikRef}
-      initialValues={role ?? initialValues}
+      enableReinitialize
+      innerRef={formikRef as any}
+      initialValues={type === EPageTypes.UPDATE ? { ...role, name: role?.name, permissions: updateDataChecked } : initialValues}
       validationSchema={validationSchema}
       onSubmit={(data) => {
         const body = {
           ...lodash.omit(data, "id"),
-          permissions: data.permissions.filter((p) => !p.startsWith("parent-")),
+          permissions: data.permissions
+            ? getIdsForKeys(
+                data.permissions.filter((p: string) => !p.startsWith("parent-")),
+                mappingKeyWithId,
+              )
+            : [],
         };
-        if (type === "create") {
+        if (type === EPageTypes.CREATE) {
           dispatch(createRole({ body }));
-        } else if (type === "update") {
-          dispatch(updateRole({ body, param: role?.id }));
+        } else if (type === EPageTypes.UPDATE) {
+          const updateData = { ...body, id: role?.id };
+          dispatch(updateRole({ body: updateData, id: role?.id }));
         }
       }}
     >
@@ -124,6 +180,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
                         children: treePermissions,
                       },
                     ]}
+                    // @ts-ignore
                     checkedKeys={values.permissions}
                     onCheck={(checkedKeys) => {
                       setFieldValue("permissions", checkedKeys);
@@ -132,15 +189,15 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
                 </FormGroup>
               ),
               colRight: (
-                <FormGroup title="General Information">
+                <FormGroup title="Thông tin ">
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
-                    label="Role name"
+                    isDisabled={type === EPageTypes.VIEW}
+                    label="Tên vai trò"
                     value={values.name}
                     name="name"
                     error={touched.name ? errors.name : ""}
-                    placeholder="Type role name here..."
+                    placeholder="Nhập tên vai trò..."
                     onChange={(value) => {
                       setFieldValue("name", value);
                     }}

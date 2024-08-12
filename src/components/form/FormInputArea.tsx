@@ -31,9 +31,13 @@ const FormInputArea: React.FC<FormInputAreaProps> = ({ label, placeholder, name,
         readOnly={isReadonly}
         defaultValue={defaultValue}
         rows={5}
-        className={clsx("text-m-regular custom-textarea min-h-[500px] bg-gray-25 px-2 py-3", { readonly: isReadonly })}
+        className={clsx("custom-textarea min-h-[500px] bg-gray-25 px-2 py-3 font-normal", { readonly: isReadonly })}
       />
-      {error && <p className="text-red-500">{error}</p>}
+      {!!error && (
+        <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white")}>
+          {error}
+        </div>
+      )}
     </div>
   );
 };

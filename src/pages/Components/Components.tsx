@@ -21,6 +21,7 @@ import { FaShoppingCart, FaTrophy, FaMoneyBill } from "react-icons/fa";
 import StatCard from "@/components/card/StatCards";
 import OrderStatusCard, { stepsData } from "@/components/card/OrderStatusCard";
 import { setFilter } from "@/services/store/account/account.slice";
+import FormTreeData from "@/components/form/FormTreeSelect";
 const Components = () => {
   return (
     <>
@@ -99,6 +100,39 @@ const Components = () => {
                 { value: "2", label: "Option 2" },
                 { value: "3", label: "Option 3" },
                 { value: "4", label: "Option 4" },
+              ]}
+            />
+            <FormTreeData
+              placeholder="Đây là TreeSelect"
+              treeData={[
+                {
+                  title: 'Node1',
+                  value: '0-0',
+                  children: [
+                    {
+                      title: 'Child Node1',
+                      value: '0-0-1',
+                    },
+                    {
+                      title: 'Child Node2',
+                      value: '0-0-2',
+                    }
+                  ]
+                },
+                {
+                  title: 'Node2',
+                  value: '1-0',
+                  children: [
+                    {
+                      title: 'Child Node1',
+                      value: '1-0-1',
+                    },
+                    {
+                      title: 'Child Node2',
+                      value: '1-0-2',
+                    }
+                  ]
+                },
               ]}
             />
           </div>
