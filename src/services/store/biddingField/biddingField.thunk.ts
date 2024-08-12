@@ -1,7 +1,7 @@
 import { client } from "@/services/config/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { INewBiddingField } from "./biddingField.model";
+import { IBiddingFieldIds, INewBiddingField } from "./biddingField.model";
 
 const prefix = "/api/admin/bidding-fields";
 
@@ -25,9 +25,9 @@ export const getBiddingFieldById = createAsyncThunk("bidding-field/get-bidding-f
 
 export const getBiddingFieldAllIds = createAsyncThunk(
   "bidding-field/get-bidding-field-all-ids",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.get<INewBiddingField[]>(`${prefix}/all-ids`, payload);
+      const { response, data } = await client.get<IBiddingFieldIds[]>(`${prefix}/all-ids`);
       return response.status >= 400 ? rejectWithValue(data) : data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
