@@ -16,3 +16,10 @@ export interface INewBiddingField {
   parent_id: string;
   parent: { id: string; name?: string };
 }
+
+export interface IBiddingFieldIds {
+  id: number;
+  name: string;
+  parent_id?: number;
+  children?: IBiddingFieldIds[];
+}
