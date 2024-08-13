@@ -35,7 +35,7 @@ const initialState: IStatisticalReportInitialState = {
 };
 
 const statisticalReportSlice = createSlice({
-  name: "statisticalReport",
+  name: "statistical_report",
   initialState,
   reducers: {
     ...commonStaticReducers<IStatisticalReportInitialState>(),
