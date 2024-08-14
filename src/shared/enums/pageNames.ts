@@ -10,6 +10,7 @@ export enum EPageNames {
   create = "Tạo mới",
   enterprise = "Doanh nghiệp",
   staffs = "Nhân viên",
+  funding_sources = "Nguồn tài trợ",
   business_activity = "Loại hình hoạt động",
   bidding_fields = "Lĩnh vực đấu thầu",
   bidding_types = "Loại hình đấu thầu",
