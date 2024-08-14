@@ -65,12 +65,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       icon: { component: MdOutlineFactory },
       items: [
         {
-<<<<<<< HEAD
-          id: "2.3",
-          label: "Orders",
-          path: "orders",
-          permissions: EPermissions.LIST_ORDER,
-=======
           id: "3.1",
           label: "Doanh nghiệp",
           path: "enterprise",
@@ -99,7 +93,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Ngành kinh doanh",
           path: "industry",
           permissions: EPermissions.LIST_INDUSTRY,
->>>>>>> 0c6d7c227de676031411e8cba8334225f850cac8
+        },
+        {
+          id: "3.5",
+          label: "Nguồn tài trợ",
+          path: "funding_sources",
+          permissions: EPermissions.LIST_FUNDING_SOURCE,
         },
       ],
     },
@@ -130,14 +129,9 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "4.4",
           label: "Báo cáo thống kê",
           path: "statistical_reports",
-          // permissions: EPermissions.LIST_STATISTICAL_REPORT,
+          permissions: EPermissions.LIST_STATISTICAL_REPORT,
         },
-        {
-          id: "3.4",
-          label: "Nguồn tài trợ",
-          path: "funding_sources",
-          permissions: EPermissions.READ_FUNDING_SOURCE,
-        },
+        
       ],
     },
     {

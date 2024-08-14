@@ -5,7 +5,7 @@ import Components from "@/pages/Components/Components";
 import NoPathMiddleware from "@/middlewares/NoPathMiddleware";
 import Login from "@/pages/Login/Login";
 import GuestMiddleware from "@/middlewares/GuestMiddleware";
-// import AuthMiddleware from "@/middlewares/AuthMiddleware";
+import AuthMiddleware from "@/middlewares/AuthMiddleware";
 import GlobalMiddleware from "@/middlewares/GlobalMiddleware";
 import Orders from "@/pages/Order/Orders/Orders";
 import Roles from "@/pages/Role/Roles/Roles";
@@ -19,35 +19,32 @@ import CreateTag from "@/pages/Tag/CreateTag/CreateTag";
 import UpdateTag from "@/pages/Tag/UpdateTag/UpdateTag";
 import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermission";
 import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
-<<<<<<< HEAD
-import FundingSources from "@/pages/FundingSource/FundingSources/FundingSources";
-import CreateFundingSource from "@/pages/FundingSource/CreateFundingSource/CreateFundingSource";
-=======
-import CreateBiddingField from "@/pages/BiddingFields/CreateBiddingField/CreateBiddingField";
-import UpdateBiddingField from "@/pages/BiddingFields/UpdateBiddingField/UpdateBiddingField";
-import BiddingFields from "@/pages/BiddingFields/BiddingFields/BiddingFields";
-import Staffs from "@/pages/Staff/Staffs";
-import CreateStaff from "@/pages/Staff/Create";
-import DetailStaff from "@/pages/Staff/Detail";
-import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
+import FundingSources from "@/pages/FundingSource";
+import CreateFundingSource from "@/pages/FundingSource/Create";
 import BusinessActivities from "@/pages/BusinessActivities";
 import CreateBusinessActivity from "@/pages/BusinessActivities/Create";
 import UpdateBusinessActivity from "@/pages/BusinessActivities/Update";
-import BiddingTypes from "@/pages/BiddingTypes/BiddingTypes/BiddingTypes";
-import CreateBiddingType from "@/pages/BiddingTypes/CreateBiddingType/CreateBiddingType";
-import UpdateBiddingType from "@/pages/BiddingTypes/UpdateBiddingType/UpdateBiddingType";
 import Industry from "@/pages/Industry";
 import CreateIndustry from "@/pages/Industry/Create";
 import UpdateIndustry from "@/pages/Industry/Update";
+import DetailIndustry from "@/pages/Industry/Detail";
 import Enterprise from "@/pages/Enterprise";
 import CreateEnterprise from "@/pages/Enterprise/Create";
 import UpdateEnterprise from "@/pages/Enterprise/Update";
-import DetailIndustry from "@/pages/Industry/Detail";
-import BiddingFieldDetail from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
 import StatisticalReports from "@/pages/StatisticalReports/StatisticalReports/StatisticalReports";
 import CreateStatisticalReport from "@/pages/StatisticalReports/CreateStatisticalReport/CreateStatisticalReport";
 import UpdateStatisticalReport from "@/pages/StatisticalReports/UpdateStatisticalReport/UpdateStatisticalReport";
->>>>>>> 0c6d7c227de676031411e8cba8334225f850cac8
+import UpdateBiddingType from "@/pages/BiddingTypes/UpdateBiddingType/UpdateBiddingType";
+import CreateBiddingType from "@/pages/BiddingTypes/CreateBiddingType/CreateBiddingType";
+import BiddingTypes from "@/pages/BiddingTypes/BiddingTypes/BiddingTypes";
+import BiddingFieldDetail from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
+import UpdateBiddingField from "@/pages/BiddingFields/UpdateBiddingField/UpdateBiddingField";
+import CreateBiddingField from "@/pages/BiddingFields/CreateBiddingField/CreateBiddingField";
+import BiddingFields from "@/pages/BiddingFields/BiddingFields/BiddingFields";
+import DetailStaff from "@/pages/Staff/Detail";
+import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
+import CreateStaff from "@/pages/Staff/Create";
+import Staffs from "@/pages/Staff/Staffs";
 
 export interface IRoute {
   path: string;
@@ -64,7 +61,7 @@ export const routes: IRoute[] = [
     pages: [
       {
         path: "/",
-        // middleware: () => <AuthMiddleware />,
+        middleware: () => <AuthMiddleware />,
         layout: () => <DefaultLayout />,
         pages: [
           {
@@ -194,6 +191,23 @@ export const routes: IRoute[] = [
             ],
           },
           {
+            path: "funding_sources",
+            pages: [
+              {
+                path: "/",
+                element: () => <FundingSources />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateFundingSource />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateTag />,
+              },
+            ],
+          },
+          {
             path: "industry",
             pages: [
               {
@@ -270,23 +284,6 @@ export const routes: IRoute[] = [
             ],
           },
           
-          {
-            path: "funding_sources",
-            pages: [
-              {
-                path: "/",
-                element: () => <FundingSources />,
-              },
-              {
-                path: "/create",
-                element: () => <CreateFundingSource />,
-              },
-              // {
-              //   path: "/update/:id",
-              //   element: () => <UpdateTag />,
-              // },
-            ],
-          },
         ],
       },
       {
