@@ -7,17 +7,18 @@ import Heading from "@/components/layout/Heading";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
-import FundingSourceForm, { IFundingSourceFormInitialValues } from "../FundingSourceForm";
+import FundingSourceForm, { IFundingSourceFormInitialValues } from "../ActionModule";
 import { IFundingSourceInitialState, resetStatus } from "@/services/store/funding_source/funding_source.slice";
+import { EPageTypes } from "@/shared/enums/page";
 
 const CreateFundingSource = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IFundingSourceFormInitialValues>>(null);
 
-  const { state } = useArchive<IFundingSourceInitialState>("fundingsource");
+  const { state } = useArchive<IFundingSourceInitialState>("funding_source");
 
   useFetchStatus({
-    module: "fundingsource",
+    module: "funding_source",
     reset: resetStatus,
     actions: {
       success: {
@@ -33,28 +34,30 @@ const CreateFundingSource = () => {
   return (
     <>
       <Heading
-        title="Thêm Nguồn Tài Trợ"
+        title="Tạo mới "
         hasBreadcrumb
         buttons={[
           {
             type: "secondary",
-            text: "Cancel",
+            text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/funding_sources");
+              navigate("/business_activity");
             },
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
-            text: "Thêm Nguồn Tài Trợ",
+            text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
-              formikRef && formikRef.current && formikRef.current.handleSubmit();
+              if (formikRef.current) {
+                formikRef.current.handleSubmit();
+              }
             },
           },
         ]}
       />
-      <FundingSourceForm  formikRef={formikRef} type="create" />
+      <FundingSourceForm type={EPageTypes.CREATE} formikRef={formikRef} />
     </>
   );
 };

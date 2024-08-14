@@ -115,7 +115,8 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         label={item.label}
                         placeholder={item.placeholder}
                         treeData={item.treeData!}
-                        defaultValue={value}
+                        // @ts-ignore
+                        defaultValue={value} 
                         isDisabled={item.isDisabled}
                         onChange={(data) => {
                           setFieldValue(item.id, data);
@@ -136,6 +137,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         id={item.id}
                         label={item.title}
                         minDate={item.minDate ? dayjs(item.minDate) : undefined}
+                         // @ts-ignore
                         value={value ? dayjs(value) : null}
                         maxDate={item.maxDate ? dayjs(item.maxDate) : undefined}
                         onChange={(data) => {
