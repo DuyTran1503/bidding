@@ -26,9 +26,6 @@ export enum EPermissions {
   CREATE_TAG = "create_tag",
   UPDATE_TAG = "update_tag",
   DESTROY_TAG = "destroy_tag",
-<<<<<<< HEAD
-  // ? staff
-=======
 
   // ? BiddingField
   LIST_BIDDING_FIELD = "list_bidding_field",
@@ -45,21 +42,11 @@ export enum EPermissions {
   DESTROY_BIDDING_TYPE = "destroy_bidding_type",
 
   // staff
->>>>>>> 0c6d7c227de676031411e8cba8334225f850cac8
   LIST_STAFF = "list_staff",
   DETAIL_STAFF = "detail_staff",
   CREATE_STAFF = "create_staff",
   UPDATE_STAFF = "update_staff",
   DESTROY_STAFF = "destroy_staff",
-<<<<<<< HEAD
-
-  // ? funding sources
-  LIST_FUNDING_SOURCE = "list_funding_source",
-  DETAIL_FUNDING_SOURCE = "detail_funding_source",
-  CREATE_FUNDING_SOURCE = "create_funding_source",
-  UPDATE_FUNDING_SOURCE = "update_funding_source",
-  DESTROY_FUNDING_SOURCE = "destroy_funding_source",
-=======
   // Lĩnh vực hoạt động
   LIST_BUSINESS_ACTIVITY_TYPE = "list_business_activity_type",
   DETAIL_BUSINESS_ACTIVITY_TYPE = "detail_business_activity_type",
@@ -87,5 +74,11 @@ export enum EPermissions {
   CREATE_STATISTICAL_REPORT = "create_statistical_report",
   UPDATE_STATISTICAL_REPORT = "update_statistical_report",
   DESTROY_STATISTICAL_REPORT = "destroy_statistical_report",
->>>>>>> 0c6d7c227de676031411e8cba8334225f850cac8
+
+    // Nguồn tài trợ
+    LIST_FUNDING_SOURCE = "list_funding_source",
+    DETAIL_FUNDING_SOURCE = "detail_funding_source",
+    CREATE_FUNDING_SOURCE = "create_funding_source",
+    UPDATE_FUNDING_SOURCE = "update_funding_source",
+    DESTROY_FUNDING_SOURCE = "destroy_funding_source",
 }
