@@ -144,7 +144,7 @@ const BiddingTypes = () => {
                     },
                     {
                         icon: <FaPlus className="text-[18px]" />,
-                        // permission: EPermissions.CREATE_BIDDINGTYPE,
+                        permission: EPermissions.CREATE_BIDDING_TYPE,
                         text: "Thêm mới",
                         onClick: () => navigate("/bidding_types/create"),
                     },
