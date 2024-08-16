@@ -27,7 +27,6 @@ export const getIndustryById = createAsyncThunk("industry/get-industry-by-id", a
 export const createIndustry = createAsyncThunk("industry/create-industry", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.post(prefix, payload);
-
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data as IError);
