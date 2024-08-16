@@ -8,11 +8,12 @@ import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
 import FormInputArea from "@/components/form/FormInputArea";
 import { createStatisticalReport, updateStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.thunk";
-import { IStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.model";
+import { IStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.motel";
+import { EPageTypes } from "@/shared/enums/page";
 
 interface IStatisticalReportFormProps {
   formikRef?: any;
-  type: "create" | "view" | "update";
+  type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
   statisticalReport?: IStatisticalReport;
 }
 
@@ -40,14 +41,14 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
         const body = {
           ...lodash.omit(data, "id"),
         };
-        if (type === "create") {
+        if (type === EPageTypes.CREATE) {
           dispatch(createStatisticalReport({ body }))
             .unwrap()
             .catch((error) => {
               const apiErrors = error?.errors || {};
               setErrors(apiErrors);
             });
-        } else if (type === "update") {
+        } else if (type === EPageTypes.UPDATE) {
           dispatch(updateStatisticalReport({ body, param: statisticalReport?.id }))
             .unwrap()
             .catch((error) => {
