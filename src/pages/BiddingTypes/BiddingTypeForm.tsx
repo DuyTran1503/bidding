@@ -9,10 +9,11 @@ import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
 import FormInputArea from "@/components/form/FormInputArea";
 import { createBiddingType, updateBiddingType } from "@/services/store/biddingType/biddingType.thunk";
+import { EPageTypes } from "@/shared/enums/page";
 
 interface IBiddingTypeFormProps {
   formikRef?: any;
-  type: "create" | "view" | "update";
+  type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
   biddingType?: IBiddingType;
 }
 
@@ -40,14 +41,14 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
         const body = {
           ...lodash.omit(data, "id"),
         };
-        if (type === "create") {
+        if (type === EPageTypes.CREATE) {
           dispatch(createBiddingType({ body }))
             .unwrap()
             .catch((error) => {
               const apiErrors = error?.errors || {};
               setErrors(apiErrors);
             });
-        } else if (type === "update") {
+        } else if (type === EPageTypes.UPDATE) {
           dispatch(updateBiddingType({ body, param: biddingType?.id }))
             .unwrap()
             .catch((error) => {
