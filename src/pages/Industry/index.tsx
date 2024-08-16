@@ -125,7 +125,6 @@ const Industry = () => {
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
       dispatch(changeStatusIndustry(String(confirmItem.key)));
-      dispatch(getAllIndustry({ query: industryState.filter }));
     }
   };
   useEffect(() => {
@@ -192,7 +191,7 @@ const Industry = () => {
           pageSize: industryState.filter.size ?? 10,
           total: industryState.totalRecords,
           number_of_elements: industryState.number_of_elements && industryState.number_of_elements,
-          // showSideChanger:true
+          // showSideChanger: true,
         }}
         setFilter={setFilter}
         filter={industryState.filter}
