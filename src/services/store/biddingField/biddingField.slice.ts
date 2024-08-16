@@ -35,7 +35,7 @@ const initialState: IBiddingFieldInitialState = {
 };
 
 const biddingFieldSlice = createSlice({
-  name: "biddingField",
+  name: "bidding_field",
   initialState,
   reducers: {
     ...commonStaticReducers<IBiddingFieldInitialState>(),
