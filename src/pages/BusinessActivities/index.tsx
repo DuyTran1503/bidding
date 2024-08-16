@@ -46,6 +46,9 @@ const BusinessActivities = () => {
       dataIndex: "description",
       title: "Mô tả",
       className: " text-compact-3 h-[90px]",
+      render(_, record) {
+        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
+      },
     },
     {
       title: "Trạng thái tài khoản",
@@ -97,12 +100,12 @@ const BusinessActivities = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.businessActivities)
       ? state.businessActivities.map(({ id, name, description, is_active }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        description,
-        is_active,
-      }))
+          index: index + 1,
+          key: id,
+          name,
+          description,
+          is_active,
+        }))
       : [];
   }, [JSON.stringify(state.businessActivities)]);
   const handleChangeStatus = (item: ITableData) => {
