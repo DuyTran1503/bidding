@@ -5,7 +5,7 @@ import { IBiddingType } from "./biddingType.model";
 
 const prefix = "/api/admin/bidding-types";
 
-export const getAllBiddingTypes = createAsyncThunk("bidding-type/get-all-bidding_types", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const getAllBiddingTypes = createAsyncThunk("bidding-type/get-all-bidding-types", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IBiddingType[]>(prefix, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;
