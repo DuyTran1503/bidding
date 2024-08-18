@@ -13,10 +13,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^43.0.0",
+    "@ckeditor/ckeditor5-react": "^9.0.0",
     "@reduxjs/toolkit": "^2.2.3",
     "antd": "^5.17.3",
     "axios": "^1.7.3",
     "clsx": "^2.1.1",
+    "ckeditor5-custom-build": "file:./src/assets/lib/ckeditor5",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.34.3",
