@@ -116,7 +116,11 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         placeholder={item.placeholder}
                         treeData={item.treeData!}
                         // @ts-ignore
+<<<<<<< HEAD
                         defaultValue={value} 
+=======
+                        defaultValue={value}
+>>>>>>> fe2662854235cdfdbbbaaa587d92d18872188214
                         isDisabled={item.isDisabled}
                         onChange={(data) => {
                           setFieldValue(item.id, data);
@@ -137,7 +141,11 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         id={item.id}
                         label={item.title}
                         minDate={item.minDate ? dayjs(item.minDate) : undefined}
+<<<<<<< HEAD
                          // @ts-ignore
+=======
+                        // @ts-ignore
+>>>>>>> fe2662854235cdfdbbbaaa587d92d18872188214
                         value={value ? dayjs(value) : null}
                         maxDate={item.maxDate ? dayjs(item.maxDate) : undefined}
                         onChange={(data) => {

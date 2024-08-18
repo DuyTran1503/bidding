@@ -15,6 +15,7 @@ import { transformPayloadErrors } from "@/shared/utils/common/function";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus } from "@/services/store/account/account.slice";
 import { useEffect } from "react";
+import FormCkFinder from "@/components/form/FormCkFinder";
 
 interface IBusinessActivityFormProps {
   formikRef?: FormikRefType<IIBusinessActivityInitialValues>;
@@ -88,13 +89,12 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
           <Row gutter={[24, 24]}>
             <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
               <FormGroup title="Mô tả">
-                <FormInputArea
-                  label="Mô tả"
-                  placeholder="Nhập mô tả..."
-                  name="description"
+                <FormCkFinder
+                  id="description"
+                  direction="vertical"
                   value={values.description}
-                  error={touched.description ? errors.description : ""}
-                  onChange={(e) => setFieldValue("description", e)}
+                  setFieldValue={setFieldValue}
+                  disabled={type === EPageTypes.VIEW}
                 />
               </FormGroup>
             </Col>
