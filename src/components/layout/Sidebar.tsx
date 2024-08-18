@@ -97,7 +97,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         {
           id: "3.5",
           label: "Nguồn tài trợ",
-          path: "funding_sources",
+          path: "funding-sources",
           permissions: EPermissions.LIST_FUNDING_SOURCE,
         },
       ],
