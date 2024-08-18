@@ -35,7 +35,25 @@ module.exports = {
     "no-multiple-empty-lines": ["error", { max: 1, maxEOF: 0 }],
     "react/jsx-no-useless-fragment": "error",
     "react/react-in-jsx-scope": "off",
-    "eqeqeq": "error"
+    eqeqeq: "error",
+    "ckeditor5-rules/ckeditor-imports": "error",
+    "ckeditor5-rules/license-header": [
+      "error",
+      {
+        headerLines: [
+          "/**",
+          " * @license Copyright (c) 2003-2024, CKSource Holding sp. z o.o. All rights reserved.",
+          " * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license",
+          " */",
+        ],
+      },
+    ],
+    "ckeditor5-rules/require-file-extensions-in-imports": [
+      "error",
+      {
+        extensions: [".ts", ".js", ".json"],
+      },
+    ],
   },
   settings: {
     react: {
@@ -45,4 +63,20 @@ module.exports = {
       typescript: {},
     },
   },
+  overrides: [
+    {
+      files: ["**/tests/**/*.@(js|ts)"],
+      rules: {
+        "no-unused-expressions": "off",
+        "ckeditor5-rules/ckeditor-imports": "off",
+        "ckeditor5-rules/no-cross-package-imports": "off",
+      },
+    },
+    {
+      files: ["**/docs/**/*.js"],
+      rules: {
+        "ckeditor5-rules/ckeditor-imports": "off",
+      },
+    },
+  ],
 };
