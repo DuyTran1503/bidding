@@ -61,27 +61,34 @@ const Enterprise = () => {
       dataIndex: "is_active",
       render(_, record) {
         return (
-          <CommonSwitch
-            onChange={() => handleChangeStatus(record)}
-            checked={!!record.is_active}
-            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
-          />
+          <>
+            <CommonSwitch
+              onChange={() => handleChangeStatus(record)}
+              checked={!!record.is_active}
+              title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
+            />
+            <CommonSwitch
+              onChange={() => handleChangeStatus(record)}
+              checked={!!record.is_blacklisted}
+              title={`Bạn có chắc chắn muốn ${record.is_blacklisted ? "bỏ cấm" : "cấm"} tài khoản này?`}
+            />
+          </>
         );
       },
     },
-    {
-      title: "Trạng thái blacklist",
-      dataIndex: "is_blacklisted",
-      render(_, record) {
-        return (
-          <CommonSwitch
-            onChange={() => handleChangeStatus(record)}
-            checked={!!record.is_blacklisted}
-            title={`Bạn có chắc chắn muốn ${record.is_blacklisted ? "bỏ cấm" : "cấm"} tài khoản này?`}
-          />
-        );
-      },
-    },
+    // {
+    //   title: "Trạng thái blacklist",
+    //   dataIndex: "is_blacklisted",
+    //   render(_, record) {
+    //     return (
+    //       <CommonSwitch
+    //         onChange={() => handleChangeStatus(record)}
+    //         checked={!!record.is_blacklisted}
+    //         title={`Bạn có chắc chắn muốn ${record.is_blacklisted ? "bỏ cấm" : "cấm"} tài khoản này?`}
+    //       />
+    //     );
+    //   },
+    // },
   ];
   const buttons: IGridButton[] = [
     {
