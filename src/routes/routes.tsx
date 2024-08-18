@@ -191,7 +191,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "funding_sources",
+            path: "funding-sources",
             pages: [
               {
                 path: "/",
