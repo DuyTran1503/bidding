@@ -33,14 +33,14 @@ const StatisticalReports = () => {
         {
             type: EButtonTypes.VIEW,
             onClick(record) {
-                navigate(`/statistical_reports/update/${record?.key}`);
+                navigate(`update/${record?.key}`);
             },
             permission: EPermissions.DETAIL_STATISTICAL_REPORT,
         },
         {
             type: EButtonTypes.UPDATE,
             onClick(record) {
-                navigate(`/statistical_reports/update/${record?.key}`);
+                navigate(`update/${record?.key}`);
             },
             permission: EPermissions.UPDATE_STATISTICAL_REPORT,
         },
@@ -149,7 +149,7 @@ const StatisticalReports = () => {
                         icon: <FaPlus className="text-[18px]" />,
                         // permission: EPermissions.CREATE_STATISTICALREPORT,
                         text: "Thêm mới",
-                        onClick: () => navigate("/statistical_reports/create"),
+                        onClick: () => navigate("create"),
                     },
                 ]}
             />
