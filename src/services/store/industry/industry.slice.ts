@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
@@ -18,7 +17,6 @@ const initialState: IIndustryInitialState = {
   businessActivities: [],
   businessActivity: undefined,
   message: "",
-  error: undefined,
   filter: {
     page: 1,
     size: 10,
