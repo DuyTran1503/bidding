@@ -17,6 +17,8 @@ import { RootStateType } from "@/services/reducers";
 import { useSelector } from "react-redux";
 import { EPageTypes } from "@/shared/enums/page";
 import dayjs from "dayjs";
+import FormCkFinder from "@/components/form/FormCkFinder";
+import { ResourceType } from "@/shared/enums/resourceType";
 interface TreeNode {
   title: string;
   key: string;
@@ -288,6 +290,22 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </Col>
               )}
             </Row>
+            <FormCkFinder
+              resourceTypes={ResourceType.FILES}
+              // Type={TypePage.IMAGE}
+              errors={errors}
+              touched={touched}
+              buttonClose
+              id="avatar"
+              label=""
+              placeholder="Tải file"
+              value={values.avatar}
+              disabled={type === "view"}
+              onChange={(data) => {
+                setFieldValue("avatar", data).then();
+              }}
+              name={"avatar"}
+            />
             <Row gutter={[24, 0]}>
               <Col xs={24} sm={24} md={24} xl={24}></Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
