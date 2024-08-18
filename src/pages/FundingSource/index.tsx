@@ -178,7 +178,7 @@ const FundingSources = () => {
       <ManagementGrid
         columns={columns}
         data={data}
-        search={search}
+        // search={search}
         buttons={buttons}
         pagination={{
           current: state.filter.page ?? 1,
