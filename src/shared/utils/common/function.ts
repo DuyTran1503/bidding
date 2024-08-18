@@ -13,7 +13,7 @@ export const removeMultipleSpaces = function (value: any) {
   }, {});
 };
 export const getFileExtension = (url: string): ETYPEFILE => {
-  if (!url || url.length < 0) return ETYPEFILE.unknow;
+  if (!url || url.length < 0) return ETYPEFILE.unknown;
 
   const parts = url.split(".");
   const ext = parts[parts.length - 1];
@@ -53,7 +53,7 @@ export const getFileExtension = (url: string): ETYPEFILE => {
     return ETYPEFILE.mp4;
   }
 
-  return ETYPEFILE.unknow;
+  return ETYPEFILE.unknown;
 };
 export const transformPayloadErrors = (arr: PayloadErrors): string => {
   for (const key in arr) {
