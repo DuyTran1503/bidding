@@ -29,14 +29,14 @@ const BiddingTypes = () => {
         {
             type: EButtonTypes.VIEW,
             onClick(record) {
-                navigate(`/bidding_types/update/${record?.key}`);
+                navigate(`update/${record?.key}`);
             },
             permission: EPermissions.DETAIL_BIDDING_TYPE,
         },
         {
             type: EButtonTypes.UPDATE,
             onClick(record) {
-                navigate(`/bidding_types/update/${record?.key}`);
+                navigate(`update/${record?.key}`);
             },
             permission: EPermissions.UPDATE_BIDDING_TYPE,
         },
@@ -146,7 +146,7 @@ const BiddingTypes = () => {
                         icon: <FaPlus className="text-[18px]" />,
                         permission: EPermissions.CREATE_BIDDING_TYPE,
                         text: "Thêm mới",
-                        onClick: () => navigate("/bidding_types/create"),
+                        onClick: () => navigate("create"),
                     },
                 ]}
             />
