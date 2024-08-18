@@ -16,6 +16,7 @@ import { createIndustry, updateIndustry } from "@/services/store/industry/indust
 import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
 import { convertDataOption, selectedData } from "@/shared/utils/common/function";
 import { getListBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
+import FormCkEditor from "@/components/form/FormCkEditor";
 
 interface IIndustryFormProps {
   formikRef?: FormikRefType<IndustryInitialValues>;
@@ -105,7 +106,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
             </Row>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormGroup title="Mô tả">
+                {/* <FormGroup title="Mô tả">
                   <FormInputArea
                     label="Mô tả"
                     placeholder="Nhập mô tả..."
@@ -115,7 +116,14 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                     error={touched.description ? errors.description : ""}
                     onChange={(e) => setFieldValue("description", e)}
                   />
-                </FormGroup>
+                </FormGroup> */}
+                <FormCkEditor
+                  id="description"
+                  direction="vertical"
+                  value={values.description}
+                  setFieldValue={setFieldValue}
+                  disabled={type === EPageTypes.VIEW}
+                />
               </Col>
             </Row>
             <Row gutter={[24, 24]}>
