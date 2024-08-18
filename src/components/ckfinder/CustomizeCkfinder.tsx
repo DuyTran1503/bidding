@@ -1,5 +1,5 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import Editor, * as CustomBuild from "ckeditor5-custom-build";
+import Editor from "ckeditor5-custom-build";
 import "ckeditor5/ckeditor5.css";
 import "./ckfinder.scss";
 const defaultToolbar = {
