@@ -33,6 +33,7 @@ interface IProps {
   errors?: FormikErrors<any>;
   touched?: FormikTouched<any>;
 }
+
 const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: ForwardedRef<any>) {
   const {
     name,
@@ -63,13 +64,20 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
     if (!value) return;
     setImageLink(value);
   }, [value]);
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js";
+    script.async = true;
+    document.body.appendChild(script);
 
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
   const handleCkFinder = () => {
     // Open CKFinder when button is clicked
     // CKFinder instance should be available globally after initialization
     // Here you can access CKFinder and open it programmatically
-    console.log(window);
-
     if (window.CKFinder) {
       const finder = window.CKFinder;
       finder.popup({
@@ -97,9 +105,9 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
     onChange && onChange(updatedFilesList);
   };
   const Label = () => <div className={`text-medium-md leading-0 ${isRequired ? "required-start" : ""}`}>{label}</div>;
+
   const Button = () => (
     <>
-      {/* <Script src="/ckfinder/static/ckfinder.js" /> */}
       <button
         className="ck-finder-button"
         onClick={(e) => {
@@ -116,20 +124,20 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
   const Error = () => errors && !!errors[id] && touched && touched[id] && <div className="block">{`${errors[id]}`}</div>;
 
   const SelectedFile = () => (
-    <div className="d-flex mt-2 w-full flex-row flex-wrap gap-2">
+    <div className="mt-2 flex w-full flex-row flex-wrap gap-2">
       {!!value &&
         value?.map((file: any, index: number) => {
           const fileExt = getFileExtension(file.path);
           const fileName = file.name;
           if (fileExt === ETYPEFILE.IMAGE) {
             return (
-              <div key={index} className={`justify-content-center align-items-start relative flex gap-1`}>
+              <div key={index} className={`relative flex items-start justify-center gap-1`}>
                 {(!isMultiple && value?.length === 1) || (isMultiple && value?.length > 0) ? (
-                  <Image key={index} src={file.path} alt={fileName} width="200" preview />
+                  <Image key={index} src={file.path} alt={fileName} width="200px" preview />
                 ) : null}
                 {buttonClose && !disabled && (
                   <i
-                    className={`${!!disabled ? "pointer-event-none" : "cursor-pointer"} pi pi-times bg-danger absolute right-1 top-1 text-white`}
+                    className={`${!!disabled ? "pointer-events-none" : "cursor-pointer"} pi pi-times absolute right-1 top-1 bg-red-500 text-white`}
                     onClick={() => handleDeleteFile(index)}
                   ></i>
                 )}
@@ -139,16 +147,19 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
 
           if (fileExt === ETYPEFILE.WORD) {
             return (
-              <div key={index} className={`w-100 align-items-center common-input mt-2 flex h-12 justify-between`}>
+              <div
+                key={index}
+                className={`focus:border-indigo-500 focus:ring-indigo-500 w-full items-center rounded border border-gray-300 px-4 py-3 shadow-sm sm:text-sm`}
+              >
                 <div className="flex items-center">
                   <Word width={24} height={30} />
-                  <a className="m-0 flex-1" href={file.path} target="_blank">
+                  <a className="text-gray-900 ml-2 flex-1" href={file.path} target="_blank">
                     {fileName}
                   </a>
                 </div>
                 {!disabled && (
                   <i
-                    className={`${!!disabled ? "pointer-event-none" : "cursor-pointer"} pi pi-minus text-danger`}
+                    className={`${!!disabled ? "pointer-events-none" : "cursor-pointer"} pi pi-minus text-red-500`}
                     onClick={() => handleDeleteFile(index)}
                   ></i>
                 )}
@@ -158,16 +169,19 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
 
           if (fileExt === ETYPEFILE.PDF) {
             return (
-              <div key={index} className={`w-100 align-items-center common-input mt-2 flex justify-between gap-[10px]`}>
+              <div
+                key={index}
+                className={`focus:border-indigo-500 focus:ring-indigo-500 w-full items-center rounded border border-gray-300 px-4 py-3 shadow-sm sm:text-sm`}
+              >
                 <div className="flex items-center gap-2">
                   <Pdf width={24} height={30} />
-                  <a className="m-0 flex-1" href={file.path} target="_blank">
+                  <a className="text-gray-900 ml-2 flex-1" href={file.path} target="_blank">
                     {fileName}
                   </a>
                 </div>
                 {!disabled && (
                   <i
-                    className={`${!!disabled ? "pointer-event-none" : "cursor-pointer"} pi pi-minus text-danger`}
+                    className={`${!!disabled ? "pointer-events-none" : "cursor-pointer"} pi pi-minus text-red-500`}
                     onClick={() => handleDeleteFile(index)}
                   ></i>
                 )}
@@ -177,16 +191,19 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
 
           if (fileExt === ETYPEFILE.EXCEL) {
             return (
-              <div key={index} className={`w-100 align-items-center common-input mt-2 flex h-12 justify-between`}>
+              <div
+                key={index}
+                className={`focus:border-indigo-500 focus:ring-indigo-500 w-full items-center rounded border border-gray-300 px-4 py-3 shadow-sm sm:text-sm`}
+              >
                 <div className="flex items-center gap-2">
                   <Excel width={24} height={30} />
-                  <a className="m-0 flex-1" href={file.path} target="_blank">
+                  <a className="text-gray-900 ml-2 flex-1" href={file.path} target="_blank">
                     {fileName}
                   </a>
                 </div>
                 {!disabled && (
                   <i
-                    className={`${!!disabled ? "pointer-event-none" : "cursor-pointer"} pi pi-minus text-danger`}
+                    className={`${!!disabled ? "pointer-events-none" : "cursor-pointer"} pi pi-minus text-red-500`}
                     onClick={() => handleDeleteFile(index)}
                   ></i>
                 )}
@@ -198,21 +215,10 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
     </div>
   );
   return direction === "vertical" ? (
-    <div ref={ref} className="flex-column flex w-full items-start justify-center">
-      <div className={`flex w-full ${className} items-center gap-3`}>
-        {label ? (
-          // <Col xs={6} lg={3}>
-          <Label />
-        ) : (
-          // </Col>
-          ""
-        )}
-
-        {/* <Col xs={6} lg={9}> */}
-        {/* <div className="ml-auto"> */}
+    <div ref={ref} className="flex w-full items-start justify-start gap-5">
+      <div className={`flex ${className} items-center gap-3`}>
+        {label ? <Label /> : ""}
         <Button />
-        {/* </div> */}
-        {/* </Col> */}
       </div>
       <SelectedFile />
       <Error />
