@@ -43,7 +43,6 @@
         > th {
           background-color: #ffffff;
           padding: 18px 22px;
-
         }
       }
     }
@@ -98,9 +97,9 @@
       background-color: #f4ecfb;
     }
     .ant-pagination-item {
-      &:active {
-        background-color: #f4ecfb;
-      }
+      // &:active {
+      //   background-color: #f4ecfb;
+      // }
       background-color: #f4ecfb;
     }
 
