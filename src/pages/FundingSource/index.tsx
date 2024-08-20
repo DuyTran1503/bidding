@@ -13,21 +13,19 @@ import { ColumnsType } from "antd/es/table";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import DetailFundingSource from "./Detail";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { GoDownload } from "react-icons/go";
 import FormModal from "@/components/form/FormModal";
 import ConfirmModal from "@/components/common/CommonModal";
-import search from "antd/es/transfer/search";
 
 const FundingSources = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IFundingSourceInitialState>("funding_source");
-  const [isModal, setIsModal ] = useState(false)
+  const [isModal, setIsModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [modalContent, setModalContent] = useState<ReactNode>(null);
- 
+
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -36,7 +34,7 @@ const FundingSources = () => {
     {
       dataIndex: "name",
       title: "Tên nguồn tài trợ",
-      className: "w-[250px]"
+      className: "w-[250px]",
     },
     {
       dataIndex: "type",
@@ -57,24 +55,23 @@ const FundingSources = () => {
     {
       title: "Trạng thái",
       dataIndex: "is_active",
-      render(_,record) {
+      render(_, record) {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
             checked={!!record.is_active}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
-        )
-      }
+        );
+      },
     },
-
   ];
 
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/funding-sources/detail/${record?.key}`);;
+        navigate(`/funding-sources/detail/${record?.key}`);
       },
       permission: EPermissions.DETAIL_FUNDING_SOURCE,
     },
@@ -97,21 +94,21 @@ const FundingSources = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.fundingSources)
       ? state.fundingSources.map(({ id, name, code, type, description, is_active }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        code,
-        type,
-        description,
-        is_active,
-      }))
+          index: index + 1,
+          key: id,
+          name,
+          code,
+          type,
+          description,
+          is_active,
+        }))
       : [];
   }, [JSON.stringify(state.fundingSources)]);
 
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
-  }
+  };
 
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
@@ -121,7 +118,7 @@ const FundingSources = () => {
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false)
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
