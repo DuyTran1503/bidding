@@ -1,24 +1,23 @@
+import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
+import FormModal from "@/components/form/FormModal";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IFundingSourceInitialState, resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
 import { changeStatusFundingSource, deleteFundingSources, getAllFundingSources } from "@/services/store/funding_source/funding_source.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import DetailFundingSource from "./Detail";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { GoDownload } from "react-icons/go";
-import FormModal from "@/components/form/FormModal";
-import ConfirmModal from "@/components/common/CommonModal";
-import search from "antd/es/transfer/search";
+import { useNavigate } from "react-router-dom";
 
 const FundingSources = () => {
   const navigate = useNavigate();
@@ -27,6 +26,30 @@ const FundingSources = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [modalContent, setModalContent] = useState<ReactNode>(null);
+
+  const buttons: IGridButton[] = [
+    {
+      type: EButtonTypes.VIEW,
+      onClick(record) {
+        navigate(`/funding-sources/detail/${record?.key}`);;
+      },
+      permission: EPermissions.DETAIL_FUNDING_SOURCE,
+    },
+    {
+      type: EButtonTypes.UPDATE,
+      onClick(record) {
+        navigate(`/funding-sources/update/${record?.key}`);
+      },
+      permission: EPermissions.UPDATE_FUNDING_SOURCE,
+    },
+    {
+      type: EButtonTypes.DESTROY,
+      onClick(record) {
+        dispatch(deleteFundingSources(record?.key));
+      },
+      permission: EPermissions.DESTROY_FUNDING_SOURCE,
+    },
+  ];
  
   const columns: ColumnsType = [
     {
@@ -70,32 +93,29 @@ const FundingSources = () => {
 
   ];
 
-  const buttons: IGridButton[] = [
-    {
-      type: EButtonTypes.VIEW,
-      onClick(record) {
-        navigate(`/funding-sources/detail/${record?.key}`);;
-      },
-      permission: EPermissions.DETAIL_FUNDING_SOURCE,
-    },
-    {
-      type: EButtonTypes.UPDATE,
-      onClick(record) {
-        navigate(`/funding-sources/update/${record?.key}`);
-      },
-      permission: EPermissions.UPDATE_FUNDING_SOURCE,
-    },
-    {
-      type: EButtonTypes.DESTROY,
-      onClick(record) {
-        dispatch(deleteFundingSources(record?.key));
-      },
-      permission: EPermissions.DESTROY_FUNDING_SOURCE,
-    },
-  ];
+  const handleChangeStatus = (item: ITableData) => {
+    setIsModal(true);
+    setConfirmItem(item);
+  }
 
-  const data: ITableData[] = useMemo(() => {
-    return Array.isArray(state.fundingSources)
+  const onConfirmStatus = () => {
+    if (confirmItem && confirmItem.key) {
+      dispatch(changeStatusFundingSource(String(confirmItem.key)));
+    }
+  };
+
+  const search: ISearchTypeTable[] = [
+    {
+        id: "name",
+        placeholder: "Nhập tên nguồn tài trợ...",
+        label: "Tên nguồn tài trợ",
+        type: "text",
+    },
+];
+
+  const data: ITableData[] = useMemo(
+    () => 
+      state.fundingSources && state.fundingSources.length > 0
       ? state.fundingSources.map(({ id, name, code, type, description, is_active }, index) => ({
         index: index + 1,
         key: id,
@@ -105,20 +125,10 @@ const FundingSources = () => {
         description,
         is_active,
       }))
-      : [];
-  }, [JSON.stringify(state.fundingSources)]);
+      : [],
+   [JSON.stringify(state.fundingSources)]);
 
-  const handleChangeStatus = (item: ITableData) => {
-    setIsModal(true);
-    setConfirmItem(item);
-  }
 
-  const onConfirmStatus = () => {
-    if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusFundingSource(String(confirmItem.key)));
-      dispatch(getAllFundingSources({ query: state.filter }));
-    }
-  };
 
   const handleCancel = () => {
     setIsModalOpen(false)
@@ -127,6 +137,7 @@ const FundingSources = () => {
   useEffect(() => {
     dispatch(getAllFundingSources({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
+
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllFundingSources({ query: state.filter }));
@@ -180,14 +191,14 @@ const FundingSources = () => {
       <ManagementGrid
         columns={columns}
         data={data}
-        // search={search}
+        search={search}
         buttons={buttons}
         pagination={{
           current: state.filter.page ?? 1,
           pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
           number_of_elements: state.number_of_elements && state.number_of_elements,
-          showSideChanger: true,
+          // showSideChanger: true,
         }}
         setFilter={setFilter}
         filter={state.filter}
