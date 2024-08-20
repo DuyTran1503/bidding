@@ -7,21 +7,23 @@ import Heading from "@/components/layout/Heading";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
+import FundingSourceForm, { IFundingSourceInitialValues } from "../ActionModule";
+import { IFundingSourceInitialState, resetStatus } from "@/services/store/funding_source/funding_source.slice";
 import { EPageTypes } from "@/shared/enums/page";
-import { IEnterpriseInitialState, resetStatus } from "@/services/store/enterprise/enterprise.slice";
-import EnterpriseForm, { IEnterpriseInitialValues } from "../ActionModule";
-const CreateEnterprise = () => {
+
+const CreateFundingSource = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IEnterpriseInitialValues>>(null);
-  const { state } = useArchive<IEnterpriseInitialState>("enterprise");
+  const formikRef = useRef<FormikProps<IFundingSourceInitialValues>>(null);
+
+  const { state } = useArchive<IFundingSourceInitialState>("funding_source");
 
   useFetchStatus({
-    module: "enterprise",
+    module: "funding_source",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/enterprise",
+        navigate: "/funding-sources",
       },
       error: {
         message: state.message,
@@ -40,7 +42,7 @@ const CreateEnterprise = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/enterprise");
+              navigate("/funding-sources");
             },
           },
           {
@@ -55,9 +57,9 @@ const CreateEnterprise = () => {
           },
         ]}
       />
-      <EnterpriseForm type={EPageTypes.CREATE} formikRef={formikRef} />
+      <FundingSourceForm type={EPageTypes.CREATE} formikRef={formikRef} />
     </>
   );
 };
 
-export default CreateEnterprise;
+export default CreateFundingSource;

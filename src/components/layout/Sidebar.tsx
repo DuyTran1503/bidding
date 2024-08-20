@@ -94,6 +94,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "industry",
           permissions: EPermissions.LIST_INDUSTRY,
         },
+        {
+          id: "3.5",
+          label: "Nguồn tài trợ",
+          path: "funding-sources",
+          permissions: EPermissions.LIST_FUNDING_SOURCE,
+        },
       ],
     },
     {
@@ -123,8 +129,9 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "4.4",
           label: "Báo cáo thống kê",
           path: "statistical_reports",
-          // permissions: EPermissions.LIST_STATISTICAL_REPORT,
+          permissions: EPermissions.LIST_STATISTICAL_REPORT,
         },
+        
       ],
     },
     {
