@@ -10,21 +10,18 @@ import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { GoDownload } from "react-icons/go";
-import FormModal from "@/components/form/FormModal";
 import ConfirmModal from "@/components/common/CommonModal";
 
 const FundingSources = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IFundingSourceInitialState>("funding_source");
   const [isModal, setIsModal] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const [modalContent, setModalContent] = useState<ReactNode>(null);
 
   const columns: ColumnsType = [
     {
@@ -117,10 +114,6 @@ const FundingSources = () => {
     }
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   useEffect(() => {
     dispatch(getAllFundingSources({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
@@ -164,9 +157,6 @@ const FundingSources = () => {
           },
         ]}
       />
-      <FormModal open={isModalOpen} onCancel={handleCancel}>
-        {modalContent}
-      </FormModal>
       <ConfirmModal
         title={"Xác nhận"}
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
@@ -184,7 +174,6 @@ const FundingSources = () => {
           pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
           number_of_elements: state.number_of_elements && state.number_of_elements,
-          showSideChanger: true,
         }}
         setFilter={setFilter}
         filter={state.filter}

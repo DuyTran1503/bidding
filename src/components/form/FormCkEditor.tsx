@@ -1,8 +1,7 @@
 import { Col, Row } from "antd";
 import { FormikErrors, FormikTouched } from "formik";
-import { ForwardedRef, forwardRef, lazy, memo, useMemo } from "react";
+import { ForwardedRef, forwardRef, memo, useMemo } from "react";
 import CustomFormikEditor from "../ckfinder/CustomizeCkfinder";
-// const CustomizeCkfinder = lazy(() => import("../ckfinder/CustomizeCkfinder"));
 interface Props {
   id: string;
   label?: string;

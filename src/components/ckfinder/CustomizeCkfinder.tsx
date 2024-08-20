@@ -1,6 +1,6 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 // import Editor from "ckeditor5-custom-build";
-import * as Editor from "ckeditor5-custom-build";
+import Editor from "ckeditor5-custom-build";
 import "./ckfinder.scss";
 const defaultToolbar = {
   items: [
@@ -74,7 +74,7 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
       <CKEditor
         editor={Editor as any}
         data={value || ""}
-        onChange={(event: any, editor: any) => {
+        onChange={(_, editor: any) => {
           if (!editor) return;
 
           const data = editor.getData();
