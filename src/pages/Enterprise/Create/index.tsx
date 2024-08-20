@@ -13,7 +13,6 @@ import EnterpriseForm, { IEnterpriseInitialValues } from "../ActionModule";
 const CreateEnterprise = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IEnterpriseInitialValues>>(null);
-
   const { state } = useArchive<IEnterpriseInitialState>("enterprise");
 
   useFetchStatus({
