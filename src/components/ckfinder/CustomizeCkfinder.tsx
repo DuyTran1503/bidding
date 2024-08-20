@@ -70,9 +70,9 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
   const { readonly, setFieldValue, value, name, simpleMode, size, noBorder, id, onChange } = props;
 
   return (
-    <div className={`custom-editor ${size ? `size-${size}` : ""} ${noBorder ? "no-border" : ""}`}>
+    <div className={`custom-editor w-full ${size ? `size-${size}` : ""} ${noBorder ? "no-border" : ""}`}>
       <CKEditor
-        editor={Editor}
+        editor={Editor as any}
         data={value || ""}
         onChange={(event: any, editor: any) => {
           if (!editor) return;
