@@ -1,24 +1,78 @@
-import React from "react";
-import { ITableData } from "@/components/table/PrimaryTable";
-interface DetailFundingSourceProps {
-  record: ITableData;
-}
+import Heading from "@/components/layout/Heading";
+import { useArchive } from "@/hooks/useArchive";
+import useFetchStatus from "@/hooks/useFetchStatus";
+import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
+import { resetStatus } from "@/services/store/industry/industry.slice";
+import { getIndustryById } from "@/services/store/industry/industry.thunk";
+import { EPageTypes } from "@/shared/enums/page";
+import { FormikProps } from "formik";
+import { useEffect, useRef, useState } from "react";
+import { IoClose } from "react-icons/io5";
+import { useNavigate, useParams } from "react-router-dom";
+import FundingSourceForm, { IFundingSourceInitialValues } from "../ActionModule";
+import { getFundingSourceById } from "@/services/store/funding_source/funding_source.thunk";
+const DetailFundingSource = () => {
+  const navigate = useNavigate();
+  const formikRef = useRef<FormikProps<IFundingSourceInitialValues>>(null);
+  const { state, dispatch } = useArchive<IFundingSourceInitialState>("funding_source");
+  const [data, setData] = useState<IFundingSourceInitialValues>();
+  const { id } = useParams();
 
-const DetailFundingSource: React.FC<DetailFundingSourceProps> = ({ record }: ITableData | any) => {
+  useFetchStatus({
+    module: "funding_source",
+    reset: resetStatus,
+    actions: {
+      success: {
+        message: state.message,
+        navigate: "/funding-source",
+      },
+      error: {
+        message: state.message,
+      },
+    },
+  });
+  useEffect(() => {
+    if (id) {
+      dispatch(getFundingSourceById(id));
+    }
+  }, [id]);
+  useEffect(() => {
+    if (!!state.fundingSource) {
+      setData(state.fundingSource);
+    }
+  }, [JSON.stringify(state.fundingSource)]);
+
+  useEffect(() => {
+    if (data) {
+      if (formikRef.current) {
+        formikRef.current.setValues({
+          name: data.name,
+          code: data.code,
+          type: data.type,
+          description: data.description,
+          is_active: data.is_active,
+        });
+      }
+    }
+  }, [data]);
   return (
-    <div className="bg-white p-6">
-      <h2 className="mb-4 text-2xl font-semibold">Chi tiết nguồn tài trợ</h2>
-      <div className="flex flex-col gap-3">
-        <div className="text-m-medium mb-1 block font-semibold text-black-900">Tên nguồn tài trợ: {record?.name}</div>
-        <div>
-          <span className="text-m-medium mb-1 font-semibold text-black-900">
-            Mô tả:
-            <span className="mb-1 ml-2 text-sm text-black-300">{record?.description}</span>
-          </span>
-        </div>
-        <div className="text-m-medium mb-1 block font-semibold text-black-900">Trạng thái</div>
-      </div>
-    </div>
+    <>
+      <Heading
+        title="Chi tiết nguồn tài trợ"
+        hasBreadcrumb
+        buttons={[
+          {
+            type: "secondary",
+            text: "Hủy",
+            icon: <IoClose className="text-[18px]" />,
+            onClick: () => {
+              navigate("/industry");
+            },
+          },
+        ]}
+      />
+      <FundingSourceForm type={EPageTypes.VIEW} formikRef={formikRef} fundingSource={data} />
+    </>
   );
 };
 
