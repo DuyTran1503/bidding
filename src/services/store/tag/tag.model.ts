@@ -1,5 +1,7 @@
 export interface Itag {
+  code: any;
+  name: any;
   id: string;
-  name: string;
+  source_name: string;
   description: string;
 }
