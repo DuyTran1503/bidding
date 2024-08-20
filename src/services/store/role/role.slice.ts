@@ -3,12 +3,14 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createRole, deleteRole, getAllPermissions, getAllRoles, getRoleById, updateRole } from "./role.thunk";
-import { IRole } from "./role.model";
+import { IRole, IUpdateRole } from "./role.model";
 import { IPermission } from "../permission/permission.model";
+import { IError } from "@/shared/interface/error";
+import { transformPayloadErrors } from "@/shared/utils/common/function";
 
 export interface IRoleInitialState extends IInitialState {
   roles: IRole[];
-  activeRole: IRole | undefined;
+  activeRole: IUpdateRole | undefined;
   permissions: IPermission[];
 }
 
@@ -19,6 +21,7 @@ const initialState: IRoleInitialState = {
   permissions: [],
   activeRole: undefined,
   totalRecords: 0,
+  loading: false,
   filter: {
     size: 10,
     page: 1,
@@ -30,18 +33,46 @@ const roleSlice = createSlice({
   initialState,
   reducers: {
     ...commonStaticReducers<IRoleInitialState>(),
+    setData: (state) => {
+      state.permissions = [];
+    },
+    fetching(state) {
+      state.loading = true;
+    },
   },
   extraReducers(builder) {
     // ? Get all roles
-    builder.addCase(getAllRoles.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole[]> | any>) => {
-      if (payload.data) {
-        state.roles = payload.data.data;
-      }
-    });
+    builder
+      .addCase(getAllRoles.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole[]> | any>) => {
+        // state.status = EFetchStatus.FULFILLED;
+        if (payload.data) {
+          state.roles = payload.data.data;
+          state.totalRecords = payload?.data?.total_elements;
+        }
+      })
+      .addCase(getAllRoles.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
     // ? Get role by id
-    builder.addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IResponse<IRole> | any>) => {
-      state.activeRole = payload.data.data;
-    });
+    builder
+      .addCase(getRoleById.pending, (state) => {
+        // state.status = EFetchStatus.PENDING;
+        state.loading = true;
+      })
+      .addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IUpdateRole> | any) => {
+        const { permissions, created_at, guard_name, ...rest } = payload.role;
+        state.activeRole = {
+          permissions: payload?.id_permission_checked,
+          ...rest,
+        };
+
+        state.loading = false;
+      })
+      .addCase(getRoleById.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
     // ? Create role
     builder
       .addCase(createRole.pending, (state) => {
@@ -49,10 +80,11 @@ const roleSlice = createSlice({
       })
       .addCase(createRole.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Created successfully";
+        state.message = "Tạo mới vai trò thành công";
       })
-      .addCase(createRole.rejected, (state) => {
+      .addCase(createRole.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Update role
     builder
@@ -61,10 +93,11 @@ const roleSlice = createSlice({
       })
       .addCase(updateRole.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Updated successfully";
+        state.message = "Cập nhật vai trò thành công";
       })
-      .addCase(updateRole.rejected, (state) => {
+      .addCase(updateRole.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Delete role
     builder
@@ -73,19 +106,20 @@ const roleSlice = createSlice({
       })
       .addCase(deleteRole.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Deleted successfully";
+        state.message = "Xóa vai trò thành công";
         state.roles = state.roles.filter((role) => role.id !== payload);
       })
-      .addCase(deleteRole.rejected, (state) => {
+      .addCase(deleteRole.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
       });
     builder.addCase(getAllPermissions.fulfilled, (state, { payload }: PayloadAction<IResponse<IPermission[]> | any>) => {
       if (payload) {
-        state.permissions = payload.permissions;
+        state.permissions = payload.permissions.data;
       }
     });
   },
 });
 
-export const { resetStatus, setFilter } = roleSlice.actions;
+export const { resetStatus, setFilter, setData, fetching } = roleSlice.actions;
 export { roleSlice };

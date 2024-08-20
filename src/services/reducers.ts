@@ -6,8 +6,12 @@ import { authSlice } from "./store/auth/auth.slice";
 import { roleSlice } from "./store/role/role.slice";
 import { permissionSlice } from "./store/permission/permission.slice";
 import { tagSlice } from "./store/tag/tag.slice";
+import { biddingFieldSlice } from "./store/biddingField/biddingField.slice";
+import { businessActivitySlice } from "./store/business-activity/business-activity.slice";
+import { industrySlice } from "./store/industry/industry.slice";
+import { enterpriseSlice } from "./store/enterprise/enterprise.slice";
+import { statisticalReportSlice } from "./store/statisticalReport/statisticalReport.slice";
 import { fundingSourceSlice } from "./store/funding_source/funding_source.slice";
-import { fieldofactivitySlice } from "./store/field_of_activity/field_of_activity.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -15,9 +19,11 @@ export const reducers = combineReducers({
   account: accountSlice.reducer,
   role: roleSlice.reducer,
   permission: permissionSlice.reducer,
+  bidding_field: biddingFieldSlice.reducer,
+  funding_source: fundingSourceSlice.reducer,
+  bidding_type: biddingTypeSlice.reducer,
   tag: tagSlice.reducer,
-  fundingsource: fundingSourceSlice.reducer,
-  fieldofactivity: fieldofactivitySlice.reducer
+  fundingsource: fundingSourceSlice.reducer
 });
 
 export type RootStateType = ReturnType<typeof reducers>;

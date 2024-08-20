@@ -1,6 +1,5 @@
 export interface IFundingSource {
-    id: string ;
+    id: string | number;
     name: string;
     type: string;
-   
   }

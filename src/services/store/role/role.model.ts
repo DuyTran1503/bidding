@@ -5,3 +5,12 @@ export interface IRole {
   name: string;
   permissions: IPermission[];
 }
+export interface IUpdateRole {
+  id_permission_checked: number[];
+  permissions: IPermission[] | number[];
+  name?: string;
+  role: {
+    id?: string;
+    name: string;
+  };
+}

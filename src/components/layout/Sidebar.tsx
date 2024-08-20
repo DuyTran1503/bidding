@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
 // Icons
-import { IoCartOutline, IoPieChartOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoPieChartOutline, IoSettingsOutline } from "react-icons/io5";
 
 // Images
 import logo from "@/assets/images/logo.png";
@@ -15,6 +15,7 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { checkPermission } from "@/helpers/checkPermission";
+import { MdOutlineFactory } from "react-icons/md";
 
 export interface IMenuItem {
   id: string;
@@ -41,58 +42,95 @@ const Sidebar = ({ children }: PropsWithChildren) => {
   const menuItems: IMenuItem[] = [
     {
       id: "1",
-      label: "Dashboard",
+      label: "Bảng điều khiển",
       path: "dashboard",
       icon: { component: IoPieChartOutline },
     },
+    // {
+    //   id: "2",
+    //   label: "E-Commerce",
+    //   icon: { component: IoCartOutline },
+    //   items: [
+    //     {
+    //       id: "2.3",
+    //       label: "Orders",
+    //       path: "orders",
+    //       permissions: EPermissions.LIST_ORDER,
+    //     },
+    //   ],
+    // },
     {
-      id: "2",
-      label: "E-Commerce",
-      icon: { component: IoCartOutline },
+      id: "3",
+      label: "Doanh nghiệp",
+      icon: { component: MdOutlineFactory },
       items: [
         {
-          id: "2.3",
-          label: "Orders",
-          path: "orders",
-          permissions: EPermissions.LIST_ORDER,
+          id: "3.1",
+          label: "Doanh nghiệp",
+          path: "enterprise",
+          permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
+        },
+        {
+          id: "3.2",
+          label: "Loại hình kinh doanh",
+          path: "business_activity",
+          permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
+        },
+        {
+          id: "3.2",
+          label: "Lĩnh vực đấu thầu",
+          path: "bidding_fields",
+          permissions: EPermissions.LIST_BIDDING_FIELD,
+        },
+        {
+          id: "3.3",
+          label: "Loại hình đấu thầu",
+          path: "bidding_types",
+          // permissions: EPermissions.LIST_BIDDING_TYPE,
+        },
+        {
+          id: "3.4",
+          label: "Ngành kinh doanh",
+          path: "industry",
+          permissions: EPermissions.LIST_INDUSTRY,
+        },
+        {
+          id: "3.5",
+          label: "Nguồn tài trợ",
+          path: "funding-sources",
+          permissions: EPermissions.LIST_FUNDING_SOURCE,
         },
       ],
     },
     {
-      id: "3",
-      label: "System",
+      id: "4",
+      label: "Hệ thống",
       icon: { component: IoSettingsOutline },
       items: [
         {
-          id: "3.1",
-          label: "Roles",
+          id: "4.1",
+          label: "Vai trò",
           path: "roles",
-          permissions: EPermissions.READ_ROLE,
+          permissions: EPermissions.LIST_ROLE,
         },
         {
-          id: "3.2",
-          label: "Permissions",
-          path: "permissions",
-          permissions: EPermissions.LIST_PERMISSION,
+          id: "4.2",
+          label: "Nhân viên",
+          path: "staffs",
+          permissions: EPermissions.LIST_STAFF,
         },
         {
-          id: "3.3",
+          id: "4.3",
           label: "Tags",
           path: "tags",
-          permissions: EPermissions.READ_TAG,
+          permissions: EPermissions.LIST_TAG,
         },
         {
           id: "3.4",
-          label: "Nguồn Tài Trợ",
+          label: "Nguồn tài trợ",
           path: "funding_sources",
           permissions: EPermissions.READ_FUNDING_SOURCE,
         },
-        // {
-        //   id: "3.5",
-        //   label: "Loại Hình Hoạt Động",
-        //   path: "field_of_activity",
-        //   permissions: EPermissions.READ_FIELD_OF_ACTIVITY,
-        // },
       ],
     },
     {

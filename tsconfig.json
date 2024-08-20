@@ -25,6 +25,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "script.d.ts", "src/ckeditor.d.tssrc/global.d.tsd.ts", "global.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

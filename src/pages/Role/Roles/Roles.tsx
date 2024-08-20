@@ -3,25 +3,32 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import Heading from "@/components/layout/Heading";
-import { IRoleInitialState, resetStatus, setFilter } from "@/services/store/role/role.slice";
+import { fetching, IRoleInitialState, resetStatus, setFilter } from "@/services/store/role/role.slice";
 import { deleteRole, getAllRoles } from "@/services/store/role/role.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
+import DetailRole from "../DetailRole/DetailRole";
+import FormModal from "@/components/form/FormModal";
 
 const Roles = () => {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<ReactNode>(null);
   const { state, dispatch } = useArchive<IRoleInitialState>("role");
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/roles/detail/${record?.key}`);
+        setModalContent(<DetailRole id={record?.key} />);
+        setIsModalOpen(true);
       },
+
       permission: EPermissions.DETAIL_ROLE,
     },
     {
@@ -42,20 +49,29 @@ const Roles = () => {
 
   const columns: ColumnsType = [
     {
+      dataIndex: "index",
+      title: "STT",
+    },
+    {
       dataIndex: "name",
-      title: "Name",
+      title: "Tên vai trò",
     },
   ];
 
   const data: ITableData[] = useMemo(() => {
     if (state.roles && state.roles.length > 0) {
-      return state.roles.map((role) => ({
+      return state.roles.map((role, index) => ({
+        index: index + 1,
         key: role.id,
         name: role.name,
       }));
     }
     return [];
   }, [JSON.stringify(state.roles)]);
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   useFetchStatus({
     module: "role",
@@ -69,32 +85,44 @@ const Roles = () => {
   useEffect(() => {
     dispatch(getAllRoles({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-
+  const search: ISearchTypeTable[] = [
+    {
+      id: "name",
+      placeholder: "Nhập tên vai trò...",
+      label: "Tên vai trò",
+      type: "text",
+    },
+  ];
   return (
     <>
       <Heading
-        title="Roles"
+        title="Vai trò"
         hasBreadcrumb
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
-            // permission: EPermissions.CREATE_ROLE,
-            text: "Create Role",
+            permission: EPermissions.CREATE_ROLE,
+            text: "Tạo mới",
             onClick: () => navigate("/roles/create"),
           },
         ]}
       />
+      <FormModal open={isModalOpen} onCancel={handleCancel}>
+        {modalContent}
+      </FormModal>
       <ManagementGrid
         columns={columns}
         data={data}
-        search={{ status: [] }}
+        search={search}
         buttons={buttons}
         pagination={{
-          current: state.filter._page! ?? 1,
-          pageSize: state.filter._page! ?? 10,
+          current: state.filter.page ?? 1,
+          pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
         }}
         setFilter={setFilter}
+        filter={state.filter}
+        fetching={fetching}
       />
     </>
   );
