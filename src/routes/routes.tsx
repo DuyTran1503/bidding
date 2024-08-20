@@ -45,6 +45,7 @@ import DetailStaff from "@/pages/Staff/Detail";
 import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
 import CreateStaff from "@/pages/Staff/Create";
 import Staffs from "@/pages/Staff/Staffs";
+import UpdateFundingSource from "@/pages/FundingSource/Update";
 
 export interface IRoute {
   path: string;
@@ -203,7 +204,7 @@ export const routes: IRoute[] = [
               },
               {
                 path: "/update/:id",
-                element: () => <UpdateTag />,
+                element: () => <UpdateFundingSource />,
               },
             ],
           },
