@@ -3,17 +3,15 @@ import { useMemo } from "react";
 
 interface Props {
   title: string;
-  label?: string;
   checked: boolean;
   onChange?: () => void;
   disabled?: boolean;
-  toolTip?: string;
   toolTipPosition?: "top" | "bottom" | "left" | "right";
   loading?: boolean;
 }
 
 const CommonSwitch = (props: Props) => {
-  const { title, label, checked, onChange, disabled = false, toolTip, toolTipPosition = "top", loading } = props;
+  const { title, checked, onChange, disabled = false, toolTipPosition = "top", loading } = props;
 
   const SwitchComponent = useMemo(
     () => <AntSwitch checked={checked} disabled={disabled} onChange={onChange} loading={loading} />,
