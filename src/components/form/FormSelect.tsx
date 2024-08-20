@@ -24,7 +24,7 @@ const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isM
 
   return (
     <div>
-      <div className="text-m-medium mb-1 text-black-300">{label}</div>
+      <div className="text-m-medium mb-1 w-full text-black-300">{label}</div>
       <ConfigProvider
         theme={{
           components: {
