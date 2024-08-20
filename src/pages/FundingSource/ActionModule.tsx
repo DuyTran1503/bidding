@@ -64,7 +64,8 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
         }}
       >
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
-                    <Form>
+          <>
+         
                     <Row gutter={[24, 24]}>
                       <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                         <FormGroup title="Tên nguồn tài trợ">
@@ -104,7 +105,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                         </FormGroup>
                       </Col>
                     </Row>
-                  </Form>
+          </>
         )}
       </Formik>
     );

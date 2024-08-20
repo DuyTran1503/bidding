@@ -74,7 +74,7 @@ const FundingSources = () => {
         setModalContent(<DetailFundingSource record={record} />);
         setIsModalOpen(true);
       },
-      permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.CREATE_FUNDING_SOURCE,
     },
     {
       type: EButtonTypes.UPDATE,
@@ -132,7 +132,7 @@ const FundingSources = () => {
   }, [JSON.stringify(state.status)]);
 
   useFetchStatus({
-    module: "business",
+    module: "funding_source",
     reset: resetStatus,
     actions: {
       success: { message: state.message },
@@ -160,7 +160,7 @@ const FundingSources = () => {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
-              navigate("/funding-source/create");
+              navigate("create");
             },
           },
         ]}
