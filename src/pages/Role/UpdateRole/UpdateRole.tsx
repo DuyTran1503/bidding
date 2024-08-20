@@ -40,7 +40,6 @@ const UpdateRole = () => {
       memoizedDispatch(setData());
     };
   }, [JSON.stringify(id), memoizedDispatch]);
-
   return (
     <>
       <Heading
