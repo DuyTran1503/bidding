@@ -290,24 +290,28 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </Col>
               )}
             </Row>
-            <FormCkFinder
-              resourceTypes={ResourceType.FILES}
-              // Type={TypePage.IMAGE}
-              errors={errors}
-              touched={touched}
-              buttonClose
-              id="avatar"
-              label=""
-              placeholder="Tải file"
-              value={values.avatar}
-              disabled={type === "view"}
-              onChange={(data) => {
-                setFieldValue("avatar", data).then();
-              }}
-              name={"avatar"}
-            />
             <Row gutter={[24, 0]}>
-              <Col xs={24} sm={24} md={24} xl={24}></Col>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormGroup title="Ảnh đại diện">
+                  <FormCkFinder
+                    resourceTypes={ResourceType.FILES}
+                    direction="vertical"
+                    errors={errors}
+                    touched={touched}
+                    buttonClose
+                    id="avatar"
+                    placeholder="Tải ảnh lên"
+                    value={values.avatar ?? ""}
+                    disabled={type === "view"}
+                    onChange={(data) => {
+                      setFieldValue("avatar", data).then();
+                    }}
+                    name={"avatar"}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row gutter={[24, 0]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Vai trò">
                   <FormSelect
