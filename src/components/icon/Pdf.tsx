@@ -1,12 +1,9 @@
-import React, { SVGProps } from 'react';
+import { SVGProps } from "react";
 
 const Pdf = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="56" height="64" viewBox="0 0 56 64" {...props}>
-      <path
-        fill="#8c181a"
-        d="M5.1 0C2.3 0 0 2.3 0 5.1v53.8C0 61.7 2.3 64 5.1 64h45.8c2.8 0 5.1-2.3 5.1-5.1V20.3L37.1 0z"
-      ></path>
+      <path fill="#8c181a" d="M5.1 0C2.3 0 0 2.3 0 5.1v53.8C0 61.7 2.3 64 5.1 64h45.8c2.8 0 5.1-2.3 5.1-5.1V20.3L37.1 0z"></path>
       <path fill="#6b0d12" d="M56 20.4v1H43.2s-6.3-1.3-6.1-6.7c0 0 .2 5.7 6 5.7z"></path>
       <g fill="#fff">
         <path d="M37.1 0v14.6c0 1.7 1.1 5.8 6.1 5.8H56z" opacity="0.5"></path>

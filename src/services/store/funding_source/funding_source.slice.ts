@@ -1,5 +1,4 @@
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { IFundingSource } from "./funding_source.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { commonStaticReducers } from "@/services/shared";
@@ -14,6 +13,7 @@ import {
 } from "./funding_source.thunk";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { IFundingSource } from "./funding_source.model";
 
 export interface IFundingSourceInitialState extends IInitialState {
   fundingSources: IFundingSource[];

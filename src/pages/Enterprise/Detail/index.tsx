@@ -1,19 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormikProps } from "formik";
 import Heading from "@/components/layout/Heading";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { ITagInitialState, resetStatus } from "@/services/store/tag/tag.slice";
-import { useArchive } from "@/hooks/useArchive";
-import BusinessActivityForm, { IEnterpriseInitialValues } from "../ActionModule";
+import { IEnterpriseInitialValues } from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
-import { getBusinessActivityById } from "@/services/store/business-activity/business-activity.thunk";
-import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
-import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { IEnterpriseInitialState, resetStatus } from "@/services/store/enterprise/enterprise.slice";
 import EnterpriseForm from "../ActionModule";
+import { useArchive } from "@/hooks/useArchive";
+import { getEnterpriseById } from "@/services/store/enterprise/enterprise.thunk";
 
 const index = () => {
   const navigate = useNavigate();
@@ -35,12 +31,16 @@ const index = () => {
       },
     },
   });
-  // useEffect(() => {
-  //   if (id) {
-  //     dispatch(getBusinessActivityById(id));
-  //   }
-  // }, [id]);
-
+  useEffect(() => {
+    if (id) {
+      dispatch(getEnterpriseById(id));
+    }
+  }, [id]);
+  useEffect(() => {
+    if (!!state.enterprise) {
+      setData(state.enterprise);
+    }
+  }, [JSON.stringify(state.enterprise)]);
   useEffect(() => {
     if (data) {
       if (formikRef.current) {
