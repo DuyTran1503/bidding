@@ -15,7 +15,7 @@ import { transformPayloadErrors } from "@/shared/utils/common/function";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus } from "@/services/store/account/account.slice";
 import { useEffect } from "react";
-import FormCkFinder from "@/components/form/FormCkFinder";
+import FormCkEditor from "@/components/form/FormCkEditor";
 
 interface IBusinessActivityFormProps {
   formikRef?: FormikRefType<IIBusinessActivityInitialValues>;
@@ -89,7 +89,7 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
           <Row gutter={[24, 24]}>
             <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
               <FormGroup title="Mô tả">
-                <FormCkFinder
+                <FormCkEditor
                   id="description"
                   direction="vertical"
                   value={values.description}
