@@ -88,7 +88,6 @@ const BiddingTypes = () => {
         }
     };
 
-    // Update the search state and dispatch actions
     const search: ISearchTypeTable[] = [
         {
             id: "name",
