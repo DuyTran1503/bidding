@@ -61,11 +61,12 @@ const roleSlice = createSlice({
         state.loading = true;
       })
       .addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IUpdateRole> | any) => {
-        // state.status = EFetchStatus.FULFILLED;
+        const { permissions, created_at, guard_name, ...rest } = payload.role;
         state.activeRole = {
-          permissions: payload.id_permission_checked,
-          ...payload.role,
+          permissions: payload?.id_permission_checked,
+          ...rest,
         };
+
         state.loading = false;
       })
       .addCase(getRoleById.rejected, (state, { payload }: PayloadAction<IError | any>) => {
@@ -114,7 +115,7 @@ const roleSlice = createSlice({
       });
     builder.addCase(getAllPermissions.fulfilled, (state, { payload }: PayloadAction<IResponse<IPermission[]> | any>) => {
       if (payload) {
-        state.permissions = payload.permissions;
+        state.permissions = payload.permissions.data;
       }
     });
   },
