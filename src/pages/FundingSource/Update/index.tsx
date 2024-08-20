@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { IoClose, IoSaveOutline } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormikProps } from "formik";
 import Heading from "@/components/layout/Heading";
@@ -25,7 +25,7 @@ const UpdateFundingSource = () => {
     actions: {
       success: {
         message: state.message,
-        navigate: "/funding_sources",
+        navigate: "/funding-sources",
       },
       error: {
         message: state.message,
@@ -58,6 +58,7 @@ const UpdateFundingSource = () => {
       }
     }
   }, [data]);
+  
   return (
     <>
       <Heading
@@ -69,7 +70,7 @@ const UpdateFundingSource = () => {
             text: "Cancel",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/funding_sources");
+              navigate("/funding-sources");
             },
           },
           {

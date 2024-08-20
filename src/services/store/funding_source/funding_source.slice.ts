@@ -37,7 +37,7 @@ const initialState: IFundingSourceInitialState = {
 };
 
 const fundingSourceSlice = createSlice({
-    name: "funding-sources",
+    name: "funding_source",
     initialState,
     reducers: {
         ...commonStaticReducers<IFundingSourceInitialState>(),
@@ -102,7 +102,7 @@ const fundingSourceSlice = createSlice({
       .addCase(changeStatusFundingSource.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusFundingSource.fulfilled, (state, { payload }) => {
+      .addCase(changeStatusFundingSource.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })
