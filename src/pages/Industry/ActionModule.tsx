@@ -7,7 +7,6 @@ import { useArchive } from "@/hooks/useArchive";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { EPageTypes } from "@/shared/enums/page";
 import FormSwitch from "@/components/form/FormSwitch";
-import FormInputArea from "@/components/form/FormInputArea";
 import { Col, Row } from "antd";
 import { useEffect } from "react";
 import { IIndustryInitialState, resetMessageError } from "@/services/store/industry/industry.slice";

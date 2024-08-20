@@ -1,7 +1,6 @@
 import { ResourceType } from "@/shared/enums/resourceType";
 import { IFile } from "@/shared/interface/file";
-import { ForwardedRef, forwardRef, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { ForwardedRef, forwardRef, useEffect } from "react";
 import Upload from "../icon/Upload";
 import { getFileExtension } from "@/shared/utils/common/function";
 import { ETYPEFILE } from "@/shared/enums/fileType";
@@ -36,17 +35,10 @@ interface IProps {
 
 const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: ForwardedRef<any>) {
   const {
-    name,
-    setFieldValue,
     value,
-    selectedFiles = [],
     disabled = false,
-    multiFiles = false,
-    buttonTitle = "Tải lên ảnh",
     onChange,
-    isHideButton,
     className,
-    maxWidth,
     direction,
     isRequired,
     resourceTypes,
@@ -58,12 +50,12 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
     touched,
     id,
   } = props;
-  const [imageLink, setImageLink] = useState(value);
+  // const [imageLink, setImageLink] = useState(value);
 
-  useEffect(() => {
-    if (!value) return;
-    setImageLink(value);
-  }, [value]);
+  // useEffect(() => {
+  //   if (!value) return;
+  //   setImageLink(value);
+  // }, [value]);
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js";
@@ -92,7 +84,7 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
 
             onChange && onChange([...value, ...files]);
           });
-          finder.on("file:choose:resizedImage", function (evt: any) {});
+          finder.on("file:choose:resizedImage", function () {});
         },
       });
     } else {
