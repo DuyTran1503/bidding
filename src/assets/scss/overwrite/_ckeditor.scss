@@ -1,0 +1,19 @@
+.ck-finder-button {
+  width: 150px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 1.5px solid #883dcf;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.ck-finder-button-text {
+  margin: 0;
+  color: #883dcf;
+}
+
+.ck-finder-button:disabled {
+  opacity: 0.5;
+}
