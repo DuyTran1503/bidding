@@ -1,4 +1,4 @@
-import React, { SVGProps } from 'react';
+import { SVGProps } from "react";
 
 const Word = (props: SVGProps<SVGSVGElement>) => {
   return (
@@ -7,7 +7,7 @@ const Word = (props: SVGProps<SVGSVGElement>) => {
       width="56"
       height="64"
       viewBox="0 0 56 64"
-      style={{ display: 'inline-block', marginRight: '10px' }}
+      style={{ display: "inline-block", marginRight: "10px" }}
       {...props}
     >
       <path

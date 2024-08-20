@@ -96,7 +96,7 @@ const enterpriseSlice = createSlice({
       .addCase(changeStatusEnterprise.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusEnterprise.fulfilled, (state, { payload }) => {
+      .addCase(changeStatusEnterprise.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })

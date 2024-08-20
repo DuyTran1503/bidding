@@ -46,19 +46,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       path: "dashboard",
       icon: { component: IoPieChartOutline },
     },
-    // {
-    //   id: "2",
-    //   label: "E-Commerce",
-    //   icon: { component: IoCartOutline },
-    //   items: [
-    //     {
-    //       id: "2.3",
-    //       label: "Orders",
-    //       path: "orders",
-    //       permissions: EPermissions.LIST_ORDER,
-    //     },
-    //   ],
-    // },
     {
       id: "3",
       label: "Doanh nghiệp",
@@ -131,7 +118,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "statistical_reports",
           permissions: EPermissions.LIST_STATISTICAL_REPORT,
         },
-        
       ],
     },
     {

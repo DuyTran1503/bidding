@@ -14,14 +14,12 @@ import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IIndustryInitialState, resetStatus, setFilter } from "@/services/store/industry/industry.slice";
 import { changeStatusIndustry, deleteIndustry, getAllIndustry } from "@/services/store/industry/industry.thunk";
 import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
 import { convertDataOption } from "@/shared/utils/common/function";
 import { getListBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
-import { IBusinessActivity } from "@/services/store/business-activity/business-activity.model";
 
 const Industry = () => {
   const navigate = useNavigate();
@@ -30,7 +28,6 @@ const Industry = () => {
 
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const [isDelete, setIsDelete] = useState(false);
   const business = (value: number) => {
     if (businessState?.listBusinessActivities?.length > 0 && !!value)
       return businessState?.listBusinessActivities!.find((item) => item.id === value)?.name;
@@ -51,9 +48,8 @@ const Industry = () => {
     {
       dataIndex: "description",
       title: "Mô tả",
-      className: " text-compact-3 h-[90px]",
       render(_, record) {
-        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
+        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }} className="text-compact-3"></div>;
       },
     },
     {
@@ -89,7 +85,6 @@ const Industry = () => {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteIndustry(record?.key));
-        setIsDelete(true);
       },
       permission: EPermissions.DESTROY_INDUSTRY,
     },
@@ -139,7 +134,6 @@ const Industry = () => {
   useEffect(() => {
     if (industryState.status === EFetchStatus.FULFILLED) {
       dispatch(getAllIndustry({ query: industryState.filter }));
-      setIsDelete(false);
     }
   }, [JSON.stringify(industryState.status)]);
 
