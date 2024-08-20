@@ -15,7 +15,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^43.0.0",
     "@ckeditor/ckeditor5-ckfinder": "^43.0.0",
-    "@ckeditor/ckeditor5-react": "^3.5.0",
+    "@ckeditor/ckeditor5-react": "^9.0.0",
     "@reduxjs/toolkit": "^2.2.3",
     "antd": "^5.17.3",
     "axios": "^1.7.3",
