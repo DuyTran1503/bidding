@@ -7,13 +7,13 @@ import Heading from "@/components/layout/Heading";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
-import FundingSourceForm, { IFundingSourceFormInitialValues } from "../ActionModule";
+import FundingSourceForm, { IFundingSourceInitialValues } from "../ActionModule";
 import { IFundingSourceInitialState, resetStatus } from "@/services/store/funding_source/funding_source.slice";
 import { EPageTypes } from "@/shared/enums/page";
 
 const CreateFundingSource = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IFundingSourceFormInitialValues>>(null);
+  const formikRef = useRef<FormikProps<IFundingSourceInitialValues>>(null);
 
   const { state } = useArchive<IFundingSourceInitialState>("funding_source");
 
@@ -23,7 +23,7 @@ const CreateFundingSource = () => {
     actions: {
       success: {
         message: state.message,
-        navigate: "/funding_sources",
+        navigate: "/funding-sources",
       },
       error: {
         message: state.message,
@@ -42,7 +42,7 @@ const CreateFundingSource = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/business_activity");
+              navigate("/funding-sources");
             },
           },
           {
