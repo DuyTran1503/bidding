@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IBiddingType } from "./biddingType.model";
 
-const prefix = "/api/admin/bidding_types";
+const prefix = "/api/admin/bidding-types";
 
 export const getAllBiddingTypes = createAsyncThunk("bidding-type/get-all-bidding_types", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {

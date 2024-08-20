@@ -52,6 +52,9 @@ const Industry = () => {
       dataIndex: "description",
       title: "Mô tả",
       className: " text-compact-3 h-[90px]",
+      render(_, record) {
+        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
+      },
     },
     {
       title: "Trạng thái ",
