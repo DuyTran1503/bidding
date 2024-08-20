@@ -31,7 +31,7 @@ export interface ISearchTypeTable {
   label?: string;
 }
 
-interface ISearchProps<T extends ISearchParams> {
+export interface ISearchProps<T extends ISearchParams> {
   search: ISearchTypeTable[];
   setFilter: ActionCreatorWithPayload<ISearchParams>;
   fetching?: Function;
@@ -108,7 +108,6 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
                 if (item.type === "treeSelect") {
                   const value = values[item.id] || null;
-
                   return (
                     <Col key={index} xs={24} sm={24} md={12} lg={6}>
                       <FormTreeSelect
@@ -117,6 +116,8 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         treeData={item.treeData!}
                         // @ts-ignore
                         defaultValue={value}
+                        // @ts-ignore
+                        value={value}
                         isDisabled={item.isDisabled}
                         onChange={(data) => {
                           setFieldValue(item.id, data);
