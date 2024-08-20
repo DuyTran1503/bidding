@@ -50,6 +50,9 @@ const FundingSources = () => {
       dataIndex: "desciption",
       title: "Mô tả",
       className: " text-compact-3 h-[90px]",
+      render(_, record) {
+        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
+      },
     },
     {
       title: "Trạng thái",
@@ -71,10 +74,9 @@ const FundingSources = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        setModalContent(<DetailFundingSource record={record} />);
-        setIsModalOpen(true);
+        navigate(`/funding-sources/detail/${record?.key}`);;
       },
-      permission: EPermissions.CREATE_FUNDING_SOURCE,
+      permission: EPermissions.DETAIL_FUNDING_SOURCE,
     },
     {
       type: EButtonTypes.UPDATE,
