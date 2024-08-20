@@ -117,7 +117,7 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
         disabled={disabled}
       >
         <p className="ck-finder-button-text text-semibold-sm">{placeholder ?? "Chọn"}</p>
-        <Upload color="#1b4ab6" />
+        <Upload color="#883dcf" />
       </button>
     </>
   );
@@ -126,6 +126,7 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
   const SelectedFile = () => (
     <div className="mt-2 flex w-full flex-row flex-wrap gap-2">
       {!!value &&
+        value?.length > 0 &&
         value?.map((file: any, index: number) => {
           const fileExt = getFileExtension(file.path);
           const fileName = file.name;

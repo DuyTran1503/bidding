@@ -301,7 +301,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                     buttonClose
                     id="avatar"
                     placeholder="Tải ảnh lên"
-                    value={values.avatar}
+                    value={values.avatar ?? ""}
                     disabled={type === "view"}
                     onChange={(data) => {
                       setFieldValue("avatar", data).then();
