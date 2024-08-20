@@ -19,30 +19,34 @@ import CreateTag from "@/pages/Tag/CreateTag/CreateTag";
 import UpdateTag from "@/pages/Tag/UpdateTag/UpdateTag";
 import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermission";
 import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
-import CreateBiddingField from "@/pages/BiddingFields/CreateBiddingField/CreateBiddingField";
-import UpdateBiddingField from "@/pages/BiddingFields/UpdateBiddingField/UpdateBiddingField";
-import BiddingFields from "@/pages/BiddingFields/BiddingFields/BiddingFields";
-import Staffs from "@/pages/Staff/Staffs";
-import CreateStaff from "@/pages/Staff/Create";
-import DetailStaff from "@/pages/Staff/Detail";
-import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
+import FundingSources from "@/pages/FundingSource";
+import CreateFundingSource from "@/pages/FundingSource/Create";
 import BusinessActivities from "@/pages/BusinessActivities";
 import CreateBusinessActivity from "@/pages/BusinessActivities/Create";
 import UpdateBusinessActivity from "@/pages/BusinessActivities/Update";
-import BiddingTypes from "@/pages/BiddingTypes/BiddingTypes/BiddingTypes";
-import CreateBiddingType from "@/pages/BiddingTypes/CreateBiddingType/CreateBiddingType";
-import UpdateBiddingType from "@/pages/BiddingTypes/UpdateBiddingType/UpdateBiddingType";
 import Industry from "@/pages/Industry";
 import CreateIndustry from "@/pages/Industry/Create";
 import UpdateIndustry from "@/pages/Industry/Update";
+import DetailIndustry from "@/pages/Industry/Detail";
 import Enterprise from "@/pages/Enterprise";
 import CreateEnterprise from "@/pages/Enterprise/Create";
 import UpdateEnterprise from "@/pages/Enterprise/Update";
-import DetailIndustry from "@/pages/Industry/Detail";
-import BiddingFieldDetail from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
 import StatisticalReports from "@/pages/StatisticalReports/StatisticalReports/StatisticalReports";
 import CreateStatisticalReport from "@/pages/StatisticalReports/CreateStatisticalReport/CreateStatisticalReport";
 import UpdateStatisticalReport from "@/pages/StatisticalReports/UpdateStatisticalReport/UpdateStatisticalReport";
+import UpdateBiddingType from "@/pages/BiddingTypes/UpdateBiddingType/UpdateBiddingType";
+import CreateBiddingType from "@/pages/BiddingTypes/CreateBiddingType/CreateBiddingType";
+import BiddingTypes from "@/pages/BiddingTypes/BiddingTypes/BiddingTypes";
+import BiddingFieldDetail from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
+import UpdateBiddingField from "@/pages/BiddingFields/UpdateBiddingField/UpdateBiddingField";
+import CreateBiddingField from "@/pages/BiddingFields/CreateBiddingField/CreateBiddingField";
+import BiddingFields from "@/pages/BiddingFields/BiddingFields/BiddingFields";
+import DetailStaff from "@/pages/Staff/Detail";
+import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
+import CreateStaff from "@/pages/Staff/Create";
+import Staffs from "@/pages/Staff/Staffs";
+import UpdateFundingSource from "@/pages/FundingSource/Update";
+import DetailFundingSource from "@/pages/FundingSource/Detail";
 
 export interface IRoute {
   path: string;
@@ -189,6 +193,27 @@ export const routes: IRoute[] = [
             ],
           },
           {
+            path: "funding-sources",
+            pages: [
+              {
+                path: "/",
+                element: () => <FundingSources />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateFundingSource />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateFundingSource />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailFundingSource />,
+              }
+            ],
+          },
+          {
             path: "industry",
             pages: [
               {
@@ -264,6 +289,7 @@ export const routes: IRoute[] = [
               },
             ],
           },
+          
         ],
       },
       {
