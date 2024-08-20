@@ -74,4 +74,11 @@ export enum EPermissions {
   CREATE_STATISTICAL_REPORT = "create_statistical_report",
   UPDATE_STATISTICAL_REPORT = "update_statistical_report",
   DESTROY_STATISTICAL_REPORT = "destroy_statistical_report",
+
+    // Nguồn tài trợ
+    LIST_FUNDING_SOURCE = "list_funding_source",
+    DETAIL_FUNDING_SOURCE = "detail_funding_source",
+    CREATE_FUNDING_SOURCE = "create_funding_source",
+    UPDATE_FUNDING_SOURCE = "update_funding_source",
+    DESTROY_FUNDING_SOURCE = "destroy_funding_source",
 }

@@ -1,29 +1,30 @@
 import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import IndustryForm from "@/pages/Industry/ActionModule";
-import { IIndustryInitialState, resetStatus } from "@/services/store/industry/industry.slice";
+import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
+import { resetStatus } from "@/services/store/industry/industry.slice";
 import { getIndustryById } from "@/services/store/industry/industry.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import { FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
-import { IndustryInitialValues } from "../ActionModule";
-const DetailIndustry = () => {
+import FundingSourceForm, { IFundingSourceInitialValues } from "../ActionModule";
+import { getFundingSourceById } from "@/services/store/funding_source/funding_source.thunk";
+const DetailFundingSource = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IndustryInitialValues>>(null);
-  const { state, dispatch } = useArchive<IIndustryInitialState>("industry");
-  const [data, setData] = useState<IndustryInitialValues>();
+  const formikRef = useRef<FormikProps<IFundingSourceInitialValues>>(null);
+  const { state, dispatch } = useArchive<IFundingSourceInitialState>("funding_source");
+  const [data, setData] = useState<IFundingSourceInitialValues>();
   const { id } = useParams();
 
   useFetchStatus({
-    module: "industry",
+    module: "funding_source",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/industry",
+        navigate: "/funding-source",
       },
       error: {
         message: state.message,
@@ -32,21 +33,22 @@ const DetailIndustry = () => {
   });
   useEffect(() => {
     if (id) {
-      dispatch(getIndustryById(id));
+      dispatch(getFundingSourceById(id));
     }
   }, [id]);
   useEffect(() => {
-    if (!!state.businessActivity) {
-      setData(state.businessActivity);
+    if (!!state.fundingSource) {
+      setData(state.fundingSource);
     }
-  }, [JSON.stringify(state.businessActivity)]);
+  }, [JSON.stringify(state.fundingSource)]);
 
   useEffect(() => {
     if (data) {
       if (formikRef.current) {
         formikRef.current.setValues({
           name: data.name,
-          business_activity_type_id: data.business_activity_type_id,
+          code: data.code,
+          type: data.type,
           description: data.description,
           is_active: data.is_active,
         });
@@ -56,7 +58,7 @@ const DetailIndustry = () => {
   return (
     <>
       <Heading
-        title="Cập nhật ngành kinh doanh"
+        title="Chi tiết nguồn tài trợ"
         hasBreadcrumb
         buttons={[
           {
@@ -69,9 +71,9 @@ const DetailIndustry = () => {
           },
         ]}
       />
-      <IndustryForm type={EPageTypes.VIEW} formikRef={formikRef} industry={data} />
+      <FundingSourceForm type={EPageTypes.VIEW} formikRef={formikRef} fundingSource={data} />
     </>
   );
 };
 
-export default DetailIndustry;
+export default DetailFundingSource;

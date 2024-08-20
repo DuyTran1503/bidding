@@ -1,21 +1,17 @@
-import { Formik, Form } from "formik";
-import { object, string } from "yup";
-import lodash from "lodash";
+import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import { useArchive } from "@/hooks/useArchive";
-import { FormikRefType } from "@/shared/utils/shared-types";
-import { EPageTypes } from "@/shared/enums/page";
 import FormSwitch from "@/components/form/FormSwitch";
-import { createBusinessActivity, updateBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
-import FormInputArea from "@/components/form/FormInputArea";
-import { Col, Row } from "antd";
+import { useArchive } from "@/hooks/useArchive";
 import { IBusinessActivityInitialState, resetMessageError } from "@/services/store/business-activity/business-activity.slice";
-import { transformPayloadErrors } from "@/shared/utils/common/function";
-import useFetchStatus from "@/hooks/useFetchStatus";
-import { resetStatus } from "@/services/store/account/account.slice";
+import { createBusinessActivity, updateBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
+import { EPageTypes } from "@/shared/enums/page";
+import { FormikRefType } from "@/shared/utils/shared-types";
+import { Col, Row } from "antd";
+import { Form, Formik } from "formik";
+import lodash from "lodash";
 import { useEffect } from "react";
-import FormCkEditor from "@/components/form/FormCkEditor";
+import { object, string } from "yup";
 
 interface IBusinessActivityFormProps {
   formikRef?: FormikRefType<IIBusinessActivityInitialValues>;
@@ -25,7 +21,7 @@ interface IBusinessActivityFormProps {
 
 export interface IIBusinessActivityInitialValues {
   id?: string;
-  name: string;
+  name: string;  
   description: string;
   is_active: string;
 }
