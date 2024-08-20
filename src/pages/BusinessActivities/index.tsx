@@ -31,7 +31,6 @@ const BusinessActivities = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<ReactNode>(null);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-
   const columns: ColumnsType = [
     {
       dataIndex: "index",

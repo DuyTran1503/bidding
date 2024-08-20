@@ -4,7 +4,7 @@ export enum ETYPEFILE {
   EXCEL = "excel",
   POWERPOINT = "powerpoint",
   PDF = "pdf",
-  unknow = "unknow",
+  unknown = "unknown",
   mp3 = "mp3",
   mp4 = "mp4",
 }
