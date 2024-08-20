@@ -118,13 +118,13 @@ const BiddingFields = () => {
   const data: ITableData[] = useMemo(() => {
     return state.biddingFields && state.biddingFields.length > 0
       ? state.biddingFields.map(({ id, name, is_active, code, parent }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        is_active,
-        code,
-        parent_name: parent?.name || "",
-      }))
+          index: index + 1,
+          key: id,
+          name,
+          is_active,
+          code,
+          parent_name: parent?.name || "",
+        }))
       : [];
   }, [state.biddingFields]);
 
@@ -142,15 +142,16 @@ const BiddingFields = () => {
 
     dispatch(getBiddingFieldAllIds())
       .unwrap()
-      .then(result => {
-        const formattedTreeData: TreeNode[] = result.data.map(field => ({
+      .then((result) => {
+        const formattedTreeData: TreeNode[] = result.data.map((field) => ({
           title: field.name,
           value: field.id.toString(),
-          children: field.children?.map(child => ({
-            title: child.name,
-            value: child.id.toString(),
-            children: [] // Nếu có children, bạn có thể thêm chúng vào đây
-          })) || [], // Đảm bảo children là mảng, ngay cả khi không có dữ liệu con
+          children:
+            field.children?.map((child) => ({
+              title: child.name,
+              value: child.id.toString(),
+              children: [], // Nếu có children, bạn có thể thêm chúng vào đây
+            })) || [], // Đảm bảo children là mảng, ngay cả khi không có dữ liệu con
         }));
         setParentOptions(formattedTreeData);
       });
