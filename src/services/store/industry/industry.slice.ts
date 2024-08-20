@@ -88,7 +88,7 @@ const industrySlice = createSlice({
       .addCase(changeStatusIndustry.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusIndustry.fulfilled, (state, { payload }) => {
+      .addCase(changeStatusIndustry.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Trạng thái hoạt động của ngành nghề đã được cập nhật thành công";
       })
