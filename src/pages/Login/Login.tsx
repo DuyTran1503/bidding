@@ -57,7 +57,7 @@ const Login = () => {
           <div className="flex flex-col gap-5 p-8">
             <h1 className="text-gray-900 display-m-bold md:text-xl-semibold text-center">Chào mừng bạn đến với Septenary Solution</h1>
             <Formik
-              // validationSchema={validateSchema}
+              validationSchema={validateSchema}
               initialValues={loginFormInitialValues}
               validateOnBlur
               onSubmit={(data) => {
@@ -95,7 +95,7 @@ const Login = () => {
                     <Button text="Login" isLoading={state.status === EFetchStatus.PENDING} className="mt-3" />
                     <Link
                       to="/forgot-password"
-                      className="font-normal cursor-pointer text-end text-primary-700 transition-colors hover:text-primary-500"
+                      className="cursor-pointer text-end font-normal text-primary-700 transition-colors hover:text-primary-500"
                     >
                       Forgot password?
                     </Link>
