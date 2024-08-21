@@ -4,8 +4,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IFieldOfActivity } from "./field_of_activity.model";
 
 const prefix = "";
-
-// eslint-disable-next-line max-len
+ 
 export const getAllFieldOfActivities = createAsyncThunk(
   "field-of-activity/get-all-field-of-activity",
   async (payload: IThunkPayload, { rejectWithValue }) => {
@@ -26,8 +25,7 @@ export const getFieldOfActivityById = createAsyncThunk("field-of-activity/get-fi
     return rejectWithValue(error.response.data);
   }
 });
-
-// eslint-disable-next-line max-len
+ 
 export const createFieldOfActivity = createAsyncThunk(
   "field-of-activity/create-field-of-activity",
   async (payload: IThunkPayload, { rejectWithValue }) => {
@@ -39,8 +37,7 @@ export const createFieldOfActivity = createAsyncThunk(
     }
   },
 );
-
-// eslint-disable-next-line max-len
+ 
 export const updateFieldOfActivity = createAsyncThunk(
   "field-of-activity/update-field-of-activity",
   async (payload: IThunkPayload, { rejectWithValue }) => {
