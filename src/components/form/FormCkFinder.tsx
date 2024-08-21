@@ -88,6 +88,7 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
         },
       });
     } else {
+      /* eslint-disable no-console */
       console.error("CKFinder is not initialized yet");
     }
   };
@@ -99,19 +100,17 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
   const Label = () => <div className={`text-medium-md leading-0 ${isRequired ? "required-start" : ""}`}>{label}</div>;
 
   const Button = () => (
-    <>
-      <button
-        className="ck-finder-button"
-        onClick={(e) => {
-          e.preventDefault();
-          handleCkFinder();
-        }}
-        disabled={disabled}
-      >
-        <p className="ck-finder-button-text text-semibold-sm">{placeholder ?? "Chọn"}</p>
-        <Upload color="#883dcf" />
-      </button>
-    </>
+    <button
+      className="ck-finder-button"
+      onClick={(e) => {
+        e.preventDefault();
+        handleCkFinder();
+      }}
+      disabled={disabled}
+    >
+      <p className="ck-finder-button-text text-semibold-sm">{placeholder ?? "Chọn"}</p>
+      <Upload color="#883dcf" />
+    </button>
   );
   const Error = () => errors && !!errors[id] && touched && touched[id] && <div className="block">{`${errors[id]}`}</div>;
 
@@ -203,7 +202,7 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
               </div>
             );
           }
-          return <></>;
+          return null;
         })}
     </div>
   );
