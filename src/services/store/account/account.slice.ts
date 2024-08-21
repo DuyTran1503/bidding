@@ -82,7 +82,7 @@ const accountSlice = createSlice({
       .addCase(changeStatusStaff.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusStaff.fulfilled, (state, { payload }) => {
+      .addCase(changeStatusStaff.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })

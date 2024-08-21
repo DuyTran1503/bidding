@@ -4,7 +4,7 @@ import { PayloadErrors } from "@/shared/interface/error";
 export const phoneRegex = /^(?:\+84|0084|0)?[235789][0-9]{8}$/;
 //chặn khoảng trắng
 export const removeMultipleSpaces = function (value: any) {
-  return Object.keys(value)?.reduce((prev: any, key: string, index: number) => {
+  return Object.keys(value)?.reduce((prev: any, key: string) => {
     // newValue[key] = newValue[key].replace(/\s{2,}/g, ' ');
     return {
       ...prev,
