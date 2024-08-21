@@ -91,29 +91,48 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     },
     {
       id: "4",
+      label: "Dự án",
+      icon: { component: MdOutlineFactory },
+      items: [
+        {
+          id: "4.1",
+          label: "Tài liệu đính kèm",
+          path: "attachment",
+          // permissions: EPermissions.LIST_ATTACHMENT,
+        },
+        {
+          id: "4.2",
+          label: "Hồ sơ mời thầu",
+          path: "bid-document",
+          // permissions: EPermissions.LIST_BID_DOCUMENT,
+        },
+      ],
+    },
+    {
+      id: "5",
       label: "Hệ thống",
       icon: { component: IoSettingsOutline },
       items: [
         {
-          id: "4.1",
+          id: "5.1",
           label: "Vai trò",
           path: "roles",
           permissions: EPermissions.LIST_ROLE,
         },
         {
-          id: "4.2",
+          id: "5.2",
           label: "Nhân viên",
           path: "staffs",
           permissions: EPermissions.LIST_STAFF,
         },
         {
-          id: "4.3",
+          id: "5.3",
           label: "Tags",
           path: "tags",
           permissions: EPermissions.LIST_TAG,
         },
         {
-          id: "4.4",
+          id: "5.4",
           label: "Báo cáo thống kê",
           path: "statistical_reports",
           permissions: EPermissions.LIST_STATISTICAL_REPORT,
