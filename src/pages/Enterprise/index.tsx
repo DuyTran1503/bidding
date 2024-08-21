@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
-import { EPermissions } from "@/shared/enums/permissions";
 import { useEffect, useMemo, useState } from "react";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
@@ -24,7 +23,6 @@ const Enterprise = () => {
   const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const [isDelete, setIsDelete] = useState(false);
 
   const columns: ColumnsType = [
     {
@@ -109,7 +107,6 @@ const Enterprise = () => {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteEnterprise(record?.key));
-        setIsDelete(true);
       },
       // permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
     },
@@ -153,7 +150,6 @@ const Enterprise = () => {
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllEnterprise({ query: state.filter }));
-      setIsDelete(false);
     }
   }, [JSON.stringify(state.status)]);
 
@@ -169,7 +165,6 @@ const Enterprise = () => {
     return () => {
       setFilter({ page: 1, size: 10 });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
