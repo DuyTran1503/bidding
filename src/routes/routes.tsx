@@ -39,6 +39,14 @@ import CreateStaff from "@/pages/Staff/Create";
 import Staffs from "@/pages/Staff/Staffs";
 import UpdateFundingSource from "@/pages/FundingSource/Update";
 import DetailFundingSource from "@/pages/FundingSource/Detail";
+import Attachment from "@/pages/Attachment";
+import BidDocument from "@/pages/BidDocument";
+import CreateBidDocument from "@/pages/BidDocument/Create";
+import CreateAttachment from "@/pages/Attachment/Create";
+import UpdateAttachment from "@/pages/Attachment/Update";
+import DetailAttachment from "@/pages/Attachment/Detail";
+import DetailBidDocument from "@/pages/BidDocument/Detail";
+import UpdateBidDocument from "@/pages/BidDocument/Update";
 
 export interface IRoute {
   path: string;
@@ -240,6 +248,48 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateStatisticalReport />,
+              },
+            ],
+          },
+          {
+            path: "attachment",
+            pages: [
+              {
+                path: "/",
+                element: () => <Attachment />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateAttachment />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateAttachment />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailAttachment />,
+              },
+            ],
+          },
+          {
+            path: "bid-document",
+            pages: [
+              {
+                path: "/",
+                element: () => <BidDocument />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBidDocument />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBidDocument />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBidDocument />,
               },
             ],
           },
