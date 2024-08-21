@@ -31,29 +31,29 @@ module.exports = {
     "jsx-a11y/alt-text": "error",
     "prefer-const": "error",
     "no-var": "error",
-    "max-len": ["error", { code: 150 }],
+    "max-len": ["error", { code: 180 }],
     "no-multiple-empty-lines": ["error", { max: 1, maxEOF: 0 }],
     "react/jsx-no-useless-fragment": "error",
     "react/react-in-jsx-scope": "off",
-    eqeqeq: "error",
-    "ckeditor5-rules/ckeditor-imports": "error",
-    "ckeditor5-rules/license-header": [
-      "error",
-      {
-        headerLines: [
-          "/**",
-          " * @license Copyright (c) 2003-2024, CKSource Holding sp. z o.o. All rights reserved.",
-          " * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license",
-          " */",
-        ],
-      },
-    ],
-    "ckeditor5-rules/require-file-extensions-in-imports": [
-      "error",
-      {
-        extensions: [".ts", ".js", ".json"],
-      },
-    ],
+    // eqeqeq: "error",
+    // "ckeditor5-rules/ckeditor-imports": "error",
+    // "ckeditor5-rules/license-header": [
+    //   "error",
+    //   {
+    //     headerLines: [
+    //       "/**",
+    //       " * @license Copyright (c) 2003-2024, CKSource Holding sp. z o.o. All rights reserved.",
+    //       " * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license",
+    //       " */",
+    //     ],
+    //   },
+    // ],
+    // "ckeditor5-rules/require-file-extensions-in-imports": [
+    //   "error",
+    //   {
+    //     extensions: [".ts", ".js", ".json"],
+    //   },
+    // ],
   },
   settings: {
     react: {

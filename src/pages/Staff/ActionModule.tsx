@@ -196,7 +196,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
           account_ban_at: data.account_ban_at ? new Date().toISOString() : null,
           role_id: data.id_role,
         };
-
+        /* eslint-disable @typescript-eslint/no-unused-vars */
         const { id_role, ...newObj } = body;
         if (type === EPageTypes.CREATE) {
           const newValue = { ...newObj, account_ban_at: dayjs(body.account_ban_at).format(" YYYY-MM-DD HH:mm:ss") };

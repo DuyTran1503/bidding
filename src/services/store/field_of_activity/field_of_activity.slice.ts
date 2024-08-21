@@ -3,7 +3,7 @@ import { IFieldOfActivity } from "./field_of_activity.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { commonStaticReducers } from "@/services/shared";
-// eslint-disable-next-line max-len
+ 
 import {
   createFieldOfActivity,
   deleteFieldOfActivity,
