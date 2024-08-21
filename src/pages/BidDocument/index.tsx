@@ -15,6 +15,7 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IBidDocumentInitialState, resetStatus, setFilter } from "@/services/store/bid_document/bid_document.slice";
 import { changeStatusBidDocument, deleteBidDocument, getAllBidDocument } from "@/services/store/bid_document/bid_document.thunk";
+import CommonSwitch from "@/components/common/CommonSwitch";
 
 const BidDocument = () => {
   const navigate = useNavigate();
@@ -78,32 +79,25 @@ const BidDocument = () => {
       title: "Thứ hạng",
       className: "w-[250px]",
     },
-    {
-      dataIndex: "status",
-      title: "Trạng thái",
-      className: "w-[250px]",
-    },
-
     // {
+    //   dataIndex: "status",
     //   title: "Trạng thái",
-    //   dataIndex: "is_active",
-    //   render(_, record) {
-    //     return (
-    //       <>
-    //         <CommonSwitch
-    //           onChange={() => handleChangeStatus(record)}
-    //           checked={!!record.is_active}
-    //           title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
-    //         />
-    //         <CommonSwitch
-    //           onChange={() => handleChangeStatus(record)}
-    //           checked={!!record.is_blacklisted}
-    //           title={`Bạn có chắc chắn muốn ${record.is_blacklisted ? "bỏ cấm" : "cấm"} tài khoản này?`}
-    //         />
-    //       </>
-    //     );
-    //   },
+    //   className: "w-[250px]",
     // },
+
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      render(_, record) {
+        return (
+          <CommonSwitch
+            onChange={() => handleChangeStatus(record)}
+            checked={!!record.is_active}
+            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
+          />
+        );
+      },
+    },
   ];
   const buttons: IGridButton[] = [
     {
