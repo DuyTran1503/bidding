@@ -96,13 +96,14 @@ const fundingSourceSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
+      // change
     builder
       .addCase(changeStatusFundingSource.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusFundingSource.fulfilled, (state) => {
+      .addCase(changeStatusFundingSource.fulfilled, (state,) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Thay đổi trạng thái thành công";
+        state.message = "Trạng thái hoạt động của nguồn tài trợ đã được cập nhật thành công";
       })
       .addCase(changeStatusFundingSource.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
