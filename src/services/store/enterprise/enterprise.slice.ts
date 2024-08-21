@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
@@ -13,6 +12,7 @@ import {
 } from "./enterprise.thunk";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { IEnterprise } from "./enterprise.model";
 
 export interface IEnterpriseInitialState extends IInitialState {
   enterprises: IEnterprise[];
@@ -96,7 +96,7 @@ const enterpriseSlice = createSlice({
       .addCase(changeStatusEnterprise.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusEnterprise.fulfilled, (state, { payload }) => {
+      .addCase(changeStatusEnterprise.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })

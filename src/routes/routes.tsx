@@ -11,14 +11,6 @@ import Orders from "@/pages/Order/Orders/Orders";
 import Roles from "@/pages/Role/Roles/Roles";
 import CreateRole from "@/pages/Role/CreateRole/CreateRole";
 import UpdateRole from "@/pages/Role/UpdateRole/UpdateRole";
-import Permissions from "@/pages/Permission/Permissions/Permissions";
-import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
-import { EPermissions } from "@/shared/enums/permissions";
-import Tags from "@/pages/Tag/Tags/Tags";
-import CreateTag from "@/pages/Tag/CreateTag/CreateTag";
-import UpdateTag from "@/pages/Tag/UpdateTag/UpdateTag";
-import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermission";
-import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
 import FundingSources from "@/pages/FundingSource";
 import CreateFundingSource from "@/pages/FundingSource/Create";
 import BusinessActivities from "@/pages/BusinessActivities";
@@ -159,23 +151,6 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "tags",
-            pages: [
-              {
-                path: "/",
-                element: () => <Tags />,
-              },
-              {
-                path: "/create",
-                element: () => <CreateTag />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateTag />,
-              },
-            ],
-          },
-          {
             path: "business_activity",
             pages: [
               {
@@ -210,7 +185,7 @@ export const routes: IRoute[] = [
               {
                 path: "/detail/:id",
                 element: () => <DetailFundingSource />,
-              }
+              },
             ],
           },
           {
@@ -268,28 +243,6 @@ export const routes: IRoute[] = [
               },
             ],
           },
-          {
-            path: "permissions",
-            middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
-            pages: [
-              {
-                path: "/",
-                element: () => <Permissions />,
-                middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
-              },
-              {
-                path: "/create",
-                element: () => <CreatePermission />,
-                middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.CREATE_PERMISSION]} />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdatePermission />,
-                middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.UPDATE_PERMISSION]} />,
-              },
-            ],
-          },
-          
         ],
       },
       {
