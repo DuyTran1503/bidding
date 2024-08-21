@@ -149,7 +149,6 @@ const Industry = () => {
     return () => {
       setFilter({ page: 1, size: 10 });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
