@@ -100,7 +100,7 @@ const businessActivitySlice = createSlice({
       .addCase(changeStatusBusinessActivity.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusBusinessActivity.fulfilled, (state, { payload }) => {
+      .addCase(changeStatusBusinessActivity.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })

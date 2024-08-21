@@ -1,4 +1,4 @@
-interface IEnterprise {
+export interface IEnterprise {
   id: string | number;
   name: string;
   address: string;
