@@ -4,26 +4,26 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
 import {
-  changeStatusAttachment,
-  createAttachment,
-  deleteAttachment,
-  getAllAttachment,
-  getAttachmentById,
-  updateAttachment,
-} from "./attachment.thunk";
+  changeStatusBidDocument,
+  createBidDocument,
+  deleteBidDocument,
+  getAllBidDocument,
+  getBidDocumentById,
+  updateBidDocument,
+} from "./bid_document.thunk";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
-import { IAttachment } from "./attachment.model";
+import { IBidDocument } from "./bid_document.model";
 
-export interface IAttachmentInitialState extends IInitialState {
-  attachments: IAttachment[];
-  attachment?: IAttachment | any;
+export interface IBidDocumentInitialState extends IInitialState {
+  bidDocuments: IBidDocument[];
+  bidDocument?: IBidDocument | any;
 }
 
-const initialState: IAttachmentInitialState = {
+const initialState: IBidDocumentInitialState = {
   status: EFetchStatus.IDLE,
-  attachments: [],
-  attachment: undefined,
+  bidDocuments: [],
+  bidDocument: undefined,
   message: "",
   error: undefined,
   filter: {
@@ -34,11 +34,11 @@ const initialState: IAttachmentInitialState = {
   number_of_elements: 0,
 };
 
-const attachmentSlice = createSlice({
-  name: "attachment",
+const bidDocumentSlice = createSlice({
+  name: "bid_document",
   initialState,
   reducers: {
-    ...commonStaticReducers<IAttachmentInitialState>(),
+    ...commonStaticReducers<IBidDocumentInitialState>(),
     fetching(state) {
       state.loading = true;
     },
@@ -49,76 +49,76 @@ const attachmentSlice = createSlice({
 
   extraReducers(builder) {
     builder
-      .addCase(getAllAttachment.fulfilled, (state, { payload }: PayloadAction<IResponse<IAttachment[]> | any>) => {
+      .addCase(getAllBidDocument.fulfilled, (state, { payload }: PayloadAction<IResponse<IBidDocument[]> | any>) => {
         if (payload.data) {
-          state.attachments = payload.data.data;
+          state.bidDocuments = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;
           state.number_of_elements = payload?.data?.number_of_elements;
         }
       })
-      .addCase(getAllAttachment.rejected, (state, { payload }: PayloadAction<IResponse<IAttachment[]> | any>) => {
+      .addCase(getAllBidDocument.rejected, (state, { payload }: PayloadAction<IResponse<IBidDocument[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
     builder
-      .addCase(getAttachmentById.fulfilled, (state, { payload }: PayloadAction<IAttachment> | any) => {
-        state.attachment = payload.data;
+      .addCase(getBidDocumentById.fulfilled, (state, { payload }: PayloadAction<IBidDocument> | any) => {
+        state.bidDocument = payload.data;
         state.loading = false;
       })
-      .addCase(getAttachmentById.rejected, (state, { payload }: PayloadAction<IAttachment> | any) => {
-        state.attachment = payload.data;
+      .addCase(getBidDocumentById.rejected, (state, { payload }: PayloadAction<IBidDocument> | any) => {
+        state.bidDocument = payload.data;
         state.message = transformPayloadErrors(payload?.errors);
         state.loading = true;
       });
     builder
-      .addCase(createAttachment.pending, (state) => {
+      .addCase(createBidDocument.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(createAttachment.fulfilled, (state) => {
+      .addCase(createBidDocument.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Tạo mới thành công ";
       })
-      .addCase(createAttachment.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+      .addCase(createBidDocument.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
     builder
-      .addCase(updateAttachment.pending, (state) => {
+      .addCase(updateBidDocument.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(updateAttachment.fulfilled, (state) => {
+      .addCase(updateBidDocument.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Cập nhật thành công";
       })
-      .addCase(updateAttachment.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+      .addCase(updateBidDocument.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
     builder
-      .addCase(changeStatusAttachment.pending, (state) => {
+      .addCase(changeStatusBidDocument.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusAttachment.fulfilled, (state) => {
+      .addCase(changeStatusBidDocument.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })
-      .addCase(changeStatusAttachment.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+      .addCase(changeStatusBidDocument.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Delete tag
     builder
-      .addCase(deleteAttachment.pending, (state) => {
+      .addCase(deleteBidDocument.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(deleteAttachment.fulfilled, (state, { payload }) => {
+      .addCase(deleteBidDocument.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Xóa thành công";
-        state.businessActivities = state.attachments.filter((item) => String(item.id) !== payload);
+        state.businessActivities = state.bidDocuments.filter((item) => String(item.id) !== payload);
       })
-      .addCase(deleteAttachment.rejected, (state) => {
+      .addCase(deleteBidDocument.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
       });
   },
 });
-export const { fetching, setFilter, resetStatus, resetMessageError } = attachmentSlice.actions;
-export { attachmentSlice };
+export const { fetching, setFilter, resetStatus, resetMessageError } = bidDocumentSlice.actions;
+export { bidDocumentSlice };
