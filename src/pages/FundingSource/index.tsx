@@ -69,9 +69,8 @@ const FundingSources = () => {
     {
       dataIndex: "desciption",
       title: "Mô tả",
-      className: " text-compact-3 h-[90px]",
       render(_, record) {
-        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
+        return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
       },
     },
     {
