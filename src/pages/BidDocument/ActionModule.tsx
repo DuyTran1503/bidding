@@ -6,8 +6,6 @@ import FormInput from "@/components/form/FormInput";
 import { useArchive } from "@/hooks/useArchive";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { EPageTypes } from "@/shared/enums/page";
-import FormSwitch from "@/components/form/FormSwitch";
-import FormInputArea from "@/components/form/FormInputArea";
 import { Col, Row } from "antd";
 import { useEffect } from "react";
 import { IBidDocumentInitialState, resetMessageError } from "@/services/store/bid_document/bid_document.slice";

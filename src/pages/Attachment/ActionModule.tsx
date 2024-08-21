@@ -1,4 +1,4 @@
-import { Formik, Form } from "formik";
+import { Formik } from "formik";
 import { object, string } from "yup";
 import lodash from "lodash";
 import FormGroup from "@/components/form/FormGroup";
@@ -6,8 +6,6 @@ import FormInput from "@/components/form/FormInput";
 import { useArchive } from "@/hooks/useArchive";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { EPageTypes } from "@/shared/enums/page";
-import FormSwitch from "@/components/form/FormSwitch";
-import FormInputArea from "@/components/form/FormInputArea";
 import { Col, Row } from "antd";
 import { useEffect } from "react";
 import { IAttachmentInitialState, resetMessageError } from "@/services/store/attachment/attachment.slice";
