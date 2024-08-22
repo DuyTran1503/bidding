@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
-import { EPermissions } from "@/shared/enums/permissions";
 import { useEffect, useMemo, useState } from "react";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
@@ -24,12 +23,13 @@ const Enterprise = () => {
   const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const [isDelete, setIsDelete] = useState(false);
+  console.log(state.enterprises);
 
   const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",
+      className: "w-[100px]",
     },
     {
       dataIndex: "name",
@@ -40,7 +40,7 @@ const Enterprise = () => {
       title: "Tên người đại diện",
     },
     {
-      dataIndex: "contact_phone",
+      dataIndex: "phone",
       title: "Điện thoại",
     },
     {
@@ -94,14 +94,14 @@ const Enterprise = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/business_activity/detail/${record?.key}`);
+        navigate(`/enterprise/detail/${record?.key}`);
       },
       // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/business_activity/update/${record?.key}`);
+        navigate(`/enterprise/update/${record?.key}`);
       },
       // permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },
@@ -109,7 +109,6 @@ const Enterprise = () => {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteEnterprise(record?.key));
-        setIsDelete(true);
       },
       // permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
     },
@@ -124,12 +123,12 @@ const Enterprise = () => {
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.enterprises)
-      ? state.enterprises.map(({ id, name, representative, contact_phone, email, address, is_active, is_blacklisted }, index) => ({
+      ? state.enterprises.map(({ id, name, representative, phone, email, address, is_active, is_blacklisted }, index) => ({
           index: index + 1,
           key: id,
           name,
           representative,
-          contact_phone,
+          phone,
           email,
           address,
           is_active,
@@ -153,7 +152,6 @@ const Enterprise = () => {
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllEnterprise({ query: state.filter }));
-      setIsDelete(false);
     }
   }, [JSON.stringify(state.status)]);
 
@@ -169,7 +167,6 @@ const Enterprise = () => {
     return () => {
       setFilter({ page: 1, size: 10 });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
