@@ -24,7 +24,7 @@ export interface IEnterpriseInitialValues {
   name: string;
   address: string;
   representative: string;
-  contact_phone: string;
+  phone: string;
   email: string;
   website?: string;
   join_date: string;
@@ -47,7 +47,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     address: enterprise?.address ?? "",
     description: enterprise?.description ?? "",
     representative: enterprise?.representative ?? "",
-    contact_phone: enterprise?.contact_phone ?? "",
+    phone: enterprise?.phone ?? "",
     email: enterprise?.email ?? "",
     join_date: enterprise?.join_date ?? "",
     id_business_activity: enterprise?.id_business_activity ?? [],
@@ -143,10 +143,10 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 <FormInput
                   label="Số điện thoại liên hệ"
                   placeholder="Nhập số điện thoại liên hệ..."
-                  name="contact_phone"
-                  value={values.contact_phone}
-                  error={touched.contact_phone ? errors.contact_phone : ""}
-                  onChange={(e) => setFieldValue("contact_phone", e)}
+                  name="phone"
+                  value={values.phone}
+                  error={touched.phone ? errors.phone : ""}
+                  onChange={(e) => setFieldValue("phone", e)}
                   onBlur={handleBlur}
                 />
               </FormGroup>
