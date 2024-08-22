@@ -3,7 +3,6 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
 import { resetStatus } from "@/services/store/industry/industry.slice";
-import { getIndustryById } from "@/services/store/industry/industry.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import { FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";

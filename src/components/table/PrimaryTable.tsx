@@ -51,7 +51,7 @@ const PrimaryTable = <T extends ISearchParams>({
   const dispatch = useDispatch();
 
   const getShowingText = (total: number, range: [number, number]) => {
-    return `Showing ${range[0]}-${range[1]} of ${total}`;
+    return `Hiển thị ${range[0]}-${range[1]} của ${total}`;
   };
 
   const handleTableChange = (pagination: any) => {

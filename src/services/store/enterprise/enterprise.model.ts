@@ -1,9 +1,9 @@
-interface IEnterprise {
+export interface IEnterprise {
   id: string | number;
   name: string;
   address: string;
   representative: string;
-  contact_phone: string;
+  phone: string;
   email: string;
   website?: string;
   join_date?: string;

@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
@@ -13,6 +12,7 @@ import {
 } from "./enterprise.thunk";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { IEnterprise } from "./enterprise.model";
 
 export interface IEnterpriseInitialState extends IInitialState {
   enterprises: IEnterprise[];
@@ -50,7 +50,7 @@ const enterpriseSlice = createSlice({
     builder
       .addCase(getAllEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IEnterprise[]> | any>) => {
         if (payload.data) {
-          state.businessActivities = payload.data.data;
+          state.enterprises = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;
           state.number_of_elements = payload?.data?.number_of_elements;
         }
@@ -60,11 +60,11 @@ const enterpriseSlice = createSlice({
       });
     builder
       .addCase(getEnterpriseById.fulfilled, (state, { payload }: PayloadAction<IEnterprise> | any) => {
-        state.businessActivity = payload.data;
+        state.enterprise = payload.data;
         state.loading = false;
       })
       .addCase(getEnterpriseById.rejected, (state, { payload }: PayloadAction<IEnterprise> | any) => {
-        state.businessActivity = payload.data;
+        state.enterprise = payload.data;
         state.message = transformPayloadErrors(payload?.errors);
         state.loading = true;
       });
@@ -96,7 +96,7 @@ const enterpriseSlice = createSlice({
       .addCase(changeStatusEnterprise.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusEnterprise.fulfilled, (state, { payload }) => {
+      .addCase(changeStatusEnterprise.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })
@@ -112,7 +112,7 @@ const enterpriseSlice = createSlice({
       .addCase(deleteEnterprise.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Xóa thành công";
-        state.businessActivities = state.enterprises.filter((item) => String(item.id) !== payload);
+        state.enterprises = state.enterprises.filter((item) => String(item.id) !== payload);
       })
       .addCase(deleteEnterprise.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
