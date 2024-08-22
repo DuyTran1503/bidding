@@ -48,7 +48,7 @@ const index = () => {
           name: data.name,
           address: data.address,
           representative: data.representative,
-          contact_phone: data.contact_phone,
+          phone: data.phone,
           email: data.email,
           website: data.website,
           join_date: data.join_date,

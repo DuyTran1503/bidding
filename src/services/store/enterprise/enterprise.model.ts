@@ -3,7 +3,7 @@ export interface IEnterprise {
   name: string;
   address: string;
   representative: string;
-  contact_phone: string;
+  phone: string;
   email: string;
   website?: string;
   join_date?: string;
