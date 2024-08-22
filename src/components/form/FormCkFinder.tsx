@@ -1,7 +1,6 @@
 import { ResourceType } from "@/shared/enums/resourceType";
 import { IFile } from "@/shared/interface/file";
-import { ForwardedRef, forwardRef, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { ForwardedRef, forwardRef, useEffect } from "react";
 import Upload from "../icon/Upload";
 import { getFileExtension } from "@/shared/utils/common/function";
 import { ETYPEFILE } from "@/shared/enums/fileType";
@@ -36,17 +35,10 @@ interface IProps {
 
 const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: ForwardedRef<any>) {
   const {
-    name,
-    setFieldValue,
     value,
-    selectedFiles = [],
     disabled = false,
-    multiFiles = false,
-    buttonTitle = "Tải lên ảnh",
     onChange,
-    isHideButton,
     className,
-    maxWidth,
     direction,
     isRequired,
     resourceTypes,
@@ -58,12 +50,12 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
     touched,
     id,
   } = props;
-  const [imageLink, setImageLink] = useState(value);
+  // const [imageLink, setImageLink] = useState(value);
 
-  useEffect(() => {
-    if (!value) return;
-    setImageLink(value);
-  }, [value]);
+  // useEffect(() => {
+  //   if (!value) return;
+  //   setImageLink(value);
+  // }, [value]);
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js";
@@ -92,10 +84,11 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
 
             onChange && onChange([...value, ...files]);
           });
-          finder.on("file:choose:resizedImage", function (evt: any) {});
+          finder.on("file:choose:resizedImage", function () {});
         },
       });
     } else {
+      /* eslint-disable no-console */
       console.error("CKFinder is not initialized yet");
     }
   };
@@ -107,19 +100,17 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
   const Label = () => <div className={`text-medium-md leading-0 ${isRequired ? "required-start" : ""}`}>{label}</div>;
 
   const Button = () => (
-    <>
-      <button
-        className="ck-finder-button"
-        onClick={(e) => {
-          e.preventDefault();
-          handleCkFinder();
-        }}
-        disabled={disabled}
-      >
-        <p className="ck-finder-button-text text-semibold-sm">{placeholder ?? "Chọn"}</p>
-        <Upload color="#883dcf" />
-      </button>
-    </>
+    <button
+      className="ck-finder-button"
+      onClick={(e) => {
+        e.preventDefault();
+        handleCkFinder();
+      }}
+      disabled={disabled}
+    >
+      <p className="ck-finder-button-text text-semibold-sm">{placeholder ?? "Chọn"}</p>
+      <Upload color="#883dcf" />
+    </button>
   );
   const Error = () => errors && !!errors[id] && touched && touched[id] && <div className="block">{`${errors[id]}`}</div>;
 
@@ -211,7 +202,7 @@ const FormCkFinder = forwardRef(function FormCkFinder(props: IProps, ref?: Forwa
               </div>
             );
           }
-          return <></>;
+          return null;
         })}
     </div>
   );

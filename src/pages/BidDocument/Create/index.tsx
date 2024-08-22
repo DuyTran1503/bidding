@@ -2,27 +2,26 @@ import { useRef } from "react";
 import { FaPlus } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import TagForm, { ITagFormInitialValues } from "../TagForm";
 import { FormikProps } from "formik";
 import Heading from "@/components/layout/Heading";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { ITagInitialState, resetStatus } from "@/services/store/tag/tag.slice";
 import { useArchive } from "@/hooks/useArchive";
-
-const CreateTag = () => {
+import { EPageTypes } from "@/shared/enums/page";
+import BidDocumentForm, { IBidDocumentInitialValues } from "../ActionModule";
+import { IBidDocumentInitialState, resetStatus } from "@/services/store/bid_document/bid_document.slice";
+const CreateBidDocument = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<ITagFormInitialValues>>(null);
-
-  const { state } = useArchive<ITagInitialState>("tag");
+  const formikRef = useRef<FormikProps<IBidDocumentInitialValues>>(null);
+  const { state } = useArchive<IBidDocumentInitialState>("bid_document");
 
   useFetchStatus({
-    module: "tag",
+    module: "bid_document",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/tags",
+        navigate: "/bid-document",
       },
       error: {
         message: state.message,
@@ -33,20 +32,20 @@ const CreateTag = () => {
   return (
     <>
       <Heading
-        title="Create Tag"
+        title="Tạo mới "
         hasBreadcrumb
         buttons={[
           {
             type: "secondary",
-            text: "Cancel",
+            text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/tags");
+              navigate("/bid-document");
             },
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
-            text: "Create Tag",
+            text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
               if (formikRef.current) {
@@ -56,9 +55,9 @@ const CreateTag = () => {
           },
         ]}
       />
-      <TagForm type="create" formikRef={formikRef} />
+      <BidDocumentForm type={EPageTypes.CREATE} formikRef={formikRef} />
     </>
   );
 };
 
-export default CreateTag;
+export default CreateBidDocument;

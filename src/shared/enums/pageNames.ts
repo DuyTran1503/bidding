@@ -16,5 +16,6 @@ export enum EPageNames {
   bidding_fields = "Lĩnh vực đấu thầu",
   bidding_types = "Loại hình đấu thầu",
   statistical_reports = "Báo cáo thống kê",
-  industry = "Ngành kinh doanh",
+  attachment = "Tài liệu đính kèm",
+  "bid-document" = "Hồ sơ mời thầu",
 }
