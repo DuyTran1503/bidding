@@ -1,6 +1,5 @@
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
-import FormModal from "@/components/form/FormModal";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
@@ -14,7 +13,7 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
@@ -22,16 +21,14 @@ import { useNavigate } from "react-router-dom";
 const FundingSources = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IFundingSourceInitialState>("funding_source");
-  const [isModal, setIsModal ] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const [modalContent, setModalContent] = useState<ReactNode>(null);
 
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/funding-sources/detail/${record?.key}`);;
+        navigate(`/funding-sources/detail/${record?.key}`);
       },
       permission: EPermissions.DETAIL_FUNDING_SOURCE,
     },
@@ -50,7 +47,7 @@ const FundingSources = () => {
       permission: EPermissions.DESTROY_FUNDING_SOURCE,
     },
   ];
- 
+
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -59,7 +56,7 @@ const FundingSources = () => {
     {
       dataIndex: "name",
       title: "Tên nguồn tài trợ",
-      className: "w-[250px]"
+      className: "w-[250px]",
     },
     {
       dataIndex: "type",
@@ -72,31 +69,29 @@ const FundingSources = () => {
     {
       dataIndex: "desciption",
       title: "Mô tả",
-      className: " text-compact-3 h-[90px]",
       render(_, record) {
-        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
+        return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
       },
     },
     {
       title: "Trạng thái",
       dataIndex: "is_active",
-      render(_,record) {
+      render(_, record) {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
             checked={!!record.is_active}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
-        )
-      }
+        );
+      },
     },
-
   ];
 
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
-  }
+  };
 
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
@@ -106,33 +101,28 @@ const FundingSources = () => {
 
   const search: ISearchTypeTable[] = [
     {
-        id: "name",
-        placeholder: "Nhập tên nguồn tài trợ...",
-        label: "Tên nguồn tài trợ",
-        type: "text",
+      id: "name",
+      placeholder: "Nhập tên nguồn tài trợ...",
+      label: "Tên nguồn tài trợ",
+      type: "text",
     },
-];
+  ];
 
   const data: ITableData[] = useMemo(
-    () => 
+    () =>
       state.fundingSources && state.fundingSources.length > 0
-      ? state.fundingSources.map(({ id, name, code, type, description, is_active }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        code,
-        type,
-        description,
-        is_active,
-      }))
-      : [],
-   [JSON.stringify(state.fundingSources)]);
-
-
-
-  const handleCancel = () => {
-    setIsModalOpen(false)
-  };
+        ? state.fundingSources.map(({ id, name, code, type, description, is_active }, index) => ({
+            index: index + 1,
+            key: id,
+            name,
+            code,
+            type,
+            description,
+            is_active,
+          }))
+        : [],
+    [JSON.stringify(state.fundingSources)],
+  );
 
   useEffect(() => {
     dispatch(getAllFundingSources({ query: state.filter }));
@@ -178,9 +168,6 @@ const FundingSources = () => {
           },
         ]}
       />
-      <FormModal open={isModalOpen} onCancel={handleCancel}>
-        {modalContent}
-      </FormModal>
       <ConfirmModal
         title={"Xác nhận"}
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}

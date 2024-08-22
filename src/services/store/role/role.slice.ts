@@ -61,6 +61,7 @@ const roleSlice = createSlice({
         state.loading = true;
       })
       .addCase(getRoleById.fulfilled, (state, { payload }: PayloadAction<IUpdateRole> | any) => {
+        /* eslint-disable @typescript-eslint/no-unused-vars */
         const { permissions, created_at, guard_name, ...rest } = payload.role;
         state.activeRole = {
           permissions: payload?.id_permission_checked,

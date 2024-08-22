@@ -12,7 +12,7 @@ interface IFormModalProps {
   submitText?: string;
 }
 
-const FormModal = ({ title, open, onCancel, cancelText = "Cancel", isCancelDisabled = false, children, submitText }: IFormModalProps) => {
+const FormModal = ({ title, open, onCancel, cancelText = "Cancel", isCancelDisabled = false, children }: IFormModalProps) => {
   return (
     <Modal
       title={title}

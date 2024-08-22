@@ -44,9 +44,8 @@ const BusinessActivities = () => {
     {
       dataIndex: "description",
       title: "Mô tả",
-      className: " text-compact-3 h-[90px]",
       render(_, record) {
-        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
+        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }} className="text-compact-3"></div>;
       },
     },
     {
