@@ -1,19 +1,23 @@
-export interface IEnterprise {
-  id: string | number;
+ export interface IProject {
+  id: number|string;
+  parent_id?: number |string;
+  children?: IProject[] | null;
   name: string;
-  address: string;
-  representative: string;
-  contact_phone: string;
-  email: string;
-  website?: string;
-  join_date?: string;
-  id_business_activity: string[];
-  description?: string;
-  tax_code?: string;
-  organization_type?: string;
-  representative_name?: string;
-  business_registration_date?: string;
-  business_registration_number?: string;
-  is_active?: boolean;
-  is_blacklisted?: boolean;
+  bidding_field_id: number |string;
+  staff_id?: number |string;
+  release_date: string;
+  decision_issuance: string;
+  owner_representative: string;
+  tenderer_representative: string;
+  location: string;
+  funding_source_id: number|string;
+  tender_package_price: number;
+  description: string;
+  invest_total: number;
+  tender_date: string;
+  enterprise_id: number;
+  technical_requirements: string;
+  status?: string;
+  start_time?: string;
+  end_time?: string;
 }
