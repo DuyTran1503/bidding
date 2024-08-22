@@ -23,11 +23,13 @@ const Enterprise = () => {
   const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+  console.log(state.enterprises);
 
   const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",
+      className: "w-[100px]",
     },
     {
       dataIndex: "name",
@@ -38,7 +40,7 @@ const Enterprise = () => {
       title: "Tên người đại diện",
     },
     {
-      dataIndex: "contact_phone",
+      dataIndex: "phone",
       title: "Điện thoại",
     },
     {
@@ -92,14 +94,14 @@ const Enterprise = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/business_activity/detail/${record?.key}`);
+        navigate(`/enterprise/detail/${record?.key}`);
       },
       // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/business_activity/update/${record?.key}`);
+        navigate(`/enterprise/update/${record?.key}`);
       },
       // permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },
@@ -121,12 +123,12 @@ const Enterprise = () => {
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.enterprises)
-      ? state.enterprises.map(({ id, name, representative, contact_phone, email, address, is_active, is_blacklisted }, index) => ({
+      ? state.enterprises.map(({ id, name, representative, phone, email, address, is_active, is_blacklisted }, index) => ({
           index: index + 1,
           key: id,
           name,
           representative,
-          contact_phone,
+          phone,
           email,
           address,
           is_active,

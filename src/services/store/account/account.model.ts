@@ -16,5 +16,5 @@ export interface IStaff {
   account_ban_at?: string | null;
   created_at?: string;
   updated_at?: string;
-  taxcode: string;
+  phone: string;
 }

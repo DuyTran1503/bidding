@@ -2,27 +2,19 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
-import {
-  changeStatusEnterprise,
-  createEnterprise,
-  deleteEnterprise,
-  getAllEnterprise,
-  getEnterpriseById,
-  updateEnterprise,
-} from "./enterprise.thunk";
+import { changeStatusProject, createProject, deleteProject, getAllProject, getProjectById, updateProject } from "./project.thunk.ts";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
-import { IEnterprise } from "./enterprise.model";
+import { IProject } from "./project.model.ts";
 
-export interface IEnterpriseInitialState extends IInitialState {
-  enterprises: IEnterprise[];
-  enterprise?: IEnterprise | any;
+export interface IProjectInitialState extends IInitialState {
+  projects: IProject[];
+  project?: IProject | any;
 }
-
-const initialState: IEnterpriseInitialState = {
+const initialState: IProjectInitialState = {
   status: EFetchStatus.IDLE,
-  enterprises: [],
-  enterprise: undefined,
+  projects: [],
+  project: undefined,
   message: "",
   error: undefined,
   filter: {
@@ -33,11 +25,11 @@ const initialState: IEnterpriseInitialState = {
   number_of_elements: 0,
 };
 
-const enterpriseSlice = createSlice({
-  name: "enterprise",
+const projectSlice = createSlice({
+  name: "project",
   initialState,
   reducers: {
-    ...commonStaticReducers<IEnterpriseInitialState>(),
+    ...commonStaticReducers<IProjectInitialState>(),
     fetching(state) {
       state.loading = true;
     },
@@ -48,76 +40,76 @@ const enterpriseSlice = createSlice({
 
   extraReducers(builder) {
     builder
-      .addCase(getAllEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IEnterprise[]> | any>) => {
+      .addCase(getAllProject.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
         if (payload.data) {
-          state.businessActivities = payload.data.data;
+          state.projects = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;
           state.number_of_elements = payload?.data?.number_of_elements;
         }
       })
-      .addCase(getAllEnterprise.rejected, (state, { payload }: PayloadAction<IResponse<IEnterprise[]> | any>) => {
+      .addCase(getAllProject.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
     builder
-      .addCase(getEnterpriseById.fulfilled, (state, { payload }: PayloadAction<IEnterprise> | any) => {
-        state.businessActivity = payload.data;
+      .addCase(getProjectById.fulfilled, (state, { payload }: PayloadAction<IProject> | any) => {
+        state.project = payload.data;
         state.loading = false;
       })
-      .addCase(getEnterpriseById.rejected, (state, { payload }: PayloadAction<IEnterprise> | any) => {
-        state.businessActivity = payload.data;
+      .addCase(getProjectById.rejected, (state, { payload }: PayloadAction<IProject> | any) => {
+        state.project = payload.data;
         state.message = transformPayloadErrors(payload?.errors);
         state.loading = true;
       });
     builder
-      .addCase(createEnterprise.pending, (state) => {
+      .addCase(createProject.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(createEnterprise.fulfilled, (state) => {
+      .addCase(createProject.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Tạo mới thành công ";
       })
-      .addCase(createEnterprise.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+      .addCase(createProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
     builder
-      .addCase(updateEnterprise.pending, (state) => {
+      .addCase(updateProject.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(updateEnterprise.fulfilled, (state) => {
+      .addCase(updateProject.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Cập nhật thành công";
       })
-      .addCase(updateEnterprise.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+      .addCase(updateProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
     builder
-      .addCase(changeStatusEnterprise.pending, (state) => {
+      .addCase(changeStatusProject.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusEnterprise.fulfilled, (state) => {
+      .addCase(changeStatusProject.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Thay đổi trạng thái thành công";
       })
-      .addCase(changeStatusEnterprise.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+      .addCase(changeStatusProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Delete tag
     builder
-      .addCase(deleteEnterprise.pending, (state) => {
+      .addCase(deleteProject.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(deleteEnterprise.fulfilled, (state, { payload }) => {
+      .addCase(deleteProject.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Xóa thành công";
-        state.businessActivities = state.enterprises.filter((item) => String(item.id) !== payload);
+        state.projects = state.projects.filter((item) => String(item.id) !== payload);
       })
-      .addCase(deleteEnterprise.rejected, (state) => {
+      .addCase(deleteProject.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
       });
   },
 });
-export const { fetching, setFilter, resetStatus, resetMessageError } = enterpriseSlice.actions;
-export { enterpriseSlice };
+export const { fetching, setFilter, resetStatus, resetMessageError } = projectSlice.actions;
+export { projectSlice };
