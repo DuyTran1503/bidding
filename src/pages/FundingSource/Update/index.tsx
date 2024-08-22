@@ -6,7 +6,7 @@ import Heading from "@/components/layout/Heading";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
-import FundingSourceForm, { IFundingSourceFormInitialValues } from "../ActionModule";
+import FundingSourceForm, { IFundingSourceInitialValues } from "../ActionModule";
 import { IFundingSourceInitialState, resetStatus } from "@/services/store/funding_source/funding_source.slice";
 import { getFundingSourceById } from "@/services/store/funding_source/funding_source.thunk";
 import { FaPlus } from "react-icons/fa";
@@ -14,10 +14,10 @@ import { EPageTypes } from "@/shared/enums/page";
 
 const UpdateFundingSource = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IFundingSourceFormInitialValues>>(null);
+  const formikRef = useRef<FormikProps<IFundingSourceInitialValues>>(null);
   const { id } = useParams();
   const { state, dispatch } = useArchive<IFundingSourceInitialState>("funding_source");
-  const [data, setData] = useState<IFundingSourceFormInitialValues>();
+  const [data, setData] = useState<IFundingSourceInitialValues>();
 
   useFetchStatus({
     module: "funding_source",
@@ -58,7 +58,7 @@ const UpdateFundingSource = () => {
       }
     }
   }, [data]);
-  
+
   return (
     <>
       <Heading
