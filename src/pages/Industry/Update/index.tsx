@@ -37,10 +37,10 @@ const UpdateIndustry = () => {
     }
   }, [id]);
   useEffect(() => {
-    if (!!state.businessActivity) {
-      setData(state.businessActivity);
+    if (!!state.industry) {
+      setData(state.industry);
     }
-  }, [JSON.stringify(state.businessActivity)]);
+  }, [JSON.stringify(state.industry)]);
 
   useEffect(() => {
     if (data) {
@@ -80,7 +80,7 @@ const UpdateIndustry = () => {
           },
         ]}
       />
-      <IndustryForm type={EPageTypes.UPDATE} formikRef={formikRef} industry={data} />
+      <IndustryForm type={EPageTypes.UPDATE} formikRef={formikRef} industry={state.industry} />
     </>
   );
 };

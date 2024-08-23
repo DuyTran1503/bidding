@@ -8,21 +8,25 @@ import {
   deleteEnterprise,
   getAllEnterprise,
   getEnterpriseById,
+  getIndustries,
   updateEnterprise,
 } from "./enterprise.thunk";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IEnterprise } from "./enterprise.model";
+import { IIndustry } from "../industry/industry.model";
 
 export interface IEnterpriseInitialState extends IInitialState {
   enterprises: IEnterprise[];
   enterprise?: IEnterprise | any;
+  industries?: IIndustry[];
 }
 
 const initialState: IEnterpriseInitialState = {
   status: EFetchStatus.IDLE,
   enterprises: [],
   enterprise: undefined,
+  industries: [],
   message: "",
   error: undefined,
   filter: {
@@ -78,7 +82,7 @@ const enterpriseSlice = createSlice({
       })
       .addCase(createEnterprise.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
     builder
       .addCase(updateEnterprise.pending, (state) => {
@@ -90,7 +94,7 @@ const enterpriseSlice = createSlice({
       })
       .addCase(updateEnterprise.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
     builder
       .addCase(changeStatusEnterprise.pending, (state) => {
@@ -102,7 +106,7 @@ const enterpriseSlice = createSlice({
       })
       .addCase(changeStatusEnterprise.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
     // ? Delete tag
     builder
@@ -114,8 +118,20 @@ const enterpriseSlice = createSlice({
         state.message = "Xóa thành công";
         state.enterprises = state.enterprises.filter((item) => String(item.id) !== payload);
       })
-      .addCase(deleteEnterprise.rejected, (state) => {
+      .addCase(deleteEnterprise.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        console.log(payload?.message);
+
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
+      });
+    builder
+      .addCase(getIndustries.fulfilled, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {
+        if (payload.data) {
+          state.industries = payload.data.data;
+        }
+      })
+      .addCase(getIndustries.rejected, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
   },
 });
