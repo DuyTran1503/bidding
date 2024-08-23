@@ -43,7 +43,7 @@ const Industry = () => {
     },
     {
       dataIndex: "business_activity_type_id",
-      title: "Loại hình doanh nghiệp",
+      title: "Loại hình kinh doanh",
     },
     {
       dataIndex: "description",
@@ -105,8 +105,8 @@ const Industry = () => {
     },
   ];
   const data: ITableData[] = useMemo(() => {
-    return Array.isArray(industryState.businessActivities)
-      ? industryState.businessActivities.map(({ id, name, business_activity_type_id, description, is_active }, index) => ({
+    return Array.isArray(industryState.industries)
+      ? industryState.industries.map(({ id, name, business_activity_type_id, description, is_active }, index) => ({
           index: index + 1,
           key: id,
           name,
@@ -115,7 +115,7 @@ const Industry = () => {
           is_active,
         }))
       : [];
-  }, [JSON.stringify(industryState.businessActivities)]);
+  }, [JSON.stringify(industryState.industries)]);
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
