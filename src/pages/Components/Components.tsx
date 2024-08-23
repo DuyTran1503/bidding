@@ -5,7 +5,7 @@ import FormInput from "@/components/form/FormInput";
 import FormInputArea from "@/components/form/FormInputArea";
 import FormSelect from "@/components/form/FormSelect";
 import Heading from "@/components/layout/Heading";
-import UpdateImage from "@/components/form/FormUpload";
+import UpdateImage from "@/components/form/FormUploadImage";
 import { IoBagOutline, IoSaveOutline } from "react-icons/io5";
 import ImageTable from "@/components/table/ImageTable";
 import PrimaryTable from "@/components/table/PrimaryTable";
@@ -176,7 +176,11 @@ const Components = () => {
         </div>
         <div className="flex flex-col items-start gap-5">
           <h1 className="display-s-regular mb-2">FormUpload</h1>
-          <UpdateImage />
+          <UpdateImage
+            onChange={function (value: File | File[] | null): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </div>
         <div className="flex flex-col items-start gap-5">
           <h1 className="display-s-regular mb-2">Table</h1>

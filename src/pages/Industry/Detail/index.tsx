@@ -36,10 +36,10 @@ const DetailIndustry = () => {
     }
   }, [id]);
   useEffect(() => {
-    if (!!state.businessActivity) {
-      setData(state.businessActivity);
+    if (!!state.industry) {
+      setData(state.industry);
     }
-  }, [JSON.stringify(state.businessActivity)]);
+  }, [JSON.stringify(state.industry)]);
 
   useEffect(() => {
     if (data) {
