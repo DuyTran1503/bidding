@@ -4,15 +4,18 @@ import FormModal from '@/components/form/FormModal';
 import ManagementGrid from '@/components/grid/ManagementGrid';
 import Heading from '@/components/layout/Heading';
 import { ITableData } from '@/components/table/PrimaryTable';
+import { ISearchTypeTable } from '@/components/table/SearchComponent';
 import { useArchive } from '@/hooks/useArchive';
-import { setFilter } from '@/services/store/account/account.slice';
+import useFetchStatus from '@/hooks/useFetchStatus';
+import { resetStatus, setFilter } from '@/services/store/account/account.slice';
 import { IBidBondInitialState } from '@/services/store/bidbond/bidBond.slice';
-import { changeStatusBidBond, deleteBidBond } from '@/services/store/bidbond/bidBond.thunk';
+import { changeStatusBidBond, deleteBidBond, getAllBidBonds } from '@/services/store/bidbond/bidBond.thunk';
 import { EButtonTypes } from '@/shared/enums/button';
+import { EFetchStatus } from '@/shared/enums/fetchStatus';
 import { EPermissions } from '@/shared/enums/permissions';
 import { IGridButton } from '@/shared/utils/shared-interfaces';
 import { ColumnsType } from 'antd/es/table';
-import React, { ReactNode, useMemo, useState } from 'react'
+import React, { ReactNode, useEffect, useMemo, useState } from 'react'
 import { FaPlus } from 'react-icons/fa';
 import { GoDownload } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
@@ -21,9 +24,9 @@ const BidBonds = () => {
     const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBidBondInitialState>("bidbond");
   const [isModal, setIsModal ] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const [modalContent, setModalContent] = useState<ReactNode>(null);
+//   const [modalContent, setModalContent] = useState<ReactNode>(null);
 
   const buttons: IGridButton[] = [
     {
@@ -104,28 +107,62 @@ const BidBonds = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.bidBonds && state.bidBonds.length > 0
-        ? state.bidBonds.map(({ id, bidding_submissionId, bond_amount, type, issuer,issue_date,expiry_date, is_active }, index) => ({
+        ? state.bidBonds.map(({ id, project_id,bidder_id, bond_amount, bond_type,bond_number, issuer, issue_date, expiry_date, scan_document, notes, status  }, index) => ({
             index: index + 1,
             key: id,
-            bidding_submissionId,
+            project_id,
+            bidder_id,
             bond_amount,
-            type,
+            bond_type,
+            bond_number,
             issuer,
             issue_date,
             expiry_date,
-            is_active,
+            scan_document,
+            notes,
+            status
           }))
         : [],
-    [JSON.stringify(state.fundingSources)],
+    [JSON.stringify(state.bidBonds)],
   );
 
+  useEffect(() => {
+    dispatch(getAllBidBonds({ query: state.filter }));
+  }, [JSON.stringify(state.filter)]);
 
+  useEffect(() => {
+    if (state.status === EFetchStatus.FULFILLED) {
+      dispatch(getAllBidBonds({ query: state.filter }));
+    }
+  }, [JSON.stringify(state.status)]);
 
+  useFetchStatus({
+    module: "bidbond",
+    reset: resetStatus,
+    actions: {
+      success: { message: state.message },
+      error: { message: state.message },
+    },
+  });
+  useEffect(() => {
+    return () => {
+      setFilter({ page: 1, size: 10 });
+    };
+  }, []);
+
+  const search: ISearchTypeTable[] = [
+    {
+      id: "name",
+      placeholder: "Nhập tên bão lãnh dự thầu...",
+      label: "Tên bão lãnh dự thầu",
+      type: "text",
+    },
+  ];
 
   return (
     <>
     <Heading
-      title="Nguồn Tài Trợ"
+      title="Bão lãnh dự thầu"
       hasBreadcrumb
       buttons={[
         {
@@ -142,9 +179,7 @@ const BidBonds = () => {
         },
       ]}
     />
-    <FormModal open={isModalOpen} onCancel={handleCancel}>
-      {modalContent}
-    </FormModal>
+
     <ConfirmModal
       title={"Xác nhận"}
       content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
