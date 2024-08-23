@@ -12,9 +12,9 @@ import { enterpriseSlice } from "./store/enterprise/enterprise.slice";
 import { statisticalReportSlice } from "./store/statisticalReport/statisticalReport.slice";
 import { fundingSourceSlice } from "./store/funding_source/funding_source.slice";
 import { biddingTypeSlice } from "./store/biddingType/biddingType.slice";
-import { fieldOfActivitySlice } from "./store/field_of_activity/field_of_activity.slice";
 import { attachmentSlice } from "./store/attachment/attachment.slice";
 import { bidDocumentSlice } from "./store/bid_document/bid_document.slice";
+import { bidBondSlice } from "./store/bidbond/bidBond.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -29,9 +29,9 @@ export const reducers = combineReducers({
   industry: industrySlice.reducer,
   enterprise: enterpriseSlice.reducer,
   statistical_report: statisticalReportSlice.reducer,
-  field_of_activity: fieldOfActivitySlice.reducer,
   attachment: attachmentSlice.reducer,
   bid_document: bidDocumentSlice.reducer,
+  bidbond: bidBondSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
