@@ -177,6 +177,7 @@ const Components = () => {
         <div className="flex flex-col items-start gap-5">
           <h1 className="display-s-regular mb-2">FormUpload</h1>
           <UpdateImage
+            //@ts-ignore
             onChange={function (value: File | File[] | null): void {
               throw new Error("Function not implemented.");
             }}
