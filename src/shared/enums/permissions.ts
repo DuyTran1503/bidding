@@ -62,11 +62,11 @@ export enum EPermissions {
   DESTROY_INDUSTRY = "destroy_industry",
 
   // Doanh nghiệp
-  LIST_ENTERPRISE = "list_enterprise",
-  DETAIL_ENTERPRISE = "detail_enterprise",
-  CREATE_ENTERPRISE = "create_enterprise",
-  UPDATE_ENTERPRISE = "update_enterprise",
-  DESTROY_ENTERPRISE = "destroy_enterprise",
+  LIST_ENTERPRISE = "list_enterpise",
+  DETAIL_ENTERPRISE = "detail_enterpise",
+  CREATE_ENTERPRISE = "create_enterpise",
+  UPDATE_ENTERPRISE = "update_enterpise",
+  DESTROY_ENTERPRISE = "destroy_enterpise",
 
   // Báo cáo thống kê
   LIST_STATISTICAL_REPORT = "list_statistical_report",

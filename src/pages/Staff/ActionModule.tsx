@@ -294,7 +294,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Ảnh đại diện">
                   <FormCkFinder
-                    resourceTypes={ResourceType.FILES}
+                    resourceTypes={ResourceType.IMAGES}
                     direction="vertical"
                     errors={errors}
                     touched={touched}
