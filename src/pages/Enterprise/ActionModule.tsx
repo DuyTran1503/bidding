@@ -15,8 +15,6 @@ import FormSelect from "@/components/form/FormSelect";
 import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
 import { IOption } from "@/shared/utils/shared-interfaces";
 import FormCkEditor from "@/components/form/FormCkEditor";
-import FormCkFinder from "@/components/form/FormCkFinder";
-import { ResourceType } from "@/shared/enums/resourceType";
 import FormDate from "@/components/form/FormDate";
 import dayjs from "dayjs";
 import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
@@ -41,7 +39,7 @@ export interface IEnterpriseInitialValues {
   account_ban_at?: string | null;
   website?: string;
   industries?: number[];
-  industry_id: number[];
+  industry_id?: number[];
   description?: string;
   establish_date?: string;
   organization_type?: string | number;
@@ -52,7 +50,6 @@ export interface IEnterpriseInitialValues {
   is_blacklist?: boolean;
   password?: string;
 }
-
 const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) => {
   const { dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: industryState, dispatch: dispatchIndustry } = useArchive<IBusinessActivityInitialState>("business");
