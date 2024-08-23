@@ -3,6 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IError } from "@/shared/interface/error";
 import { IEnterprise } from "./enterprise.model";
+import { IIndustry } from "../industry/industry.model";
 
 const prefix = "/api/admin/enterprises";
 
@@ -55,6 +56,14 @@ export const changeStatusEnterprise = createAsyncThunk("enterprises/change-statu
   try {
     const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
     return response.status >= 400 ? rejectWithValue(data) : id;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+export const getIndustries = createAsyncThunk("enterprises/get-list-industries", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IIndustry[]>(`${prefix}/list`, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }
