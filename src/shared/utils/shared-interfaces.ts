@@ -16,7 +16,7 @@ export interface IFetchOptions extends IFetchHeaders {
 export interface IThunkPayload {
   body?: unknown;
   query?: ISearchParams;
-  param?: string ;
+  param?: string;
   headers?: IFetchHeaders;
   id?: string;
 }
@@ -63,6 +63,6 @@ export interface IGridButton {
   permission?: EPermissions;
 }
 export interface IOption {
-  value: string;
+  value: string | number;
   label: string;
 }
