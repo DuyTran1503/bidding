@@ -2,9 +2,15 @@ import { message } from "antd";
 import "@/assets/scss/overwrite/index.scss";
 import imageError from "@/assets/images/imgError-table.jpg";
 import imageFile from "@/assets/images/img-file.png";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
-const UpdateImage: React.FC = () => {
+
+interface IProps {
+  value?: File | File[];
+  onChange: (value: File | File[] | null) => void;
+  id?: string;
+}
+const FormUploadImage: React.FC<IProps> = ({ onChange }) => {
   const [fileList, setFileList] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const handleDeleteImage = (uid: string) => {
@@ -27,7 +33,11 @@ const UpdateImage: React.FC = () => {
       setFileList((prevFileList) => [...prevFileList, ...newFiles]);
     }
   };
-
+  useEffect(() => {
+    if (typeof onChange === "function") {
+      onChange(fileList.length > 0 ? fileList : null);
+    }
+  }, [fileList]);
   const renderFileIcon = (file: File) => {
     if (file.type && file.type.startsWith("image/")) {
       return (
@@ -57,13 +67,13 @@ const UpdateImage: React.FC = () => {
             </div>
           ))}
         </div>
-        {fileList.length === 0 && <div className="mt-3 text-center font-normal text-gray-400">Drag and drop image here, or click add image</div>}
+        {fileList.length === 0 && <div className="mt-3 text-center font-normal text-gray-400">Kéo hoặc thả file vào đây</div>}
         <div className="mt-4 flex justify-center">
           <label
             htmlFor="file-upload"
             className="text-m-medium inline-block cursor-pointer rounded bg-primary-50 px-[14px] py-[10px] text-primary-500"
           >
-            Add image
+            Tải file lên
           </label>
           <input id="file-upload" type="file" onChange={handleFileChange} multiple className="hidden" />
         </div>
@@ -72,4 +82,4 @@ const UpdateImage: React.FC = () => {
   );
 };
 
-export default UpdateImage;
+export default FormUploadImage;
