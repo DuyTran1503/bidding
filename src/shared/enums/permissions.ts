@@ -74,4 +74,11 @@ export enum EPermissions {
   CREATE_STATISTICAL_REPORT = "create_statistical_report",
   UPDATE_STATISTICAL_REPORT = "update_statistical_report",
   DESTROY_STATISTICAL_REPORT = "destroy_statistical_report",
+
+  // ? BiddingHistory
+  LIST_BIDDING_HISTORY = "list_bidding_history",
+  DETAIL_BIDDING_HISTORY = "detail_bidding_history",
+  CREATE_BIDDING_HISTORY = "create_bidding_history",
+  UPDATE_BIDDING_HISTORY = "update_bidding_history",
+  DESTROY_BIDDING_HISTORY = "destroy_bidding_history",
 }

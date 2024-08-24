@@ -6,10 +6,10 @@ import lodash from "lodash";
 import { IStatisticalReportInitialState } from "@/services/store/statisticalReport/statisticalReport.slice";
 import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
-import FormInputArea from "@/components/form/FormInputArea";
 import { createStatisticalReport, updateStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import { IStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.model";
+import FormCkEditor from "@/components/form/FormCkEditor";
 
 interface IStatisticalReportFormProps {
   formikRef?: any;
@@ -132,14 +132,15 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
             </Row>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormInputArea
-                  label="Mô tả"
-                  placeholder="Nhập mô tả..."
-                  name="description"
-                  value={values.description}
-                  error={touched.description ? errors.description : ""}
-                  onChange={(e) => setFieldValue("description", e)}
-                />
+                <FormGroup title="Mô tả">
+                  <FormCkEditor
+                    id="description"
+                    direction="vertical"
+                    value={values.description}
+                    setFieldValue={setFieldValue}
+                    disabled={type === EPageTypes.VIEW}
+                  />
+                </FormGroup>
               </Col>
             </Row>
           </FormGroup>

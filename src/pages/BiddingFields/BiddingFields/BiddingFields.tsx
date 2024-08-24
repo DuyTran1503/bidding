@@ -159,12 +159,6 @@ const BiddingFields = () => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllBiddingFields({ query: state.filter }));
       dispatch(getBiddingFieldAllIds())
-        .then(unwrapResult)
-        .then((result) => {
-          const fields = result.data;
-          const formattedData = formatTreeData(fields);
-          setTreeData(formattedData);
-        });
     }
   }, [JSON.stringify(state.status)]);
 
