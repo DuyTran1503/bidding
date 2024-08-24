@@ -47,6 +47,11 @@ import UpdateAttachment from "@/pages/Attachment/Update";
 import DetailAttachment from "@/pages/Attachment/Detail";
 import DetailBidDocument from "@/pages/BidDocument/Detail";
 import UpdateBidDocument from "@/pages/BidDocument/Update";
+import BiddingHistorys from "@/pages/BiddingHistory/BiddingHistory/BiddingHistory";
+import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/CreateBiddingHistory";
+import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
+import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
+import { EPermissions } from "@/shared/enums/permissions";
 
 export interface IRoute {
   path: string;
@@ -96,7 +101,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "bidding_fields",
+            path: "bidding-fields",
             pages: [
               {
                 path: "/",
@@ -117,7 +122,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "bidding_types",
+            path: "bidding-types",
             pages: [
               {
                 path: "/",
@@ -159,7 +164,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "business_activity",
+            path: "business-activity",
             pages: [
               {
                 path: "/",
@@ -235,7 +240,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "statistical_reports",
+            path: "statistical-reports",
             pages: [
               {
                 path: "/",
@@ -252,7 +257,25 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "attachment",
+            path: "bidding-historys",
+            pages: [
+              {
+                path: "/",
+                element: () => <BiddingHistorys />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBiddingHistory />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBiddingHistory />,
+              },
+            ],
+          },
+          {
+            path: "permissions",
+            middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
             pages: [
               {
                 path: "/",
