@@ -63,6 +63,6 @@ export interface IGridButton {
   permission?: EPermissions;
 }
 export interface IOption {
-  value: string;
+  value: string | number;
   label: string;
 }

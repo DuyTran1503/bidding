@@ -39,7 +39,7 @@ const DetailBiddingHistory = () => {
   return (
     <>
       <Heading
-        title="Chi tiết loại hình đấu thầu"
+        title="Chi tiết lịch sử đấu thầu"
         hasBreadcrumb
         buttons={[
           {

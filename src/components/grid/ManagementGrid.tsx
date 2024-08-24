@@ -11,7 +11,6 @@ import { ISearchTypeTable } from "../table/SearchComponent";
 export interface IGridProps<T extends ISearchParams> {
   columns: ColumnsType;
   data: ITableData[];
-  // search: ISearchTable | false;
   search?: ISearchTypeTable[];
   buttons?: IGridButton[];
   pagination?: {

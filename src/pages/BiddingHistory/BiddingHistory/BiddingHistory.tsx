@@ -7,7 +7,6 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-// import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
@@ -55,12 +54,20 @@ const BiddingHistorys = () => {
             title: "STT",
         },
         {
-            dataIndex: "name",
-            title: "Name",
+            dataIndex: "event_date",
+            title: "Event_date",
         },
         {
-            dataIndex: "description",
-            title: "Description",
+            dataIndex: "project_id",
+            title: "Project_id",
+        },
+        {
+            dataIndex: "event_type",
+            title: "Event_type",
+        },
+        {
+            dataIndex: "event_description",
+            title: "Event_description",
         },
         {
             title: "Trạng thái",
@@ -100,11 +107,13 @@ const BiddingHistorys = () => {
     const data: ITableData[] = useMemo(
         () =>
             state.biddingHistorys && state.biddingHistorys.length > 0
-                ? state.biddingHistorys.map(({ id, description, is_active }, index) => ({
+                ? state.biddingHistorys.map(({ id, project_id, event_date, event_description, event_type, is_active }, index) => ({
                     index: index + 1,
                     key: id,
-                    name,
-                    description,
+                    project_id,
+                    event_type,
+                    event_date,
+                    event_description,
                     is_active,
                 }))
                 : [],
@@ -133,7 +142,7 @@ const BiddingHistorys = () => {
     return (
         <>
             <Heading
-                title="Loại hình đấu thầu"
+                title="Lịch sử đấu thầu"
                 hasBreadcrumb
                 buttons={[
                     {
