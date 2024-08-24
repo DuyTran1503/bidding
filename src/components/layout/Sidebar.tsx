@@ -125,6 +125,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "statistical-reports",
           // permissions: EPermissions.LIST_STATISTICAL_REPORT,
         },
+        {
+          id: "4.5",
+          label: "Lịch sử đấu thầu",
+          path: "bidding-historys",
+          // permissions: EPermissions.LIST_BIDDING_TYPE,
+        },
       ],
     },
     {
