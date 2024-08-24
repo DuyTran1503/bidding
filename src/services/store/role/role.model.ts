@@ -7,7 +7,7 @@ export interface IRole {
 }
 export interface IUpdateRole {
   id_permission_checked: number[];
-  permissions: IPermission[];
+  permissions: IPermission[] | number[];
   name?: string;
   role: {
     id?: string;

@@ -33,7 +33,7 @@ const CreateBiddingHistory = () => {
   return (
     <>
       <Heading
-        title="Tạo mới loại hình đấu thầu"
+        title="Tạo mới lịch sử đấu thầu"
         hasBreadcrumb
         buttons={[
           {

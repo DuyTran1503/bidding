@@ -125,13 +125,13 @@ const BiddingFields = () => {
   const data: ITableData[] = useMemo(() => {
     return state.biddingFields && state.biddingFields.length > 0
       ? state.biddingFields.map(({ id, name, is_active, code, parent }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        is_active,
-        code,
-        parent_name: parent?.name || "",
-      }))
+          index: index + 1,
+          key: id,
+          name,
+          is_active,
+          code,
+          parent_name: parent?.name || "",
+        }))
       : [];
   }, [JSON.stringify(state.biddingFields)]);
 

@@ -58,3 +58,11 @@ export const changeStatusIndustry = createAsyncThunk("industry/change-status-ind
     return rejectWithValue(error.response.data);
   }
 });
+export const getIndustries = createAsyncThunk("enterprises/get-list-industries", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IIndustry[]>(`${prefix}/list`, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});

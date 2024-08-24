@@ -1,19 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormikProps } from "formik";
 import Heading from "@/components/layout/Heading";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { ITagInitialState, resetStatus } from "@/services/store/tag/tag.slice";
-import { useArchive } from "@/hooks/useArchive";
-import BusinessActivityForm, { IEnterpriseInitialValues } from "../ActionModule";
+import { IEnterpriseInitialValues } from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
-import { getBusinessActivityById } from "@/services/store/business-activity/business-activity.thunk";
-import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
-import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { IEnterpriseInitialState, resetStatus } from "@/services/store/enterprise/enterprise.slice";
 import EnterpriseForm from "../ActionModule";
+import { useArchive } from "@/hooks/useArchive";
+import { getEnterpriseById } from "@/services/store/enterprise/enterprise.thunk";
 
 const index = () => {
   const navigate = useNavigate();
@@ -23,44 +19,50 @@ const index = () => {
   const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const [data, setData] = useState<IEnterpriseInitialValues>();
   useFetchStatus({
-    module: "business",
+    module: "enterprise",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/business-activity",
+        navigate: "/enterprise",
       },
       error: {
         message: state.message,
       },
     },
   });
-  // useEffect(() => {
-  //   if (id) {
-  //     dispatch(getBusinessActivityById(id));
-  //   }
-  // }, [id]);
-
+  useEffect(() => {
+    if (id) {
+      dispatch(getEnterpriseById(id));
+    }
+  }, [id]);
+  useEffect(() => {
+    if (!!state.enterprise) {
+      setData(state.enterprise);
+    }
+  }, [JSON.stringify(state.enterprise)]);
   useEffect(() => {
     if (data) {
       if (formikRef.current) {
         formikRef.current.setValues({
-          name: data.name,
-          address: data.address,
-          representative: data.representative,
-          contact_phone: data.contact_phone,
-          email: data.email,
-          website: data.website,
-          join_date: data.join_date,
-          id_business_activity: data.id_business_activity,
-          description: data.description,
-          tax_code: data.tax_code,
-          organization_type: data.organization_type,
-          representative_name: data.representative_name,
-          business_registration_date: data.business_registration_date,
-          business_registration_number: data.business_registration_number,
-          is_active: data.is_active,
-          is_blacklisted: data.is_blacklisted,
+          name: data?.name ?? "",
+          address: data?.address ?? "",
+          description: data?.description ?? "",
+          representative: data?.representative ?? "",
+          phone: data?.phone ?? "",
+          email: data?.email ?? "",
+          avatar: data?.avatar ?? "",
+          taxcode: data?.taxcode ?? "",
+          account_ban_at: data?.account_ban_at ?? null,
+          website: data?.website ?? "",
+          industries: data?.industries ?? [],
+          establish_date: data?.establish_date ?? "",
+          organization_type: data?.organization_type ?? "",
+          avg_document_rating: data?.avg_document_rating ?? "",
+          registration_date: data?.registration_date ?? "",
+          registration_number: data?.registration_number ?? "",
+          is_active: data?.is_active ?? false,
+          is_blacklist: data?.is_blacklist ?? false,
         });
       }
     }
