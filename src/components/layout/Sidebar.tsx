@@ -46,19 +46,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       path: "dashboard",
       icon: { component: IoPieChartOutline },
     },
-    // {
-    //   id: "2",
-    //   label: "E-Commerce",
-    //   icon: { component: IoCartOutline },
-    //   items: [
-    //     {
-    //       id: "2.3",
-    //       label: "Orders",
-    //       path: "orders",
-    //       permissions: EPermissions.LIST_ORDER,
-    //     },
-    //   ],
-    // },
     {
       id: "3",
       label: "Doanh nghiệp",
@@ -94,36 +81,61 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "industry",
           permissions: EPermissions.LIST_INDUSTRY,
         },
+        {
+          id: "3.5",
+          label: "Nguồn tài trợ",
+          path: "funding-sources",
+          permissions: EPermissions.LIST_FUNDING_SOURCE,
+        },
       ],
     },
     {
       id: "4",
+      label: "Dự án",
+      icon: { component: MdOutlineFactory },
+      items: [
+        {
+          id: "4.1",
+          label: "Tài liệu đính kèm",
+          path: "attachment",
+          // permissions: EPermissions.LIST_ATTACHMENT,
+        },
+        {
+          id: "4.2",
+          label: "Hồ sơ mời thầu",
+          path: "bid-document",
+          // permissions: EPermissions.LIST_BID_DOCUMENT,
+        },
+      ],
+    },
+    {
+      id: "5",
       label: "Hệ thống",
       icon: { component: IoSettingsOutline },
       items: [
         {
-          id: "4.1",
+          id: "5.1",
           label: "Vai trò",
           path: "roles",
           permissions: EPermissions.LIST_ROLE,
         },
         {
-          id: "4.2",
+          id: "5.2",
           label: "Nhân viên",
           path: "staffs",
           permissions: EPermissions.LIST_STAFF,
         },
         {
-          id: "4.3",
+          id: "5.3",
           label: "Tags",
           path: "tags",
           permissions: EPermissions.LIST_TAG,
         },
         {
-          id: "4.4",
+          id: "5.4",
           label: "Báo cáo thống kê",
-          path: "statistical-reports",
-          // permissions: EPermissions.LIST_STATISTICAL_REPORT,
+          path: "statistical_reports",
+          permissions: EPermissions.LIST_STATISTICAL_REPORT,
         },
         {
           id: "4.5",

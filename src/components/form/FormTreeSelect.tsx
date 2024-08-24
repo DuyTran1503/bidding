@@ -1,5 +1,4 @@
 import { ConfigProvider, TreeSelect } from "antd";
-import { valueType } from "antd/es/statistic/utils";
 import clsx from "clsx";
 
 interface IFormTreeSelect {

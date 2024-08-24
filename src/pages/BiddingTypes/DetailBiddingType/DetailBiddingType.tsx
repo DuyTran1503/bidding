@@ -1,63 +1,29 @@
-import { useEffect, useRef } from "react";
-import { IoClose } from "react-icons/io5";
-import { useNavigate, useParams } from "react-router-dom";
-import { FormikProps } from "formik";
-import Heading from "@/components/layout/Heading";
-import useFetchStatus from "@/hooks/useFetchStatus";
-import { useArchive } from "@/hooks/useArchive";
-import { EPageTypes } from "@/shared/enums/page";
-import { getBiddingTypeById } from "@/services/store/biddingType/biddingType.thunk";
-import { IBiddingTypeInitialState, resetStatus } from "@/services/store/biddingType/biddingType.slice";
-import BiddingTypeForm, { IBiddingTypeFormInitialValues } from "../BiddingTypeForm";
+import React from "react";
+import { ITableData } from "@/components/table/PrimaryTable";
 
-const DetailBiddingType = () => {
-  const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IBiddingTypeFormInitialValues>>(null);
-  const { state, dispatch } = useArchive<IBiddingTypeInitialState>("bidding_type");
-  const { id } = useParams();
+interface DetailBiddingTypeProps {
+  record: ITableData;
+}
 
-  useFetchStatus({
-    module: "bidding_type",
-    reset: resetStatus,
-    actions: {
-      success: {
-        message: state.message,
-        navigate: "/bidding-types",
-      },
-      error: {
-        message: state.message,
-      },
-    },
-  });
-
-  useEffect(() => {
-    if (id) {
-      dispatch(getBiddingTypeById(id));
-    }
-  }, [id]);
-
+const DetailBiddingType: React.FC<DetailBiddingTypeProps> = ({ record }) => {
   return (
-    <>
-      <Heading
-        title="Chi tiết loại hình đấu thầu"
-        hasBreadcrumb
-        buttons={[
-          {
-            type: "secondary",
-            text: "Hủy",
-            icon: <IoClose className="text-[18px]" />,
-            onClick: () => {
-              navigate("/bidding-types");
-            },
-          },
-        ]}
-      />
-      {state.activeBiddingType ? (
-        <BiddingTypeForm type={EPageTypes.VIEW} formikRef={formikRef} biddingType={state.activeBiddingType} />
-      ) : (
-        <div>Loading...</div>
-      )}
-    </>
+    <div className="p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-semibold mb-4">Chi tiết loại hình đấu thầu</h2>
+      <div className="space-y-4">
+        <div className="flex items-start">
+          <span className="font-medium text-gray-700 w-1/3">Tên của loại hình đấu thầu:</span>
+          <span className="ml-2 text-gray-900">{record.name as string}</span>
+        </div>
+        <div className="flex items-start">
+          <span className="font-medium text-gray-700 w-1/3">Mô tả của loại hình đấu thầu:</span>
+          <span className="ml-2 text-gray-900">{record.description as string}</span>
+        </div>
+        <div className="flex items-start">
+          <span className="font-medium text-gray-700 w-1/3">Trạng thái:</span>
+          <span className="ml-2 text-gray-900">{record.is_active ? "Kích hoạt" : "Không kích hoạt"}</span>
+        </div>
+      </div>
+    </div>
   );
 };
 
