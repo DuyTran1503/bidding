@@ -85,9 +85,9 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Loại hình kinh doanh">
+                <FormGroup title="Ngành nghề kinh doanh">
                   <FormSelect
-                    label="Loại hình kinh doanh"
+                    label="Ngành nghề kinh doanh"
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."
                     options={convertDataOption(businessState?.listBusinessActivities!)}
