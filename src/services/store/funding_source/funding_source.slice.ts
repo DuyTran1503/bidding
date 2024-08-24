@@ -4,7 +4,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { commonStaticReducers } from "@/services/shared";
 import {
   changeStatusFundingSource,
-  getListBusinessActivity,
   createFundingSource,
   deleteFundingSources,
   getAllFundingSources,
