@@ -43,6 +43,9 @@ import BiddingFieldDetail from "@/pages/BiddingFields/DetailBiddingField/DetailB
 import StatisticalReports from "@/pages/StatisticalReports/StatisticalReports/StatisticalReports";
 import CreateStatisticalReport from "@/pages/StatisticalReports/CreateStatisticalReport/CreateStatisticalReport";
 import UpdateStatisticalReport from "@/pages/StatisticalReports/UpdateStatisticalReport/UpdateStatisticalReport";
+import BiddingHistorys from "@/pages/BiddingHistory/BiddingHistory/BiddingHistory";
+import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/CreateBiddingHistory";
+import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
 
 export interface IRoute {
   path: string;
@@ -240,6 +243,23 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateStatisticalReport />,
+              },
+            ],
+          },
+          {
+            path: "bidding-historys",
+            pages: [
+              {
+                path: "/",
+                element: () => <BiddingHistorys />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBiddingHistory />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBiddingHistory />,
               },
             ],
           },
