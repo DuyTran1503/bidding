@@ -19,12 +19,12 @@ import { EPageTypes } from "@/shared/enums/page";
 import dayjs from "dayjs";
 import FormCkFinder from "@/components/form/FormCkFinder";
 import { ResourceType } from "@/shared/enums/resourceType";
-interface TreeNode {
-  title: string;
-  key: string;
-  id: number | null;
-  children?: TreeNode[];
-}
+// interface TreeNode {
+//   title: string;
+//   key: string;
+//   id: number | null;
+//   children?: TreeNode[];
+// }
 
 interface IAccountFormProps {
   formikRef?: FormikRefType<IStaffFormInitialValues>;
@@ -142,38 +142,38 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
       })
       .required("Mật khẩu không được để trống"),
   });
-  const calculateSimilarity = (str1: string, str2: string): number => {
-    const longer = str1.length > str2.length ? str1 : str2;
-    const shorter = str1.length > str2.length ? str2 : str1;
-    const longerLength = longer.length;
-    if (longerLength === 0) {
-      return 1.0;
-    }
-    return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength.toString());
-  };
+  // const calculateSimilarity = (str1: string, str2: string): number => {
+  //   const longer = str1.length > str2.length ? str1 : str2;
+  //   const shorter = str1.length > str2.length ? str2 : str1;
+  //   const longerLength = longer.length;
+  //   if (longerLength === 0) {
+  //     return 1.0;
+  //   }
+  //   return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength.toString());
+  // };
 
-  const editDistance = (s1: string, s2: string): number => {
-    s1 = s1.toLowerCase();
-    s2 = s2.toLowerCase();
+  // const editDistance = (s1: string, s2: string): number => {
+  //   s1 = s1.toLowerCase();
+  //   s2 = s2.toLowerCase();
 
-    const costs: number[] = [];
-    for (let i = 0; i <= s1.length; i++) {
-      let lastValue = i;
-      for (let j = 0; j <= s2.length; j++) {
-        if (i == 0) costs[j] = j;
-        else {
-          if (j > 0) {
-            let newValue = costs[j - 1];
-            if (s1.charAt(i - 1) != s2.charAt(j - 1)) newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
-            costs[j - 1] = lastValue;
-            lastValue = newValue;
-          }
-        }
-      }
-      if (i > 0) costs[s2.length] = lastValue;
-    }
-    return costs[s2.length];
-  };
+  //   const costs: number[] = [];
+  //   for (let i = 0; i <= s1.length; i++) {
+  //     let lastValue = i;
+  //     for (let j = 0; j <= s2.length; j++) {
+  //       if (i == 0) costs[j] = j;
+  //       else {
+  //         if (j > 0) {
+  //           let newValue = costs[j - 1];
+  //           if (s1.charAt(i - 1) != s2.charAt(j - 1)) newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+  //           costs[j - 1] = lastValue;
+  //           lastValue = newValue;
+  //         }
+  //       }
+  //     }
+  //     if (i > 0) costs[s2.length] = lastValue;
+  //   }
+  //   return costs[s2.length];
+  // };
   useEffect(() => {
     dispatch(getAllPermissions());
   }, [dispatch]);
@@ -196,7 +196,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
           account_ban_at: data.account_ban_at ? new Date().toISOString() : null,
           role_id: data.id_role,
         };
-
+        /* eslint-disable @typescript-eslint/no-unused-vars */
         const { id_role, ...newObj } = body;
         if (type === EPageTypes.CREATE) {
           const newValue = { ...newObj, account_ban_at: dayjs(body.account_ban_at).format(" YYYY-MM-DD HH:mm:ss") };
@@ -290,24 +290,28 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </Col>
               )}
             </Row>
-            <FormCkFinder
-              resourceTypes={ResourceType.FILES}
-              // Type={TypePage.IMAGE}
-              errors={errors}
-              touched={touched}
-              buttonClose
-              id="avatar"
-              label=""
-              placeholder="Tải file"
-              value={values.avatar}
-              disabled={type === "view"}
-              onChange={(data) => {
-                setFieldValue("avatar", data).then();
-              }}
-              name={"avatar"}
-            />
             <Row gutter={[24, 0]}>
-              <Col xs={24} sm={24} md={24} xl={24}></Col>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormGroup title="Ảnh đại diện">
+                  <FormCkFinder
+                    resourceTypes={ResourceType.IMAGES}
+                    direction="vertical"
+                    errors={errors}
+                    touched={touched}
+                    buttonClose
+                    id="avatar"
+                    placeholder="Tải ảnh lên"
+                    value={values.avatar ?? ""}
+                    disabled={type === "view"}
+                    onChange={(data) => {
+                      setFieldValue("avatar", data).then();
+                    }}
+                    name={"avatar"}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row gutter={[24, 0]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Vai trò">
                   <FormSelect

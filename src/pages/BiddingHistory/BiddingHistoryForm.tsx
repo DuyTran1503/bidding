@@ -9,7 +9,9 @@ import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
 import { createBiddingHistory, updateBiddingHistory } from "@/services/store/biddingHistory/biddingHistory.thunk";
 import { EPageTypes } from "@/shared/enums/page";
-import FormCkFinder from "@/components/form/FormCkFinder";
+import FormCkEditor from "@/components/form/FormCkEditor";
+import FormDate from "@/components/form/FormDate";
+import dayjs from "dayjs";
 
 interface IBiddingHistoryFormProps {
     formikRef?: any;
@@ -72,11 +74,11 @@ const BiddingHistoryForm = ({ formikRef, type, biddingHistory }: IBiddingHistory
                                 <FormInput
                                     type="text"
                                     isDisabled={type === "view"}
-                                    label="Tên loại đấu thầu"
+                                    label="Tên loại sự kiện đấu thầu"
                                     value={values.event_type}
                                     name="event_type"
                                     error={touched.event_type ? errors.event_type : ""}
-                                    placeholder="Nhập tên loại hình đấu thầu..."
+                                    placeholder="Nhập loại sự kiện đấu thầu..."
                                     onChange={(value) => setFieldValue("name", value)}
                                     onBlur={handleBlur}
                                 />
@@ -92,9 +94,28 @@ const BiddingHistoryForm = ({ formikRef, type, biddingHistory }: IBiddingHistory
                             </Col>
                         </Row>
                         <Row gutter={[24, 24]}>
+                            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                                <FormDate
+                                    disabled={type === EPageTypes.VIEW}
+                                    label="Ngày gia nhập"
+                                    value={values.event_date ? dayjs(values.event_date) : null}
+                                    onChange={(date) => setFieldValue("event_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+                                />
+                            </Col>
+                            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                                <FormSwitch
+                                    label="Trạng thái"
+                                    checked={values.is_active === "1"}
+                                    onChange={(value) => {
+                                        setFieldValue("is_active", value ? "1" : "0");
+                                    }}
+                                />
+                            </Col>
+                        </Row>
+                        <Row gutter={[24, 24]}>
                             <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                                <FormCkFinder
-                                    id="description"
+                                <FormCkEditor
+                                    id="event_description"
                                     direction="vertical"
                                     value={values.event_description}
                                     setFieldValue={setFieldValue}

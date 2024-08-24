@@ -7,10 +7,9 @@ import { IBiddingTypeInitialState } from "@/services/store/biddingType/biddingTy
 import { IBiddingType } from "@/services/store/biddingType/biddingType.model";
 import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
-import FormInputArea from "@/components/form/FormInputArea";
 import { createBiddingType, updateBiddingType } from "@/services/store/biddingType/biddingType.thunk";
 import { EPageTypes } from "@/shared/enums/page";
-import FormCkFinder from "@/components/form/FormCkFinder";
+import FormCkEditor from "@/components/form/FormCkEditor";
 
 interface IBiddingTypeFormProps {
   formikRef?: any;
@@ -88,7 +87,7 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
             </Row>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormCkFinder
+                <FormCkEditor
                   id="description"
                   direction="vertical"
                   value={values.description}

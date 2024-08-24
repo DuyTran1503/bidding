@@ -11,41 +11,47 @@ import Orders from "@/pages/Order/Orders/Orders";
 import Roles from "@/pages/Role/Roles/Roles";
 import CreateRole from "@/pages/Role/CreateRole/CreateRole";
 import UpdateRole from "@/pages/Role/UpdateRole/UpdateRole";
-import Permissions from "@/pages/Permission/Permissions/Permissions";
-import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
-import { EPermissions } from "@/shared/enums/permissions";
-import Tags from "@/pages/Tag/Tags/Tags";
-import CreateTag from "@/pages/Tag/CreateTag/CreateTag";
-import UpdateTag from "@/pages/Tag/UpdateTag/UpdateTag";
-import CreatePermission from "@/pages/Permission/CreatePermission/CreatePermission";
-import UpdatePermission from "@/pages/Permission/UpdatePermission/UpdatePermission";
-import CreateBiddingField from "@/pages/BiddingFields/CreateBiddingField/CreateBiddingField";
-import UpdateBiddingField from "@/pages/BiddingFields/UpdateBiddingField/UpdateBiddingField";
-import BiddingFields from "@/pages/BiddingFields/BiddingFields/BiddingFields";
-import Staffs from "@/pages/Staff/Staffs";
-import CreateStaff from "@/pages/Staff/Create";
-import DetailStaff from "@/pages/Staff/Detail";
-import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
+import FundingSources from "@/pages/FundingSource";
+import CreateFundingSource from "@/pages/FundingSource/Create";
 import BusinessActivities from "@/pages/BusinessActivities";
 import CreateBusinessActivity from "@/pages/BusinessActivities/Create";
 import UpdateBusinessActivity from "@/pages/BusinessActivities/Update";
-import BiddingTypes from "@/pages/BiddingTypes/BiddingTypes/BiddingTypes";
-import CreateBiddingType from "@/pages/BiddingTypes/CreateBiddingType/CreateBiddingType";
-import UpdateBiddingType from "@/pages/BiddingTypes/UpdateBiddingType/UpdateBiddingType";
 import Industry from "@/pages/Industry";
 import CreateIndustry from "@/pages/Industry/Create";
 import UpdateIndustry from "@/pages/Industry/Update";
+import DetailIndustry from "@/pages/Industry/Detail";
 import Enterprise from "@/pages/Enterprise";
 import CreateEnterprise from "@/pages/Enterprise/Create";
 import UpdateEnterprise from "@/pages/Enterprise/Update";
-import DetailIndustry from "@/pages/Industry/Detail";
-import BiddingFieldDetail from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
 import StatisticalReports from "@/pages/StatisticalReports/StatisticalReports/StatisticalReports";
 import CreateStatisticalReport from "@/pages/StatisticalReports/CreateStatisticalReport/CreateStatisticalReport";
 import UpdateStatisticalReport from "@/pages/StatisticalReports/UpdateStatisticalReport/UpdateStatisticalReport";
+import UpdateBiddingType from "@/pages/BiddingTypes/UpdateBiddingType/UpdateBiddingType";
+import CreateBiddingType from "@/pages/BiddingTypes/CreateBiddingType/CreateBiddingType";
+import BiddingTypes from "@/pages/BiddingTypes/BiddingTypes/BiddingTypes";
+import BiddingFieldDetail from "@/pages/BiddingFields/DetailBiddingField/DetailBiddingField";
+import UpdateBiddingField from "@/pages/BiddingFields/UpdateBiddingField/UpdateBiddingField";
+import CreateBiddingField from "@/pages/BiddingFields/CreateBiddingField/CreateBiddingField";
+import BiddingFields from "@/pages/BiddingFields/BiddingFields/BiddingFields";
+import DetailStaff from "@/pages/Staff/Detail";
+import UpdateStaff from "@/pages/Staff/Update/UpdateStaff";
+import CreateStaff from "@/pages/Staff/Create";
+import Staffs from "@/pages/Staff/Staffs";
+import UpdateFundingSource from "@/pages/FundingSource/Update";
+import DetailFundingSource from "@/pages/FundingSource/Detail";
+import Attachment from "@/pages/Attachment";
+import BidDocument from "@/pages/BidDocument";
+import CreateBidDocument from "@/pages/BidDocument/Create";
+import CreateAttachment from "@/pages/Attachment/Create";
+import UpdateAttachment from "@/pages/Attachment/Update";
+import DetailAttachment from "@/pages/Attachment/Detail";
+import DetailBidDocument from "@/pages/BidDocument/Detail";
+import UpdateBidDocument from "@/pages/BidDocument/Update";
 import BiddingHistorys from "@/pages/BiddingHistory/BiddingHistory/BiddingHistory";
 import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/CreateBiddingHistory";
 import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
+import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
+import { EPermissions } from "@/shared/enums/permissions";
 
 export interface IRoute {
   path: string;
@@ -158,23 +164,6 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "tags",
-            pages: [
-              {
-                path: "/",
-                element: () => <Tags />,
-              },
-              {
-                path: "/create",
-                element: () => <CreateTag />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateTag />,
-              },
-            ],
-          },
-          {
             path: "business-activity",
             pages: [
               {
@@ -188,6 +177,27 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBusinessActivity />,
+              },
+            ],
+          },
+          {
+            path: "funding-sources",
+            pages: [
+              {
+                path: "/",
+                element: () => <FundingSources />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateFundingSource />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateFundingSource />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailFundingSource />,
               },
             ],
           },
@@ -269,18 +279,40 @@ export const routes: IRoute[] = [
             pages: [
               {
                 path: "/",
-                element: () => <Permissions />,
-                middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
+                element: () => <Attachment />,
               },
               {
                 path: "/create",
-                element: () => <CreatePermission />,
-                middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.CREATE_PERMISSION]} />,
+                element: () => <CreateAttachment />,
               },
               {
                 path: "/update/:id",
-                element: () => <UpdatePermission />,
-                middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.UPDATE_PERMISSION]} />,
+                element: () => <UpdateAttachment />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailAttachment />,
+              },
+            ],
+          },
+          {
+            path: "bid-document",
+            pages: [
+              {
+                path: "/",
+                element: () => <BidDocument />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBidDocument />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBidDocument />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBidDocument />,
               },
             ],
           },

@@ -62,12 +62,12 @@ export enum EPermissions {
   DESTROY_INDUSTRY = "destroy_industry",
 
   // Doanh nghiệp
-  LIST_ENTERPRISE = "list_enterprise",
-  DETAIL_ENTERPRISE = "detail_enterprise",
-  CREATE_ENTERPRISE = "create_enterprise",
-  UPDATE_ENTERPRISE = "update_enterprise",
-  DESTROY_ENTERPRISE = "destroy_enterprise",
-  
+  LIST_ENTERPRISE = "list_enterpise",
+  DETAIL_ENTERPRISE = "detail_enterpise",
+  CREATE_ENTERPRISE = "create_enterpise",
+  UPDATE_ENTERPRISE = "update_enterpise",
+  DESTROY_ENTERPRISE = "destroy_enterpise",
+
   // Báo cáo thống kê
   LIST_STATISTICAL_REPORT = "list_statistical_report",
   DETAIL_STATISTICAL_REPORT = "detail_statistical_report",
@@ -75,10 +75,24 @@ export enum EPermissions {
   UPDATE_STATISTICAL_REPORT = "update_statistical_report",
   DESTROY_STATISTICAL_REPORT = "destroy_statistical_report",
 
-  // ? BiddingHistory
-  LIST_BIDDING_HISTORY = "list_bidding_history",
-  DETAIL_BIDDING_HISTORY = "detail_bidding_history",
-  CREATE_BIDDING_HISTORY = "create_bidding_history",
-  UPDATE_BIDDING_HISTORY = "update_bidding_history",
-  DESTROY_BIDDING_HISTORY = "destroy_bidding_history",
+  // Nguồn tài trợ
+  LIST_FUNDING_SOURCE = "list_funding_source",
+  DETAIL_FUNDING_SOURCE = "detail_funding_source",
+  CREATE_FUNDING_SOURCE = "create_funding_source",
+  UPDATE_FUNDING_SOURCE = "update_funding_source",
+  DESTROY_FUNDING_SOURCE = "destroy_funding_source",
+
+  // Tài liệu đính kèm
+  LIST_ATTACHMENT = "list_attachment",
+  DETAIL_ATTACHMENT = "detail_attachment",
+  CREATE_ATTACHMENT = "create_attachment",
+  UPDATE_ATTACHMENT = "update_attachment",
+  DESTROY_ATTACHMENT = "destroy_attachment",
+
+  // Hồ sơ mời thầu
+  LIST_BID_DOCUMENT = "list_bid_document",
+  DETAIL_BID_DOCUMENT = "detail_bid_document",
+  CREATE_BID_DOCUMENT = "create_bid_document",
+  UPDATE_BID_DOCUMENT = "update_bid_document",
+  DESTROY_BID_DOCUMENT = "destroy_bid_document",
 }
