@@ -7,10 +7,9 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-// import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
@@ -18,18 +17,23 @@ import { IBiddingTypeInitialState, resetStatus, setFilter } from "@/services/sto
 import { changeStatusBiddingType, deleteBiddingType, getAllBiddingTypes } from "@/services/store/biddingType/biddingType.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
 import { GoDownload } from "react-icons/go";
+import FormModal from "@/components/form/FormModal";
+import DetailBiddingType from "../DetailBiddingType/DetailBiddingType";
 
 const BiddingTypes = () => {
     const navigate = useNavigate();
     const { state, dispatch } = useArchive<IBiddingTypeInitialState>("bidding_type");
     const [isModal, setIsModal] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState<ReactNode>(null);
     const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
             onClick(record) {
-                navigate(`update/${record?.key}`);
+                setModalContent(<DetailBiddingType record={record} />);
+                setIsModalOpen(true);
             },
             permission: EPermissions.DETAIL_BIDDING_TYPE,
         },
@@ -76,6 +80,10 @@ const BiddingTypes = () => {
             },
         },
     ];
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
     const handleChangeStatus = (item: ITableData) => {
         setIsModal(true);
@@ -149,6 +157,9 @@ const BiddingTypes = () => {
                     },
                 ]}
             />
+            <FormModal open={isModalOpen} onCancel={handleCancel}>
+                {modalContent}
+            </FormModal>
             <ConfirmModal
                 title={"Xác nhận"}
                 content={"Bạn chắc chắn muốn thay đổi trạng thái không"}

@@ -2,20 +2,30 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
-import { changeStatusIndustry, createIndustry, deleteIndustry, getAllIndustry, getIndustryById, updateIndustry } from "./industry.thunk";
+import {
+  changeStatusIndustry,
+  createIndustry,
+  deleteIndustry,
+  getAllIndustry,
+  getIndustries,
+  getIndustryById,
+  updateIndustry,
+} from "./industry.thunk";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IIndustry } from "./industry.model";
 
 export interface IIndustryInitialState extends IInitialState {
-  businessActivities: IIndustry[];
-  businessActivity?: IIndustry | any;
+  industries: IIndustry[];
+  industry?: IIndustry | any;
+  listIndustry?: IIndustry[];
 }
 
 const initialState: IIndustryInitialState = {
   status: EFetchStatus.IDLE,
-  businessActivities: [],
-  businessActivity: undefined,
+  industries: [],
+  industry: undefined,
+  listIndustry: [],
   message: "",
   filter: {
     page: 1,
@@ -42,7 +52,7 @@ const industrySlice = createSlice({
     builder
       .addCase(getAllIndustry.fulfilled, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {
         if (payload.data) {
-          state.businessActivities = payload.data.data;
+          state.industries = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;
           state.number_of_elements = payload?.data?.number_of_elements;
         }
@@ -52,11 +62,11 @@ const industrySlice = createSlice({
       });
     builder
       .addCase(getIndustryById.fulfilled, (state, { payload }: PayloadAction<IIndustry> | any) => {
-        state.businessActivity = payload.data;
+        state.industry = payload.data;
         state.loading = false;
       })
       .addCase(getIndustryById.rejected, (state, { payload }: PayloadAction<IIndustry> | any) => {
-        state.businessActivity = payload.data;
+        state.industry = payload.data;
         state.message = transformPayloadErrors(payload?.errors);
         state.loading = true;
       });
@@ -88,7 +98,7 @@ const industrySlice = createSlice({
       .addCase(changeStatusIndustry.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusIndustry.fulfilled, (state, { payload }) => {
+      .addCase(changeStatusIndustry.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Trạng thái hoạt động của ngành nghề đã được cập nhật thành công";
       })
@@ -104,10 +114,19 @@ const industrySlice = createSlice({
       .addCase(deleteIndustry.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Xóa thành công";
-        state.businessActivities = state.businessActivities.filter((item) => String(item.id) !== payload);
+        state.industries = state.industries.filter((item) => String(item.id) !== payload);
       })
       .addCase(deleteIndustry.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
+      });
+    builder
+      .addCase(getIndustries.fulfilled, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {
+        if (payload.data) {
+          state.listIndustry = payload.data.data;
+        }
+      })
+      .addCase(getIndustries.rejected, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors);
       });
   },
 });

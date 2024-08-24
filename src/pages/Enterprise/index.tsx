@@ -6,10 +6,9 @@ import { ColumnsType } from "antd/es/table";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
-import { EPermissions } from "@/shared/enums/permissions";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import useFetchStatus from "@/hooks/useFetchStatus";
@@ -18,73 +17,107 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IEnterpriseInitialState, resetStatus, setFilter } from "@/services/store/enterprise/enterprise.slice";
 import { changeStatusEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const Enterprise = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const [isDelete, setIsDelete] = useState(false);
-
   const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",
+      className: "w-[100px]",
     },
     {
       dataIndex: "name",
       title: "Tên doanh nghiệp",
+      className: "w-[250px]",
     },
     {
       dataIndex: "representative",
       title: "Tên người đại diện",
+      className: "w-[250px]",
     },
     {
-      dataIndex: "contact_phone",
+      dataIndex: "organization_type",
+      title: "Loại hình doanh nghiệp",
+      className: "w-[250px]",
+      render(_, record, index) {
+        const typeOptions: IOption[] = typeEnterpriseEnumArray.map((e) => ({
+          value: e,
+          label: mappingTypeEnterprise[e],
+        }));
+        const organization_type = typeOptions.find((e) => +e.value === +record?.organization_type)?.label;
+        return <Fragment key={index}>{organization_type}</Fragment>;
+      },
+    },
+    {
+      dataIndex: "phone",
       title: "Điện thoại",
+      className: "w-[250px]",
     },
     {
       dataIndex: "email",
       title: "Email",
+      className: "w-[250px]",
     },
     {
       dataIndex: "address",
       title: "Địa chỉ",
+      className: "w-[250px]",
     },
     {
-      dataIndex: "id_field_of_activity",
+      dataIndex: "industries",
       title: "Lĩnh vực hoạt động",
+      render(_, record: { industries: { id: string; name: string }[] }) {
+        return (
+          <div className="flex flex-col">
+            {record.industries.map((item, index) => (
+              <div key={index}>{item?.name}</div>
+            ))}
+          </div>
+        );
+      },
     },
 
     {
       title: "Trạng thái",
       dataIndex: "is_active",
-      render(_, record) {
+      className: "w-[150px]",
+      render(_, record, index) {
         return (
-          <>
+          <div key={index} className="flex flex-col gap-2">
             <CommonSwitch
               onChange={() => handleChangeStatus(record)}
               checked={!!record.is_active}
-              title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
+              title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
             />
             <CommonSwitch
               onChange={() => handleChangeStatus(record)}
-              checked={!!record.is_blacklisted}
-              title={`Bạn có chắc chắn muốn ${record.is_blacklisted ? "bỏ cấm" : "cấm"} tài khoản này?`}
+              checked={!!record.is_blacklist}
+              title={`Bạn có chắc chắn muốn ${record.is_blacklist ? "bỏ danh sách đen" : "thêm vào danh sách đen"} doanh nghiệp này?`}
             />
-          </>
+            <CommonSwitch
+              onChange={() => handleChangeStatus(record)}
+              checked={!!record.account_ban_at}
+              title={`Bạn có chắc chắn muốn ${record.account_ban_at ? "bỏ cấm" : "cấm"} doanh nghiệp này?`}
+            />
+          </div>
         );
       },
     },
     // {
     //   title: "Trạng thái blacklist",
-    //   dataIndex: "is_blacklisted",
+    //   dataIndex: "is_blacklist",
     //   render(_, record) {
     //     return (
     //       <CommonSwitch
     //         onChange={() => handleChangeStatus(record)}
-    //         checked={!!record.is_blacklisted}
-    //         title={`Bạn có chắc chắn muốn ${record.is_blacklisted ? "bỏ cấm" : "cấm"} tài khoản này?`}
+    //         checked={!!record.is_blacklist}
+    //         title={`Bạn có chắc chắn muốn ${record.is_blacklist ? "bỏ cấm" : "cấm"} tài khoản này?`}
     //       />
     //     );
     //   },
@@ -96,22 +129,21 @@ const Enterprise = () => {
       onClick(record) {
         navigate(`detail/${record?.key}`);
       },
-      // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.CREATE_ENTERPRISE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`update/${record?.key}`);
       },
-      // permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.UPDATE_ENTERPRISE,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteEnterprise(record?.key));
-        setIsDelete(true);
       },
-      // permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.DESTROY_ENTERPRISE,
     },
   ];
   const search: ISearchTypeTable[] = [
@@ -153,12 +185,11 @@ const Enterprise = () => {
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllEnterprise({ query: state.filter }));
-      setIsDelete(false);
     }
   }, [JSON.stringify(state.status)]);
 
   useFetchStatus({
-    module: "business",
+    module: "enterprise",
     reset: resetStatus,
     actions: {
       success: { message: state.message },
@@ -169,7 +200,6 @@ const Enterprise = () => {
     return () => {
       setFilter({ page: 1, size: 10 });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
@@ -212,7 +242,7 @@ const Enterprise = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        scroll={{ x: 1600 }}
+        scroll={{ x: 2200 }}
       />
     </>
   );

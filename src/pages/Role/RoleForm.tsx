@@ -112,7 +112,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
   };
 
   const getAllKeysAndIds = (permissionNodes: TreeNode[]): { key: string; id: number }[] => {
-    let result: { key: string; id: number }[] = [];
+    const result: { key: string; id: number }[] = [];
     const seenIds = new Set<number>();
 
     for (const node of permissionNodes) {
