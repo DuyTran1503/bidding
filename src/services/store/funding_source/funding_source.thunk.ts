@@ -73,7 +73,7 @@ export const changeStatusFundingSource = createAsyncThunk(
       }
     },
   );
-  export const getListBusinessActivity = createAsyncThunk(
+  export const getListFundingSource = createAsyncThunk(
     "funding-sources/get-list-funding-sources",
     async (_, { rejectWithValue }) => {
       try {
