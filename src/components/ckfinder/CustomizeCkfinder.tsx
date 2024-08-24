@@ -1,6 +1,10 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+<<<<<<< HEAD
 // import Editor from "ckeditor5-custom-build";
 // import Editor from "ckeditor5-custom-build";
+=======
+import Editor from "ckeditor5-custom-build";
+>>>>>>> e2aa86a743535ab0748503b1ac164f9faacc34dc
 import "./ckfinder.scss";
 // const defaultToolbar = {
 //   items: [
@@ -78,7 +82,6 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
         "bold",
         "italic",
         "underline",
-        "strikethrough",
         "|",
         "bulletedList",
         "numberedList",
@@ -88,20 +91,14 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
         "|",
         "link",
         "blockQuote",
-        "imageInsert",
         // 'imageUpload',
-        "ckfinder",
         "mediaEmbed",
         "insertTable",
         "|",
         "undo",
         "redo",
         "specialCharacters",
-        "subscript",
-        "superscript",
         "|",
-        "showBlocks",
-        "sourceEditing",
         "pageBreak",
         "findAndReplace",
         "horizontalLine",
@@ -112,16 +109,9 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
         "fontColor",
         "fontBackgroundColor",
         "highlight",
-        "removeFormat",
       ],
     },
-    // simpleUpload: {
-    //   uploadUrl: url,
-    //   withCredentials: true,
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // },
+
     image: {
       toolbar: ["imageTextAlternative", "toggleImageCaption", "imageStyle:inline", "imageStyle:block", "imageStyle:side", "linkImage"],
     },
@@ -145,9 +135,10 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
       <CKEditor
         editor={Editor as any}
         data={value || ""}
-        onChange={(editor: any) => {
+        //@ts-ignore
+        onChange={(event: any, editor: any) => {
           if (!editor) return;
-          const data = editor.getData();
+          const data = editor?.getData();
           setFieldValue && setFieldValue(name, data || "");
           onChange && onChange(data);
         }}
