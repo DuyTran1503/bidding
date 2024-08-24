@@ -127,16 +127,14 @@ const Enterprise = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/enterprise/detail/${record?.key}`);
+        navigate(`detail/${record?.key}`);
       },
       permission: EPermissions.CREATE_ENTERPRISE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        console.log(record);
-
-        navigate(`/enterprise/update/${record?.key}`);
+        navigate(`update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_ENTERPRISE,
     },
@@ -158,21 +156,17 @@ const Enterprise = () => {
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.enterprises)
-      ? state.enterprises.map(
-          ({ id, name, organization_type, industries, representative, phone, email, address, is_active, is_blacklist }, index) => ({
-            index: index + 1,
-            key: id,
-            name,
-            representative,
-            industries,
-            organization_type,
-            phone,
-            email,
-            address,
-            is_active,
-            is_blacklist,
-          }),
-        )
+      ? state.enterprises.map(({ id, name, representative, contact_phone, email, address, is_active, is_blacklisted }, index) => ({
+        index: index + 1,
+        key: id,
+        name,
+        representative,
+        contact_phone,
+        email,
+        address,
+        is_active,
+        is_blacklisted,
+      }))
       : [];
   }, [JSON.stringify(state.enterprises)]);
   const handleChangeStatus = (item: ITableData) => {
