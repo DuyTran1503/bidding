@@ -4,7 +4,6 @@ import { client } from "@/services/config/client";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IError } from "@/shared/interface/error";
 
-
 const prefix = "/api/admin/bidbond";
 
 export const getAllBidBonds = createAsyncThunk(
