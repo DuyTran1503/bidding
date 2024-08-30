@@ -315,7 +315,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 <FormGroup title="Ảnh doanh nghiệp">
                   <FormUploadImage
                     onChange={(e: any) => {
-                      console.log(e?.at(0)?.name);
+                      // console.log(e?.at(0)?.name);
                       setFieldValue("avatar", e?.at(0)?.name);
                     }}
                   />
