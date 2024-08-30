@@ -178,6 +178,7 @@ const Components = () => {
           <h1 className="display-s-regular mb-2">FormUpload</h1>
           <UpdateImage
             //@ts-ignore
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onChange={function (value: File | File[] | null): void {
               throw new Error("Function not implemented.");
             }}
