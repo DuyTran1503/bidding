@@ -1,6 +1,5 @@
 import ConfirmModal from '@/components/common/CommonModal';
 import CommonSwitch from '@/components/common/CommonSwitch';
-import FormModal from '@/components/form/FormModal';
 import ManagementGrid from '@/components/grid/ManagementGrid';
 import Heading from '@/components/layout/Heading';
 import { ITableData } from '@/components/table/PrimaryTable';
@@ -8,14 +7,14 @@ import { ISearchTypeTable } from '@/components/table/SearchComponent';
 import { useArchive } from '@/hooks/useArchive';
 import useFetchStatus from '@/hooks/useFetchStatus';
 import { resetStatus, setFilter } from '@/services/store/account/account.slice';
-import { IBidBondInitialState } from '@/services/store/bidbond/bidBond.slice';
-import { changeStatusBidBond, deleteBidBond, getAllBidBonds } from '@/services/store/bidbond/bidBond.thunk';
+import { IBidBondInitialState } from '@/services/store/bidBond/bidBond.slice';
+import { changeStatusBidBond, deleteBidBond, getAllBidBonds } from '@/services/store/bidBond/bidBond.thunk';
 import { EButtonTypes } from '@/shared/enums/button';
 import { EFetchStatus } from '@/shared/enums/fetchStatus';
 import { EPermissions } from '@/shared/enums/permissions';
 import { IGridButton } from '@/shared/utils/shared-interfaces';
 import { ColumnsType } from 'antd/es/table';
-import React, { ReactNode, useEffect, useMemo, useState } from 'react'
+import React, {  useEffect, useMemo, useState } from 'react'
 import { FaPlus } from 'react-icons/fa';
 import { GoDownload } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
@@ -97,7 +96,6 @@ const BidBonds = () => {
       }
     },
   ];
-
 
   const handleChangeStatus = (item : ITableData) =>{
     setIsModal(true);

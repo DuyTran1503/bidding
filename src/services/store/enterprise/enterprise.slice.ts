@@ -120,7 +120,7 @@ const enterpriseSlice = createSlice({
       })
       .addCase(deleteEnterprise.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        console.log(payload?.message);
+        // console.log(payload?.message);
 
         state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });

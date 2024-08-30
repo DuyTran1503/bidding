@@ -134,7 +134,7 @@ const Enterprise = () => {
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        console.log(record);
+        // console.log(record);
 
         navigate(`/enterprise/update/${record?.key}`);
       },
