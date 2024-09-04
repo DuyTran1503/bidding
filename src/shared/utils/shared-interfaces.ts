@@ -15,6 +15,7 @@ export interface IFetchOptions extends IFetchHeaders {
 
 export interface IThunkPayload {
   body?: unknown;
+  requestBody?: FormData;
   query?: ISearchParams;
   param?: string;
   headers?: IFetchHeaders;
