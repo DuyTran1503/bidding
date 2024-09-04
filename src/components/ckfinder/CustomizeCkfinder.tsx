@@ -2,6 +2,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import "ckeditor5/ckeditor5.css";
 import "./ckfinder.scss";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Editor from "ckeditor5-custom-build";
 // const defaultToolbar = {
 //   items: [
 //     "heading",
@@ -129,7 +130,7 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
   return (
     <div className={`custom-editor w-full ${size ? `size-${size}` : ""} ${noBorder ? "no-border" : ""}`}>
       <CKEditor
-        editor={ClassicEditor}
+        editor={Editor as any}
         data={value || ""}
         //@ts-ignore
         onChange={(event: any, editor: any) => {
