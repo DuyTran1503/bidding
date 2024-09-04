@@ -47,6 +47,7 @@ import UpdateAttachment from "@/pages/Attachment/Update";
 import DetailAttachment from "@/pages/Attachment/Detail";
 import DetailBidDocument from "@/pages/BidDocument/Detail";
 import UpdateBidDocument from "@/pages/BidDocument/Update";
+import DetailEnterprise from "@/pages/Enterprise/Detail";
 import BiddingHistorys from "@/pages/BiddingHistory/BiddingHistory/BiddingHistory";
 import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/CreateBiddingHistory";
 import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
@@ -236,6 +237,10 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateEnterprise />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailEnterprise />,
               },
             ],
           },
