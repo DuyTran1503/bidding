@@ -75,7 +75,7 @@ const BusinessActivities = () => {
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/business_activity/update/${record?.key}`);
+        navigate(`update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },
@@ -98,12 +98,12 @@ const BusinessActivities = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.businessActivities)
       ? state.businessActivities.map(({ id, name, description, is_active }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          description,
-          is_active,
-        }))
+        index: index + 1,
+        key: id,
+        name,
+        description,
+        is_active,
+      }))
       : [];
   }, [JSON.stringify(state.businessActivities)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -157,7 +157,7 @@ const BusinessActivities = () => {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
-              navigate("/business_activity/create");
+              navigate("create");
             },
           },
         ]}

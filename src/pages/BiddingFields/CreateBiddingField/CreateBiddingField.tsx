@@ -19,7 +19,7 @@ const CreateBiddingField = () => {
     module: "bidding_field",
     reset: resetStatus,
     actions: {
-      success: { message: state.message, navigate: "/bidding_fields" },
+      success: { message: state.message, navigate: "/bidding-fields" },
       error: { message: state.message },
     },
   });
@@ -34,7 +34,7 @@ const CreateBiddingField = () => {
             type: "secondary",
             text: "Cancel",
             icon: <IoClose className="text-[18px]" />,
-            onClick: () => navigate("/bidding_fields"),
+            onClick: () => navigate("/bidding-fields"),
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
