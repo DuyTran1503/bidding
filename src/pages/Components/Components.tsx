@@ -5,7 +5,7 @@ import FormInput from "@/components/form/FormInput";
 import FormInputArea from "@/components/form/FormInputArea";
 import FormSelect from "@/components/form/FormSelect";
 import Heading from "@/components/layout/Heading";
-import UpdateImage from "@/components/form/FormUploadImage";
+import UpdateImage from "@/components/form/FormUpload/FormUploadImage";
 import { IoBagOutline, IoSaveOutline } from "react-icons/io5";
 import ImageTable from "@/components/table/ImageTable";
 import PrimaryTable from "@/components/table/PrimaryTable";

@@ -5,19 +5,19 @@ export interface IEnterprise {
   representative: string;
   phone: string;
   email: string;
-  avatar?: string;
+  avatar: File;
   taxcode?: string;
-  account_ban_at?: string | null;
+  account_ban_at: string | null;
   website?: string;
   join_date?: string;
-  industries: { id: number; name: string }[];
+  industry_id?: number[];
   description?: string;
   establish_date?: string;
   organization_type?: string | number;
   avg_document_rating?: string;
   registration_date?: string;
   registration_number?: string;
-  is_active?: boolean;
-  is_blacklist?: boolean;
+  is_active?: number;
+  is_blacklist?: number;
   password?: string;
 }
