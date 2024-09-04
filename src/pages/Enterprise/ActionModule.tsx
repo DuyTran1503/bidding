@@ -17,9 +17,13 @@ import { IOption } from "@/shared/utils/shared-interfaces";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormDate from "@/components/form/FormDate";
 import dayjs from "dayjs";
-import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
-import { getListBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
-import FormUploadImage from "@/components/form/FormUploadImage";
+import FormUploadImage from "@/components/form/FormUpload/FormUploadImage";
+import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
+import { getIndustries } from "@/services/store/industry/industry.thunk";
+import { objectToFormData } from "@/shared/utils/common/formData";
+import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
+import FormSingleFile from "@/components/form/FormUpload/FormSingleFile";
+import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 
 interface IEnterpriseFormProps {
   formikRef?: FormikRefType<IEnterpriseInitialValues>;
@@ -34,11 +38,10 @@ export interface IEnterpriseInitialValues {
   representative: string;
   phone: string;
   email: string;
-  avatar?: string;
+  avatar?: File;
   taxcode?: string;
-  account_ban_at?: string | null;
+  account_ban_at: string | null;
   website?: string;
-  industries?: number[];
   industry_id?: number[];
   description?: string;
   establish_date?: string;
@@ -46,13 +49,13 @@ export interface IEnterpriseInitialValues {
   avg_document_rating?: string;
   registration_date?: string;
   registration_number?: string;
-  is_active?: boolean;
-  is_blacklist?: boolean;
+  is_active?: number;
+  is_blacklist?: number;
   password?: string;
 }
 const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) => {
   const { dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
-  const { state: industryState, dispatch: dispatchIndustry } = useArchive<IBusinessActivityInitialState>("business");
+  const { state: industryState, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
   const initialValues: IEnterpriseInitialValues = {
     id: enterprise?.id ?? "",
     name: enterprise?.name ?? "",
@@ -61,11 +64,10 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     representative: enterprise?.representative ?? "",
     phone: enterprise?.phone ?? "",
     email: enterprise?.email ?? "",
-    avatar: enterprise?.avatar ?? "",
+    avatar: enterprise?.avatar ?? undefined,
     taxcode: enterprise?.taxcode ?? "",
     account_ban_at: enterprise?.account_ban_at ?? null,
     website: enterprise?.website ?? "",
-    industries: enterprise?.industries ?? [],
     industry_id: enterprise?.industry_id ?? [],
     establish_date: enterprise?.establish_date ?? "",
     organization_type: enterprise?.organization_type ?? "",
@@ -73,8 +75,8 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     registration_date: enterprise?.registration_date ?? "",
     registration_number: enterprise?.registration_number ?? "",
     password: enterprise?.password ?? "",
-    is_active: enterprise?.is_active ?? false,
-    is_blacklist: enterprise?.is_blacklist ?? false,
+    is_active: enterprise?.is_active ?? 0,
+    is_blacklist: enterprise?.is_blacklist ?? 0,
   };
   const tagSchema = object().shape({
     name: string().trim().required("Vui lòng không để trống trường này"),
@@ -85,13 +87,13 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     };
   }, []);
   useEffect(() => {
-    dispatchIndustry(getListBusinessActivity());
+    dispatchIndustry(getIndustries());
   }, []);
   const typeOptions: IOption[] = typeEnterpriseEnumArray.map((e) => ({
     value: e,
     label: mappingTypeEnterprise[e],
   }));
-  const optionsIndustry: IOption[] = industryState.listBusinessActivities.map((e) => ({
+  const optionsIndustry: IOption[] = industryState?.listIndustry!.map((e) => ({
     value: e.id,
     label: e.name,
   }));
@@ -102,20 +104,20 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
       validationSchema={tagSchema}
       onSubmit={(data) => {
         const body = {
-          ...lodash.omit(data, "id", "industries", "avg_document_rating "),
+          ...lodash.omit(data, "avg_document_rating"),
           account_ban_at: data.account_ban_at ? dayjs(new Date().toISOString()).format("YYYY-MM-DD") : null,
         };
-
         if (type === EPageTypes.CREATE) {
-          dispatchEnterprise(createEnterprise({ body: body }));
+          dispatchEnterprise(createEnterprise(body as Omit<IEnterprise, "id">));
         } else if (type === EPageTypes.UPDATE && enterprise?.id) {
-          dispatchEnterprise(updateEnterprise({ body: lodash.omit(data, "id", "industries", "avg_document_rating"), param: String(enterprise.id) }));
+          dispatchEnterprise(updateEnterprise({ body: body, param: String(enterprise.id) }));
         }
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
           <Form>
+            <img src={`https://base.septenarysolution.site/${values.avatar}`} alt="" />
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tên doanh nghiệp">
@@ -311,17 +313,20 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
               </Col>
             </Row>
             <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Ảnh doanh nghiệp">
-                  <FormUploadImage
+                  <FormUploadFile
+                    isMultiple={false}
+                    value={values.avatar}
                     onChange={(e: any) => {
-                      console.log(e?.at(0)?.name);
-                      setFieldValue("avatar", e?.at(0)?.name);
+                      setFieldValue("avatar", e);
                     }}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            </Row>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Trạng thái cấm">
                   <FormSwitch
                     checked={!!values.account_ban_at ? true : false}
@@ -331,9 +336,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-            </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Trạng thái hoạt động">
                   <FormSwitch
                     checked={!!values.is_active ? true : false}
@@ -343,7 +346,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Danh sách blacklist">
                   <FormSwitch
                     checked={!!values.is_blacklist ? true : false}

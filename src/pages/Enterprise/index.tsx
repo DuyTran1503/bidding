@@ -19,12 +19,20 @@ import { IEnterpriseInitialState, resetStatus, setFilter } from "@/services/stor
 import { changeStatusEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
 import { EPermissions } from "@/shared/enums/permissions";
+import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
+import { getIndustries } from "@/services/store/industry/industry.thunk";
 
 const Enterprise = () => {
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { state: enterpriseState, dispatch: enterpriseDispatch } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { state: industryState, dispatch: industryDispatch } = useArchive<IIndustryInitialState>("industry");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+  const industry = (value: number[]) => {
+    if (industryState?.listIndustry!.length > 0 && value.length) {
+      return industryState.listIndustry!.filter((item) => value.includes(+item.id)).map((item) => item.name);
+    }
+  };
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -70,16 +78,10 @@ const Enterprise = () => {
       className: "w-[250px]",
     },
     {
-      dataIndex: "industries",
+      dataIndex: "industry_id",
       title: "Lĩnh vực hoạt động",
-      render(_, record: { industries: { id: string; name: string }[] }) {
-        return (
-          <div className="flex flex-col">
-            {record.industries.map((item, index) => (
-              <div key={index}>{item?.name}</div>
-            ))}
-          </div>
-        );
+      render(_, record) {
+        return <div className="flex flex-col">{record?.enterprises?.map((item: string, index: number) => <div key={index}>{item}</div>)}</div>;
       },
     },
 
@@ -90,7 +92,7 @@ const Enterprise = () => {
       render(_, record, index) {
         return (
           <div key={index} className="flex flex-col gap-2">
-            <CommonSwitch
+            {/* <CommonSwitch
               onChange={() => handleChangeStatus(record)}
               checked={!!record.is_active}
               title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
@@ -99,7 +101,7 @@ const Enterprise = () => {
               onChange={() => handleChangeStatus(record)}
               checked={!!record.is_blacklist}
               title={`Bạn có chắc chắn muốn ${record.is_blacklist ? "bỏ danh sách đen" : "thêm vào danh sách đen"} doanh nghiệp này?`}
-            />
+            /> */}
             <CommonSwitch
               onChange={() => handleChangeStatus(record)}
               checked={!!record.account_ban_at}
@@ -109,20 +111,8 @@ const Enterprise = () => {
         );
       },
     },
-    // {
-    //   title: "Trạng thái blacklist",
-    //   dataIndex: "is_blacklist",
-    //   render(_, record) {
-    //     return (
-    //       <CommonSwitch
-    //         onChange={() => handleChangeStatus(record)}
-    //         checked={!!record.is_blacklist}
-    //         title={`Bạn có chắc chắn muốn ${record.is_blacklist ? "bỏ cấm" : "cấm"} tài khoản này?`}
-    //       />
-    //     );
-    //   },
-    // },
   ];
+
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -134,8 +124,6 @@ const Enterprise = () => {
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        console.log(record);
-
         navigate(`/enterprise/update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_ENTERPRISE,
@@ -143,7 +131,7 @@ const Enterprise = () => {
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteEnterprise(record?.key));
+        enterpriseDispatch(deleteEnterprise(record?.key));
       },
       permission: EPermissions.DESTROY_ENTERPRISE,
     },
@@ -157,49 +145,50 @@ const Enterprise = () => {
     },
   ];
   const data: ITableData[] = useMemo(() => {
-    return Array.isArray(state.enterprises)
-      ? state.enterprises.map(
-          ({ id, name, organization_type, industries, representative, phone, email, address, is_active, is_blacklist }, index) => ({
+    return Array.isArray(enterpriseState.enterprises)
+      ? enterpriseState.enterprises.map(
+          ({ id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at }, index) => ({
             index: index + 1,
             key: id,
             name,
             representative,
-            industries,
+            enterprises: industry_id?.length && industry(industry_id),
             organization_type,
             phone,
             email,
             address,
             is_active,
             is_blacklist,
+            account_ban_at,
           }),
         )
       : [];
-  }, [JSON.stringify(state.enterprises)]);
+  }, [JSON.stringify(enterpriseState.enterprises)]);
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
   };
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusEnterprise(String(confirmItem.key)));
-      dispatch(getAllEnterprise({ query: state.filter }));
+      enterpriseDispatch(changeStatusEnterprise(String(confirmItem.key)));
     }
   };
   useEffect(() => {
-    dispatch(getAllEnterprise({ query: state.filter }));
-  }, [JSON.stringify(state.filter)]);
+    enterpriseDispatch(getAllEnterprise({ query: enterpriseState.filter }));
+    industryDispatch(getIndustries());
+  }, [JSON.stringify(enterpriseState.filter)]);
   useEffect(() => {
-    if (state.status === EFetchStatus.FULFILLED) {
-      dispatch(getAllEnterprise({ query: state.filter }));
+    if (enterpriseState.status === EFetchStatus.FULFILLED) {
+      enterpriseDispatch(getAllEnterprise({ query: enterpriseState.filter }));
     }
-  }, [JSON.stringify(state.status)]);
+  }, [JSON.stringify(enterpriseState.status)]);
 
   useFetchStatus({
     module: "enterprise",
     reset: resetStatus,
     actions: {
-      success: { message: state.message },
-      error: { message: state.message },
+      success: { message: enterpriseState.message },
+      error: { message: enterpriseState.message },
     },
   });
   useEffect(() => {
@@ -240,14 +229,14 @@ const Enterprise = () => {
         search={search}
         buttons={buttons}
         pagination={{
-          current: state.filter.page ?? 1,
-          pageSize: state.filter.size ?? 10,
-          total: state.totalRecords,
-          number_of_elements: state.number_of_elements && state.number_of_elements,
+          current: enterpriseState.filter.page ?? 1,
+          pageSize: enterpriseState.filter.size ?? 10,
+          total: enterpriseState.totalRecords,
+          number_of_elements: enterpriseState.number_of_elements && enterpriseState.number_of_elements,
           // showSideChanger:true
         }}
         setFilter={setFilter}
-        filter={state.filter}
+        filter={enterpriseState.filter}
         scroll={{ x: 2200 }}
       />
     </>

@@ -8,7 +8,7 @@ const useArchive = <T,>(key?: keyof RootStateType) => {
   const selector: typeof useSelector = useSelector;
   let state: T = {} as T;
   if (key) {
-    //@ts-ignore
+    // @ts-ignore
     state = useSelector((state: RootStateType) => state[key]);
     return { dispatch, selector, state };
   }
