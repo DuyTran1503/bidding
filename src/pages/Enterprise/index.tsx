@@ -117,7 +117,7 @@ const Enterprise = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/enterprise/detail/${record?.key}`);
+        navigate(`detail/${record?.key}`);
       },
       permission: EPermissions.CREATE_ENTERPRISE,
     },

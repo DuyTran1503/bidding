@@ -7,9 +7,9 @@ import { IBiddingTypeInitialState } from "@/services/store/biddingType/biddingTy
 import { IBiddingType } from "@/services/store/biddingType/biddingType.model";
 import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
-import FormInputArea from "@/components/form/FormInputArea";
 import { createBiddingType, updateBiddingType } from "@/services/store/biddingType/biddingType.thunk";
 import { EPageTypes } from "@/shared/enums/page";
+import FormCkEditor from "@/components/form/FormCkEditor";
 
 interface IBiddingTypeFormProps {
   formikRef?: any;
@@ -87,13 +87,12 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
             </Row>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormInputArea
-                  label="Mô tả"
-                  placeholder="Nhập mô tả..."
-                  name="description"
+                <FormCkEditor
+                  id="description"
+                  direction="vertical"
                   value={values.description}
-                  error={touched.description ? errors.description : ""}
-                  onChange={(e) => setFieldValue("description", e)}
+                  setFieldValue={setFieldValue}
+                  disabled={type === EPageTypes.VIEW}
                 />
               </Col>
             </Row>
