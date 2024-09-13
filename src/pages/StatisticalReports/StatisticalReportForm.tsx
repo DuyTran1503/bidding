@@ -6,10 +6,10 @@ import lodash from "lodash";
 import { IStatisticalReportInitialState } from "@/services/store/statisticalReport/statisticalReport.slice";
 import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
-import FormInputArea from "@/components/form/FormInputArea";
 import { createStatisticalReport, updateStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import { IStatisticalReport } from "@/services/store/statisticalReport/statisticalReport.model";
+import FormCkEditor from "@/components/form/FormCkEditor";
 
 interface IStatisticalReportFormProps {
   formikRef?: any;
@@ -18,7 +18,10 @@ interface IStatisticalReportFormProps {
 }
 
 export interface IStatisticalReportFormInitialValues {
+  user_id: string;
   name: string;
+  type: string;
+  period: string;
   description: string;
   is_active: string;
 }
@@ -27,11 +30,13 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
   const { dispatch } = useArchive<IStatisticalReportInitialState>("statistical_report");
 
   const initialValues: IStatisticalReportFormInitialValues = {
+    user_id: statisticalReport?.user_id || "",
     name: statisticalReport?.name || "",
+    type: statisticalReport?.type || "",
+    period: statisticalReport?.period || "",
     description: statisticalReport?.description || "",
     is_active: statisticalReport?.is_active ? "1" : "0",
   };
-
   return (
     <Formik
       innerRef={formikRef}
@@ -60,18 +65,29 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => (
         <div>
-          <FormGroup title="Thông tin chung">
+          <FormGroup title="Thêm mới">
+            <FormInput
+              type="text"
+              isDisabled={type === "view"}
+              label="Tên báo cáo thống kê"
+              value={values.name}
+              name="name"
+              error={touched.name ? errors.name : ""}
+              placeholder="Nhập tên loại hình đấu thầu..."
+              onChange={(value) => setFieldValue("name", value)}
+              onBlur={handleBlur}
+            />
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormInput
                   type="text"
-                  isDisabled={type === "view"}
-                  label="Tên báo cáo thống kê"
-                  value={values.name}
-                  name="name"
-                  error={touched.name ? errors.name : ""}
-                  placeholder="Nhập tên loại hình đấu thầu..."
-                  onChange={(value) => setFieldValue("name", value)}
+                  isDisabled={type === EPageTypes.VIEW || type === EPageTypes.UPDATE || type === EPageTypes.CREATE}
+                  label="Tên người tạo báo cáo"
+                  value={values.user_id}
+                  name="user_id"
+                  error={touched.user_id ? errors.user_id : ""}
+                  placeholder="Nhập tên người tạo"
+                  onChange={(value) => setFieldValue("user_id", value)}
                   onBlur={handleBlur}
                 />
               </Col>
@@ -85,16 +101,46 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
                 />
               </Col>
             </Row>
+
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormInput
+                  type="text"
+                  isDisabled={type === EPageTypes.VIEW}
+                  label="Loại báo cáo"
+                  value={values.type}
+                  name="type"
+                  error={touched.type ? errors.type : ""}
+                  placeholder="Nhập loại báo cáo..."
+                  onChange={(value) => setFieldValue("type", value)}
+                  onBlur={handleBlur}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormInput
+                  type="text"
+                  isDisabled={type === EPageTypes.VIEW}
+                  label="Kỳ báo cáo"
+                  value={values.period}
+                  name="period"
+                  error={touched.period ? errors.period : ""}
+                  placeholder="Nhập Kỳ báo cáo..."
+                  onChange={(value) => setFieldValue("period", value)}
+                  onBlur={handleBlur}
+                />
+              </Col>
+            </Row>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormInputArea
-                  label="Mô tả"
-                  placeholder="Nhập mô tả..."
-                  name="description"
-                  value={values.description}
-                  error={touched.description ? errors.description : ""}
-                  onChange={(e) => setFieldValue("description", e)}
-                />
+                <FormGroup title="Mô tả">
+                  <FormCkEditor
+                    id="description"
+                    direction="vertical"
+                    value={values.description}
+                    setFieldValue={setFieldValue}
+                    disabled={type === EPageTypes.VIEW}
+                  />
+                </FormGroup>
               </Col>
             </Row>
           </FormGroup>
