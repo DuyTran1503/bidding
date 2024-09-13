@@ -1,60 +1,9 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import "ckeditor5/ckeditor5.css";
 import "./ckfinder.scss";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Editor from "ckeditor5-custom-build";
-// const defaultToolbar = {
-//   items: [
-//     "heading",
-//     "|",
-//     "fontFamily",
-//     "fontBackgroundColor",
-//     "fontColor",
-//     "fontSize",
-//     "highlight",
-//     "|",
-//     "bold",
-//     "italic",
-//     "underline",
-//     "link",
-//     "alignment",
-//     "bulletedList",
-//     "numberedList",
-//     "|",
-//     "outdent",
-//     "indent",
-//     "|",
-//     "imageUpload",
-//     "blockQuote",
-//     "insertTable",
-//     "undo",
-//     "redo",
-//     "horizontalLine",
-//     "pageBreak",
-//     "|",
-//     "findAndReplace",
-//     "selectAll",
-//   ],
-// };
 
-// const simpleToolbar = {
-//   items: [
-//     "bold",
-//     "italic",
-//     "underline",
-//     "link",
-//     "|",
-//     "alignment",
-//     "bulletedList",
-//     "numberedList",
-//     "|",
-//     "imageUpload",
-//     "blockQuote",
-//     "insertTable",
-//     "undo",
-//     "redo",
-//   ],
-// };
 interface ICustomEditorProps {
   id: string;
   readonly?: boolean;

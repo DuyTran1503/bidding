@@ -62,8 +62,8 @@ const UpdateEnterprise = () => {
           avg_document_rating: data?.avg_document_rating ?? "",
           registration_date: data?.registration_date ?? "",
           registration_number: data?.registration_number ?? "",
-          is_active: data?.is_active ?? false,
-          is_blacklist: data?.is_blacklist ?? false,
+          is_active: data?.is_active ?? 0,
+          is_blacklist: data?.is_blacklist ?? 0,
         });
       }
     }
