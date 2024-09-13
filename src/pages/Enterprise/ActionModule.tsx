@@ -17,12 +17,9 @@ import { IOption } from "@/shared/utils/shared-interfaces";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormDate from "@/components/form/FormDate";
 import dayjs from "dayjs";
-import FormUploadImage from "@/components/form/FormUpload/FormUploadImage";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
-import { objectToFormData } from "@/shared/utils/common/formData";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
-import FormSingleFile from "@/components/form/FormUpload/FormSingleFile";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 
 interface IEnterpriseFormProps {
@@ -53,6 +50,7 @@ export interface IEnterpriseInitialValues {
   is_blacklist?: number;
   password?: string;
 }
+
 const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) => {
   const { dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: industryState, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
@@ -78,7 +76,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     is_active: enterprise?.is_active ?? 0,
     is_blacklist: enterprise?.is_blacklist ?? 0,
   };
-  const tagSchema = object().shape({
+  const Schema = object().shape({
     name: string().trim().required("Vui lòng không để trống trường này"),
   });
   useEffect(() => {
@@ -101,7 +99,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     <Formik
       innerRef={formikRef}
       initialValues={initialValues}
-      validationSchema={tagSchema}
+      validationSchema={Schema}
       onSubmit={(data) => {
         const body = {
           ...lodash.omit(data, "avg_document_rating"),
@@ -110,14 +108,14 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
         if (type === EPageTypes.CREATE) {
           dispatchEnterprise(createEnterprise(body as Omit<IEnterprise, "id">));
         } else if (type === EPageTypes.UPDATE && enterprise?.id) {
-          dispatchEnterprise(updateEnterprise({ body: body, param: String(enterprise.id) }));
+          const newData = enterprise.avatar === body.avatar ? (({ avatar, ...rest }) => rest)(body) : body;
+          dispatchEnterprise(updateEnterprise({ body: newData, param: String(enterprise.id) }));
         }
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
           <Form>
-            <img src={`https://base.septenarysolution.site/${values.avatar}`} alt="" />
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tên doanh nghiệp">
