@@ -7,25 +7,20 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-// import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IStatisticalReportInitialState, resetStatus, setFilter } from "@/services/store/statisticalReport/statisticalReport.slice";
+import { IBiddingHistoryInitialState, resetStatus, setFilter } from "@/services/store/biddingHistory/biddingHistory.slice";
+import { changeStatusBiddingHistory, deleteBiddingHistory, getAllBiddingHistorys } from "@/services/store/biddingHistory/biddingHistory.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
-import {
-    changeStatusStatisticalReport,
-    deleteStatisticalReport,
-    getAllStatisticalReports
-} from "@/services/store/statisticalReport/statisticalReport.thunk";
 import { GoDownload } from "react-icons/go";
 
-const StatisticalReports = () => {
+const BiddingHistorys = () => {
     const navigate = useNavigate();
-    const { state, dispatch } = useArchive<IStatisticalReportInitialState>("statistical_report");
+    const { state, dispatch } = useArchive<IBiddingHistoryInitialState>("bidding_type");
     const [isModal, setIsModal] = useState(false);
     const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
@@ -35,21 +30,21 @@ const StatisticalReports = () => {
             onClick(record) {
                 navigate(`update/${record?.key}`);
             },
-            permission: EPermissions.DETAIL_STATISTICAL_REPORT,
+            permission: EPermissions.DETAIL_BIDDING_TYPE,
         },
         {
             type: EButtonTypes.UPDATE,
             onClick(record) {
                 navigate(`update/${record?.key}`);
             },
-            permission: EPermissions.UPDATE_STATISTICAL_REPORT,
+            permission: EPermissions.UPDATE_BIDDING_TYPE,
         },
         {
             type: EButtonTypes.DESTROY,
             onClick(record) {
-                dispatch(deleteStatisticalReport(record?.key));
+                dispatch(deleteBiddingHistory(record?.key));
             },
-            permission: EPermissions.DESTROY_STATISTICAL_REPORT,
+            permission: EPermissions.DESTROY_BIDDING_TYPE,
         },
     ];
 
@@ -59,20 +54,20 @@ const StatisticalReports = () => {
             title: "STT",
         },
         {
-            dataIndex: "type",
-            title: "Type",
+            dataIndex: "event_date",
+            title: "Event_date",
         },
         {
-            dataIndex: "name",
-            title: "Name",
+            dataIndex: "project_id",
+            title: "Project_id",
         },
         {
-            dataIndex: "period",
-            title: "Period",
+            dataIndex: "event_type",
+            title: "Event_type",
         },
         {
-            dataIndex: "description",
-            title: "Description",
+            dataIndex: "event_description",
+            title: "Event_description",
         },
         {
             title: "Trạng thái",
@@ -96,7 +91,7 @@ const StatisticalReports = () => {
 
     const onConfirmStatus = () => {
         if (confirmItem && confirmItem.key) {
-            dispatch(changeStatusStatisticalReport(String(confirmItem.key)));
+            dispatch(changeStatusBiddingHistory(String(confirmItem.key)));
         }
     };
 
@@ -111,23 +106,22 @@ const StatisticalReports = () => {
 
     const data: ITableData[] = useMemo(
         () =>
-            state.statisticalReports && state.statisticalReports.length > 0
-                ? state.statisticalReports.map(({ id, user_id, name, type, period, description, is_active }, index) => ({
+            state.biddingHistorys && state.biddingHistorys.length > 0
+                ? state.biddingHistorys.map(({ id, project_id, event_date, event_description, event_type, is_active }, index) => ({
                     index: index + 1,
                     key: id,
-                    user_id,
-                    name,
-                    type,
-                    period,
-                    description,
+                    project_id,
+                    event_type,
+                    event_date,
+                    event_description,
                     is_active,
                 }))
                 : [],
-        [JSON.stringify(state.statisticalReports)],
+        [JSON.stringify(state.biddingHistorys)],
     );
 
     useFetchStatus({
-        module: "statistical_report",
+        module: "bidding_type",
         reset: resetStatus,
         actions: {
             success: { message: state.message },
@@ -137,18 +131,18 @@ const StatisticalReports = () => {
 
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
-            dispatch(getAllStatisticalReports({ query: state.filter }));
+            dispatch(getAllBiddingHistorys({ query: state.filter }));
         }
     }, [JSON.stringify(state.status)]);
 
     useEffect(() => {
-        dispatch(getAllStatisticalReports({ query: state.filter }));
+        dispatch(getAllBiddingHistorys({ query: state.filter }));
     }, [JSON.stringify(state.filter)]);
 
     return (
         <>
             <Heading
-                title="Thông báo thống kê"
+                title="Lịch sử đấu thầu"
                 hasBreadcrumb
                 buttons={[
                     {
@@ -158,7 +152,7 @@ const StatisticalReports = () => {
                     },
                     {
                         icon: <FaPlus className="text-[18px]" />,
-                        // permission: EPermissions.CREATE_STATISTICALREPORT,
+                        permission: EPermissions.CREATE_BIDDING_TYPE,
                         text: "Thêm mới",
                         onClick: () => navigate("create"),
                     },
@@ -188,4 +182,4 @@ const StatisticalReports = () => {
     );
 };
 
-export default StatisticalReports;
+export default BiddingHistorys;
