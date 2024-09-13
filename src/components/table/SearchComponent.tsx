@@ -55,7 +55,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
       {({ values, errors, handleBlur, setFieldValue, resetForm, handleSubmit }) => {
         return (
           <div className={`${isShow ? "hidden" : ""} row-gap-3 flex flex-col px-4 py-3`}>
-            <Row className="row-gap-2 row-gap-lg-3 items-center gap-4">
+            <Row gutter={[24, 24]} className="row-gap-2 row-gap-lg-3 items-center">
               {search.map((item, index) => {
                 if (item.type === "text") {
                   const value: any = values[item.id] || "";
