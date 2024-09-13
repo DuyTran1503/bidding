@@ -18,11 +18,7 @@
     "@reduxjs/toolkit": "^2.2.3",
     "antd": "^5.17.3",
     "axios": "^1.7.3",
-<<<<<<< HEAD
-    "ckeditor5-custom-build": "file:./src/assets/lib/ckeditor5",
-=======
     "ckeditor5-custom-build": "./src/assets/lib/ckeditor5",
->>>>>>> e2aa86a743535ab0748503b1ac164f9faacc34dc
     "clsx": "^2.1.1",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
