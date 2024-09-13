@@ -4,6 +4,8 @@ import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IError } from "@/shared/interface/error";
 import { IEnterprise } from "./enterprise.model";
 import { IIndustry } from "../industry/industry.model";
+import { objectToFormData } from "@/shared/utils/common/formData";
+import lodash from "lodash";
 
 const prefix = "/api/admin/enterprises";
 
@@ -25,24 +27,74 @@ export const getEnterpriseById = createAsyncThunk("enterprises/get-enterprises-b
   }
 });
 
-export const createEnterprise = createAsyncThunk("enterprises/create-enterprises", async (payload: IThunkPayload, { rejectWithValue }) => {
-  try {
-    const { response, data } = await client.post(prefix, payload);
+// export const createEnterprise = createAsyncThunk("enterprises/create-enterprises", async (payload: IThunkPayload, { rejectWithValue }) => {
+//   try {
+//     const { response, data } = await client.post(prefix, payload);
 
-    return response.status >= 400 ? rejectWithValue(data) : data;
+//     return response.status >= 400 ? rejectWithValue(data) : data;
+//   } catch (error: any) {
+//     return rejectWithValue(error.response.data as IError);
+//   }
+// });
+export const createEnterprise = createAsyncThunk("enterprises/create-enterprises", async (request: Omit<IEnterprise, "id">, thunkAPI) => {
+  try {
+    const formData = objectToFormData(request);
+
+    const accessToken = client.tokens.accessToken();
+
+    const response = await fetch(import.meta.env.VITE_API_URL + prefix, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return thunkAPI.rejectWithValue(error);
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error: any) {
-    return rejectWithValue(error.response.data as IError);
+    return thunkAPI.rejectWithValue(error.response.data);
   }
 });
-
-export const updateEnterprise = createAsyncThunk("enterprises/update-enterprises", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const updateEnterprise = createAsyncThunk("enterprises/update-enterprises", async (payload: IThunkPayload, thunkAPI) => {
   try {
-    const { response, data } = await client.patch(`${prefix}/${payload?.param}`, payload);
-    return response.status >= 400 ? rejectWithValue(data) : data;
+    const formData = objectToFormData(payload.body as IEnterprise);
+    console.log(formData.get("avatar"));
+
+    const accessToken = client.tokens.accessToken();
+
+    const response = await fetch(import.meta.env.VITE_API_URL + `${prefix}/${payload?.param}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return thunkAPI.rejectWithValue(error);
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error: any) {
-    return rejectWithValue(error.response.data);
+    return thunkAPI.rejectWithValue(error.response.data);
   }
 });
+// export const updateEnterprise = createAsyncThunk("enterprises/update-enterprises", async (payload: IThunkPayload, { rejectWithValue }) => {
+//   try {
+//     const { response, data } = await client.put(`${prefix}/${payload?.param}`, payload);
+//     return response.status >= 400 ? rejectWithValue(data) : data;
+//   } catch (error: any) {
+//     return rejectWithValue(error.response.data);
+//   }
+// });
 
 export const deleteEnterprise = createAsyncThunk("enterprises/delete-enterprises", async (id: string, { rejectWithValue }) => {
   try {
@@ -52,18 +104,26 @@ export const deleteEnterprise = createAsyncThunk("enterprises/delete-enterprises
     return rejectWithValue(error.response.data);
   }
 });
-export const changeStatusEnterprise = createAsyncThunk("enterprises/change-status-enterprises", async (id: string, { rejectWithValue }) => {
-  try {
-    const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
-    return response.status >= 400 ? rejectWithValue(data) : id;
-  } catch (error: any) {
-    return rejectWithValue(error.response.data);
-  }
-});
+// export const changeStatusEnterprise = createAsyncThunk("enterprises/change-status-enterprises", async (id: string, { rejectWithValue }) => {
+//   try {
+//     const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
+//     return response.status >= 400 ? rejectWithValue(data) : id;
+//   } catch (error: any) {
+//     return rejectWithValue(error.response.data);
+//   }
+// });
 export const getIndustries = createAsyncThunk("enterprises/get-list-industries", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IIndustry[]>(`${prefix}/list`, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+export const changeStatusEnterprise = createAsyncThunk("staff/change-status-enterprises", async (id: string, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.post(`${prefix}/ban/${id}`);
+    return response.status >= 400 ? rejectWithValue(data) : id;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }

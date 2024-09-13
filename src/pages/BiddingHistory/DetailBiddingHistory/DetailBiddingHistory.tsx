@@ -6,23 +6,23 @@ import Heading from "@/components/layout/Heading";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
 import { EPageTypes } from "@/shared/enums/page";
-import { getStatisticalReportById } from "@/services/store/statisticalReport/statisticalReport.thunk";
-import { IStatisticalReportInitialState, resetStatus } from "@/services/store/statisticalReport/statisticalReport.slice";
-import StatisticalReportForm, { IStatisticalReportFormInitialValues } from "../StatisticalReportForm";
+import { getBiddingHistoryById } from "@/services/store/biddingHistory/biddingHistory.thunk";
+import { IBiddingHistoryInitialState, resetStatus } from "@/services/store/biddingHistory/biddingHistory.slice";
+import BiddingHistoryForm, { IBiddingHistoryFormInitialValues } from "../BiddingHistoryForm";
 
-const DetailStatisticalReport = () => {
+const DetailBiddingHistory = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IStatisticalReportFormInitialValues>>(null);
-  const { state, dispatch } = useArchive<IStatisticalReportInitialState>("statistical_report");
+  const formikRef = useRef<FormikProps<IBiddingHistoryFormInitialValues>>(null);
+  const { state, dispatch } = useArchive<IBiddingHistoryInitialState>("bidding_type");
   const { id } = useParams();
 
   useFetchStatus({
-    module: "statistical_report",
+    module: "bidding_type",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/statistical-reports",
+        navigate: "/bidding-historys",
       },
       error: {
         message: state.message,
@@ -32,14 +32,14 @@ const DetailStatisticalReport = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(getStatisticalReportById(id));
+      dispatch(getBiddingHistoryById(id));
     }
   }, [id]);
 
   return (
     <>
       <Heading
-        title="Chi tiết báo cáo thống kê"
+        title="Chi tiết lịch sử đấu thầu"
         hasBreadcrumb
         buttons={[
           {
@@ -47,13 +47,13 @@ const DetailStatisticalReport = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/statistical-reports");
+              navigate("/bidding-historys");
             },
           },
         ]}
       />
-      {state.activeStatisticalReport ? (
-        <StatisticalReportForm type={EPageTypes.VIEW} formikRef={formikRef} statisticalReport={state.activeStatisticalReport} />
+      {state.activeBiddingHistory ? (
+        <BiddingHistoryForm type={EPageTypes.VIEW} formikRef={formikRef} biddingHistory={state.activeBiddingHistory} />
       ) : (
         <div>Loading...</div>
       )}
@@ -61,4 +61,4 @@ const DetailStatisticalReport = () => {
   );
 };
 
-export default DetailStatisticalReport;
+export default DetailBiddingHistory;

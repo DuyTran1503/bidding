@@ -8,13 +8,13 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
 import { EPageTypes } from "@/shared/enums/page";
-import { IBiddingTypeInitialState, resetStatus } from "@/services/store/biddingType/biddingType.slice";
-import BiddingTypeForm, { IBiddingTypeFormInitialValues } from "../BiddingTypeForm";
+import { IBiddingHistoryInitialState, resetStatus } from "@/services/store/biddingHistory/biddingHistory.slice";
+import BiddingHistoryForm, { IBiddingHistoryFormInitialValues } from "../BiddingHistoryForm";
 
-const CreateBiddingType = () => {
+const CreateBiddingHistory = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IBiddingTypeFormInitialValues>>(null);
-  const { state } = useArchive<IBiddingTypeInitialState>("bidding_type");
+  const formikRef = useRef<FormikProps<IBiddingHistoryFormInitialValues>>(null);
+  const { state } = useArchive<IBiddingHistoryInitialState>("bidding_type");
 
   useFetchStatus({
     module: "bidding_type",
@@ -22,7 +22,7 @@ const CreateBiddingType = () => {
     actions: {
       success: {
         message: state.message,
-        navigate: "/bidding-types",
+        navigate: "/bidding-historys",
       },
       error: {
         message: state.message,
@@ -33,7 +33,7 @@ const CreateBiddingType = () => {
   return (
     <>
       <Heading
-        title="Tạo mới loại hình đấu thầu"
+        title="Tạo mới lịch sử đấu thầu"
         hasBreadcrumb
         buttons={[
           {
@@ -41,7 +41,7 @@ const CreateBiddingType = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/bidding-types");
+              navigate("/bidding-historys");
             },
           },
           {
@@ -56,9 +56,9 @@ const CreateBiddingType = () => {
           },
         ]}
       />
-      <BiddingTypeForm type={EPageTypes.CREATE} formikRef={formikRef} />
+      <BiddingHistoryForm type={EPageTypes.CREATE} formikRef={formikRef} />
     </>
   );
 };
 
-export default CreateBiddingType;
+export default CreateBiddingHistory;
