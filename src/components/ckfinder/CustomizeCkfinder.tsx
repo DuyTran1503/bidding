@@ -10,7 +10,7 @@ import Editor from "ckeditor5-custom-build";
 //     "fontFamily",
 //     "fontBackgroundColor",
 //     "fontColor",
-//     "fontSize",
+//     "fontSize",z
 //     "highlight",
 //     "|",
 //     "bold",
@@ -130,7 +130,7 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
   return (
     <div className={`custom-editor w-full ${size ? `size-${size}` : ""} ${noBorder ? "no-border" : ""}`}>
       <CKEditor
-        editor={Editor as any}
+        editor={ClassicEditor as any}
         data={value || ""}
         //@ts-ignore
         onChange={(event: any, editor: any) => {
