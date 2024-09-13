@@ -15,6 +15,7 @@ import { biddingTypeSlice } from "./store/biddingType/biddingType.slice";
 import { fieldOfActivitySlice } from "./store/field_of_activity/field_of_activity.slice";
 import { attachmentSlice } from "./store/attachment/attachment.slice";
 import { bidDocumentSlice } from "./store/bid_document/bid_document.slice";
+import { selectionMethodSlice } from "./store/selectionMethod/selectionMethod.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -32,6 +33,7 @@ export const reducers = combineReducers({
   field_of_activity: fieldOfActivitySlice.reducer,
   attachment: attachmentSlice.reducer,
   bid_document: bidDocumentSlice.reducer,
+  selection_method: selectionMethodSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
