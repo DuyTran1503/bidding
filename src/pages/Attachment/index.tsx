@@ -83,7 +83,7 @@ const Attachment = () => {
       placeholder: "Nhập ...",
       label: "Loại hình doanh nghiệp",
       type: "text",
-    },
+    }
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.attachments)
