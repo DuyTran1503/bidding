@@ -50,7 +50,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
     for (const key in values) {
       if (Array.isArray(values[key])) {
-        values[key].forEach((item, index) => {
+        values[key].forEach((item: string, index: number) => {
           newValues[`${key}[${index}]`] = item;
         });
       } else {
