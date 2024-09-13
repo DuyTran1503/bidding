@@ -4,7 +4,7 @@ import { IFile } from "@/shared/interface/file";
 import { getFileExtension } from "@/shared/utils/common/function";
 import { Col, Image, Row } from "antd";
 import { FormikErrors, FormikTouched } from "formik";
-import { ForwardedRef, forwardRef, useEffect, useState } from "react";
+import { ForwardedRef, forwardRef, useEffect } from "react";
 import Excel from "../icon/Excel";
 import Pdf from "../icon/Pdf";
 import Upload from "../icon/Upload";

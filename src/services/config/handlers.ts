@@ -19,6 +19,7 @@ export const refreshToken = async (client: ClientType) => {
       localStorage.setItem("refreshToken", JSON.stringify(data.metaData.refreshToken));
     } else throw new Error();
     return response.ok;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
