@@ -53,6 +53,7 @@ import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/Cr
 import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
 import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
 import { EPermissions } from "@/shared/enums/permissions";
+import ActivityLogs from "@/pages/ActivityLogs";
 
 export interface IRoute {
   path: string;
@@ -216,6 +217,19 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateIndustry />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailIndustry />,
+              },
+            ],
+          },
+          {
+            path: "activity-logs",
+            pages: [
+              {
+                path: "/",
+                element: () => <ActivityLogs />,
               },
               {
                 path: "/detail/:id",
