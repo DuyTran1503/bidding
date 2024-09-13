@@ -3,9 +3,8 @@ import { IActivityLog } from "./activityLog.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createActivityLog, getActivityLogById, getAllActivityLogs, getListActivityLog, updateActivityLog } from "./activityLog.thunk";
+import { getActivityLogById, getAllActivityLogs, getListActivityLog,  } from "./activityLog.thunk";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
-import { IError } from "@/shared/interface/error";
 
 export interface IActivityLogInitialState extends IInitialState {
     activityLogs: IActivityLog[];
@@ -67,33 +66,6 @@ export interface IActivityLogInitialState extends IInitialState {
           state.message = transformPayloadErrors(payload?.errors);
           state.loading = true;
         });
-      // create
-        builder
-      .addCase(createActivityLog.pending, (state) => {
-        state.status = EFetchStatus.PENDING;
-      })
-      .addCase(createActivityLog.fulfilled, (state) => {
-        state.status = EFetchStatus.FULFILLED;
-        state.message = "Tạo mới thành công ";
-      })
-      .addCase(createActivityLog.rejected, (state, { payload }: PayloadAction<IError | any>) => {
-        state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
-      });
-
-      // update
-      builder
-      .addCase(updateActivityLog.pending, (state) => {
-        state.status = EFetchStatus.PENDING;
-      })
-      .addCase(updateActivityLog.fulfilled, (state) => {
-        state.status = EFetchStatus.FULFILLED;
-        state.message = "Cập nhật thành công";
-      })
-      .addCase(updateActivityLog.rejected, (state, { payload }: PayloadAction<IError | any>) => {
-        state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
-      });
 
       // get list
         builder
