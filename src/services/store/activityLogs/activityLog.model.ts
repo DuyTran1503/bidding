@@ -3,7 +3,7 @@ export interface IActivityLog {
     log_name: string;
     event: string;
     action_performer: string;
-    descripton: string;
+    description: string;
     subject_type: string;
     start_date: Date;
     address_ip: string;

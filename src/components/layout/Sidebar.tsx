@@ -87,6 +87,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "funding-sources",
           permissions: EPermissions.LIST_FUNDING_SOURCE,
         },
+        {
+          id: "3.6",
+          label: "Nhật ký hoạt động",
+          path: "activity-logs",
+          // permissions: EPermissions.LIST_ACTIVITYLOG,
+        },
       ],
     },
     {
