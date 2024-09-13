@@ -1,33 +1,37 @@
 import { client } from "@/services/config/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { IBiddingType } from "./biddingType.model";
+import { IBiddingHistory } from "./biddingHistory.model";
 
-const prefix = "/api/admin/bidding-types";
+const prefix = "/api/admin/bidding-historys";
 
-export const getAllBiddingTypes = createAsyncThunk("bidding-type/get-all-bidding-types", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const getAllBiddingHistorys = createAsyncThunk(
+    "bidding-history/get-all-bidding-historys", 
+    async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<IBiddingType[]>(prefix, payload);
+    const { response, data } = await client.get<IBiddingHistory[]>(prefix, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }
 });
 
-export const getBiddingTypeById = createAsyncThunk("bidding-type/get-bidding-type-by-id", async (id: number | string, { rejectWithValue }) => {
+export const getBiddingHistoryById = createAsyncThunk(
+    "bidding-history/get-bidding-history-by-id", 
+    async (id: number | string, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<IBiddingType[]>(`${prefix}/${id}`);
+    const { response, data } = await client.get<IBiddingHistory[]>(`${prefix}/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }
 });
 
-export const getBiddingTypeAllIds = createAsyncThunk(
-  "bidding-type/get-bidding-type-all-ids",
+export const getBiddingHistoryAllIds = createAsyncThunk(
+  "bidding-history/get-bidding-history-all-ids",
   async (payload: IThunkPayload, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.get<IBiddingType[]>(`${prefix}/all-ids`, payload);
+      const { response, data } = await client.get<IBiddingHistory[]>(`${prefix}/all-ids`, payload);
       return response.status >= 400 ? rejectWithValue(data) : data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -35,7 +39,9 @@ export const getBiddingTypeAllIds = createAsyncThunk(
   },
 );
 
-export const createBiddingType = createAsyncThunk("bidding-type/create-bidding-type", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const createBiddingHistory = createAsyncThunk(
+    "bidding-history/create-bidding-history", 
+    async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.post(prefix, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;
@@ -44,7 +50,9 @@ export const createBiddingType = createAsyncThunk("bidding-type/create-bidding-t
   }
 });
 
-export const updateBiddingType = createAsyncThunk("bidding-type/update-bidding-type", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const updateBiddingHistory = createAsyncThunk(
+    "bidding-history/update-bidding-history", 
+    async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.patch(`${prefix}/${payload.param}`, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;
@@ -53,7 +61,7 @@ export const updateBiddingType = createAsyncThunk("bidding-type/update-bidding-t
   }
 });
 
-export const deleteBiddingType = createAsyncThunk("bidding-type/delete-bidding-type", async (id: number | string, { rejectWithValue }) => {
+export const deleteBiddingHistory = createAsyncThunk("bidding-history/delete-bidding-history", async (id: number | string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.delete(`${prefix}/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : id;
@@ -61,8 +69,8 @@ export const deleteBiddingType = createAsyncThunk("bidding-type/delete-bidding-t
     return rejectWithValue(error.response.data);
   }
 });
-export const changeStatusBiddingType = createAsyncThunk(
-  "bidding-type/change-status-bidding-type",
+export const changeStatusBiddingHistory = createAsyncThunk(
+  "bidding-history/change-status-bidding-history",
   async (id: string, { rejectWithValue }) => {
     try {
       const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);

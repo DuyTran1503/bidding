@@ -11,7 +11,7 @@ import EnterpriseForm from "../ActionModule";
 import { useArchive } from "@/hooks/useArchive";
 import { getEnterpriseById } from "@/services/store/enterprise/enterprise.thunk";
 
-const index = () => {
+const DetailEnterprise = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IEnterpriseInitialValues>>(null);
   const { id } = useParams();
@@ -55,9 +55,9 @@ const index = () => {
           taxcode: data?.taxcode ?? "",
           account_ban_at: data?.account_ban_at ?? null,
           website: data?.website ?? "",
-          industries: data?.industries ?? [],
+          industry_id: data?.industry_id ?? [],
           establish_date: data?.establish_date ?? "",
-          organization_type: data?.organization_type ?? "",
+          organization_type: Number(data?.organization_type) ?? "",
           avg_document_rating: data?.avg_document_rating ?? "",
           registration_date: data?.registration_date ?? "",
           registration_number: data?.registration_number ?? "",
@@ -88,4 +88,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default DetailEnterprise;
