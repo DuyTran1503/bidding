@@ -108,6 +108,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
         if (type === EPageTypes.CREATE) {
           dispatchEnterprise(createEnterprise(body as Omit<IEnterprise, "id">));
         } else if (type === EPageTypes.UPDATE && enterprise?.id) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const newData = enterprise.avatar === body.avatar ? (({ avatar, ...rest }) => rest)(body) : body;
           dispatchEnterprise(updateEnterprise({ body: newData, param: String(enterprise.id) }));
         }
