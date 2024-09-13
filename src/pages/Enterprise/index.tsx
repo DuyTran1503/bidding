@@ -156,10 +156,11 @@ const Enterprise = () => {
       options: typeOptions as { value: string; label: string }[],
     },
     {
-      id: "industry_id",
+      id: "industry_ids",
       placeholder: "Chọn lĩnh vực hoạt dộng ...",
       label: "Lĩnh vực hoạt dộng ",
       type: "select",
+      isMultiple: true,
       options: industryOptions as { value: string; label: string }[],
     },
     {
@@ -167,6 +168,7 @@ const Enterprise = () => {
       placeholder: "Chọn trạng thái ...",
       label: "Trạng thái",
       type: "select",
+
       options: statusOptions as { value: string; label: string }[],
     },
   ];
