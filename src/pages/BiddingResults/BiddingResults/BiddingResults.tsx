@@ -13,14 +13,14 @@ import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IBiddingHistoryInitialState, resetStatus, setFilter } from "@/services/store/biddingHistory/biddingHistory.slice";
-import { changeStatusBiddingHistory, deleteBiddingHistory, getAllBiddingHistorys } from "@/services/store/biddingHistory/biddingHistory.thunk";
+import { IBiddingResultInitialState, resetStatus, setFilter } from "@/services/store/biddingResult/biddingResult.slice";
+import { changeStatusBiddingResult, deleteBiddingResult, getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
 import { GoDownload } from "react-icons/go";
 
-const BiddingHistorys = () => {
+const BiddingResults = () => {
     const navigate = useNavigate();
-    const { state, dispatch } = useArchive<IBiddingHistoryInitialState>("bidding_history");
+    const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
     const [isModal, setIsModal] = useState(false);
     const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
@@ -30,21 +30,21 @@ const BiddingHistorys = () => {
             onClick(record) {
                 navigate(`update/${record?.key}`);
             },
-            permission: EPermissions.DETAIL_BIDDING_HISTORY,
+            permission: EPermissions.DETAIL_BIDDING_RESULT,
         },
         {
             type: EButtonTypes.UPDATE,
             onClick(record) {
                 navigate(`update/${record?.key}`);
             },
-            permission: EPermissions.UPDATE_BIDDING_HISTORY,
+            permission: EPermissions.UPDATE_BIDDING_RESULT,
         },
         {
             type: EButtonTypes.DESTROY,
             onClick(record) {
-                dispatch(deleteBiddingHistory(record?.key));
+                dispatch(deleteBiddingResult(record?.key));
             },
-            permission: EPermissions.DESTROY_BIDDING_HISTORY,
+            permission: EPermissions.DESTROY_BIDDING_RESULT,
         },
     ];
 
@@ -54,20 +54,24 @@ const BiddingHistorys = () => {
             title: "STT",
         },
         {
-            dataIndex: "event_date",
-            title: "Event_date",
+            dataIndex: "amount",
+            title: "Amount",
         },
         {
             dataIndex: "project_id",
             title: "Project_id",
         },
         {
-            dataIndex: "event_type",
-            title: "Event_type",
+            dataIndex: "enterprise_id",
+            title: "Enterprise_id",
         },
         {
-            dataIndex: "event_description",
-            title: "Event_description",
+            dataIndex: "decision_number",
+            title: "Decision_number",
+        },
+        {
+            dataIndex: "decision_date",
+            title: "Decision_date",
         },
         {
             title: "Trạng thái",
@@ -91,7 +95,7 @@ const BiddingHistorys = () => {
 
     const onConfirmStatus = () => {
         if (confirmItem && confirmItem.key) {
-            dispatch(changeStatusBiddingHistory(String(confirmItem.key)));
+            dispatch(changeStatusBiddingResult(String(confirmItem.key)));
         }
     };
 
@@ -106,22 +110,23 @@ const BiddingHistorys = () => {
 
     const data: ITableData[] = useMemo(
         () =>
-            state.biddingHistorys && state.biddingHistorys.length > 0
-                ? state.biddingHistorys.map(({ id, project_id, event_date, event_description, event_type, is_active }, index) => ({
+            state.biddingResults && state.biddingResults.length > 0
+                ? state.biddingResults.map(({ id, project_id, enterprise_id, amount, decision_number, decision_date, is_active }, index) => ({
                     index: index + 1,
                     key: id,
                     project_id,
-                    event_type,
-                    event_date,
-                    event_description,
+                    enterprise_id,
+                    amount,
+                    decision_number,
+                    decision_date,
                     is_active,
                 }))
                 : [],
-        [JSON.stringify(state.biddingHistorys)],
+        [JSON.stringify(state.biddingResults)],
     );
 
     useFetchStatus({
-        module: "bidding_history",
+        module: "bidding_result",
         reset: resetStatus,
         actions: {
             success: { message: state.message },
@@ -131,18 +136,18 @@ const BiddingHistorys = () => {
 
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
-            dispatch(getAllBiddingHistorys({ query: state.filter }));
+            dispatch(getAllBiddingResults({ query: state.filter }));
         }
     }, [JSON.stringify(state.status)]);
 
     useEffect(() => {
-        dispatch(getAllBiddingHistorys({ query: state.filter }));
+        dispatch(getAllBiddingResults({ query: state.filter }));
     }, [JSON.stringify(state.filter)]);
 
     return (
         <>
             <Heading
-                title="Lịch sử đấu thầu"
+                title="Kết quả đấu thầu"
                 hasBreadcrumb
                 buttons={[
                     {
@@ -152,7 +157,7 @@ const BiddingHistorys = () => {
                     },
                     {
                         icon: <FaPlus className="text-[18px]" />,
-                        permission: EPermissions.CREATE_BIDDING_HISTORY,
+                        permission: EPermissions.CREATE_BIDDING_RESULT,
                         text: "Thêm mới",
                         onClick: () => navigate("create"),
                     },
@@ -182,4 +187,4 @@ const BiddingHistorys = () => {
     );
 };
 
-export default BiddingHistorys;
+export default BiddingResults;
