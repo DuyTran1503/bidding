@@ -9,7 +9,8 @@ import {
   updateSelectionMethod, 
   deleteSelectionMethod, 
   getSelectionMethodById, 
-  changeStatusSelectionMethod 
+  changeStatusSelectionMethod, 
+  getListSelectionMethods
 } from "./selectionMethod.thunk";
 import { transformPayloadErrors } from '@/shared/utils/common/function';
 import { IError } from '@/shared/interface/error';
@@ -17,12 +18,14 @@ import { IError } from '@/shared/interface/error';
 export interface ISelectionMethodInitialState extends IInitialState {
   selectionMethods: ISelectionMethod[];
   activeSelectionMethod: ISelectionMethod | undefined;
+  listSelectionMethods: ISelectionMethod[]
 }
 
 const initialState: ISelectionMethodInitialState = {
   status: EFetchStatus.IDLE,
   message: "",
   selectionMethods: [],
+  listSelectionMethods: [],
   activeSelectionMethod: undefined,
   totalRecords: 0,
   totalPages: 0,
@@ -61,7 +64,14 @@ const selectionMethodSlice = createSlice({
         }
       }
     );
-
+    builder.addCase(
+      getListSelectionMethods.fulfilled, (state, { payload }: PayloadAction<IResponse<ISelectionMethod[]> | any>) => {
+        if (payload.data) {
+          state.listSelectionMethods = payload.data.data;
+          state.message = transformPayloadErrors(payload?.errors);
+        }
+      }
+    );
     // ? Create selection method
     builder
       .addCase(createSelectionMethod.pending, (state) => {

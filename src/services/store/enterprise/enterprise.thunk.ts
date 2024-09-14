@@ -15,7 +15,14 @@ export const getAllEnterprise = createAsyncThunk("staff/get-all-enterprises", as
     return rejectWithValue(error.response.data);
   }
 });
-
+export const getListEnterprise = createAsyncThunk("staff/get-list-enterprises", async (_, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IEnterprise[]>(prefix);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
 export const getEnterpriseById = createAsyncThunk("enterprises/get-enterprises-by-id", async (id: string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IEnterprise>(prefix + `/${id}`);
