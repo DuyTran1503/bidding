@@ -1,5 +1,5 @@
 import { ETYPEFILE } from "@/shared/enums/fileType";
-import { ETYPEACTIVITYLOG } from "@/shared/enums/typeActivityLog";
+import { E_TYPE_ACTIVITY } from "@/shared/enums/typeActivityLog";
 import { PayloadErrors } from "@/shared/interface/error";
 
 export const phoneRegex = /^(?:\+84|0084|0)?[235789][0-9]{8}$/;
@@ -75,7 +75,7 @@ export const selectedData = (data: any[], id: string | number) => {
   return data?.find((item: any) => item.id === +id);
 };
 
-export const activityLogOptions = Object.keys(ETYPEACTIVITYLOG).map((key) => ({
+export const activityLogOptions = Object.keys(E_TYPE_ACTIVITY).map((key) => ({
   value: key, // khóa của enum (ví dụ: CREATE, UPDATE, DESTROY)
-  label: ETYPEACTIVITYLOG[key as keyof typeof ETYPEACTIVITYLOG], // giá trị của enum (ví dụ: "Tạo mới", "Cập nhật", "Xóa")
+  label: E_TYPE_ACTIVITY[key as keyof typeof E_TYPE_ACTIVITY], // giá trị của enum (ví dụ: "Tạo mới", "Cập nhật", "Xóa")
 }));

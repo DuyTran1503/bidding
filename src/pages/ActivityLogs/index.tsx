@@ -4,22 +4,20 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { resetStatus, setFilter } from "@/services/store/account/account.slice";
-import { IActivityLogInitialState } from "@/services/store/activityLogs/activityLog.slice";
+import { IActivityLogInitialState, resetStatus, setFilter } from "@/services/store/activityLogs/activityLog.slice";
 import { getAllActivityLogs } from "@/services/store/activityLogs/activityLog.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { EPermissions } from "@/shared/enums/permissions";
-import { activityLogOptions } from "@/shared/enums/typeActivityLog";
+import { E_TYPE_ACTIVITY } from "@/shared/enums/typeActivityLog";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { ReactNode, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import DetailActivityLogProps from "./Detail";
 import FormModal from "@/components/form/FormModal";
+import { convertEnum } from "@/shared/utils/common/convertEnum";
+import Detail from "./Detail";
 
 const ActivityLogs = () => {
-  const navigate = useNavigate();
   const { state, dispatch } = useArchive<IActivityLogInitialState>("activity_log");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<ReactNode>(null);
@@ -28,18 +26,22 @@ const ActivityLogs = () => {
     {
       dataIndex: "index",
       title: "STT",
+      className: "w-[100px]",
     },
     {
       dataIndex: "log_name",
       title: "Tên nhật ký",
-    },
-    {
-      dataIndex: "event",
-      title: "Sự kiện",
+      className: "w-[200px]",
     },
     {
       dataIndex: "action_performer",
       title: "Người thực hiện",
+      className: "w-[200px]",
+    },
+    {
+      dataIndex: "event",
+      title: "Sự kiện",
+      className: "w-[150px]",
     },
     {
       dataIndex: "description",
@@ -54,7 +56,7 @@ const ActivityLogs = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        setModalContent(<DetailActivityLogProps record={record} />);
+        setModalContent(<Detail record={record} />);
         setIsModalOpen(true);
       },
       // permission: EPermissions.CREATE_ACTIVITYLOG,
@@ -67,18 +69,18 @@ const ActivityLogs = () => {
 
   const search: ISearchTypeTable[] = [
     {
-      id: "name",
+      id: "log_name",
       placeholder: "Nhập ...",
       label: "Nhật ký hoạt động",
       type: "text",
     },
     {
       id: "event",
-      placeholder: "--",
+      placeholder: "Chọn sự kiện",
       label: "Sự kiện",
       type: "select",
-      options: activityLogOptions
-    }
+      options: convertEnum(E_TYPE_ACTIVITY),
+    },
   ];
 
   const data: ITableData[] = useMemo(() => {
@@ -97,7 +99,7 @@ const ActivityLogs = () => {
   useEffect(() => {
     dispatch(getAllActivityLogs({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-    
+
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllActivityLogs({ query: state.filter }));
@@ -118,7 +120,6 @@ const ActivityLogs = () => {
     };
   }, []);
 
-  // console.log(state);
   return (
     <>
       <Heading title="Nhật ký hoạt động" hasBreadcrumb />
