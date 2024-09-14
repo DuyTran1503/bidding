@@ -1,12 +1,9 @@
+import { ETYPEACTIVITYLOG } from "@/shared/enums/typeActivityLog";
+
 export interface IActivityLog {
     id: number | string;
     log_name: string;
-    event: string;
+    event?: ETYPEACTIVITYLOG;
     action_performer: string;
     description: string;
-    subject_type: string;
-    start_date: Date;
-    address_ip: string;
-    user_agent?: string;
-    
   }
