@@ -116,4 +116,15 @@ export enum EPermissions {
   CREATE_BIDDING_RESULT = "create_bidding_result",
   UPDATE_BIDDING_RESULT = "update_bidding_result",
   DESTROY_BIDDING_RESULT = "destroy_bidding_result",
+  //Bảo lãnh dự thầu
+  LIST_BIDBOND = "list_bidbond",
+  DETAIL_BIDBOND = "detail_bidbond",
+  CREATE_BIDBOND = "create_bidbond",
+  UPDATE_BIDBOND = "update_bidbond",
+  DESTROY_BIDBOND = "destroy_bidbond",
+
+  // Nhật ký hoạt động
+  LIST_ACTIVITYLOG = "list_activitylog",
+  DETAIL_ACTIVITYLOG = "detail_activitylog",
+  CREATE_ACTIVITYLOG = "create_activitylog"
 }
