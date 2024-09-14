@@ -79,6 +79,7 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
   return (
     <div className={`custom-editor w-full ${size ? `size-${size}` : ""} ${noBorder ? "no-border" : ""}`}>
       <CKEditor
+        //@ts-ignore
         editor={Editor}
         data={value || ""}
         //@ts-ignore
