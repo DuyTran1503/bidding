@@ -14,8 +14,8 @@ import { fundingSourceSlice } from "./store/funding_source/funding_source.slice"
 import { biddingTypeSlice } from "./store/biddingType/biddingType.slice";
 import { attachmentSlice } from "./store/attachment/attachment.slice";
 import { bidDocumentSlice } from "./store/bid_document/bid_document.slice";
-import { bidBondSlice } from "./store/bidBond/bidBond.slice";
 import { activityLogSlice } from "./store/activityLogs/activityLog.slice";
+import { bidBondSlice } from "./store/bid_bond/bidBond.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -32,7 +32,7 @@ export const reducers = combineReducers({
   statistical_report: statisticalReportSlice.reducer,
   attachment: attachmentSlice.reducer,
   bid_document: bidDocumentSlice.reducer,
-  bidbond: bidBondSlice.reducer,
+  bid_bond: bidBondSlice.reducer,
   activity_log: activityLogSlice.reducer,
 });
 

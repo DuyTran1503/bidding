@@ -1,31 +1,31 @@
-import ConfirmModal from '@/components/common/CommonModal';
-import CommonSwitch from '@/components/common/CommonSwitch';
-import ManagementGrid from '@/components/grid/ManagementGrid';
-import Heading from '@/components/layout/Heading';
-import { ITableData } from '@/components/table/PrimaryTable';
-import { ISearchTypeTable } from '@/components/table/SearchComponent';
-import { useArchive } from '@/hooks/useArchive';
-import useFetchStatus from '@/hooks/useFetchStatus';
-import { resetStatus, setFilter } from '@/services/store/account/account.slice';
-import { IBidBondInitialState } from '@/services/store/bidBond/bidBond.slice';
-import { changeStatusBidBond, deleteBidBond, getAllBidBonds } from '@/services/store/bidBond/bidBond.thunk';
-import { EButtonTypes } from '@/shared/enums/button';
-import { EFetchStatus } from '@/shared/enums/fetchStatus';
-import { EPermissions } from '@/shared/enums/permissions';
-import { IGridButton } from '@/shared/utils/shared-interfaces';
-import { ColumnsType } from 'antd/es/table';
-import React, {  useEffect, useMemo, useState } from 'react'
-import { FaPlus } from 'react-icons/fa';
-import { GoDownload } from 'react-icons/go';
-import { useNavigate } from 'react-router-dom';
+import ConfirmModal from "@/components/common/CommonModal";
+import CommonSwitch from "@/components/common/CommonSwitch";
+import ManagementGrid from "@/components/grid/ManagementGrid";
+import Heading from "@/components/layout/Heading";
+import { ITableData } from "@/components/table/PrimaryTable";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
+import { useArchive } from "@/hooks/useArchive";
+import useFetchStatus from "@/hooks/useFetchStatus";
+import { resetStatus, setFilter } from "@/services/store/account/account.slice";
+import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
+import { changeStatusBidBond, deleteBidBond, getAllBidBonds } from "@/services/store/bid_bond/bidBond.thunk";
+import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { EPermissions } from "@/shared/enums/permissions";
+import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { ColumnsType } from "antd/es/table";
+import React, { useEffect, useMemo, useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { GoDownload } from "react-icons/go";
+import { useNavigate } from "react-router-dom";
 
 const BidBonds = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBidBondInitialState>("bidbond");
-  const [isModal, setIsModal ] = useState(false)
-//   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModal, setIsModal] = useState(false);
+  //   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-//   const [modalContent, setModalContent] = useState<ReactNode>(null);
+  //   const [modalContent, setModalContent] = useState<ReactNode>(null);
 
   const buttons: IGridButton[] = [
     {
@@ -33,7 +33,7 @@ const BidBonds = () => {
       onClick(record) {
         navigate(`/bidbonds/detail/${record?.key}`);
       },
-      permission: EPermissions.DETAIL_BIDBOND
+      permission: EPermissions.DETAIL_BIDBOND,
     },
     {
       type: EButtonTypes.UPDATE,
@@ -64,7 +64,7 @@ const BidBonds = () => {
     {
       dataIndex: "name",
       title: "Tên nguồn tài trợ",
-      className: "w-[250px]"
+      className: "w-[250px]",
     },
     {
       dataIndex: "type",
@@ -85,41 +85,46 @@ const BidBonds = () => {
     {
       title: "Trạng thái",
       dataIndex: "is_active",
-      render(_,record) {
+      render(_, record) {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
             checked={!!record.is_active}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
-        )
-      }
+        );
+      },
     },
   ];
 
-  const handleChangeStatus = (item : ITableData) =>{
+  const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
-    setConfirmItem(item)
+    setConfirmItem(item);
   };
 
   const data: ITableData[] = useMemo(
     () =>
       state.bidBonds && state.bidBonds.length > 0
-        ? state.bidBonds.map(({ id, project_id,bidder_id, bond_amount, bond_type,bond_number, issuer, issue_date, expiry_date, scan_document, notes, status  }, index) => ({
-            index: index + 1,
-            key: id,
-            project_id,
-            bidder_id,
-            bond_amount,
-            bond_type,
-            bond_number,
-            issuer,
-            issue_date,
-            expiry_date,
-            scan_document,
-            notes,
-            status
-          }))
+        ? state.bidBonds.map(
+            (
+              { id, project_id, bidder_id, bond_amount, bond_type, bond_number, issuer, issue_date, expiry_date, scan_document, notes, status },
+              index,
+            ) => ({
+              index: index + 1,
+              key: id,
+              project_id,
+              bidder_id,
+              bond_amount,
+              bond_type,
+              bond_number,
+              issuer,
+              issue_date,
+              expiry_date,
+              scan_document,
+              notes,
+              status,
+            }),
+          )
         : [],
     [JSON.stringify(state.bidBonds)],
   );
@@ -159,49 +164,49 @@ const BidBonds = () => {
 
   return (
     <>
-    <Heading
-      title="Bão lãnh dự thầu"
-      hasBreadcrumb
-      buttons={[
-        {
-          text: "Export",
-          type: "ghost",
-          icon: <GoDownload className="text-[18px]" />,
-        },
-        {
-          text: "Thêm mới",
-          icon: <FaPlus className="text-[18px]" />,
-          onClick: () => {
-            navigate("create");
+      <Heading
+        title="Bão lãnh dự thầu"
+        hasBreadcrumb
+        buttons={[
+          {
+            text: "Export",
+            type: "ghost",
+            icon: <GoDownload className="text-[18px]" />,
           },
-        },
-      ]}
-    />
+          {
+            text: "Thêm mới",
+            icon: <FaPlus className="text-[18px]" />,
+            onClick: () => {
+              navigate("create");
+            },
+          },
+        ]}
+      />
 
-    <ConfirmModal
-      title={"Xác nhận"}
-      content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
-      visible={isModal}
-      setVisible={setIsModal}
-      onConfirm={onConfirmStatus}
-    />
-    <ManagementGrid
-      columns={columns}
-      data={data}
-      search={search}
-      buttons={buttons}
-      pagination={{
-        current: state.filter.page ?? 1,
-        pageSize: state.filter.size ?? 10,
-        total: state.totalRecords,
-        number_of_elements: state.number_of_elements && state.number_of_elements,
-        // showSideChanger: true,
-      }}
-      setFilter={setFilter}
-      filter={state.filter}
-    />
-  </>
-  )
-}
+      <ConfirmModal
+        title={"Xác nhận"}
+        content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
+        visible={isModal}
+        setVisible={setIsModal}
+        onConfirm={onConfirmStatus}
+      />
+      <ManagementGrid
+        columns={columns}
+        data={data}
+        search={search}
+        buttons={buttons}
+        pagination={{
+          current: state.filter.page ?? 1,
+          pageSize: state.filter.size ?? 10,
+          total: state.totalRecords,
+          number_of_elements: state.number_of_elements && state.number_of_elements,
+          // showSideChanger: true,
+        }}
+        setFilter={setFilter}
+        filter={state.filter}
+      />
+    </>
+  );
+};
 
-export default BidBonds
+export default BidBonds;
