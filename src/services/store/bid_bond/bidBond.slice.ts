@@ -8,65 +8,63 @@ import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
 
 export interface IBidBondInitialState extends IInitialState {
-    bidBonds: IBidBond[];
-    bidBond?: IBidBond | any;
-    listBidBonds: IBidBond [],
+  bidBonds: IBidBond[];
+  bidBond?: IBidBond | any;
+  listBidBonds: IBidBond[];
 }
 
 const initialState: IBidBondInitialState = {
-    status: EFetchStatus.IDLE,
-    bidBonds: [],
-    listBidBonds: [],
-    bidBond: undefined,
-    message: "",
-    error: undefined,
-    filter: {
-        size: 10,
-        page: 1,
-    },
-    totalRecords: 0,
-    number_of_elements: 0,
+  status: EFetchStatus.IDLE,
+  bidBonds: [],
+  listBidBonds: [],
+  bidBond: undefined,
+  message: "",
+  error: undefined,
+  filter: {
+    size: 10,
+    page: 1,
+  },
+  totalRecords: 0,
+  number_of_elements: 0,
 };
 
 const bidBondSlice = createSlice({
-    name: "bidbond",
-    initialState,
-    reducers: {
-        ...commonStaticReducers<IBidBondInitialState>(),
-        fetching(state) {
-            state.loading = true;
-        },
-        resetMessageError(state) {
-            state.message = "";
-        }
+  name: "bid_bond",
+  initialState,
+  reducers: {
+    ...commonStaticReducers<IBidBondInitialState>(),
+    fetching(state) {
+      state.loading = true;
     },
+    resetMessageError(state) {
+      state.message = "";
+    },
+  },
 
-    extraReducers(builder) {
-        
-        builder
-        .addCase(getAllBidBonds.fulfilled, (state, { payload }: PayloadAction<IResponse<IBidBond[]> | any>) => {
-            if (payload.data) {
-                state.fundingSources = payload.data.data;
-                state.totalRecords = payload?.data?.total_elements;
-                state.number_of_elements = payload?.data?.number_of_elements;
-                
-            };
-          })
-        .addCase(getAllBidBonds.rejected, (state, {payload}: PayloadAction<IResponse<IBidBond[]> | any>) => {
-            state.message = transformPayloadErrors(payload?.errors)
-        })
-       
-        builder
-            .addCase(getBidBondById.fulfilled, (state, {payload}: PayloadAction<IBidBond[]> | any) => {
-                state.fundingSource = payload.data;
-                state.loading = false;
-            })
-            .addCase(getBidBondById.rejected, (state, { payload }: PayloadAction<IBidBond> | any) => {
-                state.fundingSource = payload.data;
-                state.message = transformPayloadErrors(payload?.errors);
-                state.loading = true;
-            });
-            builder
+  extraReducers(builder) {
+    builder
+      .addCase(getAllBidBonds.fulfilled, (state, { payload }: PayloadAction<IResponse<IBidBond[]> | any>) => {
+        if (payload.data) {
+          state.fundingSources = payload.data.data;
+          state.totalRecords = payload?.data?.total_elements;
+          state.number_of_elements = payload?.data?.number_of_elements;
+        }
+      })
+      .addCase(getAllBidBonds.rejected, (state, { payload }: PayloadAction<IResponse<IBidBond[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+
+    builder
+      .addCase(getBidBondById.fulfilled, (state, { payload }: PayloadAction<IBidBond[]> | any) => {
+        state.fundingSource = payload.data;
+        state.loading = false;
+      })
+      .addCase(getBidBondById.rejected, (state, { payload }: PayloadAction<IBidBond> | any) => {
+        state.fundingSource = payload.data;
+        state.message = transformPayloadErrors(payload?.errors);
+        state.loading = true;
+      });
+    builder
       .addCase(createBidBond.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
@@ -90,12 +88,12 @@ const bidBondSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
-      // change
+    // change
     builder
       .addCase(changeStatusBidBond.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusBidBond.fulfilled, (state,) => {
+      .addCase(changeStatusBidBond.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Trạng thái hoạt động của bão lãnh dự thầu đã được cập nhật thành công";
       })
@@ -125,8 +123,7 @@ const bidBondSlice = createSlice({
       .addCase(getListBidBond.rejected, (state, { payload }: PayloadAction<IResponse<IBidBond[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
-        
-    },
+  },
 });
 
-export {bidBondSlice}
+export { bidBondSlice };
