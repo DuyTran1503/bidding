@@ -113,5 +113,12 @@ export enum EPermissions {
   // Nhật ký hoạt động
   LIST_ACTIVITYLOG = "list_activitylog",
   DETAIL_ACTIVITYLOG = "detail_activitylog",
-  CREATE_ACTIVITYLOG = "create_activitylog"
+  CREATE_ACTIVITYLOG = "create_activitylog",
+
+  // Dự án
+  LIST_PROJECT = "list_project",
+  DETAIL_PROJECT = "detail_project",
+  CREATE_PROJECT = "create_project",
+  UPDATE_PROJECT = "update_project",
+  DESTROY_PROJECT = "destroy_project",
 }
