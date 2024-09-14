@@ -1,10 +1,7 @@
 import React from "react";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { Row, Col } from "antd"; // Giả sử bạn đang sử dụng Ant Design
-import { EButtonTypes } from "@/shared/enums/button";
 import FormInput from "@/components/form/FormInput";
-import FormGroup from "@/components/form/FormGroup";
-import FormCkEditor from "@/components/form/FormCkEditor";
 import FormInputArea from "@/components/form/FormInputArea";
 
 interface DetailActivityLogProps {
