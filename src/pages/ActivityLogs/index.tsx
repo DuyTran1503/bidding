@@ -12,7 +12,6 @@ import { E_TYPE_ACTIVITY } from "@/shared/enums/typeActivityLog";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { ReactNode, useEffect, useMemo, useState } from "react";
-import DetailActivityLogProps from "./Detail";
 import FormModal from "@/components/form/FormModal";
 import { convertEnum } from "@/shared/utils/common/convertEnum";
 import Detail from "./Detail";
