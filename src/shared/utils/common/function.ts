@@ -1,4 +1,5 @@
 import { ETYPEFILE } from "@/shared/enums/fileType";
+import { ETYPEACTIVITYLOG } from "@/shared/enums/typeActivityLog";
 import { PayloadErrors } from "@/shared/interface/error";
 
 export const phoneRegex = /^(?:\+84|0084|0)?[235789][0-9]{8}$/;
@@ -73,3 +74,8 @@ export const convertDataOption = (data: any[]) => {
 export const selectedData = (data: any[], id: string | number) => {
   return data?.find((item: any) => item.id === +id);
 };
+
+export const activityLogOptions = Object.keys(ETYPEACTIVITYLOG).map((key) => ({
+  value: key, // khóa của enum (ví dụ: CREATE, UPDATE, DESTROY)
+  label: ETYPEACTIVITYLOG[key as keyof typeof ETYPEACTIVITYLOG], // giá trị của enum (ví dụ: "Tạo mới", "Cập nhật", "Xóa")
+}));
