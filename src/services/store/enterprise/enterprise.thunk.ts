@@ -1,11 +1,9 @@
 import { client } from "@/services/config/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { IError } from "@/shared/interface/error";
 import { IEnterprise } from "./enterprise.model";
 import { IIndustry } from "../industry/industry.model";
 import { objectToFormData } from "@/shared/utils/common/formData";
-import lodash from "lodash";
 
 const prefix = "/api/admin/enterprises";
 
@@ -64,12 +62,14 @@ export const createEnterprise = createAsyncThunk("enterprises/create-enterprises
 export const updateEnterprise = createAsyncThunk("enterprises/update-enterprises", async (payload: IThunkPayload, thunkAPI) => {
   try {
     const formData = objectToFormData(payload.body as IEnterprise);
-    console.log(formData.get("avatar"));
+
+    // Thêm trường _method với giá trị "PUT" vào formData
+    formData.append("_method", "PUT");
 
     const accessToken = client.tokens.accessToken();
 
     const response = await fetch(import.meta.env.VITE_API_URL + `${prefix}/${payload?.param}`, {
-      method: "PUT",
+      method: "POST", // Thay đổi method thành "POST"
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -123,6 +123,14 @@ export const getIndustries = createAsyncThunk("enterprises/get-list-industries",
 export const changeStatusEnterprise = createAsyncThunk("staff/change-status-enterprises", async (id: string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.post(`${prefix}/ban/${id}`);
+    return response.status >= 400 ? rejectWithValue(data) : id;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+export const changeStatusActiveEnterprise = createAsyncThunk("staff/change-status-active-enterprises", async (id: string, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.put(`${prefix}/${id}/changeActive`);
     return response.status >= 400 ? rejectWithValue(data) : id;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
