@@ -16,5 +16,6 @@ export enum EPageNames {
   "statistical-reports" = "Báo cáo thống kê",
   "industry" = "Ngành kinh doanh",
   "bidding-historys" = "Lịch sử Đấu thầu",
+  "activity-logs" = "Nhật ký hoạt động",
   "selection-methods" = "Hình thức lựa chọn Nhà thầu",
 }
