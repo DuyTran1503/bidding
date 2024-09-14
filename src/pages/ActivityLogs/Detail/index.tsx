@@ -1,25 +1,42 @@
 import React from "react";
 import { ITableData } from "@/components/table/PrimaryTable";
+import { Row, Col } from "antd"; // Giả sử bạn đang sử dụng Ant Design
+import { EButtonTypes } from "@/shared/enums/button";
+import FormInput from "@/components/form/FormInput";
+import FormGroup from "@/components/form/FormGroup";
+import FormCkEditor from "@/components/form/FormCkEditor";
+import FormInputArea from "@/components/form/FormInputArea";
+
 interface DetailActivityLogProps {
   record: ITableData;
 }
 
-const DetailActivityLogProps: React.FC<DetailActivityLogProps> = ({ record }: ITableData | any) => {
+const Detail: React.FC<DetailActivityLogProps> = ({ record }) => {
   return (
     <div className="bg-white p-6">
       <h2 className="mb-4 text-2xl font-semibold">Chi tiết loại hình hoạt động</h2>
-      <div className="flex flex-col gap-3">
-        <div className="text-m-medium mb-1 block font-semibold text-black-900">Tên loại hình hoạt động: {record?.log_name}</div>
-        <div>
-          <span className="text-m-medium mb-1 font-semibold text-black-900">
-            Mô tả:
-            <span className="mb-1 ml-2 text-sm text-black-300">{record?.description}</span>
-          </span>
-        </div>
-        {/* <div className="text-m-medium mb-1 block font-semibold text-black-900">Trạng thái</div> */}
-      </div>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+          <FormInput type="text" isDisabled={true} label="Tên nhật ký" value={record?.log_name as string} name="log_name" />
+        </Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+          <FormInput type="text" isDisabled={true} label="Người thực hiện" value={record?.action_performer as string} name="action_performer" />
+        </Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+          <FormInput type="text" isDisabled={true} label="Hành động" value={record?.event as string} name="event" />
+        </Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+          <FormInputArea label="Mô tả" isReadonly value={record?.description as string} />
+        </Col>
+      </Row>
     </div>
   );
 };
 
-export default DetailActivityLogProps;
+export default Detail;
