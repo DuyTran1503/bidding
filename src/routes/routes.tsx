@@ -53,9 +53,10 @@ import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/Cr
 import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
 import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
 import { EPermissions } from "@/shared/enums/permissions";
+import ActivityLogs from "@/pages/ActivityLogs";
 import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/SelectionMethods";
-import CreateSelectionMethod from "@/pages/SelectionMethods/CreateSelectionMethod/CreateSelectionMethod";
-import UpdateSelectionMethod from "@/pages/SelectionMethods/UpdateSelectionMethod/UpdateSelectionMethod";
+// import CreateSelectionMethod from "@/pages/SelectionMethods/CreateSelectionMethod/CreateSelectionMethod";
+// import UpdateSelectionMethod from "@/pages/SelectionMethods/UpdateSelectionMethod/UpdateSelectionMethod";
 import BiddingResults from "@/pages/BiddingResults/BiddingResults/BiddingResults";
 import CreateBiddingResult from "@/pages/BiddingResults/CreateBiddingResult/CreateBiddingResult";
 import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/UpdateBiddingResult";
@@ -152,14 +153,14 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <SelectionMethods />,
               },
-              {
-                path: "/create",
-                element: () => <CreateSelectionMethod />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateSelectionMethod />,
-              },
+              // {
+              //   path: "/create",
+              //   element: () => <CreateSelectionMethod />,
+              // },
+              // {
+              //   path: "/update/:id",
+              //   element: () => <UpdateSelectionMethod />,
+              // },
             ],
           },
           {
@@ -244,6 +245,19 @@ export const routes: IRoute[] = [
                 path: "/detail/:id",
                 element: () => <DetailIndustry />,
               },
+            ],
+          },
+          {
+            path: "activity-logs",
+            pages: [
+              {
+                path: "/",
+                element: () => <ActivityLogs />,
+              },
+              // {
+              //   path: "/detail/:id",
+              //   element: () => <DetailActi />,
+              // },
             ],
           },
           {
