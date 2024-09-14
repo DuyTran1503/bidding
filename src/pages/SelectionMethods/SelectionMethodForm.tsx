@@ -54,84 +54,82 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
     }
   }, [state.status]);
   return (
-    <>
-      <Dialog
-        handleSubmit={() => {
-          formikRef.current && formikRef.current.handleSubmit();
-        }}
-        visible={visible}
-        setVisible={setVisible}
-        title={
-          type === EButtonTypes.CREATE
-            ? "Tạo mới hình thức đấu thầu"
-            : type === EButtonTypes.UPDATE
-              ? "Cập nhật Tạo mới hình thức đấu thầu"
-              : "Chi tiết Tạo mới hình thức đấu thầu"
-        }
-        footerContent={
-          <div className="flex items-center justify-center gap-2">
-            <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
-            {type !== EButtonTypes.VIEW && (
-              <Button
-                key="submit"
-                kind="submit"
-                text={"Lưu"}
-                onClick={() => {
-                  formikRef.current && formikRef.current.handleSubmit();
-                }}
-              />
-            )}
-          </div>
-        }
-      >
-        <Formik innerRef={formikRef} validationSchema={schema} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
-          {({ values, errors, touched, handleBlur, setFieldValue }) => (
-            <Form className="mt-3">
-              <Row gutter={[24, 24]}>
-                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                  <FormInput
-                    type="text"
-                    isDisabled={type === "view"}
-                    label="Tên hình thức đấu thầu"
-                    value={values.method_name}
-                    name="method_name"
-                    error={touched.method_name ? errors.method_name : ""}
-                    placeholder="Nhập tên hình thức đấu thầu..."
-                    onChange={(value) => setFieldValue("method_name", value)}
-                    onBlur={handleBlur}
-                  />
-                </Col>
-              </Row>
-
-              <Row gutter={[24, 24]}>
-                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                  <FormGroup title="Mô tả">
-                    <FormCkEditor
-                      id="description"
-                      direction="vertical"
-                      value={values.description}
-                      setFieldValue={setFieldValue}
-                      disabled={type === EButtonTypes.VIEW}
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Row gutter={[24, 24]}>
-                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                  <FormSwitch
-                    label="Trạng thái"
-                    checked={values.is_active === "1"}
-                    onChange={(value) => {
-                      setFieldValue("is_active", value ? "1" : "0");
-                    }}
-                  />
-                </Col>
-              </Row>
-            </Form>
+    <Dialog
+      handleSubmit={() => {
+        formikRef.current && formikRef.current.handleSubmit();
+      }}
+      visible={visible}
+      setVisible={setVisible}
+      title={
+        type === EButtonTypes.CREATE
+          ? "Tạo mới hình thức đấu thầu"
+          : type === EButtonTypes.UPDATE
+            ? "Cập nhật Tạo mới hình thức đấu thầu"
+            : "Chi tiết Tạo mới hình thức đấu thầu"
+      }
+      footerContent={
+        <div className="flex items-center justify-center gap-2">
+          <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
+          {type !== EButtonTypes.VIEW && (
+            <Button
+              key="submit"
+              kind="submit"
+              text={"Lưu"}
+              onClick={() => {
+                formikRef.current && formikRef.current.handleSubmit();
+              }}
+            />
           )}
-        </Formik>
-      </Dialog>
-    </>
+        </div>
+      }
+    >
+      <Formik innerRef={formikRef} validationSchema={schema} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+        {({ values, errors, touched, handleBlur, setFieldValue }) => (
+          <Form className="mt-3">
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormInput
+                  type="text"
+                  isDisabled={type === "view"}
+                  label="Tên hình thức đấu thầu"
+                  value={values.method_name}
+                  name="method_name"
+                  error={touched.method_name ? errors.method_name : ""}
+                  placeholder="Nhập tên hình thức đấu thầu..."
+                  onChange={(value) => setFieldValue("method_name", value)}
+                  onBlur={handleBlur}
+                />
+              </Col>
+            </Row>
+
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormGroup title="Mô tả">
+                  <FormCkEditor
+                    id="description"
+                    direction="vertical"
+                    value={values.description}
+                    setFieldValue={setFieldValue}
+                    disabled={type === EButtonTypes.VIEW}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormSwitch
+                  label="Trạng thái"
+                  checked={values.is_active === "1"}
+                  onChange={(value) => {
+                    setFieldValue("is_active", value ? "1" : "0");
+                  }}
+                />
+              </Col>
+            </Row>
+          </Form>
+        )}
+      </Formik>
+    </Dialog>
   );
 };
 
