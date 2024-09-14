@@ -231,9 +231,9 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <ActivityLogs />,
               },
-              {
+              { 
                 path: "/detail/:id",
-                element: () => <DetailIndustry />,
+                element: () => <DetailActi />,
               },
             ],
           },
