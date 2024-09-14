@@ -1,4 +1,3 @@
-import ConfirmModal from "@/components/common/CommonModal";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
@@ -11,18 +10,19 @@ import { getAllActivityLogs } from "@/services/store/activityLogs/activityLog.th
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { convertDataOption } from "@/shared/utils/common/function";
+import { activityLogOptions } from "@/shared/enums/typeActivityLog";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import React, { useEffect, useMemo, useState } from "react";
-import { GoDownload } from "react-icons/go";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DetailActivityLogProps from "./Detail";
+import FormModal from "@/components/form/FormModal";
 
 const ActivityLogs = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IActivityLogInitialState>("activity_log");
-  const [isModal, setIsModal] = useState(false);
-  const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<ReactNode>(null);
 
   const columns: ColumnsType = [
     {
@@ -54,11 +54,16 @@ const ActivityLogs = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/activitylog/detail/${record?.key}`);
+        setModalContent(<DetailActivityLogProps record={record} />);
+        setIsModalOpen(true);
       },
-      permission: EPermissions.DETAIL_INDUSTRY,
+      // permission: EPermissions.CREATE_ACTIVITYLOG,
     },
   ];
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const search: ISearchTypeTable[] = [
     {
@@ -67,6 +72,13 @@ const ActivityLogs = () => {
       label: "Nhật ký hoạt động",
       type: "text",
     },
+    {
+      id: "event",
+      placeholder: "--",
+      label: "Sự kiện",
+      type: "select",
+      options: activityLogOptions
+    }
   ];
 
   const data: ITableData[] = useMemo(() => {
@@ -85,7 +97,7 @@ const ActivityLogs = () => {
   useEffect(() => {
     dispatch(getAllActivityLogs({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-
+    
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllActivityLogs({ query: state.filter }));
@@ -105,9 +117,14 @@ const ActivityLogs = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
+
+  // console.log(state);
   return (
     <>
       <Heading title="Nhật ký hoạt động" hasBreadcrumb />
+      <FormModal open={isModalOpen} onCancel={handleCancel}>
+        {modalContent}
+      </FormModal>
       <ManagementGrid
         columns={columns}
         data={data}

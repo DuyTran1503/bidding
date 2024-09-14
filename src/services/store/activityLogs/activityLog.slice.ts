@@ -46,11 +46,13 @@ export interface IActivityLogInitialState extends IInitialState {
         builder
         .addCase(getAllActivityLogs.fulfilled, (state, { payload }: PayloadAction<IResponse<IActivityLog[]> | any>) => {
           if (payload.data) {
-            state.fundingSources = payload.data.data;
+            state.activityLogs = payload.data.data;
             state.totalRecords = payload?.data?.total_elements;
             state.number_of_elements = payload?.data?.number_of_elements;
+            
           }
         })
+
         .addCase(getAllActivityLogs.rejected, (state, { payload }: PayloadAction<IResponse<IActivityLog[]> | any>) => {
           state.message = transformPayloadErrors(payload?.errors);
         });

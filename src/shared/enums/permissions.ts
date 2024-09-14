@@ -106,4 +106,5 @@ export enum EPermissions {
   // Nhật ký hoạt động
   LIST_ACTIVITYLOG = "list_activitylog",
   DETAIL_ACTIVITYLOG = "detail_activitylog",
+  CREATE_ACTIVITYLOG = "create_activitylog"
 }
