@@ -27,57 +27,57 @@ const BidDocument = () => {
     {
       dataIndex: "index",
       title: "STT",
-      className: "w-[100px]",
+      className: "max-w-[80px]",
     },
     {
       dataIndex: "id_project",
       title: "Dự án",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "id_enterprise",
       title: "Doanh nghiệp",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "id_bid_bond",
       title: "Bảo lãnh dự thầu",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "submission_date",
       title: "Ngày nộp hồ sơ",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "bid_price",
       title: "Giá thầu",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "implementation_time",
       title: "Thời gian thực hiện",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "technical_score",
       title: "Điểm kỹ thuật",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "financial_score",
       title: "Điểm tài chính",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "totalScore",
       title: "Tổng điểm",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "ranking",
       title: "Thứ hạng",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     // {
     //   dataIndex: "status",

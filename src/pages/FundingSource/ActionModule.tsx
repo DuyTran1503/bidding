@@ -42,6 +42,9 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
 
   const tagSchema = object().shape({
     name: string().trim().required("Vui lòng không để trống trường này"),
+    type: string().trim().required("Vui lòng không để trống trường này"),
+    code: string().trim().required("Vui lòng không để trống trường này"),
+    description: string().trim().required("Vui lòng không để trống trường này"),
   });
   useEffect(() => {
     return () => {

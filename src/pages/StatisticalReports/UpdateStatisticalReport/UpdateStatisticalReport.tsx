@@ -52,6 +52,9 @@ const UpdateStatisticalReport = () => {
           name: data.name,
           description: data.description,
           is_active: data.is_active,
+          user_id: data.user_id || "",
+          type: data.type || "",
+          period: data.period || "",
         });
       }
     }

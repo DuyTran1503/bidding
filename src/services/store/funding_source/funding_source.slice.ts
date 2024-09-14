@@ -4,11 +4,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { commonStaticReducers } from "@/services/shared";
 import {
   changeStatusFundingSource,
-  getListBusinessActivity,
   createFundingSource,
   deleteFundingSources,
   getAllFundingSources,
   getFundingSourceById,
+  getListFundingSource,
   updateFundingSource,
 } from "./funding_source.thunk";
 import { IError } from "@/shared/interface/error";
@@ -123,12 +123,12 @@ const fundingSourceSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
       });
     builder
-      .addCase(getListBusinessActivity.fulfilled, (state, { payload }: PayloadAction<IResponse<IFundingSource[]> | any>) => {
+      .addCase(getListFundingSource.fulfilled, (state, { payload }: PayloadAction<IResponse<IFundingSource[]> | any>) => {
         if (payload.data) {
           state.listBusinessActivities = payload.data;
         }
       })
-      .addCase(getListBusinessActivity.rejected, (state, { payload }: PayloadAction<IResponse<IFundingSource[]> | any>) => {
+      .addCase(getListFundingSource.rejected, (state, { payload }: PayloadAction<IResponse<IFundingSource[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
   },

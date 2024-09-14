@@ -57,8 +57,8 @@ const PrimaryTable = <T extends ISearchParams>({
   const handleTableChange = (pagination: any) => {
     dispatch(
       setFilter({
-        _page: pagination.current,
-        _size: pagination.pageSize,
+        page: pagination.current,
+        size: pagination.pageSize,
       }),
     );
   };
