@@ -73,7 +73,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "3.3",
           label: "Loại hình đấu thầu",
           path: "bidding-types",
-          // permissions: EPermissions.LIST_BIDDING_TYPE,
+          permissions: EPermissions.LIST_BIDDING_TYPE,
         },
         {
           id: "3.4",
@@ -86,6 +86,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Nguồn tài trợ",
           path: "funding-sources",
           permissions: EPermissions.LIST_FUNDING_SOURCE,
+        },
+        {
+          id: "3.6",
+          label: "Hình thức lựa chọn Nhà thầu",
+          path: "selection-methods",
+          // permissions: EPermissions.LIST_SELECTION_METHOD,
         },
       ],
     },
