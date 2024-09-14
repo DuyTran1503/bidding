@@ -8,21 +8,21 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
 import { EPageTypes } from "@/shared/enums/page";
-import { IBiddingHistoryInitialState, resetStatus } from "@/services/store/biddingHistory/biddingHistory.slice";
-import BiddingHistoryForm, { IBiddingHistoryFormInitialValues } from "../BiddingHistoryForm";
+import { IBiddingResultInitialState, resetStatus } from "@/services/store/biddingResult/biddingResult.slice";
+import BiddingResultForm, { IBiddingResultFormInitialValues } from "../BiddingResultForm";
 
-const CreateBiddingHistory = () => {
+const CreateBiddingResult = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IBiddingHistoryFormInitialValues>>(null);
-  const { state } = useArchive<IBiddingHistoryInitialState>("bidding_history");
+  const formikRef = useRef<FormikProps<IBiddingResultFormInitialValues>>(null);
+  const { state } = useArchive<IBiddingResultInitialState>("bidding_result");
 
   useFetchStatus({
-    module: "bidding_history",
+    module: "bidding_result",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/bidding-historys",
+        navigate: "/bidding-results",
       },
       error: {
         message: state.message,
@@ -41,7 +41,7 @@ const CreateBiddingHistory = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/bidding-historys");
+              navigate("/bidding-results");
             },
           },
           {
@@ -56,9 +56,9 @@ const CreateBiddingHistory = () => {
           },
         ]}
       />
-      <BiddingHistoryForm type={EPageTypes.CREATE} formikRef={formikRef} />
+      <BiddingResultForm type={EPageTypes.CREATE} formikRef={formikRef} />
     </>
   );
 };
 
-export default CreateBiddingHistory;
+export default CreateBiddingResult;

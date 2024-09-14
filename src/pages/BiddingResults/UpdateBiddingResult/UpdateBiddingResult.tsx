@@ -8,24 +8,24 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
 import { EPageTypes } from "@/shared/enums/page";
-import { getBiddingHistoryById } from "@/services/store/biddingHistory/biddingHistory.thunk";
-import { IBiddingHistoryInitialState, resetStatus } from "@/services/store/biddingHistory/biddingHistory.slice";
-import BiddingHistoryForm, { IBiddingHistoryFormInitialValues } from "../BiddingHistoryForm";
+import { getBiddingResultById } from "@/services/store/biddingResult/biddingResult.thunk";
+import { IBiddingResultInitialState, resetStatus } from "@/services/store/biddingResult/biddingResult.slice";
+import BiddingResultForm, { IBiddingResultFormInitialValues } from "../BiddingResultForm";
 
-const UpdateBiddingHistory = () => {
+const UpdateBiddingResult = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IBiddingHistoryFormInitialValues>>(null);
-  const { state, dispatch } = useArchive<IBiddingHistoryInitialState>("bidding_history");
-//   const [data, setData] = useState<IBiddingHistoryFormInitialValues>();
+  const formikRef = useRef<FormikProps<IBiddingResultFormInitialValues>>(null);
+  const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
+//   const [data, setData] = useState<IBiddingResultFormInitialValues>();
   const { id } = useParams();
 
   useFetchStatus({
-    module: "bidding_history",
+    module: "bidding_result",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/bidding-historys",
+        navigate: "/bidding-results",
       },
       error: {
         message: state.message,
@@ -35,15 +35,15 @@ const UpdateBiddingHistory = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(getBiddingHistoryById(id));
+      dispatch(getBiddingResultById(id));
     }
   }, [id]);
 
 //   useEffect(() => {
-//     if (!!state.activeBiddingHistory) {
-//       setData(state.activeBiddingHistory);
+//     if (!!state.activeBiddingResult) {
+//       setData(state.activeBiddingResult);
 //     }
-//   }, [JSON.stringify(state.biddingHistory)]);
+//   }, [JSON.stringify(state.biddingResult)]);
 
 //   useEffect(() => {
 //     if (data) {
@@ -71,7 +71,7 @@ const UpdateBiddingHistory = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/bidding-historys");
+              navigate("/bidding-results");
             },
           },
           {
@@ -82,8 +82,8 @@ const UpdateBiddingHistory = () => {
           },
         ]}
       />
-      {state.activeBiddingHistory ? (
-        <BiddingHistoryForm type={EPageTypes.UPDATE} formikRef={formikRef} biddingHistory={state.activeBiddingHistory} />
+      {state.activeBiddingResult ? (
+        <BiddingResultForm type={EPageTypes.UPDATE} formikRef={formikRef} biddingResult={state.activeBiddingResult} />
       ) : (
         <div>Loading...</div>
       )}
@@ -91,4 +91,4 @@ const UpdateBiddingHistory = () => {
   );
 };
 
-export default UpdateBiddingHistory;
+export default UpdateBiddingResult;
