@@ -55,6 +55,9 @@ import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
 import { EPermissions } from "@/shared/enums/permissions";
 import ActivityLogs from "@/pages/ActivityLogs";
 import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/SelectionMethods";
+import ProjectPage from "@/pages/Project";
+import CreateProject from "@/pages/Project/Create";
+import UpdateProject from "@/pages/Project/Update";
 
 export interface IRoute {
   path: string;
@@ -346,6 +349,27 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBidDocument />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBidDocument />,
+              },
+            ],
+          },
+          {
+            path: "project",
+            pages: [
+              {
+                path: "/",
+                element: () => <ProjectPage />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateProject />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateProject />,
               },
               {
                 path: "/detail/:id",
