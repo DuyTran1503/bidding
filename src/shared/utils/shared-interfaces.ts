@@ -60,7 +60,7 @@ export interface IInitialState {
 
 export interface IGridButton {
   type: EButtonTypes;
-  onClick: (record: { key: string; [key: string]: any }) => unknown;
+  onClick?: (record: { key: string; [key: string]: any }) => unknown;
   permission?: EPermissions;
 }
 export interface IOption {

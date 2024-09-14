@@ -11,11 +11,12 @@ import { checkPermission } from "@/helpers/checkPermission";
 interface IGridButtonsProps {
   buttons: IGridButton[];
   record: { key: string; [key: string]: any };
+  onClick?: (item: any, type: EButtonTypes) => void;
 }
 
 const { confirm } = Modal;
 
-const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record }) => {
+const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record, onClick }) => {
   const { state } = useArchive<IAuthInitialState>("auth");
 
   return (
@@ -30,7 +31,12 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record }) => {
             return (
               canAccess && (
                 <Tooltip title="View" key={index}>
-                  <IoEyeOutline className="cursor-pointer text-xl text-blue-500" onClick={() => button.onClick(record)} />
+                  <IoEyeOutline
+                    className="cursor-pointer text-xl text-blue-500"
+                    onClick={() => {
+                      button.onClick ? button.onClick(record) : onClick && onClick(record, button.type);
+                    }}
+                  />
                 </Tooltip>
               )
             );
@@ -38,7 +44,12 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record }) => {
             return (
               canAccess && (
                 <Tooltip title="Edit" key={index}>
-                  <HiOutlinePencil className="cursor-pointer text-xl text-yellow-500" onClick={() => button.onClick(record)} />
+                  <HiOutlinePencil
+                    className="cursor-pointer text-xl text-yellow-500"
+                    onClick={() => {
+                      button.onClick ? button.onClick(record) : onClick && onClick(record, button.type);
+                    }}
+                  />
                 </Tooltip>
               )
             );
@@ -50,9 +61,9 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record }) => {
                     className="cursor-pointer text-xl text-red-500"
                     onClick={() => {
                       confirm({
-                        title: "Delete",
-                        content: "Are you sure you want to delete this record?",
-                        onOk: () => button.onClick(record),
+                        title: "Xóa",
+                        content: "Bạn chắc chắn muốn xóa không?",
+                        onOk: () => button.onClick && button.onClick(record),
                       });
                     }}
                   />
