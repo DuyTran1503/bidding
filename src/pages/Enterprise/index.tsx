@@ -16,12 +16,12 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IEnterpriseInitialState, resetStatus, setFilter } from "@/services/store/enterprise/enterprise.slice";
-import { changeStatusEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { changeStatusActiveEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
-import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
+import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
 
 const Enterprise = () => {
   const navigate = useNavigate();
@@ -109,8 +109,8 @@ const Enterprise = () => {
           <div key={index} className="flex flex-col gap-2">
             <CommonSwitch
               onChange={() => handleChangeStatus(record)}
-              checked={!!record.is_active}
-              title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
+              checked={+record.is_active === STATUS.ACTIVE}
+              title={`Bạn có chắc chắn muốn ${record.is_active === STATUS.ACTIVE ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
             />
           </div>
         );
@@ -198,7 +198,7 @@ const Enterprise = () => {
   };
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
-      enterpriseDispatch(changeStatusEnterprise(String(confirmItem.key)));
+      enterpriseDispatch(changeStatusActiveEnterprise(String(confirmItem.key)));
     }
   };
   useEffect(() => {
