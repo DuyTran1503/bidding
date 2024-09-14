@@ -16,11 +16,12 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IEnterpriseInitialState, resetStatus, setFilter } from "@/services/store/enterprise/enterprise.slice";
-import { changeStatusEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { changeStatusActiveEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
+import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
 
 const Enterprise = () => {
   const navigate = useNavigate();
@@ -33,6 +34,22 @@ const Enterprise = () => {
       return industryState.listIndustry!.filter((item) => value.includes(+item.id)).map((item) => item.name);
     }
   };
+
+  const typeOptions: IOption[] = typeEnterpriseEnumArray.map((e) => ({
+    value: e,
+    label: mappingTypeEnterprise[e],
+  }));
+  const statusOptions: IOption[] = statusEnumArray.map((e) => ({
+    value: e,
+    label: mappingStatus[e],
+  }));
+  // Hoặc sử dụng toán tử nullish coalescing
+  const industryOptions: IOption[] = industryState?.listIndustry?.length
+    ? industryState.listIndustry.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }))
+    : [];
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -54,10 +71,6 @@ const Enterprise = () => {
       title: "Loại hình doanh nghiệp",
       className: "w-[250px]",
       render(_, record, index) {
-        const typeOptions: IOption[] = typeEnterpriseEnumArray.map((e) => ({
-          value: e,
-          label: mappingTypeEnterprise[e],
-        }));
         const organization_type = typeOptions.find((e) => +e.value === +record?.organization_type)?.label;
         return <Fragment key={index}>{organization_type}</Fragment>;
       },
@@ -81,7 +94,9 @@ const Enterprise = () => {
       dataIndex: "industry_id",
       title: "Lĩnh vực hoạt động",
       render(_, record) {
-        return <div className="flex flex-col">{record?.enterprises?.map((item: string, index: number) => <div key={index}>{item}</div>)}</div>;
+        return (
+          <div className="flex flex-col">{record?.enterprises?.map((item: string, index: number) => <div key={index}>{item ? item : ""}</div>)}</div>
+        );
       },
     },
 
@@ -92,20 +107,10 @@ const Enterprise = () => {
       render(_, record, index) {
         return (
           <div key={index} className="flex flex-col gap-2">
-            {/* <CommonSwitch
-              onChange={() => handleChangeStatus(record)}
-              checked={!!record.is_active}
-              title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
-            />
             <CommonSwitch
               onChange={() => handleChangeStatus(record)}
-              checked={!!record.is_blacklist}
-              title={`Bạn có chắc chắn muốn ${record.is_blacklist ? "bỏ danh sách đen" : "thêm vào danh sách đen"} doanh nghiệp này?`}
-            /> */}
-            <CommonSwitch
-              onChange={() => handleChangeStatus(record)}
-              checked={!!record.account_ban_at}
-              title={`Bạn có chắc chắn muốn ${record.account_ban_at ? "bỏ cấm" : "cấm"} doanh nghiệp này?`}
+              checked={+record.is_active === STATUS.ACTIVE}
+              title={`Bạn có chắc chắn muốn ${record.is_active === STATUS.ACTIVE ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
             />
           </div>
         );
@@ -141,9 +146,32 @@ const Enterprise = () => {
   const search: ISearchTypeTable[] = [
     {
       id: "name",
-      placeholder: "Nhập ...",
-      label: "Loại hình doanh nghiệp",
+      placeholder: "Nhập tên  ...",
+      label: "Tên doanh nghiệp ",
       type: "text",
+    },
+    {
+      id: "organization_type",
+      placeholder: "Chọn tên doanh nghiệp ...",
+      label: "Loại hình doanh nghiệp ",
+      type: "select",
+      options: typeOptions as { value: string; label: string }[],
+    },
+    {
+      id: "industry_ids",
+      placeholder: "Chọn lĩnh vực hoạt dộng ...",
+      label: "Lĩnh vực hoạt dộng ",
+      type: "select",
+      isMultiple: true,
+      options: industryOptions as { value: string; label: string }[],
+    },
+    {
+      id: "is_active",
+      placeholder: "Chọn trạng thái ...",
+      label: "Trạng thái",
+      type: "select",
+
+      options: statusOptions as { value: string; label: string }[],
     },
   ];
   const data: ITableData[] = useMemo(() => {
@@ -154,7 +182,7 @@ const Enterprise = () => {
             key: id,
             name,
             representative,
-            enterprises: industry_id?.length && industry(industry_id),
+            enterprises: (industry_id?.length && industry(industry_id)) || [],
             organization_type,
             phone,
             email,
@@ -172,7 +200,7 @@ const Enterprise = () => {
   };
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
-      enterpriseDispatch(changeStatusEnterprise(String(confirmItem.key)));
+      enterpriseDispatch(changeStatusActiveEnterprise(String(confirmItem.key)));
     }
   };
   useEffect(() => {

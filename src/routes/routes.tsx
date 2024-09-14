@@ -54,6 +54,7 @@ import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/Up
 import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
 import { EPermissions } from "@/shared/enums/permissions";
 import ActivityLogs from "@/pages/ActivityLogs";
+import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/SelectionMethods";
 
 export interface IRoute {
   path: string;
@@ -138,6 +139,23 @@ export const routes: IRoute[] = [
                 path: "/update/:id",
                 element: () => <UpdateBiddingType />,
               },
+            ],
+          },
+          {
+            path: "selection-methods",
+            pages: [
+              {
+                path: "/",
+                element: () => <SelectionMethods />,
+              },
+              // {
+              //   path: "/create",
+              //   element: () => <CreateSelectionMethod />,
+              // },
+              // {
+              //   path: "/update/:id",
+              //   element: () => <UpdateSelectionMethod />,
+              // },
             ],
           },
           {
@@ -231,10 +249,10 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <ActivityLogs />,
               },
-              { 
-                path: "/detail/:id",
-                element: () => <DetailActi />,
-              },
+              // {
+              //   path: "/detail/:id",
+              //   element: () => <DetailActi />,
+              // },
             ],
           },
           {
