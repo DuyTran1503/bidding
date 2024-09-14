@@ -174,6 +174,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
             <div className="mt-[12px] flex flex-row items-center justify-center gap-2">
               <Button text={"Tìm kiếm"} onClick={() => handleSubmit()} />
               <Button
+                type="secondary"
                 text={"Hủy"}
                 onClick={() => {
                   const resetFilter: ISearchParams = {
