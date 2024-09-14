@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
+import { EButtonTypes } from "@/shared/enums/button";
 
 export interface IButtonProps {
   type?: "primary" | "ghost" | "secondary";
@@ -10,34 +11,45 @@ export interface IButtonProps {
   size?: "full";
   onClick?: () => void;
   className?: string;
+  handleClick?: (typeButton: EButtonTypes) => void;
+  kind?: "submit" | "reset" | "button" | undefined;
 }
 
-const Button = ({ type = "primary", text, isDisabled = false, isLoading = false, icon, size, className, onClick }: IButtonProps) => {
+const Button = ({
+  type = "primary",
+  text,
+  isDisabled = false,
+  isLoading = false,
+  icon,
+  size,
+  className,
+  onClick,
+  handleClick,
+  kind,
+}: IButtonProps) => {
   const typeClass = {
-    primary: "bg-primary-500 text-white",
+    primary: "text-primary-600 border border-primary-500 hover:bg-primary-600 ",
     ghost: "text-primary-500 bg-primary-50",
-    secondary: "text-gray-400 border border-gray-400",
+    secondary: "text-[#ff460b] border border-[#ff460b] hover:bg-[#f33d07]",
   };
 
   const typeLoading = {
-    primary: "border-white border-t-primary-500",
+    primary: "border-black border-t-primary-500 ",
     ghost: "border-primary-500 border-t-primary-50",
-    secondary: "border-gray-400 border-t-white",
+    secondary: "border-gray-400 border-t-black",
   };
-
   return (
     <button
-      onClick={() => {
-        if (onClick && !isDisabled && !isLoading) onClick();
-      }}
+      type={kind}
+      onClick={() => (onClick && !isDisabled && !isLoading ? onClick() : handleClick && handleClick(EButtonTypes.CREATE))}
       className={clsx(
-        "font-semibold flex items-center justify-center gap-1 rounded-[8px] px-[14px] py-[10px] transition-opacity",
+        "flex items-center justify-center gap-1 rounded-[8px] px-[12px] py-[7px] font-semibold leading-[22px] transition-opacity",
         typeClass[type],
         className,
         {
           "cursor-not-allowed opacity-65": isDisabled,
           "opacity-65": isLoading,
-          "cursor-pointer hover:opacity-95": !isDisabled && !isLoading,
+          "cursor-pointer hover:text-gray-50": !isDisabled && !isLoading,
         },
         size === "full" && "w-full",
       )}

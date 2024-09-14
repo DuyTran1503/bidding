@@ -41,6 +41,13 @@ export enum EPermissions {
   UPDATE_BIDDING_TYPE = "update_bidding_type",
   DESTROY_BIDDING_TYPE = "destroy_bidding_type",
 
+  // ? SelectionMethod
+  LIST_SELECTION_METHOD = "list_selection_method",
+  DETAIL_SELECTION_METHOD = "detail_selection_method",
+  CREATE_SELECTION_METHOD = "create_selection_method",
+  UPDATE_SELECTION_METHOD = "update_selection_method",
+  DESTROY_SELECTION_METHOD = "destroy_selection_method",
+
   // staff
   LIST_STAFF = "list_staff",
   DETAIL_STAFF = "detail_staff",
