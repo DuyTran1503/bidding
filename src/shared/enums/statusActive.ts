@@ -1,6 +1,6 @@
 export enum STATUS {
   ACTIVE = 1,
-  IN_ACTIVE = 2,
+  IN_ACTIVE = 0,
 }
 
 export const statusEnumArray: STATUS[] = [STATUS.ACTIVE, STATUS.IN_ACTIVE];

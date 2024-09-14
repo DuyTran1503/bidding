@@ -3,6 +3,7 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
 import {
+  changeStatusActiveEnterprise,
   changeStatusEnterprise,
   createEnterprise,
   deleteEnterprise,
@@ -129,6 +130,18 @@ const enterpriseSlice = createSlice({
         }
       })
       .addCase(getIndustries.rejected, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
+      });
+    builder
+      .addCase(changeStatusActiveEnterprise.pending, (state) => {
+        state.status = EFetchStatus.PENDING;
+      })
+      .addCase(changeStatusActiveEnterprise.fulfilled, (state) => {
+        state.status = EFetchStatus.FULFILLED;
+        state.message = "Thay đổi trạng thái thành công";
+      })
+      .addCase(changeStatusActiveEnterprise.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+        state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
   },
