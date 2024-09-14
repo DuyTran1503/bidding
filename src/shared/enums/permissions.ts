@@ -102,4 +102,18 @@ export enum EPermissions {
   CREATE_BID_DOCUMENT = "create_bid_document",
   UPDATE_BID_DOCUMENT = "update_bid_document",
   DESTROY_BID_DOCUMENT = "destroy_bid_document",
+
+  // ? Lịch sử đấu thầu
+  LIST_BIDDING_HISTORY = "list_bidding_history",
+  DETAIL_BIDDING_HISTORY = "detail_bidding_history",
+  CREATE_BIDDING_HISTORY = "create_bidding_history",
+  UPDATE_BIDDING_HISTORY = "update_bidding_history",
+  DESTROY_BIDDING_HISTORY = "destroy_bidding_history",
+
+  // ? Kết quả đấu thầu
+  LIST_BIDDING_RESULT = "list_bidding_result",
+  DETAIL_BIDDING_RESULT = "detail_bidding_result",
+  CREATE_BIDDING_RESULT = "create_bidding_result",
+  UPDATE_BIDDING_RESULT = "update_bidding_result",
+  DESTROY_BIDDING_RESULT = "destroy_bidding_result",
 }
