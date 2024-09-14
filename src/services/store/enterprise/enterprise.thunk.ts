@@ -128,3 +128,11 @@ export const changeStatusEnterprise = createAsyncThunk("staff/change-status-ente
     return rejectWithValue(error.response.data);
   }
 });
+export const changeStatusActiveEnterprise = createAsyncThunk("staff/change-status-active-enterprises", async (id: string, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.put(`${prefix}/${id}/changeActive`);
+    return response.status >= 400 ? rejectWithValue(data) : id;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
