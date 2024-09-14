@@ -38,24 +38,41 @@ export interface ISearchProps<T extends ISearchParams> {
   filter: T;
   isShow?: boolean;
 }
-
+interface IValues {
+  [key: string]: any; // Có thể thay đổi kiểu nếu bạn biết trước các kiểu dữ liệu
+}
 const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
   const { search, setFilter, filter, isShow } = props;
   const dispatch = useDispatch();
 
+  const transformValues = (values: IValues): IValues => {
+    const newValues: IValues = {};
+
+    for (const key in values) {
+      if (Array.isArray(values[key])) {
+        values[key].forEach((item: string, index: number) => {
+          newValues[`${key}[${index}]`] = item;
+        });
+      } else {
+        newValues[key] = values[key];
+      }
+    }
+
+    return newValues;
+  };
   return (
     <Formik
       enableReinitialize
       initialValues={filter}
       onSubmit={(values: T, formikHelpers: FormikHelpers<T>) => {
-        dispatch(setFilter(values));
+        dispatch(setFilter(transformValues(values)));
         formikHelpers.setSubmitting(false);
       }}
     >
       {({ values, errors, handleBlur, setFieldValue, resetForm, handleSubmit }) => {
         return (
           <div className={`${isShow ? "hidden" : ""} row-gap-3 flex flex-col px-4 py-3`}>
-            <Row className="row-gap-2 row-gap-lg-3 items-center gap-4">
+            <Row gutter={[24, 24]} className="row-gap-2 row-gap-lg-3 items-center">
               {search.map((item, index) => {
                 if (item.type === "text") {
                   const value: any = values[item.id] || "";
@@ -79,24 +96,18 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                 }
 
                 if (item.type === "select") {
-                  const selectedOption = item.options?.find((option) => option.value === values[item.id]);
                   const options = item.parentItem ? (values[item.parentItem] ? item.options : []) : item.options;
-
+                  const value: any = values[item.id] || undefined;
                   return (
                     <Col key={index} xs={24} sm={24} md={12} lg={6}>
                       <FormSelect
                         id={item.id}
                         label={item.label}
+                        isMultiple={item.isMultiple}
                         placeholder={item.placeholder}
                         options={options!}
-                        value={selectedOption?.value}
+                        value={value}
                         onChange={(data) => {
-                          if (Array.isArray(data)) return;
-
-                          item.childItems?.forEach((child) => {
-                            setFieldValue(child, "");
-                          });
-
                           setFieldValue(item.id, data);
 
                           item.onChange && item.onChange(data);
@@ -163,6 +174,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
             <div className="mt-[12px] flex flex-row items-center justify-center gap-2">
               <Button text={"Tìm kiếm"} onClick={() => handleSubmit()} />
               <Button
+                type="secondary"
                 text={"Hủy"}
                 onClick={() => {
                   const resetFilter: ISearchParams = {
