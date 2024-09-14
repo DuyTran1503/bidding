@@ -53,6 +53,7 @@ import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/Cr
 import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
 import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
 import { EPermissions } from "@/shared/enums/permissions";
+import ActivityLogs from "@/pages/ActivityLogs";
 import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/SelectionMethods";
 
 export interface IRoute {
@@ -239,6 +240,19 @@ export const routes: IRoute[] = [
                 path: "/detail/:id",
                 element: () => <DetailIndustry />,
               },
+            ],
+          },
+          {
+            path: "activity-logs",
+            pages: [
+              {
+                path: "/",
+                element: () => <ActivityLogs />,
+              },
+              // {
+              //   path: "/detail/:id",
+              //   element: () => <DetailActi />,
+              // },
             ],
           },
           {
