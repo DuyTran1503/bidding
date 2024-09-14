@@ -14,18 +14,16 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 
 const BidBonds = () => {
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IBidBondInitialState>("bidbond");
+  const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const [isModal, setIsModal] = useState(false);
-  //   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  //   const [modalContent, setModalContent] = useState<ReactNode>(null);
 
   const buttons: IGridButton[] = [
     {
@@ -140,7 +138,7 @@ const BidBonds = () => {
   }, [JSON.stringify(state.status)]);
 
   useFetchStatus({
-    module: "bidbond",
+    module: "bid_bond",
     reset: resetStatus,
     actions: {
       success: { message: state.message },
