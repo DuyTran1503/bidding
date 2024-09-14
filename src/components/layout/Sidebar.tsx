@@ -89,6 +89,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "3.6",
+          label: "Nhật ký hoạt động",
+          path: "activity-logs",
+          // permissions: EPermissions.LIST_ACTIVITYLOG,
+        },
+        {
+          id: "3.6",
           label: "Hình thức lựa chọn Nhà thầu",
           path: "selection-methods",
           // permissions: EPermissions.LIST_SELECTION_METHOD,

@@ -1,36 +1,36 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { IBidBond } from "./bidBond.model";
 import { client } from "@/services/config/client";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IFundingSource } from "./funding_source.model";
 import { IError } from "@/shared/interface/error";
 
-const prefix = "/api/admin/funding-sources";
+const prefix = "/api/admin/bidbond";
 
-export const getAllFundingSources = createAsyncThunk(
-  "staff/get-all-fundingsources",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
-    try {
-      const { response, data } = await client.get<IFundingSource[]>(prefix, payload);
-      return response.status >= 400 ? rejectWithValue(data) : data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+export const getAllBidBonds = createAsyncThunk(
+    "staff/get-all-bidbonds",
+    async (payload: IThunkPayload, { rejectWithValue }) => {
+      try {
+        const { response, data } = await client.get<IBidBond[]>(prefix, payload);
+        return response.status >= 400 ? rejectWithValue(data) : data;
+      } catch (error: any) {
+        return rejectWithValue(error.response.data);
+      }
+    },
+  );
 
-export const getFundingSourceById = createAsyncThunk(
-    "funding-sources/get-funding-sources-by-id", 
+  export const getBidBondById = createAsyncThunk(
+    "bidbonds/get-bidbond-by-id", 
     async (id: string, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<IFundingSource>(prefix + `/${id}`);
+    const { response, data } = await client.get<IBidBond>(prefix + `/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }
 });
 
-export const createFundingSource = createAsyncThunk(
-    "funding-sources/create-funding-sources", 
+export const createBidBond = createAsyncThunk(
+    "bidbonds/create-bidbonds", 
     async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.post(prefix, payload);
@@ -40,8 +40,8 @@ export const createFundingSource = createAsyncThunk(
   }
 });
 
-export const updateFundingSource = createAsyncThunk(
-    "funding-sources/update-funding-sources",
+export const updateBidBond = createAsyncThunk(
+    "bidbonds/update-bidbonds",
     async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.patch(`${prefix}/${payload.param}`, payload);
@@ -51,8 +51,8 @@ export const updateFundingSource = createAsyncThunk(
   }
 });
 
-export const deleteFundingSources = createAsyncThunk(
-    "funding-sources/delete-funding-sources", 
+export const deleteBidBond = createAsyncThunk(
+    "bidbonds/delete-bidbonds", 
     async (id: string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.delete(`${prefix}/${id}`);
@@ -62,8 +62,8 @@ export const deleteFundingSources = createAsyncThunk(
   }
 });
 
-export const changeStatusFundingSource = createAsyncThunk(
-    "funding-sources/change-status-funding-sources",
+export const changeStatusBidBond = createAsyncThunk(
+    "bidbonds/change-status-bidbonds",
     async (id: string, { rejectWithValue }) => {
       try {
         const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
@@ -73,8 +73,8 @@ export const changeStatusFundingSource = createAsyncThunk(
       }
     },
   );
-  export const getListFundingSource = createAsyncThunk(
-    "funding-sources/get-list-funding-sources",
+  export const getListBidBond = createAsyncThunk(
+    "bidbonds/get-list-bidbonds",
     async (_, { rejectWithValue }) => {
       try {
         const { response, data } = await client.get(`${prefix}/all-ids`);
