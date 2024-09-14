@@ -10,6 +10,7 @@ import {
   getAllEnterprise,
   getEnterpriseById,
   getIndustries,
+  getListEnterprise,
   updateEnterprise,
 } from "./enterprise.thunk";
 import { IError } from "@/shared/interface/error";
@@ -21,11 +22,13 @@ export interface IEnterpriseInitialState extends IInitialState {
   enterprises: IEnterprise[];
   enterprise?: IEnterprise | any;
   industries?: IIndustry[];
+  listEnterprise?: IEnterprise[];
 }
 
 const initialState: IEnterpriseInitialState = {
   status: EFetchStatus.IDLE,
   enterprises: [],
+  listEnterprise: [],
   enterprise: undefined,
   industries: [],
   message: "",
@@ -130,6 +133,15 @@ const enterpriseSlice = createSlice({
         }
       })
       .addCase(getIndustries.rejected, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
+      });
+    builder
+      .addCase(getListEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IEnterprise[]> | any>) => {
+        if (payload.data) {
+          state.listEnterprise = payload.data.data;
+        }
+      })
+      .addCase(getListEnterprise.rejected, (state, { payload }: PayloadAction<IResponse<IEnterprise[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
     builder
