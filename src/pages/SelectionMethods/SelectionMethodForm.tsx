@@ -1,108 +1,138 @@
 import { useArchive } from "@/hooks/useArchive";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import { Formik } from "formik";
+import { Formik, FormikProps } from "formik";
 import lodash from "lodash";
 import { ISelectionMethodInitialState } from "@/services/store/selectionMethod/selectionMethod.slice";
 import { ISelectionMethod } from "@/services/store/selectionMethod/selectionMethod.model";
-import { Col, Row } from "antd";
+import { Col, Form, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
 import { createSelectionMethod, updateSelectionMethod } from "@/services/store/selectionMethod/selectionMethod.thunk";
-import { EPageTypes } from "@/shared/enums/page";
 import FormCkEditor from "@/components/form/FormCkEditor";
+import Dialog from "@/components/dialog/Dialog";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { EButtonTypes } from "@/shared/enums/button";
+import Button from "@/components/common/Button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { object, string } from "yup";
 
 interface ISelectionMethodFormProps {
-    formikRef?: any;
-    type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
-    selectionMethod?: ISelectionMethod;
+  type?: EButtonTypes;
+  visible: boolean;
+  setVisible: Dispatch<SetStateAction<boolean>>; // Add setVisible prop
+  item?: ISelectionMethod;
 }
 
-export interface ISelectionMethodFormInitialValues {
-    method_name: string;
-    description: string;
-    is_active: string;
-}
-
-const SelectionMethodForm = ({ formikRef, type, selectionMethod }: ISelectionMethodFormProps) => {
-    const { dispatch } = useArchive<ISelectionMethodInitialState>("selection_method");
-
-    const initialValues: ISelectionMethodFormInitialValues = {
-        method_name: selectionMethod?.method_name || "",
-        description: selectionMethod?.description || "",
-        is_active: selectionMethod?.is_active ? "1" : "0",
+const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMethodFormProps) => {
+  const formikRef = useRef<FormikProps<ISelectionMethod>>(null);
+  const { state, dispatch } = useArchive<ISelectionMethodInitialState>("selection_method");
+  const initialValues: ISelectionMethod = {
+    id: item?.id || "",
+    method_name: item?.method_name || "",
+    description: item?.description || "",
+    is_active: item?.is_active ? "1" : "0",
+  };
+  const schema = object().shape({
+    method_name: string()
+      .trim()
+      .matches(/^[a-zA-Z0-9\s]*$/, "Không chứa ký tự đặc biệt")
+      .max(255, "Số ký tự tối đa là 255 ký tự"),
+  });
+  const handleSubmit = (data: ISelectionMethod) => {
+    const body = {
+      ...lodash.omit(data, "key", "index"),
     };
-
-    return (
-        <Formik
-            innerRef={formikRef}
-            initialValues={initialValues}
-            enableReinitialize={true}
-            onSubmit={(data, { setErrors }) => {
-                const body = {
-                    ...lodash.omit(data, "id"),
-                };
-                if (type === EPageTypes.CREATE) {
-                    dispatch(createSelectionMethod({ body }))
-                        .unwrap()
-                        .catch((error) => {
-                            const apiErrors = error?.errors || {};
-                            setErrors(apiErrors);
-                        });
-                } else if (type === EPageTypes.UPDATE) {
-                    dispatch(updateSelectionMethod({ body, param: selectionMethod?.id }))
-                        .unwrap()
-                        .catch((error) => {
-                            const apiErrors = error?.errors || {};
-                            setErrors(apiErrors);
-                        });
-                }
-            }}
-        >
-            {({ values, errors, touched, handleBlur, setFieldValue }) => (
-                <div>
-                    <FormGroup title="Thông tin chung">
-                        <Row gutter={[24, 24]}>
-                            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                                <FormInput
-                                    type="text"
-                                    isDisabled={type === "view"}
-                                    label="Tên hình thức đấu thầu"
-                                    value={values.method_name}
-                                    name="method_name"
-                                    error={touched.method_name ? errors.method_name : ""}
-                                    placeholder="Nhập tên hình thức đấu thầu..."
-                                    onChange={(value) => setFieldValue("method_name", value)}
-                                    onBlur={handleBlur}
-                                />
-                            </Col>
-                            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                                <FormSwitch
-                                    label="Trạng thái"
-                                    checked={values.is_active === "1"}
-                                    onChange={(value) => {
-                                        setFieldValue("is_active", value ? "1" : "0");
-                                    }}
-                                />
-                            </Col>
-                        </Row>
-                        <Row gutter={[24, 24]}>
-                            <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                                <FormGroup title="Mô tả">
-                                    <FormCkEditor
-                                        id="description"
-                                        direction="vertical"
-                                        value={values.description}
-                                        setFieldValue={setFieldValue}
-                                        disabled={type === EPageTypes.VIEW}
-                                    />
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                    </FormGroup>
-                </div>
+    if (type === EButtonTypes.CREATE) {
+      dispatch(createSelectionMethod({ body }));
+    } else if (type === EButtonTypes.UPDATE) {
+      dispatch(updateSelectionMethod({ body, param: item?.id }));
+    }
+  };
+  useEffect(() => {
+    if (state.status === EFetchStatus.FULFILLED) {
+      setVisible(false);
+    }
+  }, [state.status]);
+  return (
+    <>
+      <Dialog
+        handleSubmit={() => {
+          formikRef.current && formikRef.current.handleSubmit();
+        }}
+        visible={visible}
+        setVisible={setVisible}
+        title={
+          type === EButtonTypes.CREATE
+            ? "Tạo mới hình thức đấu thầu"
+            : type === EButtonTypes.UPDATE
+              ? "Cập nhật Tạo mới hình thức đấu thầu"
+              : "Chi tiết Tạo mới hình thức đấu thầu"
+        }
+        footerContent={
+          <div className="flex items-center justify-center gap-2">
+            <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
+            {type !== EButtonTypes.VIEW && (
+              <Button
+                key="submit"
+                kind="submit"
+                text={"Lưu"}
+                onClick={() => {
+                  formikRef.current && formikRef.current.handleSubmit();
+                }}
+              />
             )}
+          </div>
+        }
+      >
+        <Formik innerRef={formikRef} validationSchema={schema} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+          {({ values, errors, touched, handleBlur, setFieldValue }) => (
+            <Form className="mt-3">
+              <Row gutter={[24, 24]}>
+                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                  <FormInput
+                    type="text"
+                    isDisabled={type === "view"}
+                    label="Tên hình thức đấu thầu"
+                    value={values.method_name}
+                    name="method_name"
+                    error={touched.method_name ? errors.method_name : ""}
+                    placeholder="Nhập tên hình thức đấu thầu..."
+                    onChange={(value) => setFieldValue("method_name", value)}
+                    onBlur={handleBlur}
+                  />
+                </Col>
+              </Row>
+
+              <Row gutter={[24, 24]}>
+                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                  <FormGroup title="Mô tả">
+                    <FormCkEditor
+                      id="description"
+                      direction="vertical"
+                      value={values.description}
+                      setFieldValue={setFieldValue}
+                      disabled={type === EButtonTypes.VIEW}
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row gutter={[24, 24]}>
+                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                  <FormSwitch
+                    label="Trạng thái"
+                    checked={values.is_active === "1"}
+                    onChange={(value) => {
+                      setFieldValue("is_active", value ? "1" : "0");
+                    }}
+                  />
+                </Col>
+              </Row>
+            </Form>
+          )}
         </Formik>
-    );
+      </Dialog>
+    </>
+  );
 };
 
 export default SelectionMethodForm;
