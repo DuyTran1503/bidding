@@ -126,5 +126,12 @@ export enum EPermissions {
   // Nhật ký hoạt động
   LIST_ACTIVITYLOG = "list_activitylog",
   DETAIL_ACTIVITYLOG = "detail_activitylog",
-  CREATE_ACTIVITYLOG = "create_activitylog"
+  CREATE_ACTIVITYLOG = "create_activitylog",
+
+  // ? Banner
+  LIST_BANNER = "list_banner",
+  DETAIL_BANNER = "detail_banner",
+  CREATE_BANNER = "create_banner",
+  UPDATE_BANNER = "update_banner",
+  DESTROY_BANNER = "destroy_banner",
 }
