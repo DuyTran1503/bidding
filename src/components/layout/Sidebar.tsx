@@ -161,6 +161,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "bidding-results",
           // permissions: EPermissions.LIST_BIDDING_TYPE,
         },
+        {
+          id: "4.7",
+          label: "Banner",
+          path: "banners",
+          // permissions: EPermissions.LIST_BANNER,
+        },
       ],
     },
     {
