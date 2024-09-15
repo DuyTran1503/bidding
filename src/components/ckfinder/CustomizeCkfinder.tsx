@@ -1,8 +1,8 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import "ckeditor5/ckeditor5.css";
 import "./ckfinder.scss";
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import Editor from "ckeditor5-custom-build";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import Editor from "ckeditor5-custom-build";
 
 interface ICustomEditorProps {
   id: string;
@@ -80,7 +80,7 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
     <div className={`custom-editor w-full ${size ? `size-${size}` : ""} ${noBorder ? "no-border" : ""}`}>
       <CKEditor
         //@ts-ignore
-        editor={Editor}
+        editor={ClassicEditor}
         data={value || ""}
         //@ts-ignore
         onChange={(event: any, editor: any) => {
