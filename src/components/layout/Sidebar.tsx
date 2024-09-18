@@ -155,6 +155,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "bidding-historys",
           // permissions: EPermissions.LIST_BIDDING_TYPE,
         },
+        {
+          id: "4.6",
+          label: "Kết quả đấu thầu",
+          path: "bidding-results",
+          // permissions: EPermissions.LIST_BIDDING_TYPE,
+        },
       ],
     },
     {
