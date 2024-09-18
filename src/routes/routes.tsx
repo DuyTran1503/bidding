@@ -55,6 +55,11 @@ import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
 import { EPermissions } from "@/shared/enums/permissions";
 import ActivityLogs from "@/pages/ActivityLogs";
 import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/SelectionMethods";
+// import CreateSelectionMethod from "@/pages/SelectionMethods/CreateSelectionMethod/CreateSelectionMethod";
+// import UpdateSelectionMethod from "@/pages/SelectionMethods/UpdateSelectionMethod/UpdateSelectionMethod";
+import BiddingResults from "@/pages/BiddingResults/BiddingResults/BiddingResults";
+import CreateBiddingResult from "@/pages/BiddingResults/CreateBiddingResult/CreateBiddingResult";
+import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/UpdateBiddingResult";
 
 export interface IRoute {
   path: string;
@@ -307,6 +312,23 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBiddingHistory />,
+              },
+            ],
+          },
+          {
+            path: "bidding-results",
+            pages: [
+              {
+                path: "/",
+                element: () => <BiddingResults />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBiddingResult />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBiddingResult />,
               },
             ],
           },

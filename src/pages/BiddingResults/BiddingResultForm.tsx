@@ -3,41 +3,41 @@ import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import { Formik } from "formik";
 import lodash from "lodash";
-import { IBiddingHistoryInitialState } from "@/services/store/biddingHistory/biddingHistory.slice";
-import { IBiddingHistory } from "@/services/store/biddingHistory/biddingHistory.model";
+import { IBiddingResultInitialState } from "@/services/store/biddingResult/biddingResult.slice";
+import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
-import { createBiddingHistory, updateBiddingHistory } from "@/services/store/biddingHistory/biddingHistory.thunk";
+import { createBiddingResult, updateBiddingResult } from "@/services/store/biddingResult/biddingResult.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormDate from "@/components/form/FormDate";
 import dayjs from "dayjs";
 
-interface IBiddingHistoryFormProps {
+interface IBiddingResultFormProps {
     formikRef?: any;
     type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
-    biddingHistory?: IBiddingHistory;
+    biddingResult?: IBiddingResult;
 }
 
-export interface IBiddingHistoryFormInitialValues {
+export interface IBiddingResultFormInitialValues {
     project_id: string;
-    event_type: string;
-    event_date: string;
-    performed_by: string;
-    event_description: string;
+    enterprise_id: string;
+    amount: string;
+    decision_number: string;
+    decision_date: string;
     is_active: string;
 }
 
-const BiddingHistoryForm = ({ formikRef, type, biddingHistory }: IBiddingHistoryFormProps) => {
-    const { dispatch } = useArchive<IBiddingHistoryInitialState>("bidding_history");
+const BiddingResultForm = ({ formikRef, type, biddingResult }: IBiddingResultFormProps) => {
+    const { dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
 
-    const initialValues: IBiddingHistoryFormInitialValues = {
-        project_id: biddingHistory?.project_id || "",
-        event_type: biddingHistory?.event_type || "",
-        event_date: biddingHistory?.event_date || "",
-        performed_by: biddingHistory?.performed_by || "",
-        event_description: biddingHistory?.event_description || "",
-        is_active: biddingHistory?.is_active ? "1" : "0",
+    const initialValues: IBiddingResultFormInitialValues = {
+        project_id: biddingResult?.project_id || "",
+        enterprise_id: biddingResult?.enterprise_id || "",
+        amount: biddingResult?.amount || "",
+        decision_number: biddingResult?.decision_number || "",
+        decision_date: biddingResult?.decision_date || "",
+        is_active: biddingResult?.is_active ? "1" : "0",
     };
 
     return (
@@ -50,14 +50,14 @@ const BiddingHistoryForm = ({ formikRef, type, biddingHistory }: IBiddingHistory
                     ...lodash.omit(data, "id"),
                 };
                 if (type === EPageTypes.CREATE) {
-                    dispatch(createBiddingHistory({ body }))
+                    dispatch(createBiddingResult({ body }))
                         .unwrap()
                         .catch((error) => {
                             const apiErrors = error?.errors || {};
                             setErrors(apiErrors);
                         });
                 } else if (type === EPageTypes.UPDATE) {
-                    dispatch(updateBiddingHistory({ body, param: biddingHistory?.id }))
+                    dispatch(updateBiddingResult({ body, param: biddingResult?.id }))
                         .unwrap()
                         .catch((error) => {
                             const apiErrors = error?.errors || {};
@@ -75,9 +75,9 @@ const BiddingHistoryForm = ({ formikRef, type, biddingHistory }: IBiddingHistory
                                     type="text"
                                     isDisabled={type === "view"}
                                     label="Tên loại sự kiện đấu thầu"
-                                    value={values.event_type}
-                                    name="event_type"
-                                    error={touched.event_type ? errors.event_type : ""}
+                                    value={values.enterprise_id}
+                                    name="enterprise_id"
+                                    error={touched.enterprise_id ? errors.enterprise_id : ""}
                                     placeholder="Nhập loại sự kiện đấu thầu..."
                                     onChange={(value) => setFieldValue("name", value)}
                                     onBlur={handleBlur}
@@ -98,8 +98,8 @@ const BiddingHistoryForm = ({ formikRef, type, biddingHistory }: IBiddingHistory
                                 <FormDate
                                     disabled={type === EPageTypes.VIEW}
                                     label="Ngày gia nhập"
-                                    value={values.event_date ? dayjs(values.event_date) : null}
-                                    onChange={(date) => setFieldValue("event_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+                                    value={values.amount ? dayjs(values.amount) : null}
+                                    onChange={(date) => setFieldValue("amount", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                                 />
                             </Col>
                             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
@@ -115,9 +115,9 @@ const BiddingHistoryForm = ({ formikRef, type, biddingHistory }: IBiddingHistory
                         <Row gutter={[24, 24]}>
                             <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                                 <FormCkEditor
-                                    id="event_description"
+                                    id="decision_date"
                                     direction="vertical"
-                                    value={values.event_description}
+                                    value={values.decision_date}
                                     setFieldValue={setFieldValue}
                                     disabled={type === EPageTypes.VIEW}
                                 />
@@ -130,4 +130,4 @@ const BiddingHistoryForm = ({ formikRef, type, biddingHistory }: IBiddingHistory
     );
 };
 
-export default BiddingHistoryForm;
+export default BiddingResultForm;
