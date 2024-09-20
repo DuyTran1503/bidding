@@ -11,33 +11,40 @@ import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IBannerInitialState, resetStatus, setFilter } from "@/services/store/banner/banner.slice";
-import { changeStatusBanner, deleteBanner, getAllBanners } from "@/services/store/banner/banner.thunk";
+import { ITenderNoticeInitialState, resetStatus, setFilter } from "@/services/store/tenderNotice/tenderNotice.slice";
+import { changeStatusTenderNotice, deleteTenderNotice, getAllTenderNotices } from "@/services/store/tenderNotice/tenderNotice.thunk";
+// import { EPermissions } from "@/shared/enums/permissions";
 import { GoDownload } from "react-icons/go";
-import BannerForm from "../BannerForm";
-import { EPermissions } from "@/shared/enums/permissions";
 
-const Banners = () => {
-    const { state, dispatch } = useArchive<IBannerInitialState>("banner");
+const TenderNotices = () => {
+    const navigate = useNavigate();
+    const { state, dispatch } = useArchive<ITenderNoticeInitialState>("tender_notice");
     const [isModal, setIsModal] = useState(false);
     const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
-            permission: EPermissions.DETAIL_BANNER,
+            onClick(record) {
+                navigate(`update/${record?.key}`);
+            },
+            // permission: EPermissions.DETAIL_TENDER_NOTICE,
         },
         {
             type: EButtonTypes.UPDATE,
-            permission: EPermissions.UPDATE_BANNER,
+            onClick(record) {
+                navigate(`update/${record?.key}`);
+            },
+            // permission: EPermissions.UPDATE_TENDER_NOTICE,
         },
         {
             type: EButtonTypes.DESTROY,
             onClick(record) {
-                dispatch(deleteBanner(record?.key));
+                dispatch(deleteTenderNotice(record?.key));
             },
-            permission: EPermissions.DESTROY_BANNER,
+            // permission: EPermissions.DESTROY_TENDER_NOTICE,
         },
     ];
 
@@ -47,16 +54,24 @@ const Banners = () => {
             title: "STT",
         },
         {
-            dataIndex: "name",
-            title: "Tên Banner",
-            className: "w-[300px]",
+            dataIndex: "notice_content",
+            title: "Notice_content",
         },
         {
-            dataIndex: "path",
-            title: "Link",
-            render(_, record) {
-                return <div dangerouslySetInnerHTML={{ __html: record?.path || "" }} className="text-compact-3"></div>;
-            },
+            dataIndex: "project_id",
+            title: "Project_id",
+        },
+        {
+            dataIndex: "enterprise_id",
+            title: "Enterprise_id",
+        },
+        {
+            dataIndex: "notice_date",
+            title: "Notice_date",
+        },
+        {
+            dataIndex: "expiry_date",
+            title: "Expiry_date",
         },
         {
             title: "Trạng thái",
@@ -66,7 +81,7 @@ const Banners = () => {
                     <CommonSwitch
                         onChange={() => handleChangeStatus(record)}
                         checked={!!record.is_active}
-                        title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ hoạt động" : "khóa hoạt động"} ?`}
+                        title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} lĩnh vực này?`}
                     />
                 );
             },
@@ -80,36 +95,38 @@ const Banners = () => {
 
     const onConfirmStatus = () => {
         if (confirmItem && confirmItem.key) {
-            dispatch(changeStatusBanner(String(confirmItem.key)));
+            dispatch(changeStatusTenderNotice(String(confirmItem.key)));
         }
     };
 
     const search: ISearchTypeTable[] = [
         {
             id: "name",
-            placeholder: "Nhập tên Banner...",
-            label: "Tên Banner",
+            placeholder: "Nhập tên thông báo...",
+            label: "Tên thông báo",
             type: "text",
         },
     ];
 
     const data: ITableData[] = useMemo(
         () =>
-            state.banners && state.banners.length > 0
-                ? state.banners.map(({ id, name, path, is_active }, index) => ({
+            state.tenderNotices && state.tenderNotices.length > 0
+                ? state.tenderNotices.map(({ id, project_id, enterprise_id, notice_content, notice_date, expiry_date, is_active }, index) => ({
                     index: index + 1,
                     key: id,
-                    id: id,
-                    name,
-                    path,
+                    project_id,
+                    enterprise_id,
+                    notice_content,
+                    notice_date,
+                    expiry_date,
                     is_active,
                 }))
                 : [],
-        [JSON.stringify(state.banners)],
+        [JSON.stringify(state.tenderNotices)],
     );
 
     useFetchStatus({
-        module: "banner",
+        module: "tender_notice",
         reset: resetStatus,
         actions: {
             success: { message: state.message },
@@ -119,20 +136,19 @@ const Banners = () => {
 
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
-            dispatch(getAllBanners({ query: state.filter }));
+            dispatch(getAllTenderNotices({ query: state.filter }));
         }
     }, [JSON.stringify(state.status)]);
 
     useEffect(() => {
-        dispatch(getAllBanners({ query: state.filter }));
+        dispatch(getAllTenderNotices({ query: state.filter }));
     }, [JSON.stringify(state.filter)]);
 
     return (
         <>
             <Heading
-                title="Banner"
+                title="Thông báo mời thầu"
                 hasBreadcrumb
-                ModalContent={(props) => <BannerForm {...(props as any)} />}
                 buttons={[
                     {
                         text: "Export",
@@ -141,8 +157,9 @@ const Banners = () => {
                     },
                     {
                         icon: <FaPlus className="text-[18px]" />,
-                        permission: EPermissions.CREATE_BANNER,
+                        // permission: EPermissions.CREATE_TENDER_NOTICE,
                         text: "Thêm mới",
+                        onClick: () => navigate("create"),
                     },
                 ]}
             />
@@ -165,10 +182,9 @@ const Banners = () => {
                 }}
                 setFilter={setFilter}
                 filter={state.filter}
-                ModalContent={(props) => <BannerForm {...(props as any)} />}
             />
         </>
     );
 };
 
-export default Banners;
+export default TenderNotices;
