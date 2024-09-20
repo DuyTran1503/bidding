@@ -11,40 +11,33 @@ import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IBiddingHistoryInitialState, resetStatus, setFilter } from "@/services/store/biddingHistory/biddingHistory.slice";
-import { changeStatusBiddingHistory, deleteBiddingHistory, getAllBiddingHistorys } from "@/services/store/biddingHistory/biddingHistory.thunk";
-import { EPermissions } from "@/shared/enums/permissions";
+import { IBannerInitialState, resetStatus, setFilter } from "@/services/store/banner/banner.slice";
+import { changeStatusBanner, deleteBanner, getAllBanners } from "@/services/store/banner/banner.thunk";
 import { GoDownload } from "react-icons/go";
+import BannerForm from "../BannerForm";
 
-const BiddingHistorys = () => {
-    const navigate = useNavigate();
-    const { state, dispatch } = useArchive<IBiddingHistoryInitialState>("bidding_history");
+const Banners = () => {
+    const { state, dispatch } = useArchive<IBannerInitialState>("banner");
     const [isModal, setIsModal] = useState(false);
     const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
-            onClick(record) {
-                navigate(`update/${record?.key}`);
-            },
-            permission: EPermissions.DETAIL_BIDDING_HISTORY,
+
+            //   permission: EPermissions.DETAIL_BANNER,
         },
         {
             type: EButtonTypes.UPDATE,
-            onClick(record) {
-                navigate(`update/${record?.key}`);
-            },
-            permission: EPermissions.UPDATE_BIDDING_HISTORY,
+            // permission: EPermissions.UPDATE_BANNER,
         },
         {
             type: EButtonTypes.DESTROY,
             onClick(record) {
-                dispatch(deleteBiddingHistory(record?.key));
+                dispatch(deleteBanner(record?.key));
             },
-            permission: EPermissions.DESTROY_BIDDING_HISTORY,
+            // permission: EPermissions.DESTROY_BANNER,
         },
     ];
 
@@ -54,20 +47,15 @@ const BiddingHistorys = () => {
             title: "STT",
         },
         {
-            dataIndex: "event_date",
-            title: "Event_date",
+            dataIndex: "name",
+            title: "Tên Banner",
+            className: "w-[300px]",
         },
         {
-            dataIndex: "project_id",
-            title: "Project_id",
-        },
-        {
-            dataIndex: "event_type",
-            title: "Event_type",
-        },
-        {
-            dataIndex: "event_description",
-            title: "Event_description",
+            dataIndex: "path",
+            render(_, record) {
+                return <div dangerouslySetInnerHTML={{ __html: record?.path || "" }} className="text-compact-3"></div>;
+            },
         },
         {
             title: "Trạng thái",
@@ -77,7 +65,7 @@ const BiddingHistorys = () => {
                     <CommonSwitch
                         onChange={() => handleChangeStatus(record)}
                         checked={!!record.is_active}
-                        title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} lĩnh vực này?`}
+                        title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ hoạt động" : "khóa hoạt động"} ?`}
                     />
                 );
             },
@@ -91,37 +79,36 @@ const BiddingHistorys = () => {
 
     const onConfirmStatus = () => {
         if (confirmItem && confirmItem.key) {
-            dispatch(changeStatusBiddingHistory(String(confirmItem.key)));
+            dispatch(changeStatusBanner(String(confirmItem.key)));
         }
     };
 
     const search: ISearchTypeTable[] = [
         {
             id: "name",
-            placeholder: "Nhập tên lĩnh vực...",
-            label: "Tên lĩnh vực",
+            placeholder: "Nhập tên Banner...",
+            label: "Tên Banner",
             type: "text",
         },
     ];
 
     const data: ITableData[] = useMemo(
         () =>
-            state.biddingHistorys && state.biddingHistorys.length > 0
-                ? state.biddingHistorys.map(({ id, project_id, event_date, event_description, event_type, is_active }, index) => ({
+            state.banners && state.banners.length > 0
+                ? state.banners.map(({ id, name, path, is_active }, index) => ({
                     index: index + 1,
                     key: id,
-                    project_id,
-                    event_type,
-                    event_date,
-                    event_description,
+                    id: id,
+                    name,
+                    path,
                     is_active,
                 }))
                 : [],
-        [JSON.stringify(state.biddingHistorys)],
+        [JSON.stringify(state.banners)],
     );
 
     useFetchStatus({
-        module: "bidding_history",
+        module: "banner",
         reset: resetStatus,
         actions: {
             success: { message: state.message },
@@ -131,19 +118,20 @@ const BiddingHistorys = () => {
 
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
-            dispatch(getAllBiddingHistorys({ query: state.filter }));
+            dispatch(getAllBanners({ query: state.filter }));
         }
     }, [JSON.stringify(state.status)]);
 
     useEffect(() => {
-        dispatch(getAllBiddingHistorys({ query: state.filter }));
+        dispatch(getAllBanners({ query: state.filter }));
     }, [JSON.stringify(state.filter)]);
 
     return (
         <>
             <Heading
-                title="Lịch sử đấu thầu"
+                title="Banner"
                 hasBreadcrumb
+                ModalContent={(props) => <BannerForm {...(props as any)} />}
                 buttons={[
                     {
                         text: "Export",
@@ -152,9 +140,9 @@ const BiddingHistorys = () => {
                     },
                     {
                         icon: <FaPlus className="text-[18px]" />,
-                        permission: EPermissions.CREATE_BIDDING_HISTORY,
+                        // permission: EPermissions.CREATE_BANNER,
                         text: "Thêm mới",
-                        onClick: () => navigate("create"),
+                        // onClick: () => navigate("create"),
                     },
                 ]}
             />
@@ -177,9 +165,10 @@ const BiddingHistorys = () => {
                 }}
                 setFilter={setFilter}
                 filter={state.filter}
+                ModalContent={(props) => <BannerForm {...(props as any)} />}
             />
         </>
     );
 };
 
-export default BiddingHistorys;
+export default Banners;

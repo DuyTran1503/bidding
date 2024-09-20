@@ -59,6 +59,10 @@ import ProjectPage from "@/pages/Project";
 import CreateProject from "@/pages/Project/Create";
 import UpdateProject from "@/pages/Project/Update";
 import ApproveProject from "@/pages/Project/Approve";
+import BiddingResults from "@/pages/BiddingResults/BiddingResults/BiddingResults";
+import CreateBiddingResult from "@/pages/BiddingResults/CreateBiddingResult/CreateBiddingResult";
+import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/UpdateBiddingResult";
+import Banners from "@/pages/Banners/Banners/Banners";
 
 export interface IRoute {
   path: string;
@@ -152,14 +156,6 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <SelectionMethods />,
               },
-              // {
-              //   path: "/create",
-              //   element: () => <CreateSelectionMethod />,
-              // },
-              // {
-              //   path: "/update/:id",
-              //   element: () => <UpdateSelectionMethod />,
-              // },
             ],
           },
           {
@@ -311,6 +307,32 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBiddingHistory />,
+              },
+            ],
+          },
+          {
+            path: "bidding-results",
+            pages: [
+              {
+                path: "/",
+                element: () => <BiddingResults />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBiddingResult />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBiddingResult />,
+              },
+            ],
+          },
+          {
+            path: "banners",
+            pages: [
+              {
+                path: "/",
+                element: () => <Banners />,
               },
             ],
           },
