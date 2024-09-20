@@ -83,71 +83,74 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
       .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Vui lòng nhập lại! định dạng email chưa đúng")
       .max(255, "Số ký tự tối đa là 255 ký tự"),
     phone: string().trim().required("Vui lòng nhập số điện thoại").matches(phoneRegex, "Số điện thoại không hợp lệ"),
-    password: string()
-      .test("password", "Mật khẩu không hợp lệ", function (value) {
-        if (value) {
-          const id = this.options.context?.id;
-          const item = this.options.context?.item;
+    password: string().when("type", {
+      is: "create",
+      then: (schema) =>
+        schema
+          .test("password", "Mật khẩu không hợp lệ", function (value) {
+            if (value) {
+              const id = this.options.context?.id;
+              const item = this.options.context?.item;
 
-          if (!id || !item?.userId) {
-            const trimmedPassword = value.trim();
+              if (!id || !item?.userId) {
+                const trimmedPassword = value.trim();
 
-            // Kiểm tra độ dài
-            if (trimmedPassword.length < 8) {
-              return this.createError({
-                path: "password",
-                message: "Mật khẩu ít nhất phải có 8 ký tự",
-              });
-            }
-
-            // Kiểm tra độ phức tạp
-            const passwordRegex = /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/;
-            if (!passwordRegex.test(trimmedPassword)) {
-              return this.createError({
-                path: "password",
-                message: "Mật khẩu phải chứa in hoa, in thường, số và ký tự đặc biệt",
-              });
-            }
-
-            // Kiểm tra ký tự hợp lệ
-            const regex = /^[0-9a-zA-Z!@#$%^&*()-_=+\[\]{}|;:'",.<>\/?]+$/;
-            if (!regex.test(trimmedPassword)) {
-              return this.createError({
-                path: "password",
-                message: "Mật khẩu chứa ký tự không hợp lệ",
-              });
-            }
-
-            // Kiểm tra thông tin cá nhân
-            const personalInfo = [this.parent.name, this.parent.username, this.parent.phone, this.parent.email];
-
-            for (const info of personalInfo) {
-              if (info && typeof info === "string") {
-                let normalizedInfo = info.toLowerCase().replace(/\s+/g, "");
-
-                // Xử lý đặc biệt cho email
-                if (info === this.parent.email) {
-                  const emailParts = normalizedInfo.split("@");
-                  if (emailParts.length > 1) {
-                    normalizedInfo = emailParts[0];
-                  }
+                // Kiểm tra độ dài
+                if (trimmedPassword.length < 8) {
+                  return this.createError({
+                    path: "password",
+                    message: "Mật khẩu ít nhất phải có 8 ký tự",
+                  });
                 }
 
-                // const normalizedPassword = trimmedPassword.toLowerCase();
+                // Kiểm tra độ phức tạp
+                const passwordRegex = /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/;
+                if (!passwordRegex.test(trimmedPassword)) {
+                  return this.createError({
+                    path: "password",
+                    message: "Mật khẩu phải chứa in hoa, in thường, số và ký tự đặc biệt",
+                  });
+                }
 
-                // if (normalizedPassword.includes(normalizedInfo) || calculateSimilarity(normalizedPassword, normalizedInfo) >= 0.9) {
-                //   return this.createError({
-                //     path: "password",
-                //     message: "Mật khẩu không chứa các thông tin gắn liền với người dùng",
-                //   });
-                // }
+                // Kiểm tra ký tự hợp lệ
+                const regex = /^[0-9a-zA-Z!@#$%^&*()-_=+\[\]{}|;:'",.<>\/?]+$/;
+                if (!regex.test(trimmedPassword)) {
+                  return this.createError({
+                    path: "password",
+                    message: "Mật khẩu chứa ký tự không hợp lệ",
+                  });
+                }
+
+                // Kiểm tra thông tin cá nhân
+                const personalInfo = [this.parent.name, this.parent.username, this.parent.phone, this.parent.email];
+
+                for (const info of personalInfo) {
+                  if (info && typeof info === "string") {
+                    let normalizedInfo = info.toLowerCase().replace(/\s+/g, "");
+
+                    // Xử lý đặc biệt cho email
+                    if (info === this.parent.email) {
+                      const emailParts = normalizedInfo.split("@");
+                      if (emailParts.length > 1) {
+                        normalizedInfo = emailParts[0];
+                      }
+                    }
+
+                    if (trimmedPassword.toLowerCase().includes(normalizedInfo)) {
+                      return this.createError({
+                        path: "password",
+                        message: "Mật khẩu không được chứa thông tin cá nhân",
+                      });
+                    }
+                  }
+                }
               }
             }
-          }
-        }
-        return true;
-      })
-      .required("Mật khẩu không được để trống"),
+            return true;
+          })
+          .required("Mật khẩu không được để trống"),
+      otherwise: (schema) => schema,
+    }),
   });
   // const calculateSimilarity = (str1: string, str2: string): number => {
   //   const longer = str1.length > str2.length ? str1 : str2;
@@ -222,9 +225,12 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
             avatar: body.avatar,
             id_user: data.id,
             taxcode: body.taxcode,
-            account_ban_at: body.account_ban_at ? new Date().toISOString() : null,
+            birthday: body.birthday,
+            gender: body.gender,
+            account_ban_at: body.account_ban_at ? dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss") : null,
           };
-          return dispatch(updateStaff({ body: newValue, param: String(newValue?.id_user) }));
+          const payload = account?.avatar === newValue.avatar ? (({ avatar, ...rest }) => rest)(newValue) : newValue;
+          return dispatch(updateStaff({ body: payload, param: String(newValue?.id_user) }));
         }
       }}
     >
@@ -360,7 +366,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                     <FormGroup title="Giới tính" className="gap-[6px]">
                       <FormRadio
                         options={genderOptions}
-                        value={values.gender}
+                        value={values.gender && (genderOptions.find((item) => +item.value === +values.gender)?.value as string)}
                         onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
                       />
                     </FormGroup>
