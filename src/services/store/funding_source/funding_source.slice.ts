@@ -96,12 +96,12 @@ const fundingSourceSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
-      // change
+    // change
     builder
       .addCase(changeStatusFundingSource.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(changeStatusFundingSource.fulfilled, (state,) => {
+      .addCase(changeStatusFundingSource.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Trạng thái hoạt động của nguồn tài trợ đã được cập nhật thành công";
       })
@@ -125,7 +125,7 @@ const fundingSourceSlice = createSlice({
     builder
       .addCase(getListFundingSource.fulfilled, (state, { payload }: PayloadAction<IResponse<IFundingSource[]> | any>) => {
         if (payload.data) {
-          state.listBusinessActivities = payload.data;
+          state.listFundingSources = payload.data;
         }
       })
       .addCase(getListFundingSource.rejected, (state, { payload }: PayloadAction<IResponse<IFundingSource[]> | any>) => {

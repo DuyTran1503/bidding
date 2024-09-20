@@ -4,18 +4,20 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
 import { IStaff } from "./account.model";
-import { changeStatusStaff, createStaff, deleteStaff, getAllStaff, getStaffById, updateStaff } from "./account.thunk";
+import { changeStatusStaff, createStaff, deleteStaff, getAllStaff, getListStaff, getStaffById, updateStaff } from "./account.thunk";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 
 export interface IAccountInitialState extends IInitialState {
   staffs: IStaff[];
   staff?: IStaff | any;
+  getListStaff: IStaff[];
 }
 
 const initialState: IAccountInitialState = {
   status: EFetchStatus.IDLE,
   staffs: [],
+  getListStaff: [],
   staff: undefined,
   message: "",
   filter: {
@@ -30,6 +32,10 @@ const accountSlice = createSlice({
   initialState,
   reducers: {
     ...commonStaticReducers<IAccountInitialState>(),
+    resetStatus(state) {
+      state.status = EFetchStatus.IDLE;
+      state.message = "";
+    },
   },
 
   extraReducers(builder) {
@@ -42,6 +48,17 @@ const accountSlice = createSlice({
         }
       })
       .addCase(getAllStaff.rejected, (state, { payload }: PayloadAction<IError[] | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+    builder
+      .addCase(getListStaff.fulfilled, (state, { payload }: PayloadAction<IResponse<IStaff[]> | any>) => {
+        state.status = EFetchStatus.FULFILLED;
+        if (payload.data) {
+          state.getListStaff = payload.data;
+        }
+      })
+      .addCase(getListStaff.rejected, (state, { payload }: PayloadAction<IError[] | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
@@ -98,7 +115,7 @@ const accountSlice = createSlice({
       .addCase(deleteStaff.fulfilled, (state, { payload }) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Xóa thành công";
-        state.staffs = state.staffs.filter((item) => String(item.id_user) !== payload);
+        state.staffs = state.staffs.filter((item) => String(item.id) !== payload);
       })
       .addCase(deleteStaff.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
