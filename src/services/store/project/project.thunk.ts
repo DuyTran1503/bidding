@@ -1,7 +1,6 @@
 import { client } from "@/services/config/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { IError } from "@/shared/interface/error";
 import { INewProject, IProject } from "./project.model.ts";
 import { objectToFormData } from "@/shared/utils/common/formData.ts";
 

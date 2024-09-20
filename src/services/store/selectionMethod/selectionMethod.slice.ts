@@ -14,7 +14,6 @@ import {
 } from "./selectionMethod.thunk";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
-import { message } from "antd";
 
 export interface ISelectionMethodInitialState extends IInitialState {
   selectionMethods: ISelectionMethod[];
@@ -65,7 +64,7 @@ const selectionMethodSlice = createSlice({
     });
     builder.addCase(getListSelectionMethods.fulfilled, (state, { payload }: PayloadAction<IResponse<ISelectionMethod[]> | any>) => {
       if (payload.data) {
-        state.listSelectionMethods =payload.data.map((item:ISelectionMethod)=>({...item,name:item.method_name}));
+        state.listSelectionMethods = payload.data.map((item: ISelectionMethod) => ({ ...item, name: item.method_name }));
         state.message = transformPayloadErrors(payload?.errors);
       }
     });
