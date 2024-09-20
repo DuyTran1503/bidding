@@ -117,6 +117,11 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Hồ sơ mời thầu",
           path: "bid-document",
           // permissions: EPermissions.LIST_BID_DOCUMENT,
+        }, {
+          id: "4.3",
+          label: "Dự án",
+          path: "project",
+          // permissions: EPermissions.LIST_BID_DOCUMENT,
         },
       ],
     },
