@@ -1,6 +1,6 @@
 export enum GENDER {
   MALE = 1,
-  FEMALE = 0,
+  FEMALE = 2,
 }
 
 export const statusEnumArray: GENDER[] = [GENDER.MALE, GENDER.FEMALE];

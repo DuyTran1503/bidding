@@ -8,7 +8,7 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IBiddingFieldInitialState } from "@/services/store/biddingField/biddingField.slice";
 import { getBiddingFieldAllIds } from "@/services/store/biddingField/biddingField.thunk";
-import { IProjectInitialState, resetStatus, setFilter } from "@/services/store/project/project.slice";
+import { IProjectInitialState, resetMessageError, setFilter } from "@/services/store/project/project.slice";
 import { changeStatusProject, deleteProject, getAllProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
@@ -180,7 +180,7 @@ const ProjectPage = () => {
   }, []);
   useFetchStatus({
     module: "project",
-    reset: resetStatus,
+    reset: resetMessageError,
     actions: {
       success: { message: stateProject.message },
       error: { message: stateProject.message },
