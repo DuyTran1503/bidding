@@ -79,8 +79,6 @@ const Staffs = () => {
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        console.log(record);
-
         navigate(`/staffs/update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_STAFF,
