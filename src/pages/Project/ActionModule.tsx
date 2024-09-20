@@ -411,8 +411,8 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                     options={STATUS_PROJECT_ARRAY}
                     label="Trạng thái dự án"
                     id="status"
-                    // isDisabled
-                    value={values.status as unknown as string}
+                    isDisabled
+                    value={values.status && STATUS_PROJECT_ARRAY.find((item) => +item.value === +values.status)?.label}
                     error={touched.status ? errors.status : ""}
                     onChange={(e) => setFieldValue("status", e)}
                   />
