@@ -1,7 +1,7 @@
 import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { INewProject, IProject } from "@/services/store/project/project.model";
+import { INewProject } from "@/services/store/project/project.model";
 import { IProjectInitialState, resetStatus } from "@/services/store/project/project.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { Form, Formik, FormikProps } from "formik";
@@ -12,10 +12,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import ActionModule from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
 import { approveProject, getProjectById } from "@/services/store/project/project.thunk";
-import { IResponse } from "@/shared/utils/shared-interfaces";
-import { AsyncThunkAction } from "@reduxjs/toolkit";
-import { AsyncThunkConfig } from "node_modules/@reduxjs/toolkit/dist/createAsyncThunk";
-import { MdOutlineEditOff } from "react-icons/md";
 import Dialog from "@/components/dialog/Dialog";
 import Button from "@/components/common/Button";
 import { useViewport } from "@/hooks/useViewport";
@@ -130,16 +126,12 @@ const ApproveProject = () => {
           validationSchema={validationSchema}
           onSubmit={(values) => {
             if (id) {
-              console.log(values);
-
-              //   dispatch(approveProject({ body: values, param: id }));
+              dispatch(approveProject({ body: values, param: id }));
             }
           }}
           enableReinitialize
         >
           {({ values, errors, touched, handleBlur, setFieldValue, handleSubmit }) => {
-            console.log(errors);
-
             return (
               <Form onSubmit={handleSubmit}>
                 <Row gutter={[24, 12]}>
@@ -166,7 +158,6 @@ const ApproveProject = () => {
                         value={values.status && STATUS_PROJECT_ARRAY.find((item) => +item.value === +values.status)?.label}
                         error={touched.status ? errors.status : ""}
                         onChange={(e) => {
-                          console.log(e);
                           setFieldValue("status", e);
                         }}
                       />
