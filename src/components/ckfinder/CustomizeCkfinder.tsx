@@ -1,8 +1,8 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import "ckeditor5/ckeditor5.css";
 import "./ckfinder.scss";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-// import Editor from "ckeditor5-custom-build";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Editor from "ckeditor5-custom-build";
 
 interface ICustomEditorProps {
   id: string;
@@ -71,8 +71,7 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
       // Define the CKFinder configuration (if necessary).
       options: {
         resourceType: "Images",
-        // startupPath: 'Images:/' + today.toISOString().slice(0, 8).replaceAll('-', '/'),
-        // rememberLastFolder: false,
+        rememberLastFolder: false,
       },
     },
   };
@@ -80,7 +79,7 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
     <div className={`custom-editor w-full ${size ? `size-${size}` : ""} ${noBorder ? "no-border" : ""}`}>
       <CKEditor
         //@ts-ignore
-        editor={ClassicEditor}
+        editor={Editor}
         data={value || ""}
         //@ts-ignore
         onChange={(event: any, editor: any) => {

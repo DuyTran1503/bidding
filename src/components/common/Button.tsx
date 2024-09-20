@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { EButtonTypes } from "@/shared/enums/button";
 
 export interface IButtonProps {
-  type?: "primary" | "ghost" | "secondary";
+  type?: "primary" | "ghost" | "secondary" | "third";
   text: string;
   isDisabled?: boolean;
   isLoading?: boolean;
@@ -31,12 +31,14 @@ const Button = ({
     primary: "text-primary-600 border border-primary-500 hover:bg-primary-600 ",
     ghost: "text-primary-500 bg-primary-50",
     secondary: "text-[#ff460b] border border-[#ff460b] hover:bg-[#f33d07]",
+    third: "text-[#d19b3d] border border-[#d19b3d] hover:bg-[#a87722]",
   };
 
   const typeLoading = {
     primary: "border-black border-t-primary-500 ",
     ghost: "border-primary-500 border-t-primary-50",
     secondary: "border-gray-400 border-t-black",
+    third: "border-black border-[#d19b3d] ",
   };
   return (
     <button
