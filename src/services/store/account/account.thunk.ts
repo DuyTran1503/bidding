@@ -57,15 +57,42 @@ export const createStaff = createAsyncThunk("enterprises/create-enterprises", as
     return thunkAPI.rejectWithValue(error.response.data);
   }
 });
-export const updateStaff = createAsyncThunk("staff/update-staff", async (payload: IThunkPayload, { rejectWithValue }) => {
+// export const updateStaff = createAsyncThunk("staff/update-staff", async (payload: IThunkPayload, { rejectWithValue }) => {
+//   try {
+//     const { response, data } = await client.put(`${prefix}/${payload?.param}`, payload);
+//     return response.status >= 400 ? rejectWithValue(data) : data;
+//   } catch (error: any) {
+//     return rejectWithValue(error.response.data);
+//   }
+// });
+export const updateStaff = createAsyncThunk("enterprises/update-enterprises", async (payload: IThunkPayload, thunkAPI) => {
   try {
-    const { response, data } = await client.put(`${prefix}/${payload?.param}`, payload);
-    return response.status >= 400 ? rejectWithValue(data) : data;
+    const formData = objectToFormData(payload.body as IStaff);
+
+    // Thêm trường _method với giá trị "PUT" vào formData
+    formData.append("_method", "PUT");
+
+    const accessToken = client.tokens.accessToken();
+
+    const response = await fetch(import.meta.env.VITE_API_URL + `${prefix}/${payload?.param}`, {
+      method: "POST", // Thay đổi method thành "POST"
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return thunkAPI.rejectWithValue(error);
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error: any) {
-    return rejectWithValue(error.response.data);
+    return thunkAPI.rejectWithValue(error.response.data);
   }
 });
-
 export const deleteStaff = createAsyncThunk("staff/delete-staff", async (id: string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.delete(`${prefix}/${id}`);
