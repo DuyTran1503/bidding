@@ -93,6 +93,7 @@ const Enterprise = () => {
     {
       dataIndex: "industry_id",
       title: "Lĩnh vực hoạt động",
+      className: "w-[200px]",
       render(_, record) {
         return (
           <div className="flex flex-col">{record?.enterprises?.map((item: string, index: number) => <div key={index}>{item ? item : ""}</div>)}</div>
@@ -265,7 +266,7 @@ const Enterprise = () => {
         }}
         setFilter={setFilter}
         filter={enterpriseState.filter}
-        scroll={{ x: 2200 }}
+        scroll={{ x: 2100 }}
       />
     </>
   );

@@ -29,7 +29,7 @@ export interface IProject {
   decision_number_approve: string;
   approve_at?: string;
   created_at?: string;
-  status?: STATUS_PROJECT;
+  status: STATUS_PROJECT;
   submission_method?: SUBMIT_METHOD;
   files?: File[];
   decision_number_issued: string;
