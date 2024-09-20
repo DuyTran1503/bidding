@@ -17,6 +17,7 @@ import CommonSwitch from "@/components/common/CommonSwitch";
 import { IAccountInitialState, resetStatus } from "@/services/store/account/account.slice";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
+import CustomerAvatar from "@/components/common/CustomerAvatar";
 
 const Staffs = () => {
   const navigate = useNavigate();
@@ -35,6 +36,9 @@ const Staffs = () => {
     {
       dataIndex: "avatar",
       title: "Ảnh đại diện",
+      render(_, record) {
+        return <CustomerAvatar src={record.avatar} alt={"Ảnh đại diện"} />;
+      },
     },
     {
       dataIndex: "email",
@@ -75,6 +79,8 @@ const Staffs = () => {
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
+        console.log(record);
+
         navigate(`/staffs/update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_STAFF,
@@ -83,6 +89,7 @@ const Staffs = () => {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteStaff(record?.key));
+        dispatch(getAllStaff({ query: state.filter }));
       },
       permission: EPermissions.DESTROY_STAFF,
     },
@@ -97,17 +104,17 @@ const Staffs = () => {
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.staffs)
-      ? state.staffs.map(({ id_user, name, type, role_name, avatar, email, phone, account_ban_at }, index) => ({
-        index: index + 1,
-        key: id_user,
-        name,
-        avatar,
-        email,
-        type,
-        role_name,
-        phone,
-        account_ban_at,
-      }))
+      ? state.staffs.map(({ id, name, type, role_name, avatar, email, phone, account_ban_at }, index) => ({
+          index: index + 1,
+          key: id,
+          name,
+          avatar,
+          email,
+          type,
+          role_name,
+          phone,
+          account_ban_at,
+        }))
       : [];
   }, [JSON.stringify(state.staffs)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -117,7 +124,6 @@ const Staffs = () => {
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
       dispatch(changeStatusStaff(String(confirmItem.key)));
-      dispatch(getAllStaff({ query: state.filter }));
     }
   };
 

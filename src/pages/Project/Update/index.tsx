@@ -1,7 +1,7 @@
 import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { IProject } from "@/services/store/project/project.model";
+import { INewProject, IProject } from "@/services/store/project/project.model";
 import { IProjectInitialState, resetStatus } from "@/services/store/project/project.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { FormikProps } from "formik";
@@ -15,9 +15,9 @@ import { getProjectById } from "@/services/store/project/project.thunk";
 
 const UpdateProject = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IProject>>(null);
-  const { state, dispatch } = useArchive<IProjectInitialState>("enterprise");
-  const [data, setData] = useState<IProject>();
+  const formikRef = useRef<FormikProps<INewProject>>(null);
+  const { state, dispatch } = useArchive<IProjectInitialState>("project");
+  const [data, setData] = useState<INewProject>();
   const { id } = useParams();
   useFetchStatus({
     module: "project",

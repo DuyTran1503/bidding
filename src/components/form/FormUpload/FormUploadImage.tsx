@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 
 interface IProps {
-  value?: File | File[];
+  value?: File | File[] | string;
   onChange: (value: File | File[] | null) => void;
   id?: string;
 }

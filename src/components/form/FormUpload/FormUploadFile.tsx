@@ -3,7 +3,7 @@ import React from "react";
 import FormSingleFile from "./FormSingleFile";
 
 interface IProps {
-  value?: File | File[];
+  value?: File | File[] | string;
   onChange: (value: File | File[] | null) => void;
   isMultiple?: boolean;
 }
