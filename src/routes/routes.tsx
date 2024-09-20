@@ -42,9 +42,7 @@ import DetailFundingSource from "@/pages/FundingSource/Detail";
 import Attachment from "@/pages/Attachment";
 import BidDocument from "@/pages/BidDocument";
 import CreateBidDocument from "@/pages/BidDocument/Create";
-import CreateAttachment from "@/pages/Attachment/Create";
-import UpdateAttachment from "@/pages/Attachment/Update";
-import DetailAttachment from "@/pages/Attachment/Detail";
+
 import DetailBidDocument from "@/pages/BidDocument/Detail";
 import UpdateBidDocument from "@/pages/BidDocument/Update";
 import DetailEnterprise from "@/pages/Enterprise/Detail";
@@ -55,6 +53,10 @@ import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
 import { EPermissions } from "@/shared/enums/permissions";
 import ActivityLogs from "@/pages/ActivityLogs";
 import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/SelectionMethods";
+import ProjectPage from "@/pages/Project";
+import CreateProject from "@/pages/Project/Create";
+import UpdateProject from "@/pages/Project/Update";
+import ApproveProject from "@/pages/Project/Approve";
 import BiddingResults from "@/pages/BiddingResults/BiddingResults/BiddingResults";
 import CreateBiddingResult from "@/pages/BiddingResults/CreateBiddingResult/CreateBiddingResult";
 import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/UpdateBiddingResult";
@@ -340,18 +342,6 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <Attachment />,
               },
-              {
-                path: "/create",
-                element: () => <CreateAttachment />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateAttachment />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailAttachment />,
-              },
             ],
           },
           {
@@ -368,6 +358,31 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBidDocument />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBidDocument />,
+              },
+            ],
+          },
+          {
+            path: "project",
+            pages: [
+              {
+                path: "/",
+                element: () => <ProjectPage />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateProject />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateProject />,
+              },
+              {
+                path: "/approve/:id",
+                element: () => <ApproveProject />,
               },
               {
                 path: "/detail/:id",
