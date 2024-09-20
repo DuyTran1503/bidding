@@ -1,11 +1,11 @@
 import { useArchive } from "@/hooks/useArchive";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import { Formik, FormikProps } from "formik";
+import { Form, Formik, FormikProps } from "formik";
 import lodash from "lodash";
 import { IBannerInitialState } from "@/services/store/banner/banner.slice";
 import { IBanner } from "@/services/store/banner/banner.model";
-import { Col, Form, Row } from "antd";
+import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
 import { createBanner, updateBanner } from "@/services/store/banner/banner.thunk";
 import Dialog from "@/components/dialog/Dialog";
@@ -13,14 +13,20 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { EButtonTypes } from "@/shared/enums/button";
 import Button from "@/components/common/Button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { object, string } from "yup";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 
 interface IBannerFormProps {
     type?: EButtonTypes;
     visible: boolean;
-    setVisible: Dispatch<SetStateAction<boolean>>; // Add setVisible prop
+    setVisible: Dispatch<SetStateAction<boolean>>;
     item?: IBanner;
+}
+
+export interface IBannerValues {
+    id: string;
+    name: string;
+    path?: File;
+    is_active: string;
 }
 
 const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
@@ -32,18 +38,12 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
         path: item?.path ?? undefined,
         is_active: item?.is_active ? "1" : "0",
     };
-    const schema = object().shape({
-        name: string()
-            .trim()
-            .matches(/^[a-zA-Z0-9\s]*$/, "Không chứa ký tự đặc biệt")
-            .max(255, "Số ký tự tối đa là 255 ký tự"),
-    });
     const handleSubmit = (data: IBanner) => {
         const body = {
             ...lodash.omit(data, "key", "index"),
         };
         if (type === EButtonTypes.CREATE) {
-            dispatch(createBanner({ body }));
+            dispatch(createBanner(body as Omit<IBanner, "id">));
         } else if (type === EButtonTypes.UPDATE && item?.id) {
             const newData = item.path === body.path ? (({ ...rest }) => rest)(body) : body;
             dispatch(updateBanner({ body: newData, param: item?.id }));
@@ -84,8 +84,8 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
                 </div>
             }
         >
-            <Formik innerRef={formikRef} validationSchema={schema} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
-                {({ values, errors, touched, handleBlur, setFieldValue }) => (
+            <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+                {({ values, handleBlur, setFieldValue }) => (
                     <Form className="mt-3">
                         <Row gutter={[24, 24]}>
                             <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
@@ -95,7 +95,6 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
                                     label="Tên Banner"
                                     value={values.name}
                                     name="name"
-                                    error={touched.name ? errors.name : ""}
                                     placeholder="Nhập tên Banner..."
                                     onChange={(value) => setFieldValue("name", value)}
                                     onBlur={handleBlur}
