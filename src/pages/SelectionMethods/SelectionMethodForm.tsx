@@ -15,6 +15,7 @@ import { EButtonTypes } from "@/shared/enums/button";
 import Button from "@/components/common/Button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { object, string } from "yup";
+import { useViewport } from "@/hooks/useViewport";
 
 interface ISelectionMethodFormProps {
   type?: EButtonTypes;
@@ -26,6 +27,7 @@ interface ISelectionMethodFormProps {
 const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMethodFormProps) => {
   const formikRef = useRef<FormikProps<ISelectionMethod>>(null);
   const { state, dispatch } = useArchive<ISelectionMethodInitialState>("selection_method");
+  const { screenSize } = useViewport();
   const initialValues: ISelectionMethod = {
     id: item?.id || "",
     method_name: item?.method_name || "",
@@ -35,12 +37,12 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
   const schema = object().shape({
     method_name: string()
       .trim()
-      .matches(/^[a-zA-Z0-9\s]*$/, "Không chứa ký tự đặc biệt")
+      .matches(/^[\p{L}0-9\s._`-]*$/u, "Không chứa ký tự đặc biệt không hợp lệ")
       .max(255, "Số ký tự tối đa là 255 ký tự"),
   });
   const handleSubmit = (data: ISelectionMethod) => {
     const body = {
-      ...lodash.omit(data, "key", "index"),
+      ...lodash.omit(data, "id", "key", "index"),
     };
     if (type === EButtonTypes.CREATE) {
       dispatch(createSelectionMethod({ body }));
@@ -55,6 +57,7 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
   }, [state.status]);
   return (
     <Dialog
+      screenSize={screenSize}
       handleSubmit={() => {
         formikRef.current && formikRef.current.handleSubmit();
       }}

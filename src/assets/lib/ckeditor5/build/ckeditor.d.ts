@@ -29,6 +29,7 @@ import { Table, TableCaption, TableCellProperties, TableColumnResize, TablePrope
 import { TextTransformation } from "@ckeditor/ckeditor5-typing";
 import { SimpleUploadAdapter } from "@ckeditor/ckeditor5-upload";
 import { WordCount } from "@ckeditor/ckeditor5-word-count";
+
 declare class Editor extends ClassicEditor {
   static builtinPlugins: (
     | typeof Alignment
