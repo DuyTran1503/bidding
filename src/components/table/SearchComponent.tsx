@@ -1,5 +1,5 @@
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
-import { ISearchParams } from "@/shared/utils/shared-interfaces";
+import { IOption, ISearchParams } from "@/shared/utils/shared-interfaces";
 import { useDispatch } from "react-redux";
 import { Formik, FormikHelpers, FormikState } from "formik";
 import FormInput from "../form/FormInput";
@@ -21,7 +21,7 @@ export interface ISearchTypeTable {
   placeholder?: string;
   id: string;
   parentItem?: string;
-  options?: { value: string; label: string }[];
+  options?: { value: string; label: string }[] | IOption[];
   treeData?: { title: string; value: string; children?: any[] }[]; // Add treeData for treeSelect
   childItems?: string[];
   valueDefault?: any;
