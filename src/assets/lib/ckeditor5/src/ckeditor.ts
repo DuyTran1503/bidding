@@ -30,7 +30,6 @@ import { TextTransformation } from "@ckeditor/ckeditor5-typing";
 import { SimpleUploadAdapter } from "@ckeditor/ckeditor5-upload";
 import { WordCount } from "@ckeditor/ckeditor5-word-count";
 
-// @ts-ignore
 class Editor extends ClassicEditor {
   public static override builtinPlugins = [
     Alignment,

@@ -11,7 +11,10 @@ import { changeStatusFundingSource, deleteFundingSources, getAllFundingSources }
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
+import { TypeFundingSource } from "@/shared/enums/type_funding_source";
+import { convertEnum } from "@/shared/utils/common/convertEnum";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -52,6 +55,7 @@ const FundingSources = () => {
     {
       dataIndex: "index",
       title: "STT",
+      className: "w-[80px]",
     },
     {
       dataIndex: "name",
@@ -61,14 +65,18 @@ const FundingSources = () => {
     {
       dataIndex: "type",
       title: "Loại nguồn tài trợ",
+      className: "w-[250px]",
     },
     {
       dataIndex: "code",
       title: "Mã",
+      className: "w-[250px]",
     },
     {
       dataIndex: "desciption",
       title: "Mô tả",
+      className: "w-[250px]",
+
       render(_, record) {
         return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
       },
@@ -76,6 +84,8 @@ const FundingSources = () => {
     {
       title: "Trạng thái",
       dataIndex: "is_active",
+      className: "w-[150px]",
+
       render(_, record) {
         return (
           <CommonSwitch
@@ -98,13 +108,31 @@ const FundingSources = () => {
       dispatch(changeStatusFundingSource(String(confirmItem.key)));
     }
   };
-
+  const statusOptions: IOption[] = statusEnumArray.map((e) => ({
+    value: e,
+    label: mappingStatus[e],
+  }));
   const search: ISearchTypeTable[] = [
     {
       id: "name",
       placeholder: "Nhập tên nguồn tài trợ...",
       label: "Tên nguồn tài trợ",
       type: "text",
+    },
+    {
+      id: "type",
+      placeholder: "Chọn loại nguồn tài trợ",
+      label: "Loại nguồn tài trợ",
+      type: "select",
+      options: convertEnum(TypeFundingSource),
+    },
+    {
+      id: "is_active",
+      placeholder: "Chọn trạng thái ...",
+      label: "Trạng thái",
+      type: "select",
+
+      options: statusOptions as { value: string; label: string }[],
     },
   ];
 
@@ -189,6 +217,7 @@ const FundingSources = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
+        scroll={{ x: 1200 }}
       />
     </>
   );
