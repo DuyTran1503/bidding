@@ -1,8 +1,7 @@
 import { ETYPESTAFF } from "@/shared/enums/typeStaff";
 
 export interface IStaff {
-  staff_id?: number;
-  id_user: number;
+  id: number;
   role_ids: number[];
   role_name?: string;
   code_staff?: string | null;

@@ -63,7 +63,7 @@ const UpdateStaff = () => {
           formikRef={formikRef}
           account={{
             ...state.staff,
-            id_role: state.staff.list_role.map((item: any) => item.id),
+            id_role: state.staff?.roles?.map((item: any) => item.id),
           }}
         />
       )}
