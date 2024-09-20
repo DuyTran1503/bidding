@@ -58,6 +58,7 @@ import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/Selectio
 import ProjectPage from "@/pages/Project";
 import CreateProject from "@/pages/Project/Create";
 import UpdateProject from "@/pages/Project/Update";
+import ApproveProject from "@/pages/Project/Approve";
 
 export interface IRoute {
   path: string;
@@ -370,6 +371,10 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateProject />,
+              },
+              {
+                path: "/approve/:id",
+                element: () => <ApproveProject />,
               },
               {
                 path: "/detail/:id",

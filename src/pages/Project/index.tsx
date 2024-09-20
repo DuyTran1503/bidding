@@ -1,23 +1,25 @@
 import ConfirmModal from "@/components/common/CommonModal";
+import CommonSwitch from "@/components/common/CommonSwitch";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
+import useFetchStatus from "@/hooks/useFetchStatus";
 import { IBiddingFieldInitialState } from "@/services/store/biddingField/biddingField.slice";
 import { getBiddingFieldAllIds } from "@/services/store/biddingField/biddingField.thunk";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IFundingSource } from "@/services/store/funding_source/funding_source.model";
 import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
-import { IProjectInitialState, setFilter } from "@/services/store/project/project.slice";
+import { IProjectInitialState, resetStatus, setFilter } from "@/services/store/project/project.slice";
 import { changeStatusProject, deleteProject, getAllProject } from "@/services/store/project/project.thunk";
 import { ISelectionMethodInitialState } from "@/services/store/selectionMethod/selectionMethod.slice";
 import { getListSelectionMethods } from "@/services/store/selectionMethod/selectionMethod.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
+import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
@@ -28,9 +30,6 @@ import { useNavigate } from "react-router-dom";
 const ProjectPage = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateBiddingField, dispatch: dispatchBiddingField } = useArchive<IBiddingFieldInitialState>("bidding_field");
-  const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSource>("funding_source");
-  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
-  const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
   const navigate = useNavigate();
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [isModal, setIsModal] = useState(false);
@@ -39,7 +38,7 @@ const ProjectPage = () => {
     {
       dataIndex: "index",
       title: "STT",
-      className: "w-[100px]",
+      className: "w-[65px]",
     },
     {
       dataIndex: "name",
@@ -47,13 +46,13 @@ const ProjectPage = () => {
       className: "w-[250px]",
     },
     {
-      dataIndex: "owner_representative",
-      title: "Tên người đại diện",
+      dataIndex: "investor",
+      title: "Chủ đầu tư",
       className: "w-[250px]",
     },
     {
-      dataIndex: "bidding_field_id",
-      title: "Lĩnh vực thầu",
+      dataIndex: "total_amount",
+      title: "Tổng giá gói thầu",
       className: "w-[250px]",
       // render(_, record, index) {
       //   const organization_type = bidingFieldOptions.find((e) => +e.value === +record?.organization_type)?.label;
@@ -61,35 +60,22 @@ const ProjectPage = () => {
       // },
     },
     {
-      dataIndex: "tenderer_representative",
-      title: "Người đại diện thầu",
+      dataIndex: "upload_time",
+      title: "Ngày đăng tải",
       className: "w-[250px]",
     },
-    {
-      dataIndex: "tender_package_price",
-      title: "Giá gói thầu",
-      className: "w-[250px]",
-    },
-    {
-      dataIndex: "invest_total",
-      title: "Tổng đầu tư",
-      className: "w-[250px]",
-    },
+
     {
       title: "Trạng thái",
-      dataIndex: "Trạng thái",
-      className: "w-[150px]",
-      // render(_, record, index) {
-      //   return (
-      //     <div key={index} className="flex flex-col gap-2">
-      //       <CommonSwitch
-      //         onChange={() => handleChangeStatus(record)}
-      //         checked={+record.is_active === STATUS.ACTIVE}
-      //         title={`Bạn có chắc chắn muốn ${record.is_active === STATUS.ACTIVE ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
-      //       />
-      //     </div>
-      //   );
-      // },
+      dataIndex: "status",
+      className: "w-[65px]",
+      render(_, record, index) {
+        return (
+          <div key={index} className="flex flex-col gap-2">
+            <CommonSwitch onChange={() => handleChangeStatus(record)} checked={+record.status === STATUS_PROJECT.AWAITING} title={""} />
+          </div>
+        );
+      },
     },
   ];
   const buttons: IGridButton[] = [
@@ -104,6 +90,13 @@ const ProjectPage = () => {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/project/update/${record?.key}`);
+      },
+      // permission: EPermissions.UPDATE_PROJECT,
+    },
+    {
+      type: EButtonTypes.APPROVE,
+      onClick(record) {
+        navigate(`/project/approve/${record?.key}`);
       },
       // permission: EPermissions.UPDATE_PROJECT,
     },
@@ -154,19 +147,17 @@ const ProjectPage = () => {
 
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(stateProject.projects)
-      ? stateProject.projects.map(
-          ({ id, name, owner_representative, bidding_field_id, tenderer_representative, tender_package_price, invest_total, status }, index) => ({
-            index: index + 1,
-            key: id,
-            name,
-            bidding_field_id,
-            owner_representative,
-            tenderer_representative,
-            tender_package_price,
-            invest_total,
-            status,
-          }),
-        )
+      ? stateProject.projects.map(({ id, name, investor, total_amount, upload_time, bid_submission_start, bid_opening_date, status }, index) => ({
+          index: index + 1,
+          key: id,
+          name,
+          investor,
+          total_amount,
+          upload_time,
+          bid_submission_start,
+          bid_opening_date,
+          status,
+        }))
       : [];
   }, [JSON.stringify(stateProject.projects)]);
 
@@ -183,9 +174,6 @@ const ProjectPage = () => {
   useEffect(() => {
     dispatchProject(getAllProject({ query: stateProject.filter }));
     dispatchBiddingField(getBiddingFieldAllIds());
-    dispatchFundingSource(getListFundingSource());
-    dispatchEnterprise(getListEnterprise());
-    dispatchMethod(getListSelectionMethods());
   }, [JSON.stringify(stateProject.filter)]);
   useEffect(() => {
     if (stateProject.status === EFetchStatus.FULFILLED) {
@@ -197,10 +185,18 @@ const ProjectPage = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
+  useFetchStatus({
+    module: "project",
+    reset: resetStatus,
+    actions: {
+      success: { message: stateProject.message },
+      error: { message: stateProject.message },
+    },
+  });
   return (
     <>
       <Heading
-        title="Doanh nghiệp"
+        title="Dự án"
         hasBreadcrumb
         buttons={[
           {

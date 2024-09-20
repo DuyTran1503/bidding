@@ -18,7 +18,7 @@ export const getAllSelectionMethods = createAsyncThunk(
 );
 export const getListSelectionMethods = createAsyncThunk("selection-method/get-list-selection-methods", async (_, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<ISelectionMethod[]>(prefix);
+    const { response, data } = await client.get<ISelectionMethod[]>(`/api/admin/list-selection-methods`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);

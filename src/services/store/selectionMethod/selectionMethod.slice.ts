@@ -1,24 +1,25 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { ISelectionMethod } from "./selectionMethod.model"
+import { ISelectionMethod } from "./selectionMethod.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
-import { 
-  getAllSelectionMethods, 
-  createSelectionMethod, 
-  updateSelectionMethod, 
-  deleteSelectionMethod, 
-  getSelectionMethodById, 
-  changeStatusSelectionMethod, 
-  getListSelectionMethods
+import {
+  getAllSelectionMethods,
+  createSelectionMethod,
+  updateSelectionMethod,
+  deleteSelectionMethod,
+  getSelectionMethodById,
+  changeStatusSelectionMethod,
+  getListSelectionMethods,
 } from "./selectionMethod.thunk";
-import { transformPayloadErrors } from '@/shared/utils/common/function';
-import { IError } from '@/shared/interface/error';
+import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { IError } from "@/shared/interface/error";
+import { message } from "antd";
 
 export interface ISelectionMethodInitialState extends IInitialState {
   selectionMethods: ISelectionMethod[];
   activeSelectionMethod: ISelectionMethod | undefined;
-  listSelectionMethods: ISelectionMethod[]
+  listSelectionMethods: ISelectionMethod[];
 }
 
 const initialState: ISelectionMethodInitialState = {
@@ -47,31 +48,27 @@ const selectionMethodSlice = createSlice({
     // ? Get all selection methods
     builder.addCase(getAllSelectionMethods.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
       if (payload.data) {
-          state.selectionMethods = payload.data.data;
-          state.totalRecords = payload.data.total_elements;
-          state.totalPages = payload.data.total_pages;
-          state.pageSize = payload.data.page_size;
-          state.currentPage = payload.data.current_page;
+        state.selectionMethods = payload.data.data;
+        state.totalRecords = payload.data.total_elements;
+        state.totalPages = payload.data.total_pages;
+        state.pageSize = payload.data.page_size;
+        state.currentPage = payload.data.current_page;
       }
-  });
+    });
 
-  // ? Get By ID
-    builder.addCase(
-      getSelectionMethodById.fulfilled, (state, { payload }: PayloadAction<IResponse<ISelectionMethod> | any>) => {
-        if (payload.data) {
-          state.activeSelectionMethod = payload.data;
-          state.message = transformPayloadErrors(payload?.errors);
-        }
+    // ? Get By ID
+    builder.addCase(getSelectionMethodById.fulfilled, (state, { payload }: PayloadAction<IResponse<ISelectionMethod> | any>) => {
+      if (payload.data) {
+        state.activeSelectionMethod = payload.data;
+        state.message = transformPayloadErrors(payload?.errors);
       }
-    );
-    builder.addCase(
-      getListSelectionMethods.fulfilled, (state, { payload }: PayloadAction<IResponse<ISelectionMethod[]> | any>) => {
-        if (payload.data) {
-          state.listSelectionMethods = payload.data.data;
-          state.message = transformPayloadErrors(payload?.errors);
-        }
+    });
+    builder.addCase(getListSelectionMethods.fulfilled, (state, { payload }: PayloadAction<IResponse<ISelectionMethod[]> | any>) => {
+      if (payload.data) {
+        state.listSelectionMethods =payload.data.map((item:ISelectionMethod)=>({...item,name:item.method_name}));
+        state.message = transformPayloadErrors(payload?.errors);
       }
-    );
+    });
     // ? Create selection method
     builder
       .addCase(createSelectionMethod.pending, (state) => {
@@ -84,9 +81,9 @@ const selectionMethodSlice = createSlice({
           state.selectionMethods.push(payload.data);
         }
       })
-      .addCase(createSelectionMethod.rejected, (state, {payload}: PayloadAction<IError | any>) => {
+      .addCase(createSelectionMethod.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Update selection method
     builder
@@ -105,7 +102,7 @@ const selectionMethodSlice = createSlice({
       })
       .addCase(updateSelectionMethod.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Delete selection method
     builder
@@ -121,7 +118,7 @@ const selectionMethodSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
-      builder
+    builder
       .addCase(changeStatusSelectionMethod.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
