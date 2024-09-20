@@ -10,12 +10,14 @@ import {
   deleteBiddingField,
   getBiddingFieldById,
   changeStatusBiddingField,
+  getBiddingFieldAllIds,
 } from "./biddingField.thunk";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
 
 export interface IBiddingFieldInitialState extends IInitialState {
   biddingFields: INewBiddingField[];
+  listBidingField: INewBiddingField[];
   activeBiddingField: IBiddingField | undefined;
 }
 
@@ -23,6 +25,7 @@ const initialState: IBiddingFieldInitialState = {
   status: EFetchStatus.IDLE,
   message: "",
   biddingFields: [],
+  listBidingField: [],
   activeBiddingField: undefined,
   totalRecords: 0, // Tổng số lượng mục
   totalPages: 0, // Tổng số trang
@@ -66,6 +69,17 @@ const biddingFieldSlice = createSlice({
         }
       })
       .addCase(getBiddingFieldById.rejected, (state, { payload }: PayloadAction<any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+
+    builder
+      .addCase(getBiddingFieldAllIds.fulfilled, (state, { payload }: PayloadAction<INewBiddingField[] | any>) => {
+        if (payload.data) {
+          state.listBidingField = payload.data;
+        }
+      })
+      .addCase(getBiddingFieldAllIds.rejected, (state, { payload }: PayloadAction<any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });

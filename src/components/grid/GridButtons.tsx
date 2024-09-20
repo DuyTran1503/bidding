@@ -7,6 +7,7 @@ import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { checkPermission } from "@/helpers/checkPermission";
+import { MdOutlineCreditScore } from "react-icons/md";
 
 interface IGridButtonsProps {
   buttons: IGridButton[];
@@ -30,7 +31,7 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record, onClick }) 
           case EButtonTypes.VIEW:
             return (
               canAccess && (
-                <Tooltip title="View" key={index}>
+                <Tooltip title="Chi tiết" key={index}>
                   <IoEyeOutline
                     className="cursor-pointer text-xl text-blue-500"
                     onClick={() => {
@@ -43,9 +44,22 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record, onClick }) 
           case EButtonTypes.UPDATE:
             return (
               canAccess && (
-                <Tooltip title="Edit" key={index}>
+                <Tooltip title="Cập nhật" key={index}>
                   <HiOutlinePencil
                     className="cursor-pointer text-xl text-yellow-500"
+                    onClick={() => {
+                      button.onClick ? button.onClick(record) : onClick && onClick(record, button.type);
+                    }}
+                  />
+                </Tooltip>
+              )
+            );
+          case EButtonTypes.APPROVE:
+            return (
+              canAccess && (
+                <Tooltip title="Phê duyệt" key={index}>
+                  <MdOutlineCreditScore
+                    className="cursor-pointer text-xl text-green-600"
                     onClick={() => {
                       button.onClick ? button.onClick(record) : onClick && onClick(record, button.type);
                     }}
@@ -56,7 +70,7 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record, onClick }) 
           case EButtonTypes.DESTROY:
             return (
               canAccess && (
-                <Tooltip title="Delete" key={index}>
+                <Tooltip title="Xóa" key={index}>
                   <IoTrashBinOutline
                     className="cursor-pointer text-xl text-red-500"
                     onClick={() => {

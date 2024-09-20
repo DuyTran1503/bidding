@@ -8,7 +8,7 @@ import { getAllPermissions, getAllRoles } from "@/services/store/role/role.thunk
 import { FormikRefType } from "@/shared/utils/shared-types";
 import lodash from "lodash";
 import { IAccountInitialState } from "@/services/store/account/account.slice";
-import { Col, Row } from "antd";
+import { Col, RadioChangeEvent, Row } from "antd";
 import { phoneRegex } from "@/shared/utils/common/function";
 import FormSwitch from "@/components/form/FormSwitch";
 import { createStaff, updateStaff } from "@/services/store/account/account.thunk";
@@ -17,8 +17,11 @@ import { RootStateType } from "@/services/reducers";
 import { useSelector } from "react-redux";
 import { EPageTypes } from "@/shared/enums/page";
 import dayjs from "dayjs";
-import FormCkFinder from "@/components/form/FormCkFinder";
-import { ResourceType } from "@/shared/enums/resourceType";
+import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
+import FormDate from "@/components/form/FormDate";
+import FormRadio from "@/components/form/FormRadio";
+import { mappingGender, statusEnumArray } from "@/shared/enums/gender";
+import { IOption } from "@/shared/utils/shared-interfaces";
 // interface TreeNode {
 //   title: string;
 //   key: string;
@@ -39,12 +42,14 @@ export interface IStaffFormInitialValues {
   id_user?: number;
   id_role: number[];
   name: string;
-  avatar?: string;
+  avatar?: File;
   email: string;
   phone: string;
   account_ban_at?: string | null;
   password: "";
   taxcode: number | null;
+  birthday: string;
+  gender: string;
 }
 
 const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
@@ -55,12 +60,14 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
   const initialValues: IStaffFormInitialValues = {
     name: "",
     id_role: [],
-    avatar: "",
+    avatar: account?.avatar || undefined,
     email: "",
     phone: "",
     account_ban_at: "",
     password: "",
     taxcode: null,
+    birthday: "",
+    gender: "",
   };
 
   const validationSchema = object().shape({
@@ -183,7 +190,10 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
       setLoading(true);
     }
   }, [loading, state.filter]);
-
+  const genderOptions: IOption[] = statusEnumArray.map((key) => ({
+    value: key,
+    label: mappingGender[key],
+  }));
   return (
     <Formik
       enableReinitialize
@@ -192,7 +202,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
       validationSchema={validationSchema}
       onSubmit={(data) => {
         const body = {
-          ...lodash.omit(data, "id_user"),
+          ...lodash.omit(data, "id"),
           account_ban_at: data.account_ban_at ? new Date().toISOString() : null,
           role_id: data.id_role,
         };
@@ -200,7 +210,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
         const { id_role, ...newObj } = body;
         if (type === EPageTypes.CREATE) {
           const newValue = { ...newObj, account_ban_at: dayjs(body.account_ban_at).format(" YYYY-MM-DD HH:mm:ss") };
-          return dispatch(createStaff({ body: newValue as any }));
+          return dispatch(createStaff(newValue as any));
         }
         if (type === EPageTypes.UPDATE) {
           const newValue = {
@@ -210,7 +220,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
             phone: body.phone,
             email: body.email,
             avatar: body.avatar,
-            id_user: body.id,
+            id_user: data.id,
             taxcode: body.taxcode,
             account_ban_at: body.account_ban_at ? new Date().toISOString() : null,
           };
@@ -272,7 +282,8 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              {type === EPageTypes.CREATE && (
+
+              {type === EPageTypes.CREATE ? (
                 <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                   <FormGroup title="Password">
                     <FormInput
@@ -288,41 +299,34 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                     />
                   </FormGroup>
                 </Col>
+              ) : (
+                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                  <FormGroup title="Vai trò">
+                    <FormSelect
+                      isMultiple={true}
+                      onChange={(value) => setFieldValue("id_role", value)}
+                      options={roles.map((role) => ({ label: role.name, value: role.id }))}
+                      defaultValue={!!values.id_role && values.id_role}
+                      placeholder="Chọn vai trò "
+                    />
+                  </FormGroup>
+                </Col>
               )}
             </Row>
-            <Row gutter={[24, 0]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormGroup title="Ảnh đại diện">
-                  <FormCkFinder
-                    resourceTypes={ResourceType.IMAGES}
-                    direction="vertical"
-                    errors={errors}
-                    touched={touched}
-                    buttonClose
-                    id="avatar"
-                    placeholder="Tải ảnh lên"
-                    value={values.avatar ?? ""}
-                    disabled={type === "view"}
-                    onChange={(data) => {
-                      setFieldValue("avatar", data).then();
-                    }}
-                    name={"avatar"}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row gutter={[24, 0]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Vai trò">
-                  <FormSelect
-                    isMultiple={true}
-                    onChange={(value) => setFieldValue("id_role", value)}
-                    options={roles.map((role) => ({ label: role.name, value: role.id }))}
-                    defaultValue={!!values.id_role && values.id_role}
-                    placeholder="Chọn vai trò "
-                  />
-                </FormGroup>
-              </Col>
+            <Row gutter={[24, 0]} className="justify-end">
+              {type === EPageTypes.CREATE && (
+                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                  <FormGroup title="Vai trò">
+                    <FormSelect
+                      isMultiple={true}
+                      onChange={(value) => setFieldValue("id_role", value)}
+                      options={roles.map((role) => ({ label: role.name, value: role.id }))}
+                      defaultValue={!!values.id_role && values.id_role}
+                      placeholder="Chọn vai trò "
+                    />
+                  </FormGroup>
+                </Col>
+              )}
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Mã số thuế">
                   <FormInput
@@ -339,17 +343,52 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   />
                 </FormGroup>
               </Col>
+
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Row gutter={[12, 0]}>
+                  <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                    <FormGroup title="Trạng thái hoạt động">
+                      <FormSwitch
+                        checked={!!values.account_ban_at ? true : false}
+                        onChange={(value) => {
+                          setFieldValue("account_ban_at", value);
+                        }}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                    <FormGroup title="Giới tính" className="gap-[6px]">
+                      <FormRadio
+                        options={genderOptions}
+                        value={values.gender}
+                        onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Ngày sinh">
+                  <FormDate
+                    disabled={type === EPageTypes.VIEW}
+                    label="Ngày sinh"
+                    value={values.birthday ? dayjs(values.birthday) : null}
+                    onChange={(date) => setFieldValue("birthday", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Ảnh đại diện">
+                  <FormUploadFile
+                    isMultiple={false}
+                    value={values.avatar}
+                    onChange={(e: any) => {
+                      setFieldValue("avatar", e);
+                    }}
+                  />
+                </FormGroup>
+              </Col>
             </Row>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormGroup title="Trạng thái hoạt động">
-                <FormSwitch
-                  checked={!!values.account_ban_at ? true : false}
-                  onChange={(value) => {
-                    setFieldValue("account_ban_at", value);
-                  }}
-                />
-              </FormGroup>
-            </Col>
           </Form>
         );
       }}

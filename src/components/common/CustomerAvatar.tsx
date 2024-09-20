@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import imageError from "@/assets/images/imgError-table.jpg";
+import imageError from "@/assets/images/default-featured-image.png";
 import clsx from "clsx";
 import imgFbDefault from "@/assets/images/customerDefaultAvatar.png";
 interface CustomerAvatarProps {
-  src?: string;
+  src: string;
   alt: string;
   className?: string;
   size?: "large" | "medium";
