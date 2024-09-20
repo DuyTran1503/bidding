@@ -67,7 +67,7 @@ const ManagementGrid = <T extends ISearchParams>({
           ...columns,
           {
             title: "Hành động",
-            width: "150px",
+            width: "100px",
             dataIndex: "actions",
             key: "actions",
             fixed: "right",
