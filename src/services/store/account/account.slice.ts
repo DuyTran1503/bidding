@@ -32,6 +32,10 @@ const accountSlice = createSlice({
   initialState,
   reducers: {
     ...commonStaticReducers<IAccountInitialState>(),
+    resetStatus(state) {
+      state.status = EFetchStatus.IDLE;
+      state.message = "";
+    },
   },
 
   extraReducers(builder) {
