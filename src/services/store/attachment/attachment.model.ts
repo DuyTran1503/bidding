@@ -3,6 +3,6 @@ export interface IAttachment {
   user_id: string;
   project_id: string;
   name: string;
-  file: string;
+  path: File | string;
   is_active?: boolean;
 }

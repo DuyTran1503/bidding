@@ -75,7 +75,7 @@ export const selectedData = (data: any[], id: string | number) => {
   return data?.find((item: any) => item.id === +id);
 };
 
-export const activityLogOptions = Object.keys(E_TYPE_ACTIVITY).map((key) => ({
-  value: key, // khóa của enum (ví dụ: CREATE, UPDATE, DESTROY)
-  label: E_TYPE_ACTIVITY[key as keyof typeof E_TYPE_ACTIVITY], // giá trị của enum (ví dụ: "Tạo mới", "Cập nhật", "Xóa")
+export const convertEnumToArray = Object.keys(E_TYPE_ACTIVITY).map((key) => ({
+  value: key,
+  label: E_TYPE_ACTIVITY[key as keyof typeof E_TYPE_ACTIVITY],
 }));

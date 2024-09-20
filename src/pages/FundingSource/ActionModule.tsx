@@ -12,6 +12,9 @@ import lodash from "lodash";
 import { Col, Row } from "antd";
 import { useEffect } from "react";
 import { EPageTypes } from "@/shared/enums/page";
+import FormSelect from "@/components/form/FormSelect";
+import { TypeFundingSource } from "@/shared/enums/type_funding_source";
+import { convertEnum } from "@/shared/utils/common/convertEnum";
 
 interface IFundingSourceFormProps {
   formikRef?: FormikRefType<IFundingSourceInitialValues>;
@@ -65,76 +68,79 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
         }
       }}
     >
-      {({ values, errors, touched, handleBlur, setFieldValue }) => (
-        <>
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormGroup title="Tên nguồn tài trợ">
-                <FormInput
-                  label="Tên nguồn tài trợ"
-                  placeholder="Tên nguồn tài trợ..."
-                  name="name"
-                  value={values.name}
-                  error={touched.name ? errors.name : ""}
-                  onChange={(e) => setFieldValue("name", e)}
-                  onBlur={handleBlur}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormGroup title="Loại nguồn tài trợ">
-                <FormInput
-                  label="Loại nguồn tài trợ"
-                  placeholder="Loại nguồn tài trợ..."
-                  name="type"
-                  value={values.type}
-                  error={touched.type ? errors.type : ""}
-                  onChange={(e) => setFieldValue("type", e)}
-                  onBlur={handleBlur}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormGroup title="Mã nguồn tài trợ">
-                <FormInput
-                  label="Mã nguồn tài trợ"
-                  placeholder="Mã nguồn tài trợ..."
-                  name="code"
-                  value={values.code}
-                  error={touched.code ? errors.code : ""}
-                  onChange={(e) => setFieldValue("code", e)}
-                  onBlur={handleBlur}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormGroup title="Trạng thái hoạt động">
-                <FormSwitch
-                  checked={!!values.is_active ? true : false}
-                  onChange={(value) => {
-                    setFieldValue("is_active", value);
-                  }}
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-              <FormGroup title="Mô tả">
-                <FormInputArea
-                  label="Mô tả"
-                  placeholder="Nhập mô tả..."
-                  name="description"
-                  isReadonly={type === EPageTypes.VIEW}
-                  value={values.description}
-                  error={touched.description ? errors.description : ""}
-                  onChange={(e) => setFieldValue("description", e)}
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-        </>
-      )}
+      {({ values, errors, touched, handleBlur, setFieldValue }) => {
+        return (
+          <>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Tên nguồn tài trợ">
+                  <FormInput
+                    label="Tên nguồn tài trợ"
+                    placeholder="Tên nguồn tài trợ..."
+                    name="name"
+                    value={values.name}
+                    error={touched.name ? errors.name : ""}
+                    onChange={(e) => setFieldValue("name", e)}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Loại nguồn tài trợ">
+                  <FormSelect
+                    label="Loại nguồn tài trợ"
+                    placeholder="Chọn loại nguồn tài trợ..."
+                    isDisabled={type === EPageTypes.VIEW}
+                    id="type"
+                    options={convertEnum(TypeFundingSource)}
+                    value={values.type || undefined}
+                    error={touched.type ? errors.type : ""}
+                    onChange={(e) => setFieldValue("type", e)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Mã nguồn tài trợ">
+                  <FormInput
+                    label="Mã nguồn tài trợ"
+                    placeholder="Mã nguồn tài trợ..."
+                    name="code"
+                    value={values.code}
+                    error={touched.code ? errors.code : ""}
+                    onChange={(e) => setFieldValue("code", e)}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Trạng thái hoạt động">
+                  <FormSwitch
+                    checked={!!values.is_active ? true : false}
+                    onChange={(value) => {
+                      setFieldValue("is_active", value);
+                    }}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormGroup title="Mô tả">
+                  <FormInputArea
+                    label="Mô tả"
+                    placeholder="Nhập mô tả..."
+                    name="description"
+                    isReadonly={type === EPageTypes.VIEW}
+                    value={values.description}
+                    error={touched.description ? errors.description : ""}
+                    onChange={(e) => setFieldValue("description", e)}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+          </>
+        );
+      }}
     </Formik>
   );
 };
