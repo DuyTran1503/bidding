@@ -17,14 +17,11 @@ import { RootStateType } from "@/services/reducers";
 import { useSelector } from "react-redux";
 import { EPageTypes } from "@/shared/enums/page";
 import dayjs from "dayjs";
-import FormCkFinder from "@/components/form/FormCkFinder";
-import { ResourceType } from "@/shared/enums/resourceType";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import FormDate from "@/components/form/FormDate";
 import FormRadio from "@/components/form/FormRadio";
-import { GENDER, mappingGender, statusEnumArray } from "@/shared/enums/gender";
+import { mappingGender, statusEnumArray } from "@/shared/enums/gender";
 import { IOption } from "@/shared/utils/shared-interfaces";
-import { IStaff } from "@/services/store/account/account.model";
 // interface TreeNode {
 //   title: string;
 //   key: string;

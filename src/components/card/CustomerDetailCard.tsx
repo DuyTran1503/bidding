@@ -28,7 +28,7 @@ const CustomerDetailCard = ({ background, avatar, status, items, name }: ICustom
           className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
           alt={`avatar with ${name}`}
           size="large"
-          src={avatar}
+          src={avatar as string}
         />
       </div>
       <div className="mt-[80px] flex flex-col items-center gap-2 border-b border-gray-100 pb-6">

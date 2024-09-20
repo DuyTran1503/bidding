@@ -4,8 +4,6 @@ import lodash from "lodash";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import { useArchive } from "@/hooks/useArchive";
-import { FormikRefType } from "@/shared/utils/shared-types";
-import { EPageTypes } from "@/shared/enums/page";
 import { Col, Row } from "antd";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { IAttachmentInitialState, resetMessageError } from "@/services/store/attachment/attachment.slice";
@@ -133,7 +131,7 @@ const AttachmentForm = ({ visible, type, setVisible, item, OnSaveSuccess }: IAtt
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tài liệu đính kèm">
-                  <FormUploadFile value={values.path} onChange={(e) => setFieldValue("file", e)}></FormUploadFile>
+                  <FormUploadFile value={values.path} onChange={(e) => setFieldValue("file", e)} />
                 </FormGroup>
               </Col>
             </Row>
