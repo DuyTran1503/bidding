@@ -18,6 +18,7 @@ import { activityLogSlice } from "./store/activityLogs/activityLog.slice";
 import { bidBondSlice } from "./store/bid_bond/bidBond.slice";
 import { selectionMethodSlice } from "./store/selectionMethod/selectionMethod.slice";
 import { projectSlice } from "./store/project/project.slice";
+import { procurementSlice } from "./store/procurement/procurement.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -38,6 +39,7 @@ export const reducers = combineReducers({
   activity_log: activityLogSlice.reducer,
   selection_method: selectionMethodSlice.reducer,
   project: projectSlice.reducer,
+  procurement: procurementSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
