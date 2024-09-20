@@ -58,7 +58,7 @@ const UpdateProject = () => {
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
-            text: "Tạo mới",
+            text: "Cập nhật",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
               if (formikRef.current) {
