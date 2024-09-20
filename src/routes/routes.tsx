@@ -42,9 +42,7 @@ import DetailFundingSource from "@/pages/FundingSource/Detail";
 import Attachment from "@/pages/Attachment";
 import BidDocument from "@/pages/BidDocument";
 import CreateBidDocument from "@/pages/BidDocument/Create";
-import CreateAttachment from "@/pages/Attachment/Create";
-import UpdateAttachment from "@/pages/Attachment/Update";
-import DetailAttachment from "@/pages/Attachment/Detail";
+
 import DetailBidDocument from "@/pages/BidDocument/Detail";
 import UpdateBidDocument from "@/pages/BidDocument/Update";
 import DetailEnterprise from "@/pages/Enterprise/Detail";
@@ -343,18 +341,6 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <Attachment />,
-              },
-              {
-                path: "/create",
-                element: () => <CreateAttachment />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateAttachment />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailAttachment />,
               },
             ],
           },

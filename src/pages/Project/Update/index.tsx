@@ -1,7 +1,7 @@
 import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { INewProject, IProject } from "@/services/store/project/project.model";
+import { INewProject } from "@/services/store/project/project.model";
 import { IProjectInitialState, resetStatus } from "@/services/store/project/project.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { FormikProps } from "formik";
@@ -45,7 +45,7 @@ const UpdateProject = () => {
   return (
     <>
       <Heading
-        title="Tạo mới "
+        title="Cập nhật dự án"
         hasBreadcrumb
         buttons={[
           {
