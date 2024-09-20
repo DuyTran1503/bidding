@@ -1,9 +1,9 @@
-import {message} from "antd";
+import { message } from "antd";
 import "@/assets/scss/overwrite/index.scss";
 import imageError from "@/assets/images/imgError-table.jpg";
 import imageFile from "@/assets/images/img-file.png";
-import React, {useEffect, useState} from "react";
-import {IoIosCloseCircle} from "react-icons/io";
+import React, { useEffect, useState } from "react";
+import { IoIosCloseCircle } from "react-icons/io";
 
 interface IProps {
     value?: File;
@@ -11,7 +11,7 @@ interface IProps {
     id?: string;
 }
 
-const FormSingleFile: React.FC<IProps> = ({value, onChange, id}) => {
+const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
     const [file, setFile] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -60,11 +60,11 @@ const FormSingleFile: React.FC<IProps> = ({value, onChange, id}) => {
                     onError={(e) => (e.currentTarget.src = imageError)}
                 />
             ) : (
-                <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover"/>
+                <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />
             );
         } else if (typeof file === "string") {
             return <img src={`${import.meta.env.VITE_API_URL}/${file}`} alt={file}
-                        className="h-[100px] w-[100px] rounded-lg object-cover"/>;
+                className="h-[100px] w-[100px] rounded-lg object-cover" />;
         } else {
             // Handle cases where file is neither a File nor a string
             return null;
@@ -80,20 +80,20 @@ const FormSingleFile: React.FC<IProps> = ({value, onChange, id}) => {
                             {renderFileIcon(file)}
                             <button onClick={handleDeleteImage}>
                                 <IoIosCloseCircle
-                                    className="absolute right-1 top-1 h-[24px] w-[24px] rounded-circle text-green-100"/>
+                                    className="absolute right-1 top-1 h-[24px] w-[24px] rounded-circle text-green-100" />
                             </button>
                         </div>
                     )}
                 </div>
                 {!file && <div className="mt-3 text-center font-normal text-gray-400">Kéo hoặc thả file vào đây</div>}
-                <div className="mt-4 flex justify-center">
+                <div className="mt-4 flex sm:flex-col md:justify-center items-center gap-4">
                     <label
                         htmlFor={`file-upload-${id}`}
                         className="text-m-medium inline-block cursor-pointer rounded bg-primary-50 px-[14px] py-[10px] text-primary-500"
                     >
                         Tải file lên
                     </label>
-                    <input id={`file-upload-${id}`} type="file" onChange={handleFileChange} className="hidden"/>
+                    <input id={`file-upload-${id}`} type="file" onChange={handleFileChange} className="hidden" />
                 </div>
             </div>
         </div>
