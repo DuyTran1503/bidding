@@ -363,6 +363,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                     <FormDate
                       disabled={type === EPageTypes.VIEW}
                       label="Ngày kết thúc nộp hồ sơ"
+                      minDate={values.bid_submission_start ? dayjs(values.bid_submission_start) : undefined}
                       value={values.bid_submission_end ? dayjs(values.bid_submission_end) : null}
                       onChange={(date) => setFieldValue("bid_submission_end", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                     />
@@ -373,6 +374,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                     <FormDate
                       disabled={type === EPageTypes.VIEW}
                       label="Ngày mở thầu"
+                      minDate={values.bid_submission_end ? dayjs(values.bid_submission_end) : undefined}
                       value={values.bid_opening_date ? dayjs(values.bid_opening_date) : null}
                       onChange={(date) => setFieldValue("bid_opening_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                     />
@@ -384,6 +386,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                     <FormDate
                       disabled={type === EPageTypes.VIEW}
                       label="Ngày bắt đầu đấu thầu"
+                      minDate={values.bid_submission_end ? dayjs(values.bid_submission_end) : undefined}
                       value={values.start_time ? dayjs(values.start_time) : null}
                       onChange={(date) => setFieldValue("start_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                     />
@@ -394,6 +397,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                     <FormDate
                       disabled={type === EPageTypes.VIEW}
                       label="Ngày kết thúc đấu thầu"
+                      minDate={values.start_time ? dayjs(values.bid_submission_end) : undefined}
                       value={values.end_time ? dayjs(values.end_time) : null}
                       onChange={(date) => setFieldValue(".end_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                     />
