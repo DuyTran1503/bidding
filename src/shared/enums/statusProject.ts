@@ -1,9 +1,9 @@
 export enum STATUS_PROJECT {
-  AWAITING = 0, // Chờ phê duyệt
-  REJECT = 1, // Trả về
-  RECEIVED = 2, // Tiếp nhận hồ sơ
-  SELECTING_CONTRACTOR = 3, // Lựa chọn nhà thầu
-  RESULTS_PUBLISHED = 4, // Công bố kết quả
+  AWAITING = 1, // Chờ phê duyệt
+  REJECT = 2, // Trả về
+  RECEIVED = 3, // Tiếp nhận hồ sơ
+  SELECTING_CONTRACTOR = 4, // Lựa chọn nhà thầu
+  RESULTS_PUBLISHED = 5, // Công bố kết quả
 }
 
 export const STATUS_PROJECT_LABELS: { [key in STATUS_PROJECT]: string } = {

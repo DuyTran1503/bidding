@@ -138,7 +138,7 @@ const enterpriseSlice = createSlice({
     builder
       .addCase(getListEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IEnterprise[]> | any>) => {
         if (payload.data) {
-          state.listEnterprise = payload.data.data;
+          state.listEnterprise = payload.data;
         }
       })
       .addCase(getListEnterprise.rejected, (state, { payload }: PayloadAction<IResponse<IEnterprise[]> | any>) => {

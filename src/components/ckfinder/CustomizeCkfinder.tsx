@@ -71,15 +71,13 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
       // Define the CKFinder configuration (if necessary).
       options: {
         resourceType: "Images",
-        // startupPath: 'Images:/' + today.toISOString().slice(0, 8).replaceAll('-', '/'),
-        // rememberLastFolder: false,
+        rememberLastFolder: false,
       },
     },
   };
   return (
     <div className={`custom-editor w-full ${size ? `size-${size}` : ""} ${noBorder ? "no-border" : ""}`}>
       <CKEditor
-        //@ts-ignore
         editor={Editor}
         data={value || ""}
         //@ts-ignore
