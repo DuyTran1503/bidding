@@ -19,5 +19,6 @@ export enum EPageNames {
   "bidding-results" = "Kết quả Đấu thầu",
   "activity-logs" = "Nhật ký hoạt động",
   "selection-methods" = "Hình thức lựa chọn Nhà thầu",
+  "procurement-categories" = "Loại hình mua sắm công",
   "banners" = "Banner",
 }

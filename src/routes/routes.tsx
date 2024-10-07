@@ -61,6 +61,8 @@ import BiddingResults from "@/pages/BiddingResults/BiddingResults/BiddingResults
 import CreateBiddingResult from "@/pages/BiddingResults/CreateBiddingResult/CreateBiddingResult";
 import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/UpdateBiddingResult";
 import Banners from "@/pages/Banners/Banners/Banners";
+import DetailProject from "@/pages/Project/Detail";
+import ProcurementCategories from "@/pages/ProcurementCategories/ProcurementCategories";
 
 export interface IRoute {
   path: string;
@@ -153,6 +155,15 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <SelectionMethods />,
+              },
+            ],
+          },
+          {
+            path: "procurement-categories",
+            pages: [
+              {
+                path: "/",
+                element: () => <ProcurementCategories />,
               },
             ],
           },
@@ -386,7 +397,7 @@ export const routes: IRoute[] = [
               },
               {
                 path: "/detail/:id",
-                element: () => <DetailBidDocument />,
+                element: () => <DetailProject />,
               },
             ],
           },
