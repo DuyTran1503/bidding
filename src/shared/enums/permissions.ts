@@ -48,6 +48,13 @@ export enum EPermissions {
   UPDATE_SELECTION_METHOD = "update_selection_method",
   DESTROY_SELECTION_METHOD = "destroy_selection_method",
 
+  // ? ProcurementCategorie
+  LIST_PROCUREMENT_CATEGORIE = "list_procurement_categorie",
+  DETAIL_PROCUREMENT_CATEGORIE = "detail_procurement_categorie",
+  CREATE_PROCUREMENT_CATEGORIE = "create_procurement_categorie",
+  UPDATE_PROCUREMENT_CATEGORIE = "update_procurement_categorie",
+  DESTROY_PROCUREMENT_CATEGORIE = "destroy_procurement_categorie",
+
   // staff
   LIST_STAFF = "list_staff",
   DETAIL_STAFF = "detail_staff",
