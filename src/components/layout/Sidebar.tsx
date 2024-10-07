@@ -94,7 +94,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           // permissions: EPermissions.LIST_ACTIVITYLOG,
         },
         {
-          id: "3.6",
+          id: "3.7",
           label: "Hình thức lựa chọn Nhà thầu",
           path: "selection-methods",
           // permissions: EPermissions.LIST_SELECTION_METHOD,
@@ -122,6 +122,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Dự án",
           path: "project",
           // permissions: EPermissions.LIST_BID_DOCUMENT,
+        },
+        {
+          id: "4.4",
+          label: "Loại hình mua sắm công",
+          path: "procurement-categories",
+          // permissions: EPermissions.LIST_PROCUREMENT_CATEGORIE,
         },
       ],
     },
