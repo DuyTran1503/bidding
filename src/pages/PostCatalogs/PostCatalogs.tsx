@@ -12,32 +12,33 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IBannerInitialState, resetStatus, setFilter } from "@/services/store/banner/banner.slice";
-import { changeStatusBanner, deleteBanner, getAllBanners } from "@/services/store/banner/banner.thunk";
 import { GoDownload } from "react-icons/go";
-import BannerForm from "../BannerForm";
-import { EPermissions } from "@/shared/enums/permissions";
+import { IPostCatalogInitialState } from "@/services/store/postCatalog/postCatalog.slice";
+import { changeStatusPostCatalog, deletePostCatalog, getAllPostCatalogs } from "@/services/store/postCatalog/postCatalog.thunk";
+import { resetStatus, setFilter } from "@/services/store/account/account.slice";
+import PostCatalogForm from "./PostCatalogForm";
 
-const Banners = () => {
-    const { state, dispatch } = useArchive<IBannerInitialState>("banner");
+const PostCatalogs = () => {
+    const { state, dispatch } = useArchive<IPostCatalogInitialState>("post_catalog");
     const [isModal, setIsModal] = useState(false);
     const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
-            permission: EPermissions.DETAIL_BANNER,
+
+            //   permission: EPermissions.DETAIL_POST_CATALOG,
         },
         {
             type: EButtonTypes.UPDATE,
-            permission: EPermissions.UPDATE_BANNER,
+            // permission: EPermissions.UPDATE_POST_CATALOG,
         },
         {
             type: EButtonTypes.DESTROY,
             onClick(record) {
-                dispatch(deleteBanner(record?.key));
+                dispatch(deletePostCatalog(record?.key));
             },
-            permission: EPermissions.DESTROY_BANNER,
+            // permission: EPermissions.DESTROY_POST_CATALOG,
         },
     ];
 
@@ -48,14 +49,14 @@ const Banners = () => {
         },
         {
             dataIndex: "name",
-            title: "Tên Banner",
+            title: "Tên danh mục",
             className: "w-[300px]",
         },
         {
-            dataIndex: "path",
-            title: "Link",
+            dataIndex: "description",
+            title: "Mô tả",
             render(_, record) {
-                return <div dangerouslySetInnerHTML={{ __html: record?.path || "" }} className="text-compact-3"></div>;
+                return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }} className="text-compact-3"></div>;
             },
         },
         {
@@ -80,36 +81,36 @@ const Banners = () => {
 
     const onConfirmStatus = () => {
         if (confirmItem && confirmItem.key) {
-            dispatch(changeStatusBanner(String(confirmItem.key)));
+            dispatch(changeStatusPostCatalog(String(confirmItem.key)));
         }
     };
 
     const search: ISearchTypeTable[] = [
         {
             id: "name",
-            placeholder: "Nhập tên Banner...",
-            label: "Tên Banner",
+            placeholder: "Nhập tên danh mục...",
+            label: "Tên danh mục",
             type: "text",
         },
     ];
 
     const data: ITableData[] = useMemo(
         () =>
-            state.banners && state.banners.length > 0
-                ? state.banners.map(({ id, name, path, is_active }, index) => ({
+            state.postCatalogs && state.postCatalogs.length > 0
+                ? state.postCatalogs.map(({ id, name, description, is_active }, index) => ({
                     index: index + 1,
                     key: id,
                     id: id,
                     name,
-                    path,
+                    description,
                     is_active,
                 }))
                 : [],
-        [JSON.stringify(state.banners)],
+        [JSON.stringify(state.postCatalogs)],
     );
 
     useFetchStatus({
-        module: "banner",
+        module: "post_catalog",
         reset: resetStatus,
         actions: {
             success: { message: state.message },
@@ -119,20 +120,20 @@ const Banners = () => {
 
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
-            dispatch(getAllBanners({ query: state.filter }));
+            dispatch(getAllPostCatalogs({ query: state.filter }));
         }
     }, [JSON.stringify(state.status)]);
 
     useEffect(() => {
-        dispatch(getAllBanners({ query: state.filter }));
+        dispatch(getAllPostCatalogs({ query: state.filter }));
     }, [JSON.stringify(state.filter)]);
 
     return (
         <>
             <Heading
-                title="Banner"
+                title="Danh mục bài viết"
                 hasBreadcrumb
-                ModalContent={(props) => <BannerForm {...(props as any)} />}
+                ModalContent={(props) => <PostCatalogForm {...(props as any)} />}
                 buttons={[
                     {
                         text: "Export",
@@ -141,7 +142,7 @@ const Banners = () => {
                     },
                     {
                         icon: <FaPlus className="text-[18px]" />,
-                        permission: EPermissions.CREATE_BANNER,
+                        // permission: EPermissions.CREATE_POST_CATALOG,
                         text: "Thêm mới",
                     },
                 ]}
@@ -156,7 +157,7 @@ const Banners = () => {
             <ManagementGrid
                 columns={columns}
                 data={data}
-                search={search}
+                search={search} 
                 buttons={buttons}
                 pagination={{
                     current: state.filter.page ?? 1,
@@ -165,10 +166,10 @@ const Banners = () => {
                 }}
                 setFilter={setFilter}
                 filter={state.filter}
-                ModalContent={(props) => <BannerForm {...(props as any)} />}
+                ModalContent={(props) => <PostCatalogForm {...(props as any)} />}
             />
         </>
     );
 };
 
-export default Banners;
+export default PostCatalogs;
