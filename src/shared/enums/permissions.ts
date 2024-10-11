@@ -141,10 +141,18 @@ export enum EPermissions {
   CREATE_PROJECT = "create_project",
   UPDATE_PROJECT = "update_project",
   DESTROY_PROJECT = "destroy_project",
+  
   // ? Banner
   LIST_BANNER = "list_banner",
   DETAIL_BANNER = "detail_banner",
   CREATE_BANNER = "create_banner",
   UPDATE_BANNER = "update_banner",
   DESTROY_BANNER = "destroy_banner",
+  
+  // ? Post
+  LIST_POST = "list_post",
+  DETAIL_POST = "detail_post",
+  CREATE_POST = "create_post",
+  UPDATE_POST = "update_post",
+  DESTROY_POST = "destroy_post",
 }

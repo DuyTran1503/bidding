@@ -332,7 +332,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                     />
                   </FormGroup>
                 </Col>
-              )}
+              )}  
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Mã số thuế">
                   <FormInput

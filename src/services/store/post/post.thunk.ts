@@ -1,34 +1,34 @@
 import { client } from "@/services/config/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { IBanner } from "./banner.model";
+import { IPost } from "./post.model";
 import { objectToFormData } from "@/shared/utils/common/formData";
 
-const prefix = "/api/admin/banners";
+const prefix = "/api/admin/posts";
 
-export const getAllBanners = createAsyncThunk("banner/get-all-banners", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const getAllPosts = createAsyncThunk("post/get-all-posts", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<IBanner[]>(prefix, payload);
+    const { response, data } = await client.get<IPost[]>(prefix, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }
 });
 
-export const getBannerById = createAsyncThunk("banner/get-banner-by-id", async (id: number | string, { rejectWithValue }) => {
+export const getPostById = createAsyncThunk("post/get-post-by-id", async (id: number | string, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<IBanner[]>(`${prefix}/${id}`);
+    const { response, data } = await client.get<IPost[]>(`${prefix}/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }
 });
 
-export const getBannerAllIds = createAsyncThunk(
-  "banner/get-banner-all-ids",
+export const getPostAllIds = createAsyncThunk(
+  "post/get-post-all-ids",
   async (payload: IThunkPayload, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.get<IBanner[]>(`${prefix}/all-ids`, payload);
+      const { response, data } = await client.get<IPost[]>(`${prefix}/all-ids`, payload);
       return response.status >= 400 ? rejectWithValue(data) : data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -36,7 +36,7 @@ export const getBannerAllIds = createAsyncThunk(
   },
 );
 
-// export const createBanner = createAsyncThunk("banner/create-banner", async (payload: IThunkPayload, { rejectWithValue }) => {
+// export const createPost = createAsyncThunk("post/create-post", async (payload: IThunkPayload, { rejectWithValue }) => {
 //   try {
 //     const { response, data } = await client.post(prefix, payload);
 //     return response.status >= 400 ? rejectWithValue(data) : data;
@@ -45,7 +45,7 @@ export const getBannerAllIds = createAsyncThunk(
 //   }
 // });
 
-export const createBanner = createAsyncThunk("banner/create-banner", async (request: Omit<IBanner, "id">, thunkAPI) => {
+export const createPost = createAsyncThunk("post/create-post", async (request: Omit<IPost, "id">, thunkAPI) => {
   try {
     const formData = objectToFormData(request);
 
@@ -71,9 +71,9 @@ export const createBanner = createAsyncThunk("banner/create-banner", async (requ
   }
 });
 
-export const updateBanner = createAsyncThunk("banner/update-banner", async (payload: IThunkPayload, thunkAPI) => {
+export const updatePost = createAsyncThunk("post/update-post", async (payload: IThunkPayload, thunkAPI) => {
   try {
-    const formData = objectToFormData(payload.body as IBanner);
+    const formData = objectToFormData(payload.body as IPost);
     formData.append("_method", "PUT")
 
     const accessToken = client.tokens.accessToken();
@@ -98,7 +98,7 @@ export const updateBanner = createAsyncThunk("banner/update-banner", async (payl
   }
 });
 
-export const deleteBanner = createAsyncThunk("banner/delete-banner", async (id: number | string, { rejectWithValue }) => {
+export const deletePost = createAsyncThunk("post/delete-post", async (id: number | string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.delete(`${prefix}/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : id;
@@ -106,8 +106,8 @@ export const deleteBanner = createAsyncThunk("banner/delete-banner", async (id: 
     return rejectWithValue(error.response.data);
   }
 });
-export const changeStatusBanner = createAsyncThunk(
-  "banner/change-status-banner",
+export const changeStatusPost = createAsyncThunk(
+  "post/change-status-post",
   async (id: string, { rejectWithValue }) => {
     try {
       const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);

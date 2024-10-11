@@ -63,6 +63,9 @@ import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/Upda
 import Banners from "@/pages/Banners/Banners/Banners";
 import DetailProject from "@/pages/Project/Detail";
 import ProcurementCategories from "@/pages/ProcurementCategories/ProcurementCategories";
+import PostCatalogs from "@/pages/PostCatalogs/PostCatalogs";
+import Posts from "@/pages/Posts/Posts/Posts";
+import CreatePost from "@/pages/Posts/CreatePost/CreatePost";
 
 export interface IRoute {
   path: string;
@@ -164,6 +167,15 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <ProcurementCategories />,
+              },
+            ],
+          },
+          {
+            path: "post-catalogs",
+            pages: [
+              {
+                path: "/",
+                element: () => <PostCatalogs />,
               },
             ],
           },
@@ -342,6 +354,19 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <Banners />,
+              },
+            ],
+          },
+          {
+            path: "posts",
+            pages: [
+              {
+                path: "/",
+                element: () => <Posts />,
+              },
+              {
+                path: "/create",
+                element: () => <CreatePost />,
               },
             ],
           },
