@@ -10,7 +10,6 @@ import {
   deletePostCatalog,
   getPostCatalogById,
   changeStatusPostCatalog,
-  getListPostCatalogs,
 } from "./postCatalog.thunk";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
@@ -18,14 +17,12 @@ import { IError } from "@/shared/interface/error";
 export interface IPostCatalogInitialState extends IInitialState {
   postCatalogs: IPostCatalog[];
   activePostCatalog: IPostCatalog | undefined;
-  listPostCatalogs: IPostCatalog[];
 }
 
 const initialState: IPostCatalogInitialState = {
   status: EFetchStatus.IDLE,
   message: "",
   postCatalogs: [],
-  listPostCatalogs: [],
   activePostCatalog: undefined,
   totalRecords: 0,
   totalPages: 0,
@@ -62,12 +59,7 @@ const postCatalogSlice = createSlice({
         state.message = transformPayloadErrors(payload?.errors);
       }
     });
-    builder.addCase(getListPostCatalogs.fulfilled, (state, { payload }: PayloadAction<IResponse<IPostCatalog[]> | any>) => {
-      if (payload.data) {
-        state.listPostCatalogs = payload.data.map((item: IPostCatalog) => ({ ...item, name: item.name }));
-        state.message = transformPayloadErrors(payload?.errors);
-      }
-    });
+    
     // ? Create selection method
     builder
       .addCase(createPostCatalog.pending, (state) => {

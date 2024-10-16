@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
-import { EButtonTypes } from "@/shared/enums/button";
 
 export interface IButtonProps {
   type?: "primary" | "ghost" | "secondary" | "third";
@@ -11,8 +10,7 @@ export interface IButtonProps {
   size?: "full";
   onClick?: () => void;
   className?: string;
-  handleClick?: (typeButton: EButtonTypes) => void;
-  kind?: "submit" | "reset" | "button" | undefined;
+  kind?: "submit" | "reset" | "button";
 }
 
 const Button = ({
@@ -24,8 +22,7 @@ const Button = ({
   size,
   className,
   onClick,
-  handleClick,
-  kind,
+  kind = "button",
 }: IButtonProps) => {
   const typeClass = {
     primary: "text-primary-600 border border-primary-500 hover:bg-primary-600 ",
@@ -40,10 +37,11 @@ const Button = ({
     secondary: "border-gray-400 border-t-black",
     third: "border-black border-[#d19b3d] ",
   };
+
   return (
     <button
       type={kind}
-      onClick={() => (onClick && !isDisabled && !isLoading ? onClick() : handleClick && handleClick(EButtonTypes.CREATE))}
+      onClick={() => !isDisabled && !isLoading && onClick?.()}
       className={clsx(
         "flex items-center justify-center gap-1 rounded-[8px] px-[12px] py-[7px] font-semibold leading-[22px] transition-opacity",
         typeClass[type],
@@ -55,8 +53,13 @@ const Button = ({
         },
         size === "full" && "w-full",
       )}
+      disabled={isDisabled || isLoading}
     >
-      {isLoading ? <div className={clsx(`${typeLoading[type]} h-4 w-4 animate-spin rounded-full border-2`)} /> : icon}
+      {isLoading ? (
+        <div className={clsx(`${typeLoading[type]} h-4 w-4 animate-spin rounded-full border-2`)} />
+      ) : (
+        icon
+      )}
       {text}
     </button>
   );
