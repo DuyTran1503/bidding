@@ -155,4 +155,11 @@ export enum EPermissions {
   CREATE_POST = "create_post",
   UPDATE_POST = "update_post",
   DESTROY_POST = "destroy_post",
+  
+  // ? Post_catalog
+  LIST_POST_CATALOG = "list_post_catalog",
+  DETAIL_POST_CATALOG = "detail_post_catalog",
+  CREATE_POST_CATALOG = "create_post_catalog",
+  UPDATE_POST_CATALOG = "update_post_catalog",
+  DESTROY_POST_CATALOG = "destroy_post_catalog",
 }

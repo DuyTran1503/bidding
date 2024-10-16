@@ -11,7 +11,6 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { EButtonTypes } from "@/shared/enums/button";
 import Button from "@/components/common/Button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { object, string } from "yup";
 import { useViewport } from "@/hooks/useViewport";
 import { IPostCatalog } from "@/services/store/postCatalog/postCatalog.model";
 import { createPostCatalog, updatePostCatalog } from "@/services/store/postCatalog/postCatalog.thunk";
@@ -20,7 +19,7 @@ import { IPostCatalogInitialState } from "@/services/store/postCatalog/postCatal
 interface IPostCatalogFormProps {
   type?: EButtonTypes;
   visible: boolean;
-  setVisible: Dispatch<SetStateAction<boolean>>; // Add setVisible prop
+  setVisible: Dispatch<SetStateAction<boolean>>;
   item?: IPostCatalog;
 }
 
@@ -34,18 +33,17 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
     description: item?.description || "",
     is_active: item?.is_active ? "1" : "0",
   };
-  const schema = object().shape({
-    name: string()
-      .trim()
-      .matches(/^[\p{L}0-9\s._`-]*$/u, "Không chứa ký tự đặc biệt không hợp lệ")
-      .max(255, "Số ký tự tối đa là 255 ký tự"),
-  });
-  const handleSubmit = (data: IPostCatalog) => {
+  const handleSubmit = (data: IPostCatalog, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index"),
     };
     if (type === EButtonTypes.CREATE) {
-      dispatch(createPostCatalog({ body }));
+      dispatch(createPostCatalog({ body }))
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });;
     } else if (type === EButtonTypes.UPDATE) {
       dispatch(updatePostCatalog({ body, param: item?.id }));
     }
@@ -55,6 +53,7 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
       setVisible(false);
     }
   }, [state.status]);
+
   return (
     <Dialog
       screenSize={screenSize}
@@ -86,27 +85,35 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
         </div>
       }
     >
-      <Formik innerRef={formikRef} validationSchema={schema} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormInput
-                  type="text"
-                  isDisabled={type === "view"}
-                  label="Tên danh mục bài viết"
-                  value={values.name}
-                  name="name"
-                  error={touched.name ? errors.name : ""}
-                  placeholder="Nhập tên danh mục bài viết..."
-                  onChange={(value) => setFieldValue("name", value)}
-                  onBlur={handleBlur}
-                />
+              <Col xs={24} sm={24} md={24} xl={24}>
+                <FormGroup title="Tên danh mục bài viết">
+                  <FormInput
+                    type="text"
+                    isDisabled={type === "view"}
+                    value={values.name}
+                    name="name"
+                    error={touched.name ? errors.name : ""}
+                    placeholder="Nhập tên danh mục bài viết..."
+                    onChange={(value) => setFieldValue("name", value)}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
               </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={24}>
+                <FormGroup title="Trạng thái">
+                  <FormSwitch
+                    checked={values.is_active === "1"}
+                    onChange={(value) => {
+                      setFieldValue("is_active", value ? "1" : "0");
+                    }}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Mô tả">
                   <FormCkEditor
                     id="description"
@@ -116,17 +123,6 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
                     disabled={type === EButtonTypes.VIEW}
                   />
                 </FormGroup>
-              </Col>
-            </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormSwitch
-                  label="Trạng thái"
-                  checked={values.is_active === "1"}
-                  onChange={(value) => {
-                    setFieldValue("is_active", value ? "1" : "0");
-                  }}
-                />
               </Col>
             </Row>
           </Form>

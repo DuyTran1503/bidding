@@ -39,7 +39,7 @@ const DetailTenderNotice = () => {
   return (
     <>
       <Heading
-        title="Chi tiết lịch sử đấu thầu"
+        title="Chi tiết thông báo đấu thầu"
         hasBreadcrumb
         buttons={[
           {

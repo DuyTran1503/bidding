@@ -13,9 +13,8 @@ import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { GoDownload } from "react-icons/go";
-import { IPostCatalogInitialState } from "@/services/store/postCatalog/postCatalog.slice";
+import { IPostCatalogInitialState, resetStatus, setFilter } from "@/services/store/postCatalog/postCatalog.slice";
 import { changeStatusPostCatalog, deletePostCatalog, getAllPostCatalogs } from "@/services/store/postCatalog/postCatalog.thunk";
-import { resetStatus, setFilter } from "@/services/store/account/account.slice";
 import PostCatalogForm from "./PostCatalogForm";
 
 const PostCatalogs = () => {
@@ -26,7 +25,6 @@ const PostCatalogs = () => {
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
-
             //   permission: EPermissions.DETAIL_POST_CATALOG,
         },
         {
@@ -88,8 +86,8 @@ const PostCatalogs = () => {
     const search: ISearchTypeTable[] = [
         {
             id: "name",
-            placeholder: "Nhập tên danh mục...",
-            label: "Tên danh mục",
+            placeholder: "Nhập tên vai trò...",
+            label: "Tên vai trò",
             type: "text",
         },
     ];
@@ -157,7 +155,7 @@ const PostCatalogs = () => {
             <ManagementGrid
                 columns={columns}
                 data={data}
-                search={search} 
+                search={search}
                 buttons={buttons}
                 pagination={{
                     current: state.filter.page ?? 1,
