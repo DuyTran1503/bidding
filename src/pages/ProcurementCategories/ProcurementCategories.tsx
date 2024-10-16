@@ -26,7 +26,6 @@ const ProcurementCategories = () => {
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
-
             //   permission: EPermissions.DETAIL_PROCUREMENT_CATEGORIE,
         },
         {
