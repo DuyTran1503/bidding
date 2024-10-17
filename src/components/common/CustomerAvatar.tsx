@@ -11,8 +11,7 @@ interface CustomerAvatarProps {
 }
 
 const CustomerAvatar: React.FC<CustomerAvatarProps> = ({ size = "medium", src, alt, className }) => {
-  const [imageSrc, setImageSrc] = useState<string | undefined>(src);
-
+  const [imageSrc, setImageSrc] = useState<string>(src);
   useEffect(() => {
     if (!imageSrc || imageSrc.trim() === "") {
       setImageSrc(imgFbDefault);
@@ -27,11 +26,11 @@ const CustomerAvatar: React.FC<CustomerAvatarProps> = ({ size = "medium", src, a
 
   return (
     <img
-      src={imageSrc}
+      src={`${import.meta.env.VITE_API_URL}/${src}` || imageSrc}
       alt={alt}
       className={clsx("rounded-circle object-cover", className, {
-        "h-[148px] w-[148px]": size === "large",
-        "h-[80px] w-[80px]": size === "medium",
+        "h-[80px] w-[80px]": size === "large",
+        "h-[40px] w-[40px]": size === "medium",
       })}
       onError={handleError}
     />
