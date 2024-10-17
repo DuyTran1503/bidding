@@ -43,7 +43,7 @@ const DetailProject = () => {
   return (
     <>
       <Heading
-        title="Chi tiết dự án "
+        title="Chi tiết dự án"
         hasBreadcrumb
         buttons={[
           {
@@ -56,7 +56,7 @@ const DetailProject = () => {
           },
         ]}
       />
-      <ActionModule type={EPageTypes.VIEW} formikRef={formikRef} project={data} />
+      <ActionModule type={EPageTypes.UPDATE} formikRef={formikRef} project={data} />
     </>
   );
 };
