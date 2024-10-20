@@ -74,11 +74,11 @@ export const createBanner = createAsyncThunk("banner/create-banner", async (requ
 export const updateBanner = createAsyncThunk("banner/update-banner", async (payload: IThunkPayload, thunkAPI) => {
   try {
     const formData = objectToFormData(payload.body as IBanner);
-    formData.append("_method", "PUT")
+    formData.append("_method", "PATCH")
 
     const accessToken = client.tokens.accessToken();
 
-    const response = await fetch(import.meta.env.VITE_API_URL + prefix, {
+    const response = await fetch(import.meta.env.VITE_API_URL + `${prefix}/${payload?.param}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,

@@ -66,6 +66,8 @@ import ProcurementCategories from "@/pages/ProcurementCategories/ProcurementCate
 import PostCatalogs from "@/pages/PostCatalogs/PostCatalogs";
 import Posts from "@/pages/Posts/Posts/Posts";
 import CreatePost from "@/pages/Posts/CreatePost/CreatePost";
+import UpdatePost from "@/pages/Posts/UpdatePost/UpdatePost";
+import DetailPost from "@/pages/Posts/DetailPost/DetailPost";
 
 export interface IRoute {
   path: string;
@@ -367,6 +369,14 @@ export const routes: IRoute[] = [
               {
                 path: "/create",
                 element: () => <CreatePost />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdatePost />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailPost />,
               },
             ],
           },

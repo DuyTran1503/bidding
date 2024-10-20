@@ -1,10 +1,12 @@
 export interface IPost {
-    id: string;
-    author_id: string;
+   id: string;
+    // author_id: string;
+    author_name?: string;
+    post_catalog_id: number[];
+    post_catalog_name?: string[];
     short_title: string;
     title: string;
     content: string;
-    thumbnail?: File;
-    document?: File;
-    is_active: string;
+    thumbnail?: File | string;
+    status: number;
 }
