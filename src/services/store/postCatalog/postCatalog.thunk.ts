@@ -16,14 +16,6 @@ export const getAllPostCatalogs = createAsyncThunk(
     }
   },
 );
-// export const getListPostCatalogs = createAsyncThunk("post-catalog/get-list-post-catalogs", async (_, { rejectWithValue }) => {
-//   try {
-//     const { response, data } = await client.get<IPostCatalog[]>(`/api/admin/list-post-catalogs`);
-//     return response.status >= 400 ? rejectWithValue(data) : data;
-//   } catch (error: any) {
-//     return rejectWithValue(error.response.data);
-//   }
-// });
 export const getPostCatalogById = createAsyncThunk(
   "post-catalog/get-post-catalog-by-id",
   async (id: number | string, { rejectWithValue }) => {

@@ -16,31 +16,11 @@ export const getAllProcurementCategories = createAsyncThunk(
     }
   },
 );
-export const getListProcurementCategories = createAsyncThunk("procurement-categorie/get-list-procurement-categories", async (_, { rejectWithValue }) => {
-  try {
-    const { response, data } = await client.get<IProcurementCategorie[]>(`/api/admin/list-procurement-categories`);
-    return response.status >= 400 ? rejectWithValue(data) : data;
-  } catch (error: any) {
-    return rejectWithValue(error.response.data);
-  }
-});
 export const getProcurementCategorieById = createAsyncThunk(
   "procurement-categorie/get-procurement-categorie-by-id",
   async (id: number | string, { rejectWithValue }) => {
     try {
       const { response, data } = await client.get<IProcurementCategorie[]>(`${prefix}/${id}`);
-      return response.status >= 400 ? rejectWithValue(data) : data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
-
-export const getProcurementCategorieAllIds = createAsyncThunk(
-  "procurement-categorie/get-procurement-categorie-all-ids",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
-    try {
-      const { response, data } = await client.get<IProcurementCategorie[]>(`${prefix}/all-ids`, payload);
       return response.status >= 400 ? rejectWithValue(data) : data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -87,7 +67,7 @@ export const changeStatusProcurementCategorie = createAsyncThunk(
   "procurement-categorie/change-status-procurement-categorie",
   async (id: string, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
+      const { response, data } = await client.put(`${prefix}/${id}/changeActive`);
       return response.status >= 400 ? rejectWithValue(data) : id;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

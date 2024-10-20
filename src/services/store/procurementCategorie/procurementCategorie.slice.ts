@@ -10,7 +10,6 @@ import {
   deleteProcurementCategorie,
   getProcurementCategorieById,
   changeStatusProcurementCategorie,
-  getListProcurementCategories,
 } from "./procurementCategorie.thunk";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
@@ -18,7 +17,6 @@ import { IError } from "@/shared/interface/error";
 export interface IProcurementCategorieInitialState extends IInitialState {
   procurementCategories: IProcurementCategorie[];
   activeProcurementCategorie: IProcurementCategorie | undefined;
-  listProcurementCategories: IProcurementCategorie[];
 }
 
 const initialState: IProcurementCategorieInitialState = {
@@ -59,12 +57,6 @@ const procurementCategorieSlice = createSlice({
     builder.addCase(getProcurementCategorieById.fulfilled, (state, { payload }: PayloadAction<IResponse<IProcurementCategorie> | any>) => {
       if (payload.data) {
         state.activeProcurementCategorie = payload.data;
-        state.message = transformPayloadErrors(payload?.errors);
-      }
-    });
-    builder.addCase(getListProcurementCategories.fulfilled, (state, { payload }: PayloadAction<IResponse<IProcurementCategorie[]> | any>) => {
-      if (payload.data) {
-        state.listProcurementCategories = payload.data.map((item: IProcurementCategorie) => ({ ...item, name: item.name }));
         state.message = transformPayloadErrors(payload?.errors);
       }
     });
@@ -117,6 +109,8 @@ const procurementCategorieSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
+
+    // Đổi trạng thái
     builder
       .addCase(changeStatusProcurementCategorie.pending, (state) => {
         state.status = EFetchStatus.PENDING;

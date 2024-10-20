@@ -16,7 +16,7 @@ import { IError } from '@/shared/interface/error';
 
 export interface IPostInitialState extends IInitialState {
   posts: IPost[];
-  activePost: IPost | undefined;
+  activePost: IPost | any;
 }
 
 const initialState: IPostInitialState = {

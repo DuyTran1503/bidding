@@ -13,9 +13,8 @@ import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { GoDownload } from "react-icons/go";
-import { IProcurementCategorieInitialState } from "@/services/store/procurementCategorie/procurementCategorie.slice";
-import { changeStatusProcurementCategorie, deleteProcurementCategorie, getAllProcurementCategories } from "@/services/store/procurementCategorie/procurementCategorie.thunk";
-import { resetStatus, setFilter } from "@/services/store/account/account.slice";
+import { IProcurementCategorieInitialState, resetStatus, setFilter } from "@/services/store/procurementCategorie/procurementCategorie.slice";
+import { changeStatusProcurementCategorie, deleteProcurementCategorie, getAllProcurementCategories, } from "@/services/store/procurementCategorie/procurementCategorie.thunk";
 import ProcurementCategorieForm from "./ProcurementCategorieForm";
 
 const ProcurementCategories = () => {
@@ -156,7 +155,7 @@ const ProcurementCategories = () => {
             <ManagementGrid
                 columns={columns}
                 data={data}
-                search={search} 
+                search={search}
                 buttons={buttons}
                 pagination={{
                     current: state.filter.page ?? 1,

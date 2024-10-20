@@ -36,15 +36,6 @@ export const getPostAllIds = createAsyncThunk(
   },
 );
 
-// export const createPost = createAsyncThunk("post/create-post", async (payload: IThunkPayload, { rejectWithValue }) => {
-//   try {
-//     const { response, data } = await client.post(prefix, payload);
-//     return response.status >= 400 ? rejectWithValue(data) : data;
-//   } catch (error: any) {
-//     return rejectWithValue(error.response.data);
-//   }
-// });
-
 export const createPost = createAsyncThunk("post/create-post", async (request: Omit<IPost, "id">, thunkAPI) => {
   try {
     const formData = objectToFormData(request);
@@ -74,11 +65,11 @@ export const createPost = createAsyncThunk("post/create-post", async (request: O
 export const updatePost = createAsyncThunk("post/update-post", async (payload: IThunkPayload, thunkAPI) => {
   try {
     const formData = objectToFormData(payload.body as IPost);
-    formData.append("_method", "PUT")
+    formData.append("_method", "PUT");
 
     const accessToken = client.tokens.accessToken();
 
-    const response = await fetch(import.meta.env.VITE_API_URL + prefix, {
+    const response = await fetch(import.meta.env.VITE_API_URL + `${prefix}/${payload?.param}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
