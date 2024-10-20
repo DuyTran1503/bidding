@@ -17,6 +17,7 @@ import { changeStatusBanner, deleteBanner, getAllBanners } from "@/services/stor
 import { GoDownload } from "react-icons/go";
 import BannerForm from "../BannerForm";
 import { EPermissions } from "@/shared/enums/permissions";
+import Image from "@/components/table/Image";
 
 const Banners = () => {
     const { state, dispatch } = useArchive<IBannerInitialState>("banner");
@@ -41,7 +42,7 @@ const Banners = () => {
         },
     ];
 
-    const columns: ColumnsType<ITableData> = [
+    const columns: ColumnsType = [
         {
             dataIndex: "index",
             title: "STT",
@@ -49,15 +50,15 @@ const Banners = () => {
         {
             dataIndex: "name",
             title: "Tên Banner",
-            className: "w-[300px]",
         },
         {
             dataIndex: "path",
-            title: "Link",
+            title: "Ảnh banner",
             render(_, record) {
-                return <div dangerouslySetInnerHTML={{ __html: record?.path || "" }} className="text-compact-3"></div>;
+                return <Image imageSrc={"https://base.septenarysolution.site/" + record.path} />;
             },
         },
+
         {
             title: "Trạng thái",
             dataIndex: "is_active",

@@ -11,7 +11,6 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { EButtonTypes } from "@/shared/enums/button";
 import Button from "@/components/common/Button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { object, string } from "yup";
 import { useViewport } from "@/hooks/useViewport";
 import { IProcurementCategorie } from "@/services/store/procurementCategorie/procurementCategorie.model";
 import { createProcurementCategorie, updateProcurementCategorie } from "@/services/store/procurementCategorie/procurementCategorie.thunk";
@@ -34,18 +33,17 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
     description: item?.description || "",
     is_active: item?.is_active ? "1" : "0",
   };
-  const schema = object().shape({
-    name: string()
-      .trim()
-      .matches(/^[\p{L}0-9\s._`-]*$/u, "Không chứa ký tự đặc biệt không hợp lệ")
-      .max(255, "Số ký tự tối đa là 255 ký tự"),
-  });
-  const handleSubmit = (data: IProcurementCategorie) => {
+  const handleSubmit = (data: IProcurementCategorie, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index"),
     };
     if (type === EButtonTypes.CREATE) {
-      dispatch(createProcurementCategorie({ body }));
+      dispatch(createProcurementCategorie({ body }))
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });;;
     } else if (type === EButtonTypes.UPDATE) {
       dispatch(updateProcurementCategorie({ body, param: item?.id }));
     }
@@ -86,27 +84,35 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
         </div>
       }
     >
-      <Formik innerRef={formikRef} validationSchema={schema} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormInput
-                  type="text"
-                  isDisabled={type === "view"}
-                  label="Tên loại hình MSC"
-                  value={values.name}
-                  name="name"
-                  error={touched.name ? errors.name : ""}
-                  placeholder="Nhập tên loại hình MSC..."
-                  onChange={(value) => setFieldValue("name", value)}
-                  onBlur={handleBlur}
-                />
+              <Col xs={24} sm={24} md={24} xl={24}>
+                <FormGroup title="Tên loại hình MSC">
+                  <FormInput
+                    type="text"
+                    isDisabled={type === "view"}
+                    value={values.name}
+                    name="name"
+                    error={touched.name ? errors.name : ""}
+                    placeholder="Nhập tên loại hình MSC..."
+                    onChange={(value) => setFieldValue("name", value)}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
               </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={24}>
+                <FormGroup title="Trạng thái">
+                  <FormSwitch
+                    checked={values.is_active === "1"}
+                    onChange={(value) => {
+                      setFieldValue("is_active", value ? "1" : "0");
+                    }}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Mô tả">
                   <FormCkEditor
                     id="description"
@@ -116,17 +122,6 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
                     disabled={type === EButtonTypes.VIEW}
                   />
                 </FormGroup>
-              </Col>
-            </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormSwitch
-                  label="Trạng thái"
-                  checked={values.is_active === "1"}
-                  onChange={(value) => {
-                    setFieldValue("is_active", value ? "1" : "0");
-                  }}
-                />
               </Col>
             </Row>
           </Form>

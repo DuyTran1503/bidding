@@ -83,15 +83,10 @@ const bannerSlice = createSlice({
       .addCase(updateBanner.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(updateBanner.fulfilled, (state, { payload }: PayloadAction<IResponse<IBanner> | any>) => {
+      .addCase(updateBanner.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Cập nhập thành công";
-        if (payload.data) {
-          const index = state.banners.findIndex((type) => type.id === payload.data.id);
-          if (index !== -1) {
-            state.banners[index] = payload.data;
-          }
-        }
+        
       })
       .addCase(updateBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
