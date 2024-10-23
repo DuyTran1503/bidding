@@ -10,14 +10,17 @@ import { resetStatus, setFilter } from "@/services/store/account/account.slice";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { changeStatusBidBond, deleteBidBond, getAllBidBonds } from "@/services/store/bid_bond/bidBond.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
+import { domesticEnumArray } from "@/shared/enums/domestic";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
+import { mappingBidBond, TypeBidBond } from "@/shared/enums/types";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
+import ActionModule from "./ActionModule";
 
 const BidBonds = () => {
   const navigate = useNavigate();
@@ -28,24 +31,18 @@ const BidBonds = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
-      onClick(record) {
-        navigate(`/bidbonds/detail/${record?.key}`);
-      },
-      permission: EPermissions.DETAIL_BIDBOND,
+      // permission: EPermissions.DETAIL_BID_BOND,
     },
     {
       type: EButtonTypes.UPDATE,
-      onClick(record) {
-        navigate(`/bidbonds/update/${record?.key}`);
-      },
-      permission: EPermissions.UPDATE_BIDBOND,
+      // permission: EPermissions.UPDATE_BID_BOND,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteBidBond(record?.key));
       },
-      permission: EPermissions.DESTROY_BIDBOND,
+      // permission: EPermissions.DESTROY_BID_BOND,
     },
   ];
 
@@ -60,25 +57,28 @@ const BidBonds = () => {
       title: "STT",
     },
     {
-      dataIndex: "name",
+      dataIndex: "bond_number",
+      title: "Mã bảo lãnh",
+    },
+    {
+      dataIndex: "enterprise_id",
       title: "Tên nguồn tài trợ",
       className: "w-[250px]",
     },
     {
-      dataIndex: "type",
+      dataIndex: "bond_type",
       title: "Loại nguồn tài trợ",
+      render(_, record) {
+        return <div className="flex flex-col">{mappingBidBond[record?.bond_type as TypeBidBond]}</div>;
+      },
+    },
+    {
+      dataIndex: "project_id",
+      title: "Dự án",
     },
     {
       dataIndex: "bond_amount",
-      title: "Mã",
-    },
-    {
-      dataIndex: "desciption",
-      title: "Mô tả",
-      className: " text-compact-3 h-[90px]",
-      render(_, record) {
-        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
-      },
+      title: "Số tiền bảo lãnh",
     },
     {
       title: "Trạng thái",
@@ -103,26 +103,15 @@ const BidBonds = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.bidBonds && state.bidBonds.length > 0
-        ? state.bidBonds.map(
-            (
-              { id, project_id, bidder_id, bond_amount, bond_type, bond_number, issuer, issue_date, expiry_date, scan_document, notes, status },
-              index,
-            ) => ({
-              index: index + 1,
-              key: id,
-              project_id,
-              bidder_id,
-              bond_amount,
-              bond_type,
-              bond_number,
-              issuer,
-              issue_date,
-              expiry_date,
-              scan_document,
-              notes,
-              status,
-            }),
-          )
+        ? state.bidBonds.map(({ id, project_id, bond_amount, bond_type, bond_number, enterprise_id }, index) => ({
+            index: index + 1,
+            key: id,
+            project_id,
+            bond_amount,
+            bond_type,
+            bond_number,
+            enterprise_id,
+          }))
         : [],
     [JSON.stringify(state.bidBonds)],
   );
@@ -164,6 +153,7 @@ const BidBonds = () => {
     <>
       <Heading
         title="Bão lãnh dự thầu"
+        ModalContent={(props) => <ActionModule {...(props as any)} />}
         hasBreadcrumb
         buttons={[
           {
@@ -172,11 +162,9 @@ const BidBonds = () => {
             icon: <GoDownload className="text-[18px]" />,
           },
           {
-            text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
-            onClick: () => {
-              navigate("create");
-            },
+            permission: EPermissions.CREATE_BANNER,
+            text: "Thêm mới",
           },
         ]}
       />
@@ -202,6 +190,7 @@ const BidBonds = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
+        ModalContent={(props) => <ActionModule {...(props as any)} />}
       />
     </>
   );
