@@ -124,6 +124,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "project",
           permissions: EPermissions.LIST_BID_DOCUMENT,
         },
+        {
+          id: "4.4",
+          label: "Bảo lãnh dự thầu",
+          path: "bid-bond",
+          // permissions: EPermissions.LIST_BID_BOND,
+        },
       ],
     },
     {
