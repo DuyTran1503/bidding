@@ -91,14 +91,12 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
     location: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     funding_source_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     tender_package_price: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    description: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     submission_deadline: date().required("Vui lòng không để trống trường này"),
     invest_total: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
     tender_date: date().required("Vui lòng không để trống trường này"),
     enterprise_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     technical_requirements: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     attached_documents: array().min(1, "Vui lòng chọn ít nhất một tài liệu đính kèm"),
-    end_bidding: date().required("Vui lòng không để trống trường này"),
     start_bidding: date().required("Vui lòng không để trống trường này"),
     location_bidding: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     start_time: date().required("Vui lòng không để trống trường này"),
@@ -137,6 +135,8 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
+        console.log(errors);
+
         return (
           <Form>
             <Row gutter={[24, 12]}>
@@ -388,7 +388,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                     label="Ngày kết thúc đấu thầu"
                     minDate={values.start_time ? dayjs(values.bid_submission_end) : undefined}
                     value={values.end_time ? dayjs(values.end_time) : null}
-                    onChange={(date) => setFieldValue(".end_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+                    onChange={(date) => setFieldValue("end_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
                 </FormGroup>
               </Col>
