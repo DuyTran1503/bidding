@@ -62,6 +62,7 @@ import CreateBiddingResult from "@/pages/BiddingResults/CreateBiddingResult/Crea
 import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/UpdateBiddingResult";
 import Banners from "@/pages/Banners/Banners/Banners";
 import DetailProject from "@/pages/Project/Detail";
+import BidBonds from "@/pages/BidBond";
 
 export interface IRoute {
   path: string;
@@ -351,6 +352,27 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <BidDocument />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBidDocument />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBidDocument />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBidDocument />,
+              },
+            ],
+          },
+          {
+            path: "bid-bond",
+            pages: [
+              {
+                path: "/",
+                element: () => <BidBonds />,
               },
               {
                 path: "/create",
