@@ -2,7 +2,16 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { commonStaticReducers } from "@/services/shared";
-import { approveProject, changeStatusProject, createProject, deleteProject, getAllProject, getProjectById, updateProject } from "./project.thunk.ts";
+import {
+  approveProject,
+  changeStatusProject,
+  createProject,
+  deleteProject,
+  getAllProject,
+  getListProject,
+  getProjectById,
+  updateProject,
+} from "./project.thunk.ts";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IProject } from "./project.model.ts";
@@ -10,10 +19,12 @@ import { IProject } from "./project.model.ts";
 export interface IProjectInitialState extends IInitialState {
   projects: IProject[];
   project?: IProject | any;
+  listProjects?: IProject[];
 }
 const initialState: IProjectInitialState = {
   status: EFetchStatus.IDLE,
   projects: [],
+  listProjects: [],
   project: undefined,
   message: "",
   error: undefined,
@@ -121,6 +132,16 @@ const projectSlice = createSlice({
       })
       .addCase(deleteProject.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
+      });
+
+    builder
+      .addCase(getListProject.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        if (payload.data) {
+          state.listProjects = payload.data;
+        }
+      })
+      .addCase(getListProject.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors);
       });
   },
 });
