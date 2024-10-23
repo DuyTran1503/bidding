@@ -102,3 +102,11 @@ export const approveProject = createAsyncThunk("projects/approve-projects", asyn
     return rejectWithValue(error.response.data);
   }
 });
+export const getListProject = createAsyncThunk("staff/list-projects", async (_, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IProject[]>(`/api/admin/list-projects`);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});

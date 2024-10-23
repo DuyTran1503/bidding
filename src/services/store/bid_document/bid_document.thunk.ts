@@ -4,7 +4,7 @@ import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IError } from "@/shared/interface/error";
 import { IBidDocument } from "./bid_document.model";
 
-const prefix = "/api/admin/bid_document";
+const prefix = "/api/admin/bid-documents";
 
 export const getAllBidDocument = createAsyncThunk("staff/get-all-bid_document", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
