@@ -140,4 +140,11 @@ export enum EPermissions {
   CREATE_BANNER = "create_banner",
   UPDATE_BANNER = "update_banner",
   DESTROY_BANNER = "destroy_banner",
+
+  // Bảo lãnh dự thầu
+  LIST_BID_BOND = "list_bidbond",
+  DETAIL_BID_BOND = "detail_bidbond",
+  CREATE_BID_BOND = "create_bidbond",
+  UPDATE_BID_BOND = "update_bidbond",
+  DESTROY_BID_BOND = "destroy_bidbond",
 }
