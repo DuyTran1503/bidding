@@ -80,19 +80,19 @@ const BidBonds = () => {
       dataIndex: "bond_amount",
       title: "Số tiền bảo lãnh",
     },
-    {
-      title: "Trạng thái",
-      dataIndex: "is_active",
-      render(_, record) {
-        return (
-          <CommonSwitch
-            onChange={() => handleChangeStatus(record)}
-            checked={!!record.is_active}
-            title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
-          />
-        );
-      },
-    },
+    // {
+    //   title: "Trạng thái",
+    //   dataIndex: "is_active",
+    //   render(_, record) {
+    //     return (
+    //       <CommonSwitch
+    //         onChange={() => handleChangeStatus(record)}
+    //         checked={!!record.is_active}
+    //         title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
+    //       />
+    //     );
+    //   },
+    // },
   ];
 
   const handleChangeStatus = (item: ITableData) => {
