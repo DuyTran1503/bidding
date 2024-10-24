@@ -27,6 +27,8 @@ import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk"
 import { convertDataOptions } from "../Project/helper";
 import { getListProject } from "@/services/store/project/project.thunk";
 import { createBidBond, updateBidBond } from "@/services/store/bid_bond/bidBond.thunk";
+import FormCkEditor from "@/components/form/FormCkEditor";
+import { EPageTypes } from "@/shared/enums/page";
 
 interface IBidBondFormProps {
   type?: EButtonTypes;
@@ -43,6 +45,8 @@ export interface IBidBondValues {
 }
 
 const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) => {
+  console.log(item);
+
   const formikRef = useRef<FormikProps<IBidBond>>(null);
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
@@ -50,13 +54,15 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
   const { screenSize } = useViewport();
   const initialValues: IBidBond = {
     id: item?.id || "",
-    project_id: item?.project_id || "",
-    enterprise_id: item?.enterprise_id ?? "",
+    project_id: item?.project_id || undefined,
+    enterprise_id: item?.enterprise_id ?? undefined,
     bond_amount: 0,
-    bond_type: "",
+    bond_type: undefined,
     bond_number: "",
     issue_date: "",
     expiry_date: "",
+    description: "",
+    bond_amount_in_words: "",
   };
   const handleSubmit = (data: IBidBond) => {
     const body = {
@@ -141,7 +147,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                   label="Người hoặc tổ chức bảo lãnh"
                   value={values.enterprise_id}
                   id="enterprise_id"
-                  placeholder="Nhập tên dự án..."
+                  placeholder="Chọn người hoặc tổ chức bảo lãnh"
                   onChange={(value) => setFieldValue("enterprise_id", value)}
                 />
               </Col>
@@ -181,6 +187,18 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                 />
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormInput
+                  type="text"
+                  isDisabled={type === "view"}
+                  label="Số tiền bảo bằng chữ"
+                  value={values.bond_amount_in_words}
+                  name="bond_amount_in_words"
+                  placeholder="Nhập số tiền bảo lãnh bằng chữ..."
+                  onChange={(value) => setFieldValue("bond_amount_in_words", value)}
+                  onBlur={handleBlur}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormDate
                   disabled={type === "view"}
                   label="Ngày phát hành"
@@ -192,8 +210,18 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                 <FormDate
                   disabled={type === "view"}
                   label="Ngày hết hạn"
+                  minDate={values.issue_date ? dayjs(values.issue_date).add(1, "day") : undefined}
                   value={values.expiry_date ? dayjs(values.expiry_date) : null}
                   onChange={(date) => setFieldValue("expiry_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormCkEditor
+                  id="description"
+                  direction="vertical"
+                  value={String(values?.description)}
+                  setFieldValue={setFieldValue}
+                  disabled={type === EButtonTypes.VIEW}
                 />
               </Col>
             </Row>
