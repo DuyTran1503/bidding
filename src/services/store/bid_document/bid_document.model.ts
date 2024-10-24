@@ -1,8 +1,8 @@
 export interface IBidDocument {
   id: number | string;
-  id_project: number;
-  id_enterprise: number;
-  id_bid_bond: number;
+  project_id?: number;
+  enterprise_id: number;
+  bid_bond_id: number;
   submission_date?: string;
   bid_price: string;
   implementation_time?: string;
