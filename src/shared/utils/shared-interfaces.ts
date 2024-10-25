@@ -20,6 +20,7 @@ export interface IThunkPayload {
   param?: string;
   headers?: IFetchHeaders;
   id?: string;
+  status?: string
 }
 
 export interface ISearchParams {

@@ -120,9 +120,7 @@ export enum EPermissions {
   // ? Kết quả đấu thầu
   LIST_BIDDING_RESULT = "list_bidding_result",
   DETAIL_BIDDING_RESULT = "detail_bidding_result",
-  CREATE_BIDDING_RESULT = "create_bidding_result",
-  UPDATE_BIDDING_RESULT = "update_bidding_result",
-  DESTROY_BIDDING_RESULT = "destroy_bidding_result",
+  
   //Bảo lãnh dự thầu
   LIST_BIDBOND = "list_bidbond",
   DETAIL_BIDBOND = "detail_bidbond",
@@ -162,4 +160,11 @@ export enum EPermissions {
   CREATE_POST_CATALOG = "create_post_catalog",
   UPDATE_POST_CATALOG = "update_post_catalog",
   DESTROY_POST_CATALOG = "destroy_post_catalog",
+  
+  // ? Support
+  LIST_SUPPORT = "list_support",
+  DETAIL_SUPPORT = "detail_support",
+  CREATE_SUPPORT = "create_support",
+  UPDATE_SUPPORT = "update_support",
+  DESTROY_SUPPORT = "destroy_support",
 }
