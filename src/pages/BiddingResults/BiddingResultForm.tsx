@@ -10,8 +10,6 @@ import FormSwitch from "@/components/form/FormSwitch";
 import { createBiddingResult, updateBiddingResult } from "@/services/store/biddingResult/biddingResult.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import FormCkEditor from "@/components/form/FormCkEditor";
-import FormDate from "@/components/form/FormDate";
-import dayjs from "dayjs";
 
 interface IBiddingResultFormProps {
     formikRef?: any;
@@ -20,9 +18,8 @@ interface IBiddingResultFormProps {
 }
 
 export interface IBiddingResultFormInitialValues {
-    project_id: string;
-    enterprise_id: string;
-    amount: string;
+    project: string;
+    enterprise: string;
     decision_number: string;
     decision_date: string;
     is_active: string;
@@ -32,9 +29,8 @@ const BiddingResultForm = ({ formikRef, type, biddingResult }: IBiddingResultFor
     const { dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
 
     const initialValues: IBiddingResultFormInitialValues = {
-        project_id: biddingResult?.project_id || "",
-        enterprise_id: biddingResult?.enterprise_id || "",
-        amount: biddingResult?.amount || "",
+        project: biddingResult?.project || "",
+        enterprise: biddingResult?.enterprise || "",
         decision_number: biddingResult?.decision_number || "",
         decision_date: biddingResult?.decision_date || "",
         is_active: biddingResult?.is_active ? "1" : "0",
@@ -75,9 +71,9 @@ const BiddingResultForm = ({ formikRef, type, biddingResult }: IBiddingResultFor
                                     type="text"
                                     isDisabled={type === "view"}
                                     label="Tên loại sự kiện đấu thầu"
-                                    value={values.enterprise_id}
-                                    name="enterprise_id"
-                                    error={touched.enterprise_id ? errors.enterprise_id : ""}
+                                    value={values.enterprise}
+                                    name="enterprise"
+                                    error={touched.enterprise ? errors.enterprise : ""}
                                     placeholder="Nhập loại sự kiện đấu thầu..."
                                     onChange={(value) => setFieldValue("name", value)}
                                     onBlur={handleBlur}
@@ -90,16 +86,6 @@ const BiddingResultForm = ({ formikRef, type, biddingResult }: IBiddingResultFor
                                     onChange={(value) => {
                                         setFieldValue("is_active", value ? "1" : "0");
                                     }}
-                                />
-                            </Col>
-                        </Row>
-                        <Row gutter={[24, 24]}>
-                            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                                <FormDate
-                                    disabled={type === EPageTypes.VIEW}
-                                    label="Ngày gia nhập"
-                                    value={values.amount ? dayjs(values.amount) : null}
-                                    onChange={(date) => setFieldValue("amount", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                                 />
                             </Col>
                             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">

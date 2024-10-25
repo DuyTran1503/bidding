@@ -1,5 +1,3 @@
-import ConfirmModal from "@/components/common/CommonModal";
-import CommonSwitch from "@/components/common/CommonSwitch";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
@@ -9,95 +7,59 @@ import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo, useState } from "react";
-import { FaPlus } from "react-icons/fa6";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IBiddingResultInitialState, resetStatus, setFilter } from "@/services/store/biddingResult/biddingResult.slice";
-import { changeStatusBiddingResult, deleteBiddingResult, getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
-import { EPermissions } from "@/shared/enums/permissions";
+import { getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
+// import { EPermissions } from "@/shared/enums/permissions";
 import { GoDownload } from "react-icons/go";
 
 const BiddingResults = () => {
     const navigate = useNavigate();
     const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
-    const [isModal, setIsModal] = useState(false);
-    const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
 
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
             onClick(record) {
-                navigate(`update/${record?.key}`);
+                navigate(`detail/${record?.key}`);
             },
-            permission: EPermissions.DETAIL_BIDDING_RESULT,
-        },
-        {
-            type: EButtonTypes.UPDATE,
-            onClick(record) {
-                navigate(`update/${record?.key}`);
-            },
-            permission: EPermissions.UPDATE_BIDDING_RESULT,
-        },
-        {
-            type: EButtonTypes.DESTROY,
-            onClick(record) {
-                dispatch(deleteBiddingResult(record?.key));
-            },
-            permission: EPermissions.DESTROY_BIDDING_RESULT,
+            // permission: EPermissions.DETAIL_BIDDING_RESULT,
         },
     ];
 
-    const columns: ColumnsType<ITableData> = [
+    const columns: ColumnsType = [
         {
             dataIndex: "index",
             title: "STT",
         },
         {
-            dataIndex: "amount",
-            title: "Amount",
+            dataIndex: "project",
+            title: "Tên dự án",
+            render: (_, record) => {
+                return <span>{record.project?.name || "Không có tên dự án"}</span>;
+            },
         },
         {
-            dataIndex: "project_id",
-            title: "Project_id",
+            dataIndex: "project",
+            title: "Tổng chi phí",
+            render: (_, record) => {
+                return <span>{record.project?.total_amount || "Không có tên dự án"}</span>;
+            },
         },
         {
-            dataIndex: "enterprise_id",
-            title: "Enterprise_id",
-        },
-        {
-            dataIndex: "decision_number",
-            title: "Decision_number",
+            dataIndex: "enterprise",
+            title: "Doanh nghiệp trúng thầu",
+            render: (_, record) => {
+                return <span>{record.enterprise?.address || "Không có tên dự án"}</span>;
+            },
         },
         {
             dataIndex: "decision_date",
-            title: "Decision_date",
-        },
-        {
-            title: "Trạng thái",
-            dataIndex: "is_active",
-            render(_, record) {
-                return (
-                    <CommonSwitch
-                        onChange={() => handleChangeStatus(record)}
-                        checked={!!record.is_active}
-                        title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} lĩnh vực này?`}
-                    />
-                );
-            },
-        },
-    ];
-
-    const handleChangeStatus = (item: ITableData) => {
-        setIsModal(true);
-        setConfirmItem(item);
-    };
-
-    const onConfirmStatus = () => {
-        if (confirmItem && confirmItem.key) {
-            dispatch(changeStatusBiddingResult(String(confirmItem.key)));
+            title: "Thời gian kết thúc",
         }
-    };
+    ];
 
     const search: ISearchTypeTable[] = [
         {
@@ -111,12 +73,11 @@ const BiddingResults = () => {
     const data: ITableData[] = useMemo(
         () =>
             state.biddingResults && state.biddingResults.length > 0
-                ? state.biddingResults.map(({ id, project_id, enterprise_id, amount, decision_number, decision_date, is_active }, index) => ({
+                ? state.biddingResults.map(({ id, project, enterprise, decision_number, decision_date, is_active }, index) => ({
                     index: index + 1,
                     key: id,
-                    project_id,
-                    enterprise_id,
-                    amount,
+                    project,
+                    enterprise,
                     decision_number,
                     decision_date,
                     is_active,
@@ -155,20 +116,7 @@ const BiddingResults = () => {
                         type: "ghost",
                         icon: <GoDownload className="text-[18px]" />,
                     },
-                    {
-                        icon: <FaPlus className="text-[18px]" />,
-                        permission: EPermissions.CREATE_BIDDING_RESULT,
-                        text: "Thêm mới",
-                        onClick: () => navigate("create"),
-                    },
                 ]}
-            />
-            <ConfirmModal
-                title={"Xác nhận"}
-                content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
-                visible={isModal}
-                setVisible={setIsModal}
-                onConfirm={onConfirmStatus}
             />
             <ManagementGrid
                 columns={columns}

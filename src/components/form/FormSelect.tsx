@@ -6,7 +6,7 @@ interface IFormSelect {
   label?: string;
   placeholder?: string;
   options: IOption[];
-  defaultValue?: number[] | string[];
+  defaultValue?: number[] | string[] | string | number;
   value?: string[] | number[];
   isMultiple?: boolean;
   error?: string;

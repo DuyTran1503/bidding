@@ -58,8 +58,6 @@ import CreateProject from "@/pages/Project/Create";
 import UpdateProject from "@/pages/Project/Update";
 import ApproveProject from "@/pages/Project/Approve";
 import BiddingResults from "@/pages/BiddingResults/BiddingResults/BiddingResults";
-import CreateBiddingResult from "@/pages/BiddingResults/CreateBiddingResult/CreateBiddingResult";
-import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/UpdateBiddingResult";
 import Banners from "@/pages/Banners/Banners/Banners";
 import DetailProject from "@/pages/Project/Detail";
 import ProcurementCategories from "@/pages/ProcurementCategories/ProcurementCategories";
@@ -68,6 +66,10 @@ import Posts from "@/pages/Posts/Posts/Posts";
 import CreatePost from "@/pages/Posts/CreatePost/CreatePost";
 import UpdatePost from "@/pages/Posts/UpdatePost/UpdatePost";
 import DetailPost from "@/pages/Posts/DetailPost/DetailPost";
+import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult/DetailBiddingResult";
+import Supports from "@/pages/Supports/Supports/Supports";
+import CreateSupport from "@/pages/Supports/CreateSupport/CreateSupport";
+import DetailSupport from "@/pages/Supports/DetailSupport/DetailSupport";
 
 export interface IRoute {
   path: string;
@@ -341,12 +343,8 @@ export const routes: IRoute[] = [
                 element: () => <BiddingResults />,
               },
               {
-                path: "/create",
-                element: () => <CreateBiddingResult />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateBiddingResult />,
+                path: "/detail/:id",
+                element: () => <DetailBiddingResult />,
               },
             ],
           },
@@ -377,6 +375,23 @@ export const routes: IRoute[] = [
               {
                 path: "/detail/:id",
                 element: () => <DetailPost />,
+              },
+            ],
+          },
+          {
+            path: "supports",
+            pages: [
+              {
+                path: "/",
+                element: () => <Supports />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateSupport />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailSupport />,
               },
             ],
           },

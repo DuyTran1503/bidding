@@ -3,18 +3,18 @@ import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
 import { useEffect } from "react";
-import { IPostInitialState } from "@/services/store/post/post.slice";
-import { getPostById } from "@/services/store/post/post.thunk";
-import PostForm from "../PostForm";
+import { ISupportInitialState } from "@/services/store/support/support.slice";
+import { getSupportById } from "@/services/store/support/support.thunk";
+import SupportForm from "../SupportForm";
 import { EPageTypes } from "@/shared/enums/page";
 
-const DetailPost = () => {
+const DetailSupport = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IPostInitialState>("post");
+  const { state, dispatch } = useArchive<ISupportInitialState>("support");
 
   useEffect(() => {
-    if (id) dispatch(getPostById(id));
+    if (id) dispatch(getSupportById(id));
   }, [id]);
 
   return (
@@ -28,21 +28,21 @@ const DetailPost = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/posts");
+              navigate("/supports");
             },
           },
         ]}
       />
 
-      {state.activePost && (
-        <PostForm
+      {state.activeSupport && (
+        <SupportForm
           type={EPageTypes.VIEW}
-          post={{
-            ...state.activePost,
+          support={{
+            ...state.activeSupport,
           }} />
       )}
     </>
   );
 };
 
-export default DetailPost;
+export default DetailSupport;
