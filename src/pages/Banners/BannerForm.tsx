@@ -42,29 +42,13 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
         const body = {
             ...lodash.omit(data, "key", "index"),
         };
-
         if (type === EButtonTypes.CREATE) {
-            // Tạo mới banner
             dispatch(createBanner(body as Omit<IBanner, "id">));
         } else if (type === EButtonTypes.UPDATE && item?.id) {
-            // Kiểm tra xem path có thay đổi hoặc bị xóa không
-            let newData;
-            if (!body.path) {
-                // Nếu path bị xóa, gửi path là null hoặc loại bỏ tùy theo yêu cầu của backend
-                newData = { ...lodash.omit(body, "path"), path: null };
-            } else if (item.path !== body.path) {
-                // Nếu path đã thay đổi, giữ nguyên giá trị path mới trong newData
-                newData = body;
-            } else {
-                // Nếu path không thay đổi, loại bỏ path khỏi newData
-                newData = lodash.omit(body, "path");
-            }
-
-            // Cập nhật banner
-            dispatch(updateBanner({ body: newData, param: item.id }));
+            const newData = item.path === body.path ? (({ ...rest }) => rest)(body) : body;
+            dispatch(updateBanner({ body: newData, param: item?.id }));
         }
     };
-
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
             setVisible(false);
@@ -104,20 +88,22 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
                 {({ values, handleBlur, setFieldValue }) => (
                     <Form className="mt-3">
                         <Row gutter={[24, 24]}>
-                            <Col xs={24} sm={24} md={24} xl={24}>
-                                <FormGroup title="Tên Banner">
-                                    <FormInput
-                                        type="text"
-                                        isDisabled={type === "view"}
-                                        value={values.name}
-                                        name="name"
-                                        placeholder="Nhập tên Banner..."
-                                        onChange={(value) => setFieldValue("name", value)}
-                                        onBlur={handleBlur}
-                                    />
-                                </FormGroup>
+                            <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                                <FormInput
+                                    type="text"
+                                    isDisabled={type === "view"}
+                                    label="Tên Banner"
+                                    value={values.name}
+                                    name="name"
+                                    placeholder="Nhập tên Banner..."
+                                    onChange={(value) => setFieldValue("name", value)}
+                                    onBlur={handleBlur}
+                                />
                             </Col>
-                            <Col xs={24} sm={24} md={24} xl={24}>
+                        </Row>
+
+                        <Row gutter={[24, 24]}>
+                            <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                                 <FormGroup title="Hình ảnh">
                                     <FormUploadFile
                                         isMultiple={false}
@@ -128,15 +114,16 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
                                     />
                                 </FormGroup>
                             </Col>
-                            <Col xs={24} sm={24} md={24} xl={24}>
-                                <FormGroup title="Trạng thái">
-                                    <FormSwitch
-                                        checked={values.is_active === "1"}
-                                        onChange={(value) => {
-                                            setFieldValue("is_active", value ? "1" : "0");
-                                        }}
-                                    />
-                                </FormGroup>
+                        </Row>
+                        <Row gutter={[24, 24]}>
+                            <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                                <FormSwitch
+                                    label="Trạng thái"
+                                    checked={values.is_active === "1"}
+                                    onChange={(value) => {
+                                        setFieldValue("is_active", value ? "1" : "0");
+                                    }}
+                                />
                             </Col>
                         </Row>
                     </Form>

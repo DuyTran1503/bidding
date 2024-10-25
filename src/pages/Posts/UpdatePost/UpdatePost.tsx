@@ -65,7 +65,6 @@ const UpdatePost = () => {
           formikRef={formikRef}
           post={{
             ...state.activePost,
-            post_catalog_id: state.activePost?.postCatalogs?.map((item: any) => item.id),
           }} />
       )}
     </>

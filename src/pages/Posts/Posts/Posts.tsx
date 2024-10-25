@@ -15,7 +15,6 @@ import { deletePost, getAllPosts } from "@/services/store/post/post.thunk";
 import { GoDownload } from "react-icons/go";
 import ImageTable from "@/components/table/ImageTable";
 import { EButtonTypes } from "@/shared/enums/button";
-// import { EPermissions } from "@/shared/enums/permissions";
 
 const Posts = () => {
   const navigate = useNavigate();
@@ -47,7 +46,7 @@ const Posts = () => {
     },
   ];
 
-  const columns: ColumnsType<ITableData> = [
+  const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",
@@ -59,6 +58,13 @@ const Posts = () => {
     {
       dataIndex: "post_catalog_name",
       title: "Thể loại",
+      render: (_, record) => {
+        return <div>
+          {Array.isArray(record.post_catalog_name) && record.post_catalog_name.map((item: number, index: string) => (
+            <div key={index}>{item}</div>
+          ))}
+        </div>;
+      },
     },
     {
       title: "Tiêu đề",
@@ -102,18 +108,18 @@ const Posts = () => {
     //   title: "Tài liệu",
     //   dataIndex: "document"
     // },
-    {
-      dataIndex: "content",
-      title: "Nội dung",
-      render(_, record) {
-        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }} className="text-compact-3"></div>;
-      },
-    },
+    // {
+    //   dataIndex: "content",
+    //   title: "Nội dung",
+    //   render(_, record) {
+    //     return <div dangerouslySetInnerHTML={{ __html: record?.document || "" }} className="text-compact-3"></div>;
+    //   },
+    // },
   ];
 
   const search: ISearchTypeTable[] = [
     {
-      id: "title",
+      id: "short_title",
       placeholder: "Nhập tiêu đề bài viết...",
       label: "Tiêu đề bài viết",
       type: "text",

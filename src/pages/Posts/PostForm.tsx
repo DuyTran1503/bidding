@@ -32,7 +32,7 @@ export interface IPostFormInitialValues {
     short_title: string;
     title: string;
     content: string;
-    thumbnail?: File | string;
+    thumbnail?: File;
     status: number;
 }
 
@@ -79,12 +79,16 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                         id: data.id,
                         short_title: data.short_title,
                         post_catalog_id: data.post_catalog_id,
+                        post_catalog_name: data.post_catalog_name,
                         title: data.title,
                         content: data.content,
                         thumbnail: data.thumbnail,
                         status: data.status,
                     };
-                    dispatch(updatePost({ body: newData, param: post?.id }));
+                    const { thumbnail, ...rest } = newData;
+                    const payload = post?.thumbnail === thumbnail ? rest : newData;
+
+                    dispatch(updatePost({ body: payload, param: String(newData?.id) }));
                 }
             }}
         >
@@ -108,7 +112,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                                     />
                                 </FormGroup>
                             </Col>
-
+ 
                             <Col xs={24} sm={24} md={12} xl={12}>
                                 <FormGroup title="Danh mục bài viết">
                                     <FormSelect
@@ -121,7 +125,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                                             label: post_catalog.name,
                                             value: post_catalog.id,
                                         }))}
-                                        defaultValue={!!values.post_catalog_name && values.post_catalog_name}
+                                        defaultValue={!!values.post_catalog_id && values.post_catalog_id}
                                         placeholder="Chọn danh mục"
                                     />
 

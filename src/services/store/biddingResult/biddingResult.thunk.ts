@@ -27,18 +27,6 @@ export const getBiddingResultById = createAsyncThunk(
   }
 });
 
-export const getBiddingResultAllIds = createAsyncThunk(
-  "bidding-result/get-bidding-result-all-ids",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
-    try {
-      const { response, data } = await client.get<IBiddingResult[]>(`${prefix}/all-ids`, payload);
-      return response.status >= 400 ? rejectWithValue(data) : data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
-
 export const createBiddingResult = createAsyncThunk(
     "bidding-result/create-bidding-result", 
     async (payload: IThunkPayload, { rejectWithValue }) => {
