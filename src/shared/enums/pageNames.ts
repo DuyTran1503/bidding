@@ -20,6 +20,7 @@ export enum EPageNames {
   "activity-logs" = "Nhật ký hoạt động",
   "selection-methods" = "Hình thức lựa chọn Nhà thầu",
   "procurement-categories" = "Loại hình mua sắm công",
+  "supports" = "Tài khoản hỗ trợ doanh nghiệp",
   "post-catalogs" = "Danh mục bài viết",
   "banners" = "Banner",
 }

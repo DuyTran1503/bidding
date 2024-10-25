@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
 // Icons
-import { IoPieChartOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoBusinessOutline, IoNewspaperOutline, IoPieChartOutline, IoSettingsOutline, IoInformationCircleOutline, IoHeadsetOutline } from "react-icons/io5";
 
 // Images
 import logo from "@/assets/images/logo.png";
@@ -45,11 +45,27 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       label: "Bảng điều khiển",
       path: "dashboard",
       icon: { component: IoPieChartOutline },
+    }, {
+      id: "2",
+      label: "Tin tức",
+      icon: { component: IoNewspaperOutline },
+      items: [
+        {
+          id: "2.1",
+          label: "Danh mục bài viết",
+          path: "post-catalogs",
+        },
+        {
+          id: "2.2",
+          label: "Bài viết",
+          path: "posts",
+        },
+      ],
     },
     {
       id: "3",
       label: "Doanh nghiệp",
-      icon: { component: MdOutlineFactory },
+      icon: { component: IoBusinessOutline },
       items: [
         {
           id: "3.1",
@@ -164,36 +180,42 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "5.5",
           label: "Lịch sử đấu thầu",
           path: "bidding-historys",
-          // permissions: EPermissions.LIST_BIDDING_TYPE,
+          // permissions: EPermissions.LIST_BIDDING_HISTORY,
         },
         {
           id: "5.6",
           label: "Kết quả đấu thầu",
           path: "bidding-results",
-          // permissions: EPermissions.LIST_BIDDING_TYPE,
+          // permissions: EPermissions.LIST_BIDDING_RESULT,
         },
         {
           id: "5.7",
           label: "Banner",
           path: "banners",
-          // permissions: EPermissions.LIST_BANNER,
-        },
-        {
-          id: "5.8",
-          label: "Danh mục bài viết",
-          path: "post-catalogs",
-          // permissions: EPermissions.LIST_POST_CATALOG,
-        },
-        {
-          id: "5.9",
-          label: "Bài viết",
-          path: "posts",
-          // permissions: EPermissions.LIST_POST,
+          permissions: EPermissions.LIST_BANNER,
         },
       ],
     },
     {
-      id: "5",
+      id: "6",
+      label: "Giới thiệu",
+      icon: { component: IoInformationCircleOutline },
+      path: "introductions",
+    },
+    {
+      id: "7",
+      label: "Hướng dẫn",
+      icon: { component: IoNewspaperOutline },
+      path: "instructs",
+    },
+    {
+      id: "8",
+      label: "Hỗ trợ",
+      icon: { component: IoHeadsetOutline },
+      path: "supports",
+    },
+    {
+      id: "8",
       label: "Components",
       path: "components",
       icon: { component: RxComponent1 },
