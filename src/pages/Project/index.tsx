@@ -87,13 +87,13 @@ const ProjectPage = () => {
       },
       permission: EPermissions.UPDATE_PROJECT,
     },
-    {
-      type: EButtonTypes.APPROVE,
-      onClick(record) {
-        navigate(`/project/approve/${record?.key}`);
-      },
-      permission: EPermissions.UPDATE_PROJECT,
-    },
+    // {
+    //   type: EButtonTypes.APPROVE,
+    //   onClick(record) {
+    //     navigate(`/project/approve/${record?.key}`);
+    //   },
+    //   permission: EPermissions.UPDATE_PROJECT,
+    // },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {

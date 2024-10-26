@@ -1,5 +1,4 @@
 import ConfirmModal from "@/components/common/CommonModal";
-import CommonSwitch from "@/components/common/CommonSwitch";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
@@ -9,8 +8,11 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus, setFilter } from "@/services/store/account/account.slice";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { changeStatusBidBond, deleteBidBond, getAllBidBonds } from "@/services/store/bid_bond/bidBond.thunk";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getListProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
-import { domesticEnumArray } from "@/shared/enums/domestic";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { mappingBidBond, TypeBidBond } from "@/shared/enums/types";
@@ -27,7 +29,18 @@ const BidBonds = () => {
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-
+  const {state: stateProject} = useArchive<IProjectInitialState>("project")
+  const {state: stateEnterprise} = useArchive<IEnterpriseInitialState>("enterprise")
+  const projectName = (value: number) => {
+    if(stateProject?.listProjects!.length > 0 && !!value) {
+      return stateProject?.listProjects!.find((item) => item.id === value)?.name
+    }
+  }
+  const enterpriseName = ((value: number) => {
+    if(stateEnterprise?.listEnterprise!.length > 0 && !! value) {
+      return stateEnterprise?.listEnterprise!.find((item) => item.id === value)?.name
+    }
+  }) 
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -62,19 +75,23 @@ const BidBonds = () => {
     },
     {
       dataIndex: "enterprise_id",
-      title: "Tên nguồn tài trợ",
+      title: "Nguời/Tổ chức bảo lãnh",
       className: "w-[250px]",
     },
     {
       dataIndex: "bond_type",
       title: "Loại nguồn tài trợ",
       render(_, record) {
+      
         return <div className="flex flex-col">{mappingBidBond[record?.bond_type as TypeBidBond]}</div>;
       },
     },
     {
       dataIndex: "project_id",
       title: "Dự án",
+      // render(_, record) {
+      //   return <div className="flex flex-col">{}</div>
+      // }
     },
     {
       dataIndex: "bond_amount",
@@ -103,17 +120,26 @@ const BidBonds = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.bidBonds && state.bidBonds.length > 0
-        ? state.bidBonds.map(({ id, project_id, bond_amount, bond_type, bond_number, enterprise_id }, index) => ({
-            index: index + 1,
-            key: id,
-            project_id,
-            bond_amount,
-            bond_type,
-            bond_number,
-            enterprise_id,
-          }))
+        ? state.bidBonds.map(
+            (
+              { id, project_id, bond_amount, bond_type, bond_number, enterprise_id, issue_date, expiry_date, description, bond_amount_in_words },
+              index,
+            ) => ({
+              index: index + 1,
+              key: id,
+              project_id: projectName(+project_id!),
+              bond_amount,
+              bond_type,
+              bond_number,
+              enterprise_id: enterpriseName(+enterprise_id!),
+              issue_date,
+              expiry_date,
+              description,
+              bond_amount_in_words,
+            }),
+          )
         : [],
-    [JSON.stringify(state.bidBonds)],
+    [JSON.stringify(state.bidBonds),JSON.stringify(stateEnterprise?.listEnterprise)],
   );
 
   useEffect(() => {
@@ -125,6 +151,12 @@ const BidBonds = () => {
       dispatch(getAllBidBonds({ query: state.filter }));
     }
   }, [JSON.stringify(state.status)]);
+  useEffect(() => {
+    dispatch(getListProject());
+  }, [dispatch])
+  useEffect(() => {
+    dispatch(getListEnterprise())
+  },[dispatch])
 
   useFetchStatus({
     module: "bid_bond",
