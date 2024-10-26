@@ -16,13 +16,14 @@ import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { mappingBidBond, TypeBidBond } from "@/shared/enums/types";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import ActionModule from "./ActionModule";
+import { projectOptions } from "./component/searchBidbond";
 
 const BidBonds = () => {
   const navigate = useNavigate();
@@ -172,12 +173,46 @@ const BidBonds = () => {
     };
   }, []);
 
+  const projectOptions: IOption[] =
+    stateProject?.listProjects && stateProject.listProjects.length > 0
+      ? stateProject.listProjects.map((e) => ({
+          value: e.id,
+          label: e.name,
+        }))
+      : [];
+  const enterprisrOption: IOption[] = 
+  stateEnterprise?.listEnterprise! && stateEnterprise.listEnterprise.length > 0
+  ? stateEnterprise.listEnterprise.map((e) => ({
+        value: e.id,
+        label: e.name,
+  })): []
+
   const search: ISearchTypeTable[] = [
     {
-      id: "name",
-      placeholder: "Nhập tên bão lãnh dự thầu...",
-      label: "Tên bão lãnh dự thầu",
+      id: "bidbond_number",
+      placeholder: "Nhập mã bão lãnh...",
+      label: "Mã bão lãnh dự thầu",
       type: "text",
+    },
+    {
+      id: "name",
+      placeholder: "Nhập tên Người/Tổ chức...",
+      label: "Tên Người/Tổ chức bão lãnh dự thầu",
+      type: "select",
+      options: enterprisrOption as {value: string; label: string}[],
+    },
+    {
+      id: "name",
+      placeholder: "Nhập loại nguồn tài trợ...",
+      label: "Loại nguồn Tài trợ",
+      type: "text",
+    },
+    {
+      id: "project",
+      placeholder: "Nhập tên dự án...",
+      label: "Tên dự án",
+      type: "select",
+      options: projectOptions as { value: string; label: string }[],
     },
   ];
 
