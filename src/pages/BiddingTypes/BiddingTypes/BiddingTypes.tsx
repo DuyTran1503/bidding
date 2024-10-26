@@ -60,11 +60,11 @@ const BiddingTypes = () => {
     },
     {
       dataIndex: "name",
-      title: "Name",
+      title: "Tên ",
     },
     {
       dataIndex: "description",
-      title: "Description",
+      title: "Mô tả",
       render(_, record) {
         return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }} className="text-compact-3"></div>;
       },
