@@ -9,7 +9,7 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -20,6 +20,7 @@ import { IEvaluationCriteriaInitialState, resetStatus, setFilter } from "@/servi
 import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/services/store/evaluation/evaluation.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
+import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 
 const EvaluationCriteria = () => {
   const navigate = useNavigate();
@@ -87,10 +88,12 @@ const EvaluationCriteria = () => {
       title: "Trạng thái",
       dataIndex: "is_active",
       render(_, record) {
+        console.log(!!+record.is_active);
+
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
-            checked={!!record.is_active}
+            checked={!!+record.is_active}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
         );
@@ -145,13 +148,38 @@ const EvaluationCriteria = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
-
+  const statusOptions: IOption[] = statusEnumArray.map((e) => ({
+    value: e,
+    label: mappingStatus[e],
+  }));
+  const projectOptions: IOption[] =
+    stateProject?.listProjects && stateProject.listProjects.length > 0
+      ? stateProject.listProjects.map((e) => ({
+          value: e.id,
+          label: e.name,
+        }))
+      : [];
   const search: ISearchTypeTable[] = [
     {
       id: "name",
       placeholder: "Nhập tên tiêu chí đánh giá...",
       label: "Tên tiêu chí đánh giá",
       type: "text",
+    },
+    {
+      id: "project",
+      placeholder: "Chọn dự án ...",
+      label: "Loại dự án ",
+      type: "select",
+      options: projectOptions as { value: string; label: string }[],
+    },
+    {
+      id: "is_active",
+      placeholder: "Chọn trạng thái ...",
+      label: "Trạng thái",
+      type: "select",
+
+      options: statusOptions as { value: string; label: string }[],
     },
   ];
 
