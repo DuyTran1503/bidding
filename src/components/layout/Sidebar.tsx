@@ -128,7 +128,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "4.4",
           label: "Bảo lãnh dự thầu",
           path: "bid-bond",
-          permissions: EPermissions.LIST_BID_BOND,
+          // permissions: EPermissions.LIST_BID_BOND,
         },
         {
           id: "4.5",
