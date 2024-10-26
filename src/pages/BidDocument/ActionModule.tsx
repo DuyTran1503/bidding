@@ -83,15 +83,12 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
       onSubmit={(data) => {
         if (type === EPageTypes.CREATE) {
           dispatch(createBidDocument({ body: lodash.omit(data, "id") }));
-          console.log(data);
         } else if (type === EPageTypes.UPDATE && bidDocument?.id) {
           dispatch(updateBidDocument({ body: lodash.omit(data, "id"), param: String(bidDocument.id) }));
         }
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(errors);
-
         return (
           <Form>
             <Row gutter={[24, 24]}>
