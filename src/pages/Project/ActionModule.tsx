@@ -135,7 +135,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(errors);
+        // console.log(errors);
 
         return (
           <Form>
