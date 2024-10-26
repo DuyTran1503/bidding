@@ -63,6 +63,7 @@ import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/Upda
 import Banners from "@/pages/Banners/Banners/Banners";
 import DetailProject from "@/pages/Project/Detail";
 import BidBonds from "@/pages/BidBond";
+import EvaluationCriteria from "@/pages/EvaluationCriteria";
 
 export interface IRoute {
   path: string;
@@ -410,6 +411,15 @@ export const routes: IRoute[] = [
               {
                 path: "/detail/:id",
                 element: () => <DetailProject />,
+              },
+            ],
+          },
+          {
+            path: "evaluation-criteria",
+            pages: [
+              {
+                path: "/",
+                element: () => <EvaluationCriteria />,
               },
             ],
           },
