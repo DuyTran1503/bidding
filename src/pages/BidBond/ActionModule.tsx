@@ -1,34 +1,29 @@
-import { useArchive } from "@/hooks/useArchive";
-import FormGroup from "@/components/form/FormGroup";
-import FormInput from "@/components/form/FormInput";
-import { Form, Formik, FormikProps } from "formik";
-import lodash from "lodash";
-import { Col, Row } from "antd";
-import FormSwitch from "@/components/form/FormSwitch";
-import Dialog from "@/components/dialog/Dialog";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { EButtonTypes } from "@/shared/enums/button";
 import Button from "@/components/common/Button";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
+import Dialog from "@/components/dialog/Dialog";
+import FormCkEditor from "@/components/form/FormCkEditor";
+import FormDate from "@/components/form/FormDate";
+import FormInput from "@/components/form/FormInput";
+import FormSelect from "@/components/form/FormSelect";
+import { useArchive } from "@/hooks/useArchive";
+import { useViewport } from "@/hooks/useViewport";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
-import FormDate from "@/components/form/FormDate";
-import dayjs from "dayjs";
-import { useViewport } from "@/hooks/useViewport";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
-import FormSelect from "@/components/form/FormSelect";
-import { convertEnum } from "@/shared/utils/common/convertEnum";
-import { domesticEnumArray } from "@/shared/enums/domestic";
-import { IOption } from "@/shared/utils/shared-interfaces";
-import { bidBondEnumArray, mappingBidBond } from "@/shared/enums/types";
+import { createBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
-import { convertDataOptions } from "../Project/helper";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
-import { createBidBond, updateBidBond } from "@/services/store/bid_bond/bidBond.thunk";
-import FormCkEditor from "@/components/form/FormCkEditor";
-import { EPageTypes } from "@/shared/enums/page";
+import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { bidBondEnumArray, mappingBidBond } from "@/shared/enums/types";
+import { IOption } from "@/shared/utils/shared-interfaces";
+import { Col, Row } from "antd";
+import dayjs from "dayjs";
+import { Form, Formik, FormikProps } from "formik";
+import lodash from "lodash";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { number, object, string } from "yup";
+import { convertDataOptions } from "../Project/helper";
 
 interface IBidBondFormProps {
   type?: EButtonTypes;
@@ -54,14 +49,29 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
     id: item?.id || "",
     project_id: item?.project_id || undefined,
     enterprise_id: item?.enterprise_id ?? undefined,
-    bond_amount: 0,
-    bond_type: undefined,
-    bond_number: "",
-    issue_date: "",
-    expiry_date: "",
-    description: "",
-    bond_amount_in_words: "",
+    bond_amount: item?.bond_amount ?? 0,
+    bond_type: item?.bond_type ?? undefined,
+    bond_number: item?.bond_number ?? "",
+    issue_date: item?.issue_date ?? "",
+    expiry_date: item?.expiry_date ?? "",
+    description: item?.description ?? "",
+    bond_amount_in_words: item?.bond_amount_in_words ?? "",
   };
+  // console.log(initialValues);
+
+  const stringRegex =  /^[\p{L}0-9\s._`-]*$/u;
+  const Schema = object().shape({
+    project_id: string().matches(stringRegex, "Không được chưa ký tự đặc biệt").required("Vui lòng chọn tên dự án"),
+    enterprise_id: string().matches(stringRegex, "Không được chưa ký tự đặc biệt").required("Vui lòng chọn người hoặc tổ chức bảo lãnh"),
+    bond_amount: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập số tiền"),
+    bond_type: string().matches(stringRegex, "Không được chưa ký tự đặc biệt").required("Vui lòng chọn loại bảo lãnh"),
+    bond_number: string().required("Vui lòng nhập mã dự án"),
+    bond_amount_in_words: string().required("Vui lòng không để trống ô này")
+    // issue_date
+    // expiry_date
+    // description
+  });
+
   const handleSubmit = (data: IBidBond) => {
     const body = {
       ...lodash.omit(data, "id"),
@@ -119,8 +129,10 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
-        {({ values, handleBlur, setFieldValue }) => (
+      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
+        {({ values, handleBlur, errors, touched, setFieldValue }) => {
+          
+          return(
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
@@ -130,6 +142,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                   label="Mã bảo lãnh"
                   value={values.bond_number}
                   name="bond_number"
+                  error={touched.bond_number ? errors.bond_number: "" }
                   placeholder="Nhập mã bảo lãnh..."
                   onChange={(value) => setFieldValue("bond_number", value)}
                   onBlur={handleBlur}
@@ -143,6 +156,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                   label="Người hoặc tổ chức bảo lãnh"
                   value={values.enterprise_id}
                   id="enterprise_id"
+                  error={touched.enterprise_id ? errors.enterprise_id: "" }
                   placeholder="Chọn người hoặc tổ chức bảo lãnh"
                   onChange={(value) => setFieldValue("enterprise_id", value)}
                 />
@@ -153,7 +167,8 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                   label="Tên dự án"
                   value={values.project_id}
                   id="project_id"
-                  placeholder="Nhập tên dự án..."
+                  placeholder="Tên dự án..."
+                  error={touched.project_id ? errors.project_id: "" }
                   onChange={(value) => setFieldValue("project_id", value)}
                   options={convertDataOptions(stateProject.listProjects || [])}
                 />
@@ -164,6 +179,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                   isDisabled={type === "view"}
                   label="Loại bảo lãnh"
                   value={values.bond_type}
+                  error={touched.bond_type ? errors.bond_type: "" }
                   id="bond_type"
                   options={optionType}
                   placeholder="Nhập loại bảo lãnh..."
@@ -176,6 +192,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                   isDisabled={type === "view"}
                   label="Số tiền bảo lãnh"
                   value={values.bond_amount}
+                  error={touched.bond_amount ? errors.bond_amount: "" }
                   name="bond_amount"
                   placeholder="Nhập số tiền bảo lãnh..."
                   onChange={(value) => setFieldValue("bond_amount", value)}
@@ -188,6 +205,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                   isDisabled={type === "view"}
                   label="Số tiền bảo bằng chữ"
                   value={values.bond_amount_in_words}
+                  error={touched.bond_amount_in_words ? errors.bond_amount_in_words: "" }
                   name="bond_amount_in_words"
                   placeholder="Nhập số tiền bảo lãnh bằng chữ..."
                   onChange={(value) => setFieldValue("bond_amount_in_words", value)}
@@ -199,6 +217,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
                   disabled={type === "view"}
                   label="Ngày phát hành"
                   value={values.issue_date ? dayjs(values.issue_date) : null}
+                  
                   onChange={(date) => setFieldValue("issue_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                 />
               </Col>
@@ -234,7 +253,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
               </Col>
             </Row> */}
           </Form>
-        )}
+        )}}
       </Formik>
     </Dialog>
   );
