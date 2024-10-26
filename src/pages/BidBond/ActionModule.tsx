@@ -45,8 +45,6 @@ export interface IBidBondValues {
 }
 
 const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) => {
-  console.log(item);
-
   const formikRef = useRef<FormikProps<IBidBond>>(null);
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
@@ -68,8 +66,6 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
     const body = {
       ...lodash.omit(data, "id"),
     };
-    console.log(body);
-
     if (type === EButtonTypes.CREATE) {
       dispatch(createBidBond({ body: body }));
     } else if (type === EButtonTypes.UPDATE && item?.id) {
