@@ -15,7 +15,7 @@ import { getListProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { mappingBidBond, TypeBidBond } from "@/shared/enums/types";
+import { bidBondEnumArray, mappingBidBond, TypeBidBond } from "@/shared/enums/types";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
@@ -186,7 +186,10 @@ const BidBonds = () => {
         value: e.id,
         label: e.name,
   })): []
-
+  const optionType: IOption[] = bidBondEnumArray.map((e) => ({
+    label: mappingBidBond[e],
+    value: e,
+  }));
   const search: ISearchTypeTable[] = [
     {
       id: "bidbond_number",
@@ -195,20 +198,22 @@ const BidBonds = () => {
       type: "text",
     },
     {
-      id: "name",
+      id: "enterprise_id",
       placeholder: "Nhập tên Người/Tổ chức...",
       label: "Tên Người/Tổ chức bão lãnh dự thầu",
       type: "select",
       options: enterprisrOption as {value: string; label: string}[],
     },
     {
-      id: "name",
-      placeholder: "Nhập loại nguồn tài trợ...",
-      label: "Loại nguồn Tài trợ",
-      type: "text",
+      id: "bond_type",
+      placeholder: "Nhập loại bão lãnh...",
+      label: "Loại bão lãnh ",
+      type: "select",
+      options: optionType
+
     },
     {
-      id: "project",
+      id: "project_id",
       placeholder: "Nhập tên dự án...",
       label: "Tên dự án",
       type: "select",
