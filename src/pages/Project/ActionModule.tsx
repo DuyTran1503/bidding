@@ -135,12 +135,10 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        // console.log(errors);
-
         return (
           <Form>
             <Row gutter={[24, 12]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tên Dự Án">
                   <FormInput
                     label="Tên Dự Án"
@@ -153,7 +151,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Hình thức lựa chọn nhà thầu">
                   <FormSelect
                     label="Hình thức lựa chọn nhà thầu "
@@ -166,7 +164,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Hình thức tham gia đấu thầu">
                   <FormSelect
                     label="Hình thức tham gia đấu thầu "
@@ -179,7 +177,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Địa Điểm">
                   <FormInput
                     label="Địa Điểm"
@@ -192,7 +190,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Bên Mời Thầu">
                   <FormSelect
                     label=" Bên Mời Thầu"
@@ -205,7 +203,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Chủ đầu tư">
                   <FormSelect
                     label=" Chủ đầu tư"
@@ -217,7 +215,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Nguồn Vốn">
                   <FormSelect
                     label="Nguồn Vốn "
@@ -231,7 +229,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Người phê duyệt">
                   <FormSelect
                     label="Người phê duyệt"
@@ -244,7 +242,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Dịch vụ mua sắm đầu thầu công">
                   <FormSelect
                     isMultiple
@@ -257,7 +255,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Ngành Nghề">
                   <FormSelect
                     isMultiple
@@ -270,7 +268,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Số quyết định ban hành">
                   <FormInput
                     label="Số quyết định ban hành"
@@ -283,7 +281,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Quốc Tế">
                   <FormSelect
                     label="Quốc Tế "
@@ -296,7 +294,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Số Tiền">
                   <FormInput
                     label="Số Tiền"
@@ -309,7 +307,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tổng đầu tư">
                   <FormInput
                     label="Số Tiền"
@@ -323,7 +321,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Địa Điểm Nhận Hồ Sơ">
                   <FormInput
                     label="Địa Điểm Nhận Hồ Sơ"
@@ -336,7 +334,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Thời Gian Nộp Hồ Sơ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -347,7 +345,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Ngày kết thúc nộp hồ sơ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -358,7 +356,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Ngày Mở Thầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -370,7 +368,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Ngày bắt đầu đấu thầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -381,7 +379,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Ngày kết thúc đấu thầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -393,7 +391,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 </FormGroup>
               </Col>
               {type === EPageTypes.APPROVE && (
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                   <FormGroup title="Ngày phê duyệt">
                     <FormDate
                       disabled
@@ -405,7 +403,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 </Col>
               )}
 
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Trạng thái dự án">
                   <FormSelect
                     options={STATUS_PROJECT_ARRAY}
