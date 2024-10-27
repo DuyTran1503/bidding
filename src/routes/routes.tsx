@@ -65,6 +65,7 @@ import DetailProject from "@/pages/Project/Detail";
 import BidBonds from "@/pages/BidBond";
 import EvaluationCriteria from "@/pages/EvaluationCriteria";
 import QuestionsAnswers from "@/pages/Questions_Answers";
+import FeedbackComplaints from "@/pages/FeedbackComplaint";
 
 export interface IRoute {
   path: string;
@@ -430,6 +431,15 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <QuestionsAnswers />,
+              },
+            ],
+          },
+          {
+            path: "feedback-complaint",
+            pages: [
+              {
+                path: "/",
+                element: () => <FeedbackComplaints />,
               },
             ],
           },
