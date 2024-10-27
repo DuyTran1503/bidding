@@ -191,6 +191,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "questions-answers",
           // permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
         },
+        {
+          id: "4.9",
+          label: "Phản hồi và Khiếu nại",
+          path: "feedback-complaint",
+          // permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
+        },
       ],
     },
     {
