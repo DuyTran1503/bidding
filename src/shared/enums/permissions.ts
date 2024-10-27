@@ -160,4 +160,10 @@ export enum EPermissions {
   DETAIL_QUESTIONS_ANSWERS = "detail_questions_answers",
   UPDATE_QUESTIONS_ANSWERS = "update_questions_answers",
   DESTROY_QUESTIONS_ANSWERS = "destroy_questions_answers",
+
+  // Phản hồi và khiếu nại
+  LIST_FEEDBACK_COMPLAINT = "list_feedback_complaint",
+  DETAIL_FEEDBACK_COMPLAINT = "detail_feedback_complaint",
+  UPDATE_FEEDBACK_COMPLAINT = "update_feedback_complaint",
+  DESTROY_FEEDBACK_COMPLAINT = "destroy_feedback_complaint",
 }

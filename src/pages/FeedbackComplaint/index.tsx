@@ -19,10 +19,12 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ActionModule from "./ActionModule";
+import { IFeedbackComplaintInitialState } from "@/services/store/feedback_complaint/feedback_complaint.slice";
+import { getAllFeedbackComplaints } from "@/services/store/feedback_complaint/feedback_complaint.thunk";
 
-const QuestionsAnswers = () => {
+const FeedbackComplaints = () => {
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IQuestionsAnswersInitialState>("questions_answers");
+  const { state, dispatch } = useArchive<IFeedbackComplaintInitialState>("feedback_complaint");
   const {state: stateProject} = useArchive<IProjectInitialState>("project")   
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
@@ -66,30 +68,22 @@ const QuestionsAnswers = () => {
       className: "w-[250px]",
     },
     {
-      dataIndex: "asked_by",
-      title: "Người hỏi",
+      dataIndex: "user_id",
+      title: "Người khiếu nại",
+      className: "w-[250px]",
+    },
+    {
+      dataIndex: "content",
+      title: "Nội dung khiếu nại",
       className: "w-[200px]",
     },
     {
-        dataIndex: "question_content",
-        title: "Nội dung câu hỏi",
+        dataIndex: "responese_content",
+        title: "Phản hồi khiếu nại",
         className: "w-[250px]",
         render(_, record) {
-          return <div dangerouslySetInnerHTML={{ __html: record?.question_content || "" }} className="text-compact-2"></div>;
+            return <div dangerouslySetInnerHTML={{ __html: record?.responese_content || "" }} className="text-compact-2"></div>;
         },
-      },
-    {
-      dataIndex: "answered_by",
-      title: "Người trả lời",
-      className: "w-[150px]",
-    },
-    {
-      dataIndex: "answer_content",
-      title: "Nội dung câu trả lời",
-      className: "w-[250px]",
-      render(_, record) {
-        return <div dangerouslySetInnerHTML={{ __html: record?.answer_content || "" }} className="text-compact-2"></div>;
-      },
     },
 
     {
@@ -116,36 +110,35 @@ const QuestionsAnswers = () => {
 
   const data: ITableData[] = useMemo(
     () =>
-      state.questions_answers && state.questions_answers.length > 0
-        ? state.questions_answers.map(({ id, project_id, question_content, answer_content, asked_by, answer_by, is_active }, index) => ({
+      state.feedback_complaints && state.feedback_complaints.length > 0
+        ? state.feedback_complaints.map(({ id, project_id, user_id, content, response_content, is_active }, index) => ({
             index: index + 1,
             key: id,
             id,
             project_id,
+            user_id,
             project_name: projectName(+project_id!),
-            question_content,
-            answer_content,
-            asked_by,
-            answer_by,
+            content,
+            response_content,
             is_active,
           }))
         : [],
-    [JSON.stringify(state.questions_answers), JSON.stringify(stateProject.listProjects)],
+    [JSON.stringify(state.feedback_complaints), JSON.stringify(stateProject.listProjects)],
   );
 
   useEffect(() => {
-    dispatch(getAllQuestionsAnswers({ query: state.filter }));
+    dispatch(getAllFeedbackComplaints({ query: state.filter }));
     dispatch(getListProject());
   }, [JSON.stringify(state.filter)]);
 
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
-      dispatch(getAllQuestionsAnswers({ query: state.filter }));
+      dispatch(getAllFeedbackComplaints({ query: state.filter }));
     }
   }, [JSON.stringify(state.status)]);
 
   useFetchStatus({
-    module: "questions_answers",
+    module: "feedback_complaint",
     reset: resetStatus,
     actions: {
       success: { message: state.message },
@@ -157,13 +150,13 @@ const QuestionsAnswers = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
-  const projectOptions: IOption[] =
-    stateProject?.listProjects && stateProject.listProjects.length > 0
-      ? stateProject.listProjects.map((e) => ({
-          value: e.id,
-          label: e.name,
-        }))
-      : [];
+//   const projectOptions: IOption[] =
+//     stateProject?.listProjects && stateProject.listProjects.length > 0
+//       ? stateProject.listProjects.map((e) => ({
+//           value: e.id,
+//           label: e.name,
+//         }))
+//       : [];
   const search: ISearchTypeTable[] = [
    
   ];
@@ -171,7 +164,7 @@ const QuestionsAnswers = () => {
   return (
     <>
       <Heading
-        title="Câu hỏi / Câu trả lời"
+        title="Phản hồi khiếu nại"
         ModalContent={(props) => <ActionModule {...(props as any)} />}
         hasBreadcrumb
         // buttons={[
@@ -215,4 +208,4 @@ const QuestionsAnswers = () => {
   );
 };
 
-export default QuestionsAnswers;
+export default FeedbackComplaints;
