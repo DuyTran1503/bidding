@@ -169,7 +169,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   <FormSelect
                     label="Hình thức tham gia đấu thầu "
                     placeholder="Chọn hình thức..."
-                    id=""
+                    id="submission_method"
                     value={values.submission_method as string}
                     error={touched.submission_method ? errors.submission_method : ""}
                     onChange={(e) => setFieldValue("submission_method", e)}
