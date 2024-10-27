@@ -16,6 +16,7 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IBidDocumentInitialState, resetStatus, setFilter } from "@/services/store/bid_document/bid_document.slice";
 import { changeStatusBidDocument, deleteBidDocument, getAllBidDocument } from "@/services/store/bid_document/bid_document.thunk";
 import CommonSwitch from "@/components/common/CommonSwitch";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const BidDocument = () => {
   const navigate = useNavigate();
@@ -105,21 +106,21 @@ const BidDocument = () => {
       onClick(record) {
         navigate(`/bid-document/detail/${record?.key}`);
       },
-      // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/bid-document/update/${record?.key}`);
       },
-      // permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteBidDocument(record?.key));
       },
-      // permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
     },
   ];
   const search: ISearchTypeTable[] = [
@@ -130,27 +131,23 @@ const BidDocument = () => {
       type: "text",
     },
   ];
-  const data: ITableData[] = useMemo(() => {
-    return Array.isArray(state.bidDocuments)
-      ? state.bidDocuments.map(
-          (
-            {
-              id_project,
-              id_enterprise,
-              id_bid_bond,
-              submission_date,
-              bid_price,
-              implementation_time,
-              validity_period,
-              technical_score,
-              financial_score,
-              totalScore,
-              ranking,
-              status,
-              notes,
-            },
-            index,
-          ) => ({
+  const data : ITableData[] = useMemo(
+    () => state.bidDocuments && state.bidDocuments.length > 0
+      ? state.bidDocuments.map(({
+            id_project,
+            id_enterprise,
+            id_bid_bond,
+            submission_date,
+            bid_price,
+            implementation_time,
+            validity_period,
+            technical_score,
+            financial_score,
+            totalScore,
+            ranking,
+            status,
+            notes,
+      }, index) => ({
             index: index + 1,
             key: id_project,
             id_project,
@@ -166,10 +163,10 @@ const BidDocument = () => {
             ranking,
             status,
             notes,
-          }),
-        )
-      : [];
-  }, [JSON.stringify(state.bidDocuments)]);
+      }))
+      : [],
+      [JSON.stringify(state.bidDocuments)]
+  );
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
