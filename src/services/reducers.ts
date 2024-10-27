@@ -23,6 +23,7 @@ import { biddingResultSlice } from "./store/biddingResult/biddingResult.slice";
 import { biddingHistorySlice } from "./store/biddingHistory/biddingHistory.slice";
 import { bannerSlice } from "./store/banner/banner.slice";
 import { evaluationSlice } from "./store/evaluation/evaluation.slice";
+import { taskSlice } from "./store/task/task.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -48,6 +49,7 @@ export const reducers = combineReducers({
   bidding_result: biddingResultSlice.reducer,
   banner: bannerSlice.reducer,
   evaluation: evaluationSlice.reducer,
+  task: taskSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
