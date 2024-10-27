@@ -88,8 +88,6 @@ const EvaluationCriteria = () => {
       title: "Trạng thái",
       dataIndex: "is_active",
       render(_, record) {
-        console.log(!!+record.is_active);
-
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
