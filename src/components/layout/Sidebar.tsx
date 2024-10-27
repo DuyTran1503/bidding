@@ -128,7 +128,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "3.4",
           label: "Bảo lãnh dự thầu",
           path: "bid-bond",
-          permissions: EPermissions.LIST_BID_BOND,
+          // permissions: EPermissions.LIST_BID_BOND,
         },
         {
           id: "3.5",
@@ -198,6 +198,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Banner",
           path: "banners",
           permissions: EPermissions.LIST_BANNER,
+        },
+        {
+          id: "4.8",
+          label: "Câu hỏi/ Câu trả lời",
+          path: "questions-answers",
+          // permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
         },
       ],
     },
