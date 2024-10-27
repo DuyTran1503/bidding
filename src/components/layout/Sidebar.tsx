@@ -185,6 +185,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "banners",
           permissions: EPermissions.LIST_BANNER,
         },
+        {
+          id: "4.8",
+          label: "Câu hỏi/ Câu trả lời",
+          path: "questions-answers",
+          // permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
+        },
       ],
     },
     {
