@@ -20,5 +20,7 @@ export enum EPageNames {
   "activity-logs" = "Nhật ký hoạt động",
   "selection-methods" = "Hình thức lựa chọn Nhà thầu",
   "banners" = "Banner",
-  "bid-bond" = "Bão lãnh dự thầu"
+  "bid-bond" = "Bão lãnh dự thầu",
+  "questions_answers" = "Câu Hỏi/Trả lời",
+  
 }
