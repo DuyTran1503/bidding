@@ -122,7 +122,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "3.3",
           label: "Dự án",
           path: "project",
-          permissions: EPermissions.LIST_BID_DOCUMENT,
+          permissions: EPermissions.LIST_PROJECT,
         },
         {
           id: "3.4",
