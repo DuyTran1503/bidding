@@ -154,4 +154,11 @@ export enum EPermissions {
   CREATE_EVALUATION = "create_evaluation_criteria",
   UPDATE_EVALUATION = "update_evaluation_criteria",
   DESTROY_EVALUATION = "destroy_evaluation_criteria",
+
+  // ? TASK
+  LIST_TASK = "list_task",
+  DETAIL_TASK = "detail_task",
+  CREATE_TASK = "create_task",
+  UPDATE_TASK = "update_task",
+  DESTROY_TASK = "destroy_task",
 }

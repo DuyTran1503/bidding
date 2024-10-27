@@ -64,6 +64,7 @@ import Banners from "@/pages/Banners/Banners/Banners";
 import DetailProject from "@/pages/Project/Detail";
 import BidBonds from "@/pages/BidBond";
 import EvaluationCriteria from "@/pages/EvaluationCriteria";
+import Tasks from "@/pages/Task/Tasks/Task";
 
 export interface IRoute {
   path: string;
@@ -415,11 +416,11 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "evaluation-criteria",
+            path: "task",
             pages: [
               {
                 path: "/",
-                element: () => <EvaluationCriteria />,
+                element: () => <Tasks />,
               },
             ],
           },
