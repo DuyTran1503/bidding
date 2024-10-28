@@ -27,6 +27,8 @@ import { postCatalogSlice } from "./store/postCatalog/postCatalog.slice";
 import { postSlice } from "./store/post/post.slice";
 import { tenderNoticeSlice } from "./store/tenderNotice/tenderNotice.slice";
 import { supportSlice } from "./store/support/support.slice";
+import { evaluationSlice } from "./store/evaluation/evaluation.slice";
+import { chartSlice } from "./store/chart/chart.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -56,6 +58,8 @@ export const reducers = combineReducers({
   post: postSlice.reducer,
   support: supportSlice.reducer,
   tender_notice: tenderNoticeSlice.reducer,
+  evaluation: evaluationSlice.reducer,
+  chart: chartSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
