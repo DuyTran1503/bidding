@@ -25,6 +25,7 @@ import { bannerSlice } from "./store/banner/banner.slice";
 import { evaluationSlice } from "./store/evaluation/evaluation.slice";
 import { taskSlice } from "./store/task/task.slice";
 import { questionsAnswersSlice } from "./store/questions_answers/questions_answers.slice";
+import { employeeSlice } from "./store/employee/employee.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -52,6 +53,7 @@ export const reducers = combineReducers({
   evaluation: evaluationSlice.reducer,
   task: taskSlice.reducer,
   questions_answers: questionsAnswersSlice.reducer,
+  employee: employeeSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;

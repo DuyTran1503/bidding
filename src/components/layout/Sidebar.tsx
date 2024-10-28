@@ -150,6 +150,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "task",
           // permissions: EPermissions.LIST_TASK,
         },
+        {
+          id: "4.2",
+          label: "Nhân viên",
+          path: "employees",
+          // permissions: EPermissions.LIST_EMPLOYEE,
+        },
       ],
     },
     {
