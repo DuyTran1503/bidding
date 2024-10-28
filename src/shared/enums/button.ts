@@ -4,4 +4,5 @@ export enum EButtonTypes {
   VIEW = "view",
   DESTROY = "destroy",
   APPROVE = "approve",
+  STATISTICAL = "statistical",
 }

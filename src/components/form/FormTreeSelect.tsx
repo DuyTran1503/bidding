@@ -10,9 +10,22 @@ interface IFormTreeSelect {
   error?: string;
   onChange?: (value: string | string[]) => void;
   value?: string | string[];
+  width?: string | number; // Thêm prop cho chiều rộng tùy chỉnh
+  multiple?: boolean; // Cho phép chế độ chọn nhiều hoặc đơn
 }
 
-const FormTreeSelect = ({ label, isDisabled, placeholder, treeData, defaultValue, onChange, error, value }: IFormTreeSelect) => {
+const FormTreeSelect = ({
+  label,
+  isDisabled = false,
+  placeholder,
+  treeData,
+  defaultValue,
+  onChange,
+  error,
+  value,
+  width = "100%", // Thiết lập giá trị mặc định cho chiều rộng
+  multiple = false, // Thiết lập mặc định cho chế độ chọn đơn
+}: IFormTreeSelect) => {
   const handleChange = (value: string | string[]) => {
     if (onChange) {
       onChange(value);
@@ -20,7 +33,7 @@ const FormTreeSelect = ({ label, isDisabled, placeholder, treeData, defaultValue
   };
 
   return (
-    <div>
+    <div style={{ width }}>
       {label && <div className="text-m-medium mb-1 text-black-300">{label}</div>}
       <ConfigProvider
         theme={{
@@ -42,12 +55,12 @@ const FormTreeSelect = ({ label, isDisabled, placeholder, treeData, defaultValue
           defaultValue={defaultValue}
           treeData={treeData}
           fieldNames={{ label: "title", value: "value", children: "children" }}
-          multiple={false} // Chọn chế độ đơn chọn hoặc nhiều tùy thuộc vào yêu cầu
+          multiple={multiple} // Cho phép chọn đơn hoặc nhiều dựa trên prop
         />
       </ConfigProvider>
 
       {!!error && (
-        <div className={clsx("flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none placeholder:font-medium focus:bg-white")}>
+        <div className={clsx("mt-1 text-red-500")}>
           {error}
         </div>
       )}

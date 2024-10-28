@@ -43,6 +43,7 @@ interface IValues {
 }
 const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
   const { search, setFilter, filter, isShow } = props;
+
   const dispatch = useDispatch();
 
   const transformValues = (values: IValues): IValues => {
@@ -70,6 +71,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
       }}
     >
       {({ values, errors, handleBlur, setFieldValue, resetForm, handleSubmit }) => {
+        console.log(values);
         return (
           <div className={`${isShow ? "hidden" : ""} row-gap-3 flex flex-col px-4 py-3`}>
             <Row gutter={[24, 24]} className="row-gap-2 row-gap-lg-3 items-center">
@@ -97,7 +99,8 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
                 if (item.type === "select") {
                   const options = item.parentItem ? (values[item.parentItem] ? item.options : []) : item.options;
-                  const value: any = values[item.id] || undefined;
+                  const value: any = values[item.id] ?? undefined;
+
                   return (
                     <Col key={index} xs={24} sm={24} md={12} lg={6}>
                       <FormSelect

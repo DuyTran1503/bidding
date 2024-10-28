@@ -7,11 +7,11 @@ import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { checkPermission } from "@/helpers/checkPermission";
-import { MdOutlineCreditScore } from "react-icons/md";
+import { MdInsertChart, MdOutlineCreditScore } from "react-icons/md";
 
 interface IGridButtonsProps {
   buttons: IGridButton[];
-  record: { key: string; [key: string]: any };
+  record: { key: string;[key: string]: any };
   onClick?: (item: any, type: EButtonTypes) => void;
 }
 
@@ -79,6 +79,19 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record, onClick }) 
                         content: "Bạn chắc chắn muốn xóa không?",
                         onOk: () => button.onClick && button.onClick(record),
                       });
+                    }}
+                  />
+                </Tooltip>
+              )
+            );
+          case EButtonTypes.STATISTICAL:
+            return (
+              canAccess && (
+                <Tooltip title="Thống kê" key={index}>
+                  <MdInsertChart
+                    className="cursor-pointer text-xl text-green-600"
+                    onClick={() => {
+                      button.onClick ? button.onClick(record) : onClick && onClick(record, button.type);
                     }}
                   />
                 </Tooltip>

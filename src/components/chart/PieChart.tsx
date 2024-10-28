@@ -3,13 +3,14 @@ import * as echarts from "echarts";
 
 const PieChart = () => {
   useEffect(() => {
-    const chartDom = document.querySelector("#pie-chart") as HTMLElement; // Chuyển đổi kiểu
+    const chartDom = document.querySelector("#pie-chart") as HTMLElement;
     if (chartDom) {
       const myChart = echarts.init(chartDom);
 
       const option = {
         tooltip: {
           trigger: "item",
+          formatter: '{b}: {c} ({d}%)', // Hiển thị phần trăm trong tooltip
         },
         legend: {
           top: "5%",
@@ -27,8 +28,9 @@ const PieChart = () => {
               borderWidth: 2,
             },
             label: {
-              show: false,
-              position: "center",
+              show: true, // Hiển thị nhãn
+              formatter: '{b}: {d}%', // Hiển thị tên và phần trăm trên nhãn
+              position: 'outside', // Đặt vị trí nhãn ở ngoài
             },
             emphasis: {
               label: {
@@ -38,7 +40,7 @@ const PieChart = () => {
               },
             },
             labelLine: {
-              show: false,
+              show: true, // Hiển thị đường dẫn nhãn
             },
             data: [
               { value: 1048, name: "Search Engine" },
