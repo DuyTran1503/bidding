@@ -166,4 +166,11 @@ export enum EPermissions {
   DETAIL_QUESTIONS_ANSWERS = "detail_questions_answers",
   UPDATE_QUESTIONS_ANSWERS = "update_questions_answers",
   DESTROY_QUESTIONS_ANSWERS = "destroy_questions_answers",
+
+  // employee
+  LIST_EMPLOYEE = "list_employee",
+  DETAIL_EMPLOYEE = "detail_employee",
+  CREATE_EMPLOYEE = "create_employee",
+  UPDATE_EMPLOYEE = "update_employee",
+  DESTROY_EMPLOYEE = "destroy_employee",
 }
