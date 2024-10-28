@@ -70,6 +70,9 @@ import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult/Deta
 import Supports from "@/pages/Supports/Supports/Supports";
 import CreateSupport from "@/pages/Supports/CreateSupport/CreateSupport";
 import DetailSupport from "@/pages/Supports/DetailSupport/DetailSupport";
+import BidBonds from "@/pages/BidBond";
+import EvaluationCriteria from "@/pages/EvaluationCriteria";
+import Statistical from "@/pages/Project/Statistical/index";
 
 export interface IRoute {
   path: string;
@@ -427,6 +430,27 @@ export const routes: IRoute[] = [
             ],
           },
           {
+            path: "bid-bond",
+            pages: [
+              {
+                path: "/",
+                element: () => <BidBonds />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBidDocument />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBidDocument />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBidDocument />,
+              },
+            ],
+          },
+          {
             path: "project",
             pages: [
               {
@@ -446,8 +470,21 @@ export const routes: IRoute[] = [
                 element: () => <ApproveProject />,
               },
               {
+                path: "/statistical/:id",
+                element: () => <Statistical />,
+              },
+              {
                 path: "/detail/:id",
                 element: () => <DetailProject />,
+              },
+            ],
+          },
+          {
+            path: "evaluation-criteria",
+            pages: [
+              {
+                path: "/",
+                element: () => <EvaluationCriteria />,
               },
             ],
           },

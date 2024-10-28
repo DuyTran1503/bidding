@@ -13,8 +13,8 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IPostInitialState, resetStatus, setFilter } from "@/services/store/post/post.slice";
 import { deletePost, getAllPosts } from "@/services/store/post/post.thunk";
 import { GoDownload } from "react-icons/go";
-import ImageTable from "@/components/table/ImageTable";
 import { EButtonTypes } from "@/shared/enums/button";
+import Image from "@/components/table/Image";
 
 const Posts = () => {
   const navigate = useNavigate();
@@ -98,10 +98,10 @@ const Posts = () => {
       },
     },
     {
-      dataIndex: "thumbnail",
-      title: "Ảnh",
+      dataIndex: "path",
+      title: "Link",
       render(_, record) {
-        return <ImageTable imageSrc={"https://base.septenarysolution.site/" + record.thumbnail} title="" />;
+        return <Image src={record.path as unknown as string} alt={"Ảnh đại diện"} />;
       },
     },
     // {

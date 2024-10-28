@@ -24,17 +24,14 @@ export const getBannerById = createAsyncThunk("banner/get-banner-by-id", async (
   }
 });
 
-export const getBannerAllIds = createAsyncThunk(
-  "banner/get-banner-all-ids",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
-    try {
-      const { response, data } = await client.get<IBanner[]>(`${prefix}/all-ids`, payload);
-      return response.status >= 400 ? rejectWithValue(data) : data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+export const getBannerAllIds = createAsyncThunk("banner/get-banner-all-ids", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IBanner[]>(`${prefix}/all-ids`, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
 
 // export const createBanner = createAsyncThunk("banner/create-banner", async (payload: IThunkPayload, { rejectWithValue }) => {
 //   try {
@@ -74,7 +71,7 @@ export const createBanner = createAsyncThunk("banner/create-banner", async (requ
 export const updateBanner = createAsyncThunk("banner/update-banner", async (payload: IThunkPayload, thunkAPI) => {
   try {
     const formData = objectToFormData(payload.body as IBanner);
-    formData.append("_method", "PATCH")
+    formData.append("_method", "PUT");
 
     const accessToken = client.tokens.accessToken();
 
@@ -106,14 +103,11 @@ export const deleteBanner = createAsyncThunk("banner/delete-banner", async (id: 
     return rejectWithValue(error.response.data);
   }
 });
-export const changeStatusBanner = createAsyncThunk(
-  "banner/change-status-banner",
-  async (id: string, { rejectWithValue }) => {
-    try {
-      const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
-      return response.status >= 400 ? rejectWithValue(data) : id;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+export const changeStatusBanner = createAsyncThunk("banner/change-status-banner", async (id: string, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
+    return response.status >= 400 ? rejectWithValue(data) : id;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});

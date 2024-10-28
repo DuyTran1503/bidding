@@ -167,4 +167,18 @@ export enum EPermissions {
   CREATE_SUPPORT = "create_support",
   UPDATE_SUPPORT = "update_support",
   DESTROY_SUPPORT = "destroy_support",
+
+  // Bảo lãnh dự thầu
+  LIST_BID_BOND = "list_bidbond",
+  DETAIL_BID_BOND = "detail_bidbond",
+  CREATE_BID_BOND = "create_bidbond",
+  UPDATE_BID_BOND = "update_bidbond",
+  DESTROY_BID_BOND = "destroy_bidbond",
+
+  // Tiêu chí đánh giá
+  LIST_EVALUATION = "list_evaluation_criteria",
+  DETAIL_EVALUATION = "detail_evaluation_criteria",
+  CREATE_EVALUATION = "create_evaluation_criteria",
+  UPDATE_EVALUATION = "update_evaluation_criteria",
+  DESTROY_EVALUATION = "destroy_evaluation_criteria",
 }

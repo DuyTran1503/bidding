@@ -1,17 +1,20 @@
+import GenericChart from "@/components/chart/GenericChart";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
+import CustomTabs from "@/components/table/CustomTabs";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { IBiddingFieldInitialState } from "@/services/store/biddingField/biddingField.slice";
-import { getBiddingFieldAllIds } from "@/services/store/biddingField/biddingField.thunk";
+import { IChartInitialState } from "@/services/store/chart/chart.slice";
+import { projectByIndustry } from "@/services/store/chart/chart.thunk";
 import { IProjectInitialState, resetMessageError, setFilter } from "@/services/store/project/project.slice";
 import { changeStatusProject, deleteProject, getAllProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { EPermissions } from "@/shared/enums/permissions";
 import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
@@ -22,7 +25,8 @@ import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  const { state: stateBiddingField, dispatch: dispatchBiddingField } = useArchive<IBiddingFieldInitialState>("bidding_field");
+  // const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
+  const { state: stateChart, dispatch: dispatchChart } = useArchive<IChartInitialState>("chart");
   const navigate = useNavigate();
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [isModal, setIsModal] = useState(false);
@@ -77,34 +81,29 @@ const ProjectPage = () => {
       onClick(record) {
         navigate(`detail/${record?.key}`);
       },
-      // permission: EPermissions.DETAIL_PROJECT,
+      permission: EPermissions.DETAIL_PROJECT,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/project/update/${record?.key}`);
       },
-      // permission: EPermissions.UPDATE_PROJECT,
-    },
-    {
-      type: EButtonTypes.APPROVE,
-      onClick(record) {
-        navigate(`/project/approve/${record?.key}`);
-      },
-      // permission: EPermissions.UPDATE_PROJECT,
+      permission: EPermissions.UPDATE_PROJECT,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatchProject(deleteProject(record?.key));
       },
-      // permission: EPermissions.DESTROY_PROJECT,
+      permission: EPermissions.DESTROY_PROJECT,
+    },
+    {
+      type: EButtonTypes.STATISTICAL,
+      onClick(record) {
+        navigate(`/project/statistical/${record?.key}`);
+      },
     },
   ];
-  const bidingFieldOptions = stateBiddingField?.listBidingField?.map((item) => ({
-    value: item.id,
-    label: item.name,
-  }));
 
   const search: ISearchTypeTable[] = [
     {
@@ -112,21 +111,6 @@ const ProjectPage = () => {
       placeholder: "Nhập tên...",
       label: "Tên doanh nghiệp ",
       type: "text",
-    },
-    {
-      id: "organization_type",
-      placeholder: "Chọn tên doanh nghiệp ...",
-      label: "Loại hình doanh nghiệp ",
-      type: "select",
-      // options: bidingFieldOptions as { value: string; label: string }[],
-    },
-    {
-      id: "bidding_field_id",
-      placeholder: "Chọn lĩnh vực đấu thầu ...",
-      label: "Lĩnh vực đấu thầu ",
-      type: "select",
-      isMultiple: true,
-      options: bidingFieldOptions,
     },
     {
       id: "is_active",
@@ -141,16 +125,16 @@ const ProjectPage = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(stateProject.projects)
       ? stateProject.projects.map(({ id, name, investor, total_amount, upload_time, bid_submission_start, bid_opening_date, status }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          investor,
-          total_amount,
-          upload_time,
-          bid_submission_start,
-          bid_opening_date,
-          status,
-        }))
+        index: index + 1,
+        key: id,
+        name,
+        investor,
+        total_amount,
+        upload_time,
+        bid_submission_start,
+        bid_opening_date,
+        status,
+      }))
       : [];
   }, [JSON.stringify(stateProject.projects)]);
 
@@ -166,7 +150,8 @@ const ProjectPage = () => {
 
   useEffect(() => {
     dispatchProject(getAllProject({ query: stateProject.filter }));
-    dispatchBiddingField(getBiddingFieldAllIds());
+    // dispatchIndustry(getIndustries());
+    dispatchChart(projectByIndustry({}));
   }, [JSON.stringify(stateProject.filter)]);
   useEffect(() => {
     if (stateProject.status === EFetchStatus.FULFILLED) {
@@ -186,6 +171,34 @@ const ProjectPage = () => {
       error: { message: stateProject.message },
     },
   });
+
+  const projectTab = (
+    <ManagementGrid
+      columns={columns}
+      data={data}
+      search={search}
+      buttons={buttons}
+      pagination={{
+        current: stateProject.filter.page ?? 1,
+        pageSize: stateProject.filter.size ?? 10,
+        total: stateProject.totalRecords,
+        number_of_elements: stateProject.number_of_elements && stateProject.number_of_elements,
+        // showSideChanger:true
+      }}
+      setFilter={setFilter}
+      filter={stateProject.filter}
+      scroll={{ x: 2200 }}
+    />
+  )
+  const statisticalTab = (
+    <GenericChart
+      chartType="bar"
+      title="Thống kê chung"
+      name={stateChart.industryData.map(({ name }) => name)}
+      value={stateChart.industryData.map(({ value }) => value)}
+      seriesName="Dữ liệu Biểu đồ"
+    />
+  )
   return (
     <>
       <Heading
@@ -213,21 +226,12 @@ const ProjectPage = () => {
         setVisible={setIsModal}
         onConfirm={onConfirmStatus}
       />
-      <ManagementGrid
-        columns={columns}
-        data={data}
-        search={search}
-        buttons={buttons}
-        pagination={{
-          current: stateProject.filter.page ?? 1,
-          pageSize: stateProject.filter.size ?? 10,
-          total: stateProject.totalRecords,
-          number_of_elements: stateProject.number_of_elements && stateProject.number_of_elements,
-          // showSideChanger:true
-        }}
-        setFilter={setFilter}
-        filter={stateProject.filter}
-        scroll={{ x: 2200 }}
+      <CustomTabs
+        // defaultActiveKey="1"
+        items={[
+          { key: "1", label: "Danh sách Dự án", content: projectTab },
+          { key: "2", label: "Thống kê Chi tiết", content: statisticalTab },
+        ]}
       />
     </>
   );

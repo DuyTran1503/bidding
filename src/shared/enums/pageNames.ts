@@ -23,4 +23,5 @@ export enum EPageNames {
   "supports" = "Tài khoản hỗ trợ doanh nghiệp",
   "post-catalogs" = "Danh mục bài viết",
   "banners" = "Banner",
+  "bid-bond" = "Bão lãnh dự thầu"
 }
