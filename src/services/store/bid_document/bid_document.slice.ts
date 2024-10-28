@@ -17,7 +17,7 @@ import { IBidDocument } from "./bid_document.model";
 
 export interface IBidDocumentInitialState extends IInitialState {
   bidDocuments: IBidDocument[];
-  bidDocument?: IBidDocument | any;
+  bidDocument?: IBidDocument;
 }
 
 const initialState: IBidDocumentInitialState = {

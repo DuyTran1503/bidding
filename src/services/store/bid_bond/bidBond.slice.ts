@@ -45,7 +45,7 @@ const bidBondSlice = createSlice({
     builder
       .addCase(getAllBidBonds.fulfilled, (state, { payload }: PayloadAction<IResponse<IBidBond[]> | any>) => {
         if (payload.data) {
-          state.fundingSources = payload.data.data;
+          state.bidBonds = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;
           state.number_of_elements = payload?.data?.number_of_elements;
         }
@@ -56,11 +56,11 @@ const bidBondSlice = createSlice({
 
     builder
       .addCase(getBidBondById.fulfilled, (state, { payload }: PayloadAction<IBidBond[]> | any) => {
-        state.fundingSource = payload.data;
+        state.bidBond = payload.data;
         state.loading = false;
       })
       .addCase(getBidBondById.rejected, (state, { payload }: PayloadAction<IBidBond> | any) => {
-        state.fundingSource = payload.data;
+        state.bidBond = payload.data;
         state.message = transformPayloadErrors(payload?.errors);
         state.loading = true;
       });
