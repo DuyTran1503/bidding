@@ -34,7 +34,7 @@ const initialState: IFeedbackComplaintInitialState = {
   number_of_elements: 0,
 };
 
-const feedbackComlaintSlice = createSlice({
+const feedbackComplaintSlice = createSlice({
   name: "feedback_complaint",
   initialState,
   reducers: {
@@ -119,5 +119,5 @@ const feedbackComlaintSlice = createSlice({
       });
   },
 });
-export const { fetching, setFilter, resetStatus, resetMessageError } = feedbackComlaintSlice.actions;
-export { feedbackComlaintSlice };
+export const { fetching, setFilter, resetStatus, resetMessageError } = feedbackComplaintSlice.actions;
+export { feedbackComplaintSlice };
