@@ -66,6 +66,10 @@ import BidBonds from "@/pages/BidBond";
 import EvaluationCriteria from "@/pages/EvaluationCriteria";
 import Tasks from "@/pages/Task/Tasks/Task";
 import QuestionsAnswers from "@/pages/Questions_Answers";
+import Employee from "@/pages/Employee";
+import CreateEmployee from "@/pages/Employee/Create";
+import UpdateEmployee from "@/pages/Employee/Update/UpdateStaff";
+import DetailEmployee from "@/pages/Employee/Detail";
 
 export interface IRoute {
   path: string;
@@ -431,6 +435,27 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <QuestionsAnswers />,
+              },
+            ],
+          },
+          {
+            path: "employees",
+            pages: [
+              {
+                path: "/",
+                element: () => <Employee />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateEmployee />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateEmployee />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailEmployee />,
               },
             ],
           },

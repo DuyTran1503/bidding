@@ -15,10 +15,28 @@ export const mappingLevelTask: { [key in LEVELTASK]: string } = {
 };
 
 export enum EDUCATIONLEVEL {
-  primary_school = "Tiểu học",
-  secondary_school = "Trung học cơ sở",
-  high_school = "Trung học phổ thông",
-  college = "Cao đẳng",
-  university = "Đại học",
-  after_university = "Sau đại học",
+  PRIMARY_SCHOOL = "Tiểu học",
+  SECONDARY_SCHOOL = "Trung học cơ sở",
+  HIGH_SCHOOL = "Trung học phổ thông",
+  COLLEGE = "Cao đẳng",
+  UNIVERSITY = "Đại học",
+  AFTER_UNIVERSITY = "Sau đại học",
 }
+
+export const educationLevelEnumArray: EDUCATIONLEVEL[] = [
+  EDUCATIONLEVEL.PRIMARY_SCHOOL,
+  EDUCATIONLEVEL.SECONDARY_SCHOOL,
+  EDUCATIONLEVEL.HIGH_SCHOOL,
+  EDUCATIONLEVEL.COLLEGE,
+  EDUCATIONLEVEL.UNIVERSITY,
+  EDUCATIONLEVEL.AFTER_UNIVERSITY,
+];
+
+export const mappingEducationLevel: { [key in EDUCATIONLEVEL]: string } = {
+  [EDUCATIONLEVEL.PRIMARY_SCHOOL]: "Tiểu học",
+  [EDUCATIONLEVEL.SECONDARY_SCHOOL]: "Trung học cơ sở",
+  [EDUCATIONLEVEL.HIGH_SCHOOL]: "Trung học phổ thông",
+  [EDUCATIONLEVEL.COLLEGE]: "Cao đẳng",
+  [EDUCATIONLEVEL.UNIVERSITY]: "Đại học",
+  [EDUCATIONLEVEL.AFTER_UNIVERSITY]: "Sau đại học",
+};
