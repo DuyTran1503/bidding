@@ -5,6 +5,8 @@ import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import FormSwitch from "@/components/form/FormSwitch";
 import { useViewport } from "@/hooks/useViewport";
+import { IFeedbackComplaint } from "@/services/store/feedback_complaint/feedback_complaint.model";
+import { updateFeedbackComplaint } from "@/services/store/feedback_complaint/feedback_complaint.thunk";
 import { IQuestionsAnswers } from "@/services/store/questions_answers/questions_answers.model";
 import { updateQuestionAnswer } from "@/services/store/questions_answers/questions_answers.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
@@ -14,46 +16,44 @@ import lodash from "lodash";
 import { Dispatch, SetStateAction, useRef } from "react";
 import { object, string } from "yup";
 
-interface IQuestionsAnswersFormProps {
+interface IFeedbackComplaintsFormProps {
   type?: EButtonTypes;
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
-  item?: IQuestionsAnswers;
+  item?: IFeedbackComplaint;
 }
 
-export interface IQuestionsAnswersValues {
+export interface IFeedbackComplaintValues {
   id: string;
   name: string;
   path?: File;
   is_active: string;
 }
 
-const ActionModule = ({ visible, type, setVisible, item }: IQuestionsAnswersFormProps) => {
-  const formikRef = useRef<FormikProps<IQuestionsAnswers>>(null);
+const ActionModule = ({ visible, type, setVisible, item }: IFeedbackComplaintsFormProps) => {
+  const formikRef = useRef<FormikProps<IFeedbackComplaint>>(null);
   const { screenSize } = useViewport();
-  const initialValues: IQuestionsAnswers = {
+  const initialValues: IFeedbackComplaint = {
     id: item?.id || "",
     project_id: item?.project_id || "",
-    question_content: item?.question_content || "",
-    answer_content: item?.answer_content || "",
-    asked_by: item?. asked_by || "",
-    answer_by: item?.answer_by || "",
-    is_active: item?.is_active || "",
+    user_id: item?.user_id || "",
+    content: item?.content || "",
+    response_content: item?.response_content || "",
+    is_active: item?.is_active || ""
     
   };
   // console.log(initialValues);
 
   const Schema = object().shape({
-    answer_content: string().required("Vui lòng nhập câu trả lời"),
-    answer_by: string().required("Vui lòng nhập tên người trả lời"),
+    response_content: string().required("Vui lòng nhập câu trả lời"),
   });
 
-  const handleSubmit = (data: IQuestionsAnswers) => {
+  const handleSubmit = (data: IFeedbackComplaint) => {
     const body = {
       ...lodash.omit(data, "id"),
     };
     if (type === EButtonTypes.CREATE) {
-      dispatch(updateQuestionAnswer({ body: body }));
+      dispatch(updateFeedbackComplaint({ body: body }));
     } else if (type === EButtonTypes.UPDATE && item?.id) {
       //   const newData = item.path === body.path ? (({ ...rest }) => rest)(body) : body;
       //   dispatch(updateBidBond({ body: newData, param: item?.id }));
@@ -90,7 +90,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IQuestionsAnswersForm
       }
     >
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
-        {({ values, errors, touched, setFieldValue, handleBlur }) => {
+        {({ values, errors, touched, setFieldValue,  }) => {
           
           return(
           <Form className="mt-3">
@@ -100,46 +100,40 @@ const ActionModule = ({ visible, type, setVisible, item }: IQuestionsAnswersForm
                 <FormInput
                   type="text"
                   isDisabled={true}
-                  label="Người hỏi"
-                  value={values.asked_by}
-                  name="asked_by"
-                 
+                  label="Tên dự án"
+                  value={values.project_id}
+                  name="project_id" 
                 />
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormInput
                   type="text"
-                  isDisabled={type === "view"}
-                  label="Người trả lời"
-                  value={values.answer_by}
-                  name="answer_by"
-                  error={touched.answer_by ? errors.answer_by: "" }
-                  onChange={(value) => setFieldValue("answer_by", value)}
-                  onBlur={handleBlur}
-                 
+                  isDisabled={true}
+                  label="Tên người khiếu nại"
+                  value={values.user_id}
+                  name="user_id" 
                 />
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormGroup title="Nhập nội dung câu trả lời">
+              <FormGroup title="Nội dung khiéu nại">
                 <FormCkEditor
-                  id="answer_content"
+                  id="content"
                   direction="vertical"
-                  value={values.answer_content}
+                  value={values.content}
                   setFieldValue={setFieldValue}
-                  disabled={type === EButtonTypes.VIEW}
-                  errors={touched.answer_content && errors.answer_content ? { answer_content: errors.answer_content } : undefined}                
+                  disabled={type === EButtonTypes.VIEW}               
                 />
               </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormGroup title="Nhập nội dung câu trả lời">
+              <FormGroup title="Nhập nội dung phản hồi khiếu nại">
                 <FormCkEditor
-                  id="answer_content"
+                  id="response_content"
                   direction="vertical"
-                  value={values.answer_content}
+                  value={values.response_content}
                   setFieldValue={setFieldValue}
                   disabled={type === EButtonTypes.VIEW}
-                  errors={touched.answer_content && errors.answer_content ? { answer_content: errors.answer_content } : undefined}                
+                  errors={touched.response_content && errors.response_content ? { response_content: errors.response_content } : undefined}                
                 />
               </FormGroup>
               </Col>
