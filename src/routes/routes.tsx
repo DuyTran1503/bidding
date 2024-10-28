@@ -70,6 +70,7 @@ import Employee from "@/pages/Employee";
 import CreateEmployee from "@/pages/Employee/Create";
 import UpdateEmployee from "@/pages/Employee/Update/UpdateStaff";
 import DetailEmployee from "@/pages/Employee/Detail";
+import FeedbackComplaints from "@/pages/FeedbackComplaint";
 
 export interface IRoute {
   path: string;
@@ -421,6 +422,15 @@ export const routes: IRoute[] = [
             ],
           },
           {
+            path: "evaluation_criteria",
+            pages: [
+              {
+                path: "/",
+                element: () => <EvaluationCriteria />,
+              },
+            ],
+          },
+          {
             path: "task",
             pages: [
               {
@@ -456,6 +466,15 @@ export const routes: IRoute[] = [
               {
                 path: "/detail/:id",
                 element: () => <DetailEmployee />,
+              },
+            ],
+          },
+          {
+            path: "feedback-complaint",
+            pages: [
+              {
+                path: "/",
+                element: () => <FeedbackComplaints />,
               },
             ],
           },
