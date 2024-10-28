@@ -28,18 +28,18 @@ const Tasks = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
-      permission: EPermissions.DETAIL_BANNER,
+      // permission: EPermissions.DETAIL_TASK,
     },
     {
       type: EButtonTypes.UPDATE,
-      permission: EPermissions.UPDATE_BANNER,
+      // permission: EPermissions.UPDATE_TASK,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteTask(record?.key));
       },
-      permission: EPermissions.DESTROY_BANNER,
+      // permission: EPermissions.DESTROY_TASK,
     },
   ];
 

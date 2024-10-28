@@ -1,23 +1,23 @@
 import { useArchive } from "@/hooks/useArchive";
-import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import { Form, Formik, FormikProps } from "formik";
 import lodash from "lodash";
 import { Col, Row } from "antd";
-import FormSwitch from "@/components/form/FormSwitch";
 import Dialog from "@/components/dialog/Dialog";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { EButtonTypes } from "@/shared/enums/button";
 import Button from "@/components/common/Button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import { useViewport } from "@/hooks/useViewport";
 import { ITask } from "@/services/store/task/task.model";
 import { ITaskInitialState } from "@/services/store/task/task.slice";
-import { LEVELTASK, levelTaskEnumArray, mappingLevelTask } from "@/shared/enums/level";
+import { levelTaskEnumArray, mappingLevelTask } from "@/shared/enums/level";
 import { createTask, updateTask } from "@/services/store/task/task.thunk";
 import FormSelect from "@/components/form/FormSelect";
 import { IOption } from "@/shared/utils/shared-interfaces";
+import { convertDataOptions } from "../Project/helper";
+import { IAccountInitialState } from "@/services/store/account/account.slice";
+import { getListStaff } from "@/services/store/account/account.thunk";
 
 interface ITaskFormProps {
   type?: EButtonTypes;
@@ -29,10 +29,13 @@ interface ITaskFormProps {
 const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
   const formikRef = useRef<FormikProps<ITask>>(null);
   const { state, dispatch } = useArchive<ITaskInitialState>("task");
+  const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
+
   const { screenSize } = useViewport();
   const initialValues: ITask = {
     id: item?.id || "",
     name: item?.name || "",
+    employee_id: item?.employee_id || [],
     document: item?.document ?? undefined,
     difficulty_level: item?.difficulty_level || undefined,
     code: item?.code || "",
@@ -42,7 +45,7 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
       ...lodash.omit(data, "key", "index"),
     };
     if (type === EButtonTypes.CREATE) {
-      dispatch(createTask(body as Omit<ITask, "id">));
+      dispatch(createTask({ body: body as Omit<ITask, "id"> }));
     } else if (type === EButtonTypes.UPDATE && item?.id) {
       const newData = item.document === body.document ? (({ ...rest }) => rest)(body) : body;
       dispatch(updateTask({ body: newData, param: item?.id }));
@@ -53,6 +56,10 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
       setVisible(false);
     }
   }, [state.status]);
+
+  useEffect(() => {
+    dispatchStaff(getListStaff());
+  }, [visible]);
 
   const optionLevel: IOption[] = levelTaskEnumArray.map((e) => ({
     label: mappingLevelTask[e],
@@ -105,12 +112,23 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
                 <FormInput
                   type="text"
                   isDisabled={type === "view"}
-                  label="Mã nhân viên"
+                  label="Mã công việc"
                   value={values.code}
                   name="code"
-                  placeholder="Nhập tên Task..."
+                  placeholder="Nhập tên công việc..."
                   onChange={(value) => setFieldValue("code", value)}
                   onBlur={handleBlur}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormSelect
+                  label="Công ty"
+                  placeholder="Chọn công ty..."
+                  id="employees"
+                  isMultiple
+                  value={values?.employee_id}
+                  options={convertDataOptions(stateStaff?.getListStaff)}
+                  onChange={(e) => setFieldValue("employee_id", e)}
                 />
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
@@ -125,7 +143,7 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
                 />
               </Col>
 
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              {/* <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Hồ sơ nhân viên">
                   <FormUploadFile
                     isMultiple={false}
@@ -135,7 +153,7 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
                     }}
                   />
                 </FormGroup>
-              </Col>
+              </Col> */}
             </Row>
           </Form>
         )}
