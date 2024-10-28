@@ -173,4 +173,9 @@ export enum EPermissions {
   CREATE_EMPLOYEE = "create_employee",
   UPDATE_EMPLOYEE = "update_employee",
   DESTROY_EMPLOYEE = "destroy_employee",
+  // Phản hồi và khiếu nại
+  LIST_FEEDBACK_COMPLAINT = "list_feedback_complaint",
+  DETAIL_FEEDBACK_COMPLAINT = "detail_feedback_complaint",
+  UPDATE_FEEDBACK_COMPLAINT = "update_feedback_complaint",
+  DESTROY_FEEDBACK_COMPLAINT = "destroy_feedback_complaint",
 }
