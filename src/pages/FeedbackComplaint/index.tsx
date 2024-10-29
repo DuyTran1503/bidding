@@ -25,14 +25,14 @@ import { getAllFeedbackComplaints } from "@/services/store/feedback_complaint/fe
 const FeedbackComplaints = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IFeedbackComplaintInitialState>("feedback_complaint");
-  const {state: stateProject} = useArchive<IProjectInitialState>("project")   
+  const { state: stateProject } = useArchive<IProjectInitialState>("project");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const projectName = (value: number) => {
-    if(stateProject?.listProjects!.length > 0 && !!value) {
-      return stateProject?.listProjects!.find((item) => item.id === value)?.name
+    if (stateProject?.listProjects!.length > 0 && !!value) {
+      return stateProject?.listProjects!.find((item) => item.id === value)?.name;
     }
-  }
+  };
 
   const buttons: IGridButton[] = [
     {
@@ -78,20 +78,18 @@ const FeedbackComplaints = () => {
       className: "w-[200px]",
     },
     {
-        dataIndex: "responese_content",
-        title: "Phản hồi khiếu nại",
-        className: "w-[250px]",
-        render(_, record) {
-            return <div dangerouslySetInnerHTML={{ __html: record?.responese_content || "" }} className="text-compact-2"></div>;
-        },
+      dataIndex: "responese_content",
+      title: "Phản hồi khiếu nại",
+      className: "w-[250px]",
+      render(_, record) {
+        return <div dangerouslySetInnerHTML={{ __html: record?.responese_content || "" }} className="text-compact-2"></div>;
+      },
     },
 
     {
       title: "Trạng thái",
       dataIndex: "is_active",
       render(_, record) {
-        // console.log(!!+record.is_active);
-
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
@@ -150,16 +148,14 @@ const FeedbackComplaints = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
-//   const projectOptions: IOption[] =
-//     stateProject?.listProjects && stateProject.listProjects.length > 0
-//       ? stateProject.listProjects.map((e) => ({
-//           value: e.id,
-//           label: e.name,
-//         }))
-//       : [];
-  const search: ISearchTypeTable[] = [
-   
-  ];
+  //   const projectOptions: IOption[] =
+  //     stateProject?.listProjects && stateProject.listProjects.length > 0
+  //       ? stateProject.listProjects.map((e) => ({
+  //           value: e.id,
+  //           label: e.name,
+  //         }))
+  //       : [];
+  const search: ISearchTypeTable[] = [];
 
   return (
     <>

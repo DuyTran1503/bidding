@@ -11,10 +11,11 @@ export interface IEmployee {
   birthday: string;
   gender: string;
   taxcode?: string;
-  educational_level?: EDUCATIONLEVEL;
+  education_level?: EDUCATIONLEVEL;
   start_date: string;
   end_date: string;
   salary: string;
   address: string;
   status?: TypeEmployee;
+  enterprise?: { id: string; name: string };
 }
