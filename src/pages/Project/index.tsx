@@ -3,7 +3,6 @@ import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
-import CustomTabs from "@/components/table/CustomTabs";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
@@ -25,8 +24,7 @@ import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  // const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
-  const { state: stateChart, dispatch: dispatchChart } = useArchive<IChartInitialState>("chart");
+  const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IChartInitialState>("chart");
   const navigate = useNavigate();
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [isModal, setIsModal] = useState(false);
@@ -75,6 +73,26 @@ const ProjectPage = () => {
       },
     },
   ];
+
+  const additionalTabs = [
+    {
+      key: "extraTab1",
+      label: "Thông tin thêm",
+      content: <GenericChart
+        chartType="bar"
+        title="Dự án theo ngành"
+        name={stateIndustry.industryData.map(({ name }) => name)}
+        value={stateIndustry.industryData.map(({ value }) => value)}
+        seriesName="Dữ liệu Biểu đồ"
+      />,
+    },
+    {
+      key: "extraTab2",
+      label: "Thống kê chi tiết",
+      content: <div>Nội dung cho tab bổ sung 2</div>,
+    },
+
+  ]
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -150,8 +168,7 @@ const ProjectPage = () => {
 
   useEffect(() => {
     dispatchProject(getAllProject({ query: stateProject.filter }));
-    // dispatchIndustry(getIndustries());
-    dispatchChart(projectByIndustry({}));
+    dispatchIndustry(projectByIndustry({}));
   }, [JSON.stringify(stateProject.filter)]);
   useEffect(() => {
     if (stateProject.status === EFetchStatus.FULFILLED) {
@@ -171,34 +188,6 @@ const ProjectPage = () => {
       error: { message: stateProject.message },
     },
   });
-
-  const projectTab = (
-    <ManagementGrid
-      columns={columns}
-      data={data}
-      search={search}
-      buttons={buttons}
-      pagination={{
-        current: stateProject.filter.page ?? 1,
-        pageSize: stateProject.filter.size ?? 10,
-        total: stateProject.totalRecords,
-        number_of_elements: stateProject.number_of_elements && stateProject.number_of_elements,
-        // showSideChanger:true
-      }}
-      setFilter={setFilter}
-      filter={stateProject.filter}
-      scroll={{ x: 2200 }}
-    />
-  )
-  const statisticalTab = (
-    <GenericChart
-      chartType="bar"
-      title="Thống kê chung"
-      name={stateChart.industryData.map(({ name }) => name)}
-      value={stateChart.industryData.map(({ value }) => value)}
-      seriesName="Dữ liệu Biểu đồ"
-    />
-  )
   return (
     <>
       <Heading
@@ -226,12 +215,22 @@ const ProjectPage = () => {
         setVisible={setIsModal}
         onConfirm={onConfirmStatus}
       />
-      <CustomTabs
-        // defaultActiveKey="1"
-        items={[
-          { key: "1", label: "Danh sách Dự án", content: projectTab },
-          { key: "2", label: "Thống kê Chi tiết", content: statisticalTab },
-        ]}
+      <ManagementGrid
+        columns={columns}
+        data={data}
+        search={search}
+        buttons={buttons}
+        pagination={{
+          current: stateProject.filter.page ?? 1,
+          pageSize: stateProject.filter.size ?? 10,
+          total: stateProject.totalRecords,
+          number_of_elements: stateProject.number_of_elements && stateProject.number_of_elements,
+        }}
+        setFilter={setFilter}
+        filter={stateProject.filter}
+        scroll={{ x: 2200 }}
+        tabLabel="Danh sách dữ liệu"
+        additionalTabs={additionalTabs}
       />
     </>
   );
