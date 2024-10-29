@@ -17,7 +17,6 @@ const CreateEmployee = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IEmployee>>(null);
   const { state } = useArchive<IEmployeeInitialState>("employee");
-
   useFetchStatus({
     module: "employee",
     reset: resetStatus,
@@ -50,7 +49,7 @@ const CreateEmployee = () => {
             isLoading: state.status === EFetchStatus.PENDING,
             text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
-            permission: EPermissions.CREATE_EMPLOYEE,
+            // permission: EPermissions.CREATE_EMPLOYEE,
             onClick: () => {
               formikRef && formikRef.current && formikRef.current.handleSubmit();
             },

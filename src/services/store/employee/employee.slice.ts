@@ -49,7 +49,6 @@ const employeeSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getAllEmployee.fulfilled, (state, { payload }: PayloadAction<IResponse<IEmployee[]> | any>) => {
-        state.status = EFetchStatus.FULFILLED;
         if (payload.data) {
           state.employees = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;
@@ -72,7 +71,7 @@ const employeeSlice = createSlice({
       });
     builder
       .addCase(getEmployeeById.fulfilled, (state, { payload }: PayloadAction<IEmployee> | any) => {
-        state.employee = { ...payload?.employee, list_role: payload?.list_role };
+        state.employee = { ...payload?.data, enterprise_id: payload?.data.enterprise.id };
         state.loading = false;
       })
       .addCase(getEmployeeById.rejected, (state, { payload }: PayloadAction<IError> | any) => {

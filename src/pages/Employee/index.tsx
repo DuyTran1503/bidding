@@ -6,22 +6,46 @@ import { ColumnsType } from "antd/es/table";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
-import { useEffect, useMemo, useState } from "react";
-import ConfirmModal from "@/components/common/CommonModal";
+import { useEffect, useMemo } from "react";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import CustomerAvatar from "@/components/common/CustomerAvatar";
 import { IEmployeeInitialState, resetStatus, setFilter } from "@/services/store/employee/employee.slice";
 import { deleteEmployee, getAllEmployee } from "@/services/store/employee/employee.thunk";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { employeeEnumArray, mappingEmployee } from "@/shared/enums/types";
+import { educationLevelEnumArray, mappingEducationLevel } from "@/shared/enums/level";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 
 const Employee = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IEmployeeInitialState>("employee");
-  const [isModal, setIsModal] = useState(false);
-  const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const enterpriseName = (value: number) => {
+    if (stateEnterprise?.listEnterprise!.length > 0 && !!value) {
+      return stateEnterprise?.listEnterprise!.find((item) => item.id === value)?.name;
+    }
+  };
+  const enterpriseOption: IOption[] =
+    stateEnterprise?.listEnterprise! && stateEnterprise.listEnterprise.length > 0
+      ? stateEnterprise.listEnterprise.map((e) => ({
+          value: e.id,
+          label: e.name,
+        }))
+      : [];
+  const optionStatus: IOption[] = employeeEnumArray.map((e) => ({
+    label: mappingEmployee[e],
+    value: e,
+  }));
+
+  const optionEducation: IOption[] = educationLevelEnumArray.map((e) => ({
+    label: mappingEducationLevel[e],
+    value: e,
+  }));
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -30,41 +54,31 @@ const Employee = () => {
     {
       dataIndex: "name",
       title: "Name",
+      className: "w-[200px]",
     },
     {
       dataIndex: "avatar",
       title: "Ảnh đại diện",
       render(_, record) {
-        return <CustomerAvatar src={record.avatar} alt={"Ảnh đại diện"} />;
+        return <CustomerAvatar src={!!record.avatar && record.avatar} alt={"Ảnh đại diện"} />;
       },
+      className: "w-[150px]",
     },
     {
       dataIndex: "email",
       title: "Email",
+      className: "w-[200px]",
     },
     {
       dataIndex: "phone",
       title: "Số điện thoại",
+      className: "w-[150px]",
     },
-
-    // {
-    //   dataIndex: "total_bought",
-    //   title: "Số điện thoại",
-    // },
-
-    // {
-    //   title: "Trạng thái tài khoản",
-    //   dataIndex: "account_ban_at",
-    //   render(_, record) {
-    //     return (
-    //       <CommonSwitch
-    //         onChange={() => handleChangeStatus(record)}
-    //         checked={!!record.account_ban_at}
-    //         title={`Bạn có chắc chắn muốn ${record.account_ban_at ? "bỏ cấm" : "cấm"} tài khoản này?`}
-    //       />
-    //     );
-    //   },
-    // },
+    {
+      dataIndex: "enterprise",
+      title: "Công ty làm việc",
+      className: "w-[250px]",
+    },
   ];
   const buttons: IGridButton[] = [
     {
@@ -92,9 +106,42 @@ const Employee = () => {
   const search: ISearchTypeTable[] = [
     {
       id: "name",
-      placeholder: "Nhập tên vai trò...",
-      title: "Tên vai trò",
+      placeholder: "Nhập tên nhân viên...",
+      title: "Tên nhân viên",
       type: "text",
+    },
+    {
+      id: "email",
+      placeholder: "Nhập email...",
+      title: "Tên email",
+      type: "text",
+    },
+    {
+      id: "address",
+      placeholder: "Nhập địa chỉ...",
+      title: "Tên địa chỉ",
+      type: "text",
+    },
+    {
+      id: "status",
+      placeholder: "Chọn trạng thái làm việc...",
+      title: "Tên trạng thái làm việc",
+      type: "select",
+      options: optionStatus,
+    },
+    {
+      id: "status",
+      placeholder: "Chọn trình độ học vấn...",
+      title: "Tên trình độ học vấn",
+      type: "select",
+      options: optionEducation,
+    },
+    {
+      id: "enterprise_id",
+      placeholder: "Chọn tên doanh nghiệp...",
+      title: "Tên doanh nghiệp",
+      type: "select",
+      options: enterpriseOption as { value: string; label: string }[],
     },
   ];
   const data: ITableData[] = useMemo(() => {
@@ -110,37 +157,31 @@ const Employee = () => {
           birthday: employee.birthday,
           gender: employee.gender,
           taxcode: employee.taxcode,
-          educational_level: employee.educational_level,
+          education_level: employee.education_level,
           start_date: employee.start_date,
           end_date: employee.end_date,
           salary: employee.salary,
+          enterprise: enterpriseName(+employee?.enterprise?.id!),
           address: employee.address,
           status: employee.status,
+          avatar: employee.avatar,
         }))
       : [];
   }, [JSON.stringify(state.employees)]);
-  const handleChangeStatus = (item: ITableData) => {
-    setIsModal(true);
-    setConfirmItem(item);
-  };
-  // const onConfirmStatus = () => {
-  //   if (confirmItem && confirmItem.key) {
-  //     dispatch(changeStatusEmployee(String(confirmItem.key)));
-  //   }
-  // };
-
-  useEffect(() => {
-    dispatch(getAllEmployee({ query: state.filter }));
-  }, [JSON.stringify(state.filter)]);
 
   useFetchStatus({
-    module: "account",
+    module: "employee",
     reset: resetStatus,
     actions: {
       success: { message: state.message },
       error: { message: state.message },
     },
   });
+
+  useEffect(() => {
+    dispatch(getAllEmployee({ query: state.filter }));
+    dispatchEnterprise(getListEnterprise());
+  }, [JSON.stringify(state.filter), JSON.stringify(state.status)]);
   return (
     <>
       <Heading
@@ -161,13 +202,6 @@ const Employee = () => {
           },
         ]}
       />
-      {/* <ConfirmModal
-        title={"Xác nhận"}
-        content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
-        visible={isModal}
-        setVisible={setIsModal}
-        onConfirm={onConfirmStatus}
-      /> */}
       <ManagementGrid
         columns={columns}
         data={data}

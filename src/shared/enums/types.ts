@@ -21,7 +21,7 @@ export enum TypeEmployee {
 export const employeeEnumArray: TypeEmployee[] = [TypeEmployee.DOING, TypeEmployee.PAUSE, TypeEmployee.LEAVE];
 
 export const mappingEmployee: { [key in TypeEmployee]: string } = {
-  [TypeEmployee.DOING]: "Bảo lãnh dự thầu bảo hiểm",
-  [TypeEmployee.PAUSE]: "Bảo lãnh dự thầu ngân hàng",
-  [TypeEmployee.LEAVE]: "Bảo lãnh dự thầu bằng tiền mặt",
+  [TypeEmployee.DOING]: "Đang hoạt động",
+  [TypeEmployee.PAUSE]: "Tạm dừng",
+  [TypeEmployee.LEAVE]: "Rời công ty",
 };
