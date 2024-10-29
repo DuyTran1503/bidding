@@ -88,8 +88,6 @@ const EvaluationCriteria = () => {
       title: "Trạng thái",
       dataIndex: "is_active",
       render(_, record) {
-        // console.log(!!+record.is_active);
-
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
@@ -109,7 +107,7 @@ const EvaluationCriteria = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.evaluations && state.evaluations.length > 0
-        ? state.evaluations.map(({ id, project_id,name, weight, description, is_active }, index) => ({
+        ? state.evaluations.map(({ id, project_id, name, weight, description, is_active }, index) => ({
             index: index + 1,
             key: id,
             id,

@@ -23,14 +23,14 @@ import ActionModule from "./ActionModule";
 const QuestionsAnswers = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IQuestionsAnswersInitialState>("questions_answers");
-  const {state: stateProject} = useArchive<IProjectInitialState>("project")   
+  const { state: stateProject } = useArchive<IProjectInitialState>("project");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const projectName = (value: number) => {
-    if(stateProject?.listProjects!.length > 0 && !!value) {
-      return stateProject?.listProjects!.find((item) => item.id === value)?.name
+    if (stateProject?.listProjects!.length > 0 && !!value) {
+      return stateProject?.listProjects!.find((item) => item.id === value)?.name;
     }
-  }
+  };
 
   const buttons: IGridButton[] = [
     {
@@ -71,13 +71,13 @@ const QuestionsAnswers = () => {
       className: "w-[200px]",
     },
     {
-        dataIndex: "question_content",
-        title: "Nội dung câu hỏi",
-        className: "w-[250px]",
-        render(_, record) {
-          return <div dangerouslySetInnerHTML={{ __html: record?.question_content || "" }} className="text-compact-2"></div>;
-        },
+      dataIndex: "question_content",
+      title: "Nội dung câu hỏi",
+      className: "w-[250px]",
+      render(_, record) {
+        return <div dangerouslySetInnerHTML={{ __html: record?.question_content || "" }} className="text-compact-2"></div>;
       },
+    },
     {
       dataIndex: "answered_by",
       title: "Người trả lời",
@@ -96,8 +96,6 @@ const QuestionsAnswers = () => {
       title: "Trạng thái",
       dataIndex: "is_active",
       render(_, record) {
-        // console.log(!!+record.is_active);
-
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
@@ -164,9 +162,7 @@ const QuestionsAnswers = () => {
           label: e.name,
         }))
       : [];
-  const search: ISearchTypeTable[] = [
-   
-  ];
+  const search: ISearchTypeTable[] = [];
 
   return (
     <>

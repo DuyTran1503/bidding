@@ -155,12 +155,24 @@ export enum EPermissions {
   UPDATE_EVALUATION = "update_evaluation_criteria",
   DESTROY_EVALUATION = "destroy_evaluation_criteria",
 
+  // ? TASK
+  LIST_TASK = "list_task",
+  DETAIL_TASK = "detail_task",
+  CREATE_TASK = "create_task",
+  UPDATE_TASK = "update_task",
+  DESTROY_TASK = "destroy_task",
   // Câu hỏi / Câu trả lời
   LIST_QUESTIONS_ANSWERS = "list_questions_answers",
   DETAIL_QUESTIONS_ANSWERS = "detail_questions_answers",
   UPDATE_QUESTIONS_ANSWERS = "update_questions_answers",
   DESTROY_QUESTIONS_ANSWERS = "destroy_questions_answers",
 
+  // employee
+  LIST_EMPLOYEE = "list_employee",
+  DETAIL_EMPLOYEE = "detail_employee",
+  CREATE_EMPLOYEE = "create_employee",
+  UPDATE_EMPLOYEE = "update_employee",
+  DESTROY_EMPLOYEE = "destroy_employee",
   // Phản hồi và khiếu nại
   LIST_FEEDBACK_COMPLAINT = "list_feedback_complaint",
   DETAIL_FEEDBACK_COMPLAINT = "detail_feedback_complaint",
