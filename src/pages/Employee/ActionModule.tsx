@@ -24,7 +24,7 @@ import { mappingGender, statusEnumArray } from "@/shared/enums/gender";
 import { IOption } from "@/shared/utils/shared-interfaces";
 import { IEmployee } from "@/services/store/employee/employee.model";
 import Employee from ".";
-import { TypeEmployee } from "@/shared/enums/types";
+import { employeeEnumArray, mappingEmployee, TypeEmployee } from "@/shared/enums/types";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { convertDataOptions } from "../Project/helper";
@@ -43,12 +43,9 @@ interface IEmployeeFormProps {
 }
 
 const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
-  const [loading, setLoading] = useState(false);
-
-  const { dispatch, state } = useArchive<IEmployeeInitialState>("employee");
+  const { dispatch } = useArchive<IEmployeeInitialState>("employee");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
 
-  const roles = useSelector((state: RootStateType) => state.role.roles);
   const initialValues: IEmployee = {
     id: employee?.id ?? "",
     enterprise_id: employee?.enterprise_id ?? "",
@@ -60,7 +57,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
     birthday: employee?.birthday ?? "",
     gender: employee?.gender ?? "",
     taxcode: employee?.taxcode ?? "",
-    educational_level: employee?.educational_level ?? undefined, // Default value
+    education_level: employee?.education_level ?? undefined, // Default value
     start_date: employee?.start_date ?? "",
     end_date: employee?.end_date ?? "",
     salary: employee?.salary ?? "", // Assuming salary is a string
@@ -85,26 +82,28 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
     value: key,
     label: mappingGender[key],
   }));
-  useEffect(() => {
-    dispatchEnterprise(getListEnterprise());
-  }, []);
+
   const optionEducation: IOption[] = educationLevelEnumArray.map((e) => ({
     label: mappingEducationLevel[e],
     value: e,
   }));
+  const optionStatus: IOption[] = employeeEnumArray.map((e) => ({
+    label: mappingEmployee[e],
+    value: e,
+  }));
+  useEffect(() => {
+    dispatchEnterprise(getListEnterprise());
+  }, [dispatchEnterprise]);
   return (
     <Formik
       enableReinitialize
       innerRef={formikRef}
-      initialValues={employee ?? initialValues}
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(data) => {
         const body = {
           ...lodash.omit(data, "id"),
-          // employee_ban_at: data.employee_ban_at ? new Date().toISOString() : null,
-          // role_id: data.id_role,
         };
-        /* eslint-disable @typescript-eslint/no-unused-vars */
         if (type === EPageTypes.CREATE) {
           return dispatch(createEmployee(body as any));
         }
@@ -118,10 +117,11 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
         return (
           <Form>
             <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Tên nhân viên">
                   <FormInput
                     type="text"
+                    label="Tên nhân viên"
                     isDisabled={type === "view"}
                     value={values.name ?? ""}
                     name="name"
@@ -134,9 +134,10 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Mã nhân viên">
                   <FormInput
+                    label="Mã nhân viên"
                     type="text"
                     isDisabled={type === "view"}
                     value={values.code ?? ""}
@@ -150,21 +151,22 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title=" Công ty">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+                <FormGroup title=" Công ty làm việc">
                   <FormSelect
-                    label=" Công ty"
+                    label="Công ty làm việc"
                     placeholder="Chọn công ty..."
                     id="enterprise_id"
-                    value={values.enterprise_id}
+                    value={values.enterprise_id || undefined}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Email">
                   <FormInput
+                    label="Email"
                     type="text"
                     isDisabled={type === "view"}
                     value={values.email ?? ""}
@@ -178,11 +180,10 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-            </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Số điện thoại">
                   <FormInput
+                    label="Số điện thoại"
                     type="text"
                     isDisabled={type === "view"}
                     value={values.phone ?? ""}
@@ -196,11 +197,10 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-            </Row>
-            <Row gutter={[24, 0]} className="justify-end">
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Mã số thuế">
                   <FormInput
+                    label="Mã số thuế"
                     type="number"
                     isDisabled={type === "view"}
                     value={values.taxcode ?? ""}
@@ -214,21 +214,24 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <Row gutter={[12, 0]}>
-                  <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                    <FormGroup title="Giới tính" className="gap-[6px]">
-                      <FormRadio
-                        options={genderOptions}
-                        value={values.gender && (genderOptions.find((item) => +item.value === +values.gender)?.value as string)}
-                        onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+                <FormGroup title="Mức lương">
+                  <FormInput
+                    label="Mức lương"
+                    type="number"
+                    isDisabled={type === "view"}
+                    value={values.salary ?? ""}
+                    name="salary"
+                    error={touched.salary ? errors.salary : ""}
+                    placeholder="Nhập mức lương..."
+                    onChange={(value) => {
+                      setFieldValue("salary", value);
+                    }}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Ngày sinh">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -238,7 +241,24 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+                <FormGroup title="Địa chỉ">
+                  <FormInput
+                    label="Địa chỉ"
+                    type="text"
+                    isDisabled={type === "view"}
+                    value={values.address ?? ""}
+                    name="address"
+                    error={touched.address ? errors.address : ""}
+                    placeholder="Nhập địa chỉ..."
+                    onChange={(value) => {
+                      setFieldValue("address", value);
+                    }}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Ngày bắt đầu ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -248,7 +268,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Ngày kết thúc ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -259,20 +279,45 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Ảnh đại diện">
+
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+                <FormGroup title="Trình độ học vấn">
                   <FormSelect
                     isDisabled={type === "view"}
-                    label="Task làm việc"
-                    value={values.status}
+                    label="Trình độ học vấn"
+                    value={values.education_level}
                     options={optionEducation}
+                    id="education_level"
+                    placeholder="Chọn mức độ..."
+                    onChange={(value) => setFieldValue("education_level", value)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+                <FormGroup title="Giới tính" className="gap-[6px]">
+                  <FormRadio
+                    title="Giới tính"
+                    options={genderOptions}
+                    value={values.gender && (genderOptions.find((item) => +item.value === +values.gender)?.value as string)}
+                    onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+                <FormGroup title="Trạng thái làm việc">
+                  <FormSelect
+                    isDisabled={type === "view"}
+                    label="Trạng thái làm việc"
+                    value={values.status}
+                    options={optionStatus}
                     id="status"
                     placeholder="Chọn mức độ..."
                     onChange={(value) => setFieldValue("status", value)}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Ảnh đại diện">
                   <FormUploadFile
                     isMultiple={false}

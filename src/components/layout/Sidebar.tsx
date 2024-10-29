@@ -133,8 +133,8 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         {
           id: "3.5",
           label: "Tiêu chí đánh giá",
-          path: "evaluation-criteria",
-          permissions: EPermissions.LIST_EVALUATION,
+          path: "evaluation_criteria",
+          // permissions: EPermissions.LIST_EVALUATION,
         },
       ],
     },

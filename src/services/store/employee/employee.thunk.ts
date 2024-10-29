@@ -17,7 +17,7 @@ export const getAllEmployee = createAsyncThunk("employee/get-all-employee", asyn
 
 export const getEmployeeById = createAsyncThunk("employee/get-employee-by-id", async (id: string, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<IEmployee>(prefix + `/${id}/edit`);
+    const { response, data } = await client.get<IEmployee>(prefix + `/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);

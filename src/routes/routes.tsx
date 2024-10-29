@@ -42,7 +42,6 @@ import DetailFundingSource from "@/pages/FundingSource/Detail";
 import Attachment from "@/pages/Attachment";
 import BidDocument from "@/pages/BidDocument";
 import CreateBidDocument from "@/pages/BidDocument/Create";
-
 import DetailBidDocument from "@/pages/BidDocument/Detail";
 import UpdateBidDocument from "@/pages/BidDocument/Update";
 import DetailEnterprise from "@/pages/Enterprise/Detail";
@@ -63,14 +62,14 @@ import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/Upda
 import Banners from "@/pages/Banners/Banners/Banners";
 import DetailProject from "@/pages/Project/Detail";
 import BidBonds from "@/pages/BidBond";
-import EvaluationCriteria from "@/pages/EvaluationCriteria";
 import Tasks from "@/pages/Task/Tasks/Task";
 import QuestionsAnswers from "@/pages/Questions_Answers";
 import Employee from "@/pages/Employee";
 import CreateEmployee from "@/pages/Employee/Create";
-import UpdateEmployee from "@/pages/Employee/Update/UpdateStaff";
+import UpdateEmployee from "@/pages/Employee/Update";
 import DetailEmployee from "@/pages/Employee/Detail";
 import FeedbackComplaints from "@/pages/FeedbackComplaint";
+import EvaluationCriteria from "@/pages/EvaluationCriteria";
 
 export interface IRoute {
   path: string;

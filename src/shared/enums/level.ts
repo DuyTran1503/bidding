@@ -15,12 +15,12 @@ export const mappingLevelTask: { [key in LEVELTASK]: string } = {
 };
 
 export enum EDUCATIONLEVEL {
-  PRIMARY_SCHOOL = "Tiểu học",
-  SECONDARY_SCHOOL = "Trung học cơ sở",
-  HIGH_SCHOOL = "Trung học phổ thông",
-  COLLEGE = "Cao đẳng",
-  UNIVERSITY = "Đại học",
-  AFTER_UNIVERSITY = "Sau đại học",
+  PRIMARY_SCHOOL = "primary_school",
+  SECONDARY_SCHOOL = "secondary_school",
+  HIGH_SCHOOL = "high_school",
+  COLLEGE = "college",
+  UNIVERSITY = "university",
+  AFTER_UNIVERSITY = "after_university",
 }
 
 export const educationLevelEnumArray: EDUCATIONLEVEL[] = [
