@@ -23,25 +23,24 @@ import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import ActionModule from "./ActionModule";
-import { projectOptions } from "./component/searchBidbond";
 
 const BidBonds = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const {state: stateProject} = useArchive<IProjectInitialState>("project")
-  const {state: stateEnterprise} = useArchive<IEnterpriseInitialState>("enterprise")
+  const { state: stateProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const projectName = (value: number) => {
-    if(stateProject?.listProjects!.length > 0 && !!value) {
-      return stateProject?.listProjects!.find((item) => item.id === value)?.name
+    if (stateProject?.listProjects!.length > 0 && !!value) {
+      return stateProject?.listProjects!.find((item) => item.id === value)?.name;
     }
-  }
-  const enterpriseName = ((value: number) => {
-    if(stateEnterprise?.listEnterprise!.length > 0 && !! value) {
-      return stateEnterprise?.listEnterprise!.find((item) => item.id === value)?.name
+  };
+  const enterpriseName = (value: number) => {
+    if (stateEnterprise?.listEnterprise!.length > 0 && !!value) {
+      return stateEnterprise?.listEnterprise!.find((item) => item.id === value)?.name;
     }
-  }) 
+  };
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -83,40 +82,18 @@ const BidBonds = () => {
       dataIndex: "bond_type",
       title: "Loại nguồn tài trợ",
       render(_, record) {
-      
         return <div className="flex flex-col">{mappingBidBond[record?.bond_type as TypeBidBond]}</div>;
       },
     },
     {
       dataIndex: "project_id",
       title: "Dự án",
-      // render(_, record) {
-      //   return <div className="flex flex-col">{}</div>
-      // }
     },
     {
       dataIndex: "bond_amount",
       title: "Số tiền bảo lãnh",
     },
-    // {
-    //   title: "Trạng thái",
-    //   dataIndex: "is_active",
-    //   render(_, record) {
-    //     return (
-    //       <CommonSwitch
-    //         onChange={() => handleChangeStatus(record)}
-    //         checked={!!record.is_active}
-    //         title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
-    //       />
-    //     );
-    //   },
-    // },
   ];
-
-  const handleChangeStatus = (item: ITableData) => {
-    setIsModal(true);
-    setConfirmItem(item);
-  };
 
   const data: ITableData[] = useMemo(
     () =>
@@ -140,7 +117,7 @@ const BidBonds = () => {
             }),
           )
         : [],
-    [JSON.stringify(state.bidBonds),JSON.stringify(stateEnterprise?.listEnterprise)],
+    [JSON.stringify(state.bidBonds), JSON.stringify(stateEnterprise?.listEnterprise)],
   );
 
   useEffect(() => {
@@ -154,10 +131,10 @@ const BidBonds = () => {
   }, [JSON.stringify(state.status)]);
   useEffect(() => {
     dispatch(getListProject());
-  }, [dispatch])
+  }, [dispatch]);
   useEffect(() => {
-    dispatch(getListEnterprise())
-  },[dispatch])
+    dispatch(getListEnterprise());
+  }, [dispatch]);
 
   useFetchStatus({
     module: "bid_bond",
@@ -180,12 +157,13 @@ const BidBonds = () => {
           label: e.name,
         }))
       : [];
-  const enterprisrOption: IOption[] = 
-  stateEnterprise?.listEnterprise! && stateEnterprise.listEnterprise.length > 0
-  ? stateEnterprise.listEnterprise.map((e) => ({
-        value: e.id,
-        label: e.name,
-  })): []
+  const enterpriseOption: IOption[] =
+    stateEnterprise?.listEnterprise! && stateEnterprise.listEnterprise.length > 0
+      ? stateEnterprise.listEnterprise.map((e) => ({
+          value: e.id,
+          label: e.name,
+        }))
+      : [];
   const optionType: IOption[] = bidBondEnumArray.map((e) => ({
     label: mappingBidBond[e],
     value: e,
@@ -202,15 +180,14 @@ const BidBonds = () => {
       placeholder: "Nhập tên Người/Tổ chức...",
       label: "Tên Người/Tổ chức bão lãnh dự thầu",
       type: "select",
-      options: enterprisrOption as {value: string; label: string}[],
+      options: enterpriseOption as { value: string; label: string }[],
     },
     {
       id: "bond_type",
       placeholder: "Nhập loại bão lãnh...",
       label: "Loại bão lãnh ",
       type: "select",
-      options: optionType
-
+      options: optionType,
     },
     {
       id: "project_id",
