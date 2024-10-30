@@ -29,6 +29,7 @@ import { tenderNoticeSlice } from "./store/tenderNotice/tenderNotice.slice";
 import { supportSlice } from "./store/support/support.slice";
 import { evaluationSlice } from "./store/evaluation/evaluation.slice";
 import { chartSlice } from "./store/chart/chart.slice";
+import { compareProjectSlice } from "./store/CompareProject/compareProject.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -60,6 +61,7 @@ export const reducers = combineReducers({
   tender_notice: tenderNoticeSlice.reducer,
   evaluation: evaluationSlice.reducer,
   chart: chartSlice.reducer,
+  compareproject: compareProjectSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;

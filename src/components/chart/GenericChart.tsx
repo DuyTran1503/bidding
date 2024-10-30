@@ -11,27 +11,35 @@ interface GenericChartProps {
     height?: number;
     width?: string;
     title?: string;
+    legendPosition?: "top" | "bottom" | "left" | "right";
+    animationDuration?: number;
+    labelFontSize?: number;
+    barWidth?: number;
 }
 
 const defaultColors = ["#5470C6", "#91CC75", "#EE6666", "#FAC858", "#73C0DE", "#3BA272", "#FC8452", "#9A60B4", "#EA7CCC"];
 
 const GenericChart: React.FC<GenericChartProps> = ({
-    name = [],
-    value = [],
-    seriesName = "Data",
+    name,
+    value,
+    seriesName,
     chartType,
     colors = defaultColors,
     tooltipEnabled = true,
     height = 400,
     width = "100%",
-    title = "",
+    title,
+    legendPosition,
+    animationDuration = 800,
+    labelFontSize = 12,
+    barWidth
 }) => {
     const chartRef = useRef<HTMLDivElement>(null);
 
     const option = useMemo(() => {
         const seriesData = chartType === "pie"
-            ? name.map((n, i) => ({ name: n, value: value[i], itemStyle: { color: colors[i % colors.length] } }))
-            : value.map((v, i) => ({ value: v, itemStyle: { color: colors[i % colors.length] } }));
+            ? name?.map((n, i) => ({ name: n, value: value?.[i], itemStyle: { color: colors[i % colors.length] } }))
+            : value?.map((v, i) => ({ value: v, itemStyle: { color: colors[i % colors.length] } }));
 
         return {
             tooltip: {
@@ -41,7 +49,13 @@ const GenericChart: React.FC<GenericChartProps> = ({
             title: {
                 text: title,
                 left: 'center',
+                textStyle: { fontSize: Math.max(16, height / 20) }, // Responsive title font size
             },
+            legend: legendPosition ? { // Chỉ hiện legend nếu legendPosition có giá trị
+                orient: legendPosition === "left" || legendPosition === "right" ? "vertical" : "horizontal",
+                [legendPosition]: '5%',
+                itemGap: 10,
+            } : undefined,
             xAxis: chartType !== "pie" ? { type: "category", data: name } : undefined,
             yAxis: chartType !== "pie" ? { type: "value" } : undefined,
             series: [
@@ -49,16 +63,20 @@ const GenericChart: React.FC<GenericChartProps> = ({
                     name: seriesName,
                     type: chartType,
                     data: seriesData,
+                    barWidth: barWidth,
                     label: {
                         show: true,
-                        formatter: chartType === "pie" ? '{b}: {d}%' : undefined, // Hiển thị phần trăm cho biểu đồ tròn
+                        fontSize: labelFontSize,
+                        color: "#333",
+                        formatter: chartType === "pie" ? '{b}: {d}%' : '{c}',
                         position: chartType === "pie" ? 'outside' : 'top',
                     },
                     areaStyle: chartType === "area" ? {} : undefined,
+                    animationDuration,
                 },
             ],
         };
-    }, [name, value, seriesName, chartType, colors, tooltipEnabled, title]);
+    }, [name, value, seriesName, chartType, colors, tooltipEnabled, title, barWidth, legendPosition, animationDuration, labelFontSize, height]);
 
     useEffect(() => {
         const chartDom = chartRef.current;
@@ -79,7 +97,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
     }, [option]);
 
     return (
-        <div className="mt-4" ref={chartRef} style={{ minHeight: height, width: width }}></div>
+        <div className="mt-4" ref={chartRef} style={{ minHeight: height, width }}></div>
     );
 };
 
