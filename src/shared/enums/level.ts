@@ -7,7 +7,7 @@ export enum LEVELTASK {
 
 export const levelTaskEnumArray: LEVELTASK[] = [LEVELTASK.EASY, LEVELTASK.MEDIUM, LEVELTASK.HARD, LEVELTASK.VERYHARD];
 
-export const mappingLevelTask: { [key in LEVELTASK]: string } = {
+export const mappingLevelTask: { [key in LEVELTASK]: string | any } = {
   [LEVELTASK.EASY]: "Dễ",
   [LEVELTASK.MEDIUM]: "Trung bình",
   [LEVELTASK.HARD]: "Khó",
