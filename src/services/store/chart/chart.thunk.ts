@@ -5,6 +5,7 @@ import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IChart } from "./chart.model";
 
 const prefix = "/api/admin/dashboard/charts";
+const prefixx = "/api/admin/charts";
 
 // chart project-by-industry
 export const projectByIndustry = createAsyncThunk(
@@ -104,6 +105,19 @@ export const averageProjectPurationByIndustry = createAsyncThunk(
     try {
       const { data } = await client.get<IChart[]>(`${prefix}/average-project-duration-by-industry`,  payload );
       return data.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+    }
+  }
+);
+
+// chart enterprises/{id}/employee-education-level-statistic-by-enterprise
+export const employeeEducationLevelStatisticByEnterprise = createAsyncThunk(
+  "chart/employee-education-level-statistic-by-enterprise",
+  async (id: number | string, { rejectWithValue }) => {
+    try {
+      const { data } = await client.get<IChart>(`${prefixx}/enterprises/${id}/employee-education-level-statistic-by-enterprise`);
+      return data; 
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
     }
