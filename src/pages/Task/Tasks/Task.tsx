@@ -14,16 +14,16 @@ import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { GoDownload } from "react-icons/go";
 import { EPermissions } from "@/shared/enums/permissions";
-import CustomerAvatar from "@/components/common/CustomerAvatar";
 import TaskForm from "../TaskForm";
 import { ITaskInitialState, resetStatus, setFilter } from "@/services/store/task/task.slice";
 import { deleteTask, getAllTasks } from "@/services/store/task/task.thunk";
 import { levelTaskEnumArray, mappingLevelTask } from "@/shared/enums/level";
+import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
+import { getListEmployee } from "@/services/store/employee/employee.thunk";
 
 const Tasks = () => {
   const { state, dispatch } = useArchive<ITaskInitialState>("task");
-  const [isModal, setIsModal] = useState(false);
-  const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
+  const { state: stateEmployee, dispatch: dispatchEmployee } = useArchive<IEmployeeInitialState>("employee");
 
   const buttons: IGridButton[] = [
     {
@@ -42,6 +42,18 @@ const Tasks = () => {
       // permission: EPermissions.DESTROY_TASK,
     },
   ];
+  const employeeIds = (value: number[]) => {
+    if (stateEmployee?.getListEmployee!.length > 0 && value.length) {
+      return stateEmployee.getListEmployee!.filter((item) => value.includes(+item.id)).map((item) => item.name);
+    }
+  };
+  const optionEmployees: IOption[] =
+    (stateEmployee?.getListEmployee.length &&
+      stateEmployee?.getListEmployee.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }))) ||
+    [];
 
   const columns: ColumnsType<ITableData> = [
     {
@@ -58,6 +70,17 @@ const Tasks = () => {
       title: "Mã công việc",
     },
     {
+      dataIndex: "employees",
+      title: "Nhân viên",
+      render(_, record) {
+        return (
+          <div className="flex flex-col">
+            {(record?.employees as any[])?.map((item: string, index: number) => <div key={index}>{item ? item : ""}</div>)}
+          </div>
+        );
+      },
+    },
+    {
       dataIndex: "difficulty_level",
       title: "Mức độ",
     },
@@ -68,16 +91,24 @@ const Tasks = () => {
   }));
   const search: ISearchTypeTable[] = [
     {
+      id: "code",
+      placeholder: "Nhập mã ...",
+      label: "Mã công việc",
+      type: "text",
+    },
+    {
       id: "name",
       placeholder: "Nhập tên ...",
       label: "Tên công việc",
       type: "text",
     },
+
     {
-      id: "code",
-      placeholder: "Nhập tên ...",
-      label: "Tên công việc",
-      type: "text",
+      id: "employee_id",
+      placeholder: "Chọn nhân viên ...",
+      label: "Nhân viên",
+      type: "select",
+      options: optionEmployees,
     },
     {
       id: "difficulty_level",
@@ -91,14 +122,15 @@ const Tasks = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.tasks && state.tasks.length > 0
-        ? state.tasks.map(({ id, name, document, code, difficulty_level }, index) => ({
+        ? state.tasks.map(({ id, name, document, code, difficulty_level, employees }, index) => ({
             index: index + 1,
             key: id,
             id: id,
             name,
             document,
+            employees: (employees?.map((item) => item.id).length && employeeIds(employees?.map((item) => +item.id))) || [],
             code,
-            difficulty_level,
+            difficulty_level: !!difficulty_level && mappingLevelTask[difficulty_level],
           }))
         : [],
     [JSON.stringify(state.tasks)],
@@ -122,7 +154,9 @@ const Tasks = () => {
   useEffect(() => {
     dispatch(getAllTasks({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-
+  useEffect(() => {
+    dispatchEmployee(getListEmployee());
+  }, [dispatchEmployee]);
   return (
     <>
       <Heading
