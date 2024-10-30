@@ -21,7 +21,7 @@ const Statistical: React.FC = () => {
     const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
     const { state: stateCompare, dispatch: dispatchCompare } = useArchive<ICompareProjectInitialState>("compareproject");
     const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
-    const [selectedProjectIds, setSelectedProjectIds] = useState<number[]>([]);
+    const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
     const [treeSelectIds, setTreeSelectIds] = useState<string[]>([]);
     const navigate = useNavigate();
     const { id } = useParams();
@@ -60,7 +60,7 @@ const Statistical: React.FC = () => {
     useEffect(() => {
         if (selectedProjectIds.length > 0) {
             const requestData = {
-                project_ids: selectedProjectIds,
+                project_ids: selectedProjectIds.map(Number),
             };
             dispatchCompare(compareBarChartTotalAmount(requestData));
         }
@@ -74,24 +74,13 @@ const Statistical: React.FC = () => {
     }, [stateProject.project, dispatchChart]);
 
     const handleAddToCompare = () => {
-        const newIds = treeSelectIds.map(Number); // Chuyển đổi chuỗi thành số
-        const investorId = stateProject.project?.investor?.id;
-
-        // Tạo mảng project_ids và thêm investorId nếu có
-        const updatedProjectIds = [...new Set([...selectedProjectIds, ...newIds])]; // Kết hợp và loại bỏ trùng lặp
-
-        if (investorId) {
-            updatedProjectIds.push(investorId); // Thêm investorId vào mảng
-        }
-
-        setSelectedProjectIds(updatedProjectIds);
-        console.log("Selected IDs from TreeSelect:", updatedProjectIds); // Log các ID đã chọn
+        setSelectedProjectIds((prevIds) => [...prevIds, ...treeSelectIds]);
+        console.log("Selected IDs from TreeSelect:", treeSelectIds);
     };
 
     const educationData = stateChart.employeeEducationLevelStatisticByEnterprise || {};
     const names = Object.keys(educationData);
     const values = Object.values(educationData).map(value => Number(value));
-
     const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
         return data.map((item) => ({
             title: item.name,
@@ -125,6 +114,7 @@ const Statistical: React.FC = () => {
                     name={names}
                     value={values}
                     seriesName="Trình độ học vấn"
+                // width="400px"
                 />
             ),
         },

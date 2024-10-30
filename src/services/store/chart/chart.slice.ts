@@ -1,10 +1,11 @@
 // chart.slice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IInitialState } from "@/shared/utils/shared-interfaces";
+import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { IChart } from "./chart.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { 
   averageProjectPurationByIndustry, 
+  employeeEducationLevelStatisticByEnterprise, 
   projectByDomestic, 
   projectByFundingsource, 
   projectByIndustry, 
@@ -23,6 +24,7 @@ export interface IChartInitialState extends IInitialState {
   tendererData: IChart[];
   organizationData: IChart[];
   durationData: IChart[];
+  employeeEducationLevelStatisticByEnterprise: IChart | any;
 }
 
 // chart project-by-submission-method
@@ -42,6 +44,7 @@ const initialState: IChartInitialState = {
   tendererData: [],
   organizationData: [],
   durationData: [],
+  employeeEducationLevelStatisticByEnterprise: undefined,
   totalRecords: 0,
   filter: {
     size: 10,
@@ -135,6 +138,19 @@ const chartSlice = createSlice({
       state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
     });
     
+      // ? Get By ID
+      builder
+      .addCase(
+        employeeEducationLevelStatisticByEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IChart> | any>) => {
+        state.employeeEducationLevelStatisticByEnterprise = payload.data;
+        state.loading = false;
+      })
+      // .addCase(
+      //   employeeEducationLevelStatisticByEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IChart> | any>) => {
+      //   state.employeeEducationLevelStatisticByEnterprise = payload.data;
+      //   state.message = transformPayloadErrors(payload?.errors);
+      //   state.loading = false;
+      // });
   },
 });
 
