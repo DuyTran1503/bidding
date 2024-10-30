@@ -16,8 +16,8 @@ import { createTask, updateTask } from "@/services/store/task/task.thunk";
 import FormSelect from "@/components/form/FormSelect";
 import { IOption } from "@/shared/utils/shared-interfaces";
 import { convertDataOptions } from "../Project/helper";
-import { IAccountInitialState } from "@/services/store/account/account.slice";
-import { getListStaff } from "@/services/store/account/account.thunk";
+import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
+import { getListEmployee } from "@/services/store/employee/employee.thunk";
 
 interface ITaskFormProps {
   type?: EButtonTypes;
@@ -29,8 +29,7 @@ interface ITaskFormProps {
 const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
   const formikRef = useRef<FormikProps<ITask>>(null);
   const { state, dispatch } = useArchive<ITaskInitialState>("task");
-  const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
-
+  const { state: stateEmployee, dispatch: dispatchEmployee } = useArchive<IEmployeeInitialState>("employee");
   const { screenSize } = useViewport();
   const initialValues: ITask = {
     id: item?.id || "",
@@ -40,6 +39,7 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
     difficulty_level: item?.difficulty_level || undefined,
     code: item?.code || "",
   };
+
   const handleSubmit = (data: ITask) => {
     const body = {
       ...lodash.omit(data, "key", "index"),
@@ -58,7 +58,7 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
   }, [state.status]);
 
   useEffect(() => {
-    dispatchStaff(getListStaff());
+    !!visible && dispatchEmployee(getListEmployee());
   }, [visible]);
 
   const optionLevel: IOption[] = levelTaskEnumArray.map((e) => ({
@@ -73,9 +73,7 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
       }}
       visible={visible}
       setVisible={setVisible}
-      title={
-        type === EButtonTypes.CREATE ? "Tạo mới công tác" : type === EButtonTypes.UPDATE ? "Cập nhật Tạo mới công tác" : "Chi tiết Tạo mới công tác"
-      }
+      title={type === EButtonTypes.CREATE ? "Tạo mới công tác" : type === EButtonTypes.UPDATE ? "Cập nhật công tác" : "Chi tiết công tác"}
       footerContent={
         <div className="flex items-center justify-center gap-2">
           <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
@@ -123,11 +121,11 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormSelect
                   label="Công ty"
-                  placeholder="Chọn công ty..."
+                  placeholder="Chọn nhân viên..."
                   id="employees"
                   isMultiple
                   value={values?.employee_id}
-                  options={convertDataOptions(stateStaff?.getListStaff)}
+                  options={convertDataOptions(stateEmployee?.getListEmployee)}
                   onChange={(e) => setFieldValue("employee_id", e)}
                 />
               </Col>

@@ -8,7 +8,7 @@ import SearchComponent, { ISearchProps } from "./SearchComponent";
 
 export interface ITableData {
   key: React.Key;
-  [key: string]: unknown;
+  [key: string]: unknown | any;
 }
 export interface ScrollProps {
   x?: number | string | true;
