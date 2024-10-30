@@ -75,7 +75,7 @@ export const updateBanner = createAsyncThunk("banner/update-banner", async (payl
 
     const accessToken = client.tokens.accessToken();
 
-    const response = await fetch(import.meta.env.VITE_API_URL + prefix, {
+    const response = await fetch(import.meta.env.VITE_API_URL + `${prefix}/${payload?.param}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
