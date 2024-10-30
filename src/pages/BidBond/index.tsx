@@ -1,4 +1,3 @@
-import ConfirmModal from "@/components/common/CommonModal";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
@@ -7,7 +6,7 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus, setFilter } from "@/services/store/account/account.slice";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
-import { changeStatusBidBond, deleteBidBond, getAllBidBonds } from "@/services/store/bid_bond/bidBond.thunk";
+import { deleteBidBond, getAllBidBonds } from "@/services/store/bid_bond/bidBond.thunk";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
@@ -21,14 +20,10 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
-import { useNavigate } from "react-router-dom";
 import ActionModule from "./ActionModule";
 
 const BidBonds = () => {
-  const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
-  const [isModal, setIsModal] = useState(false);
-  const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const { state: stateProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const projectName = (value: number) => {
@@ -59,11 +54,6 @@ const BidBonds = () => {
     },
   ];
 
-  const onConfirmStatus = () => {
-    if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusBidBond(String(confirmItem.key)));
-    }
-  };
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -217,14 +207,6 @@ const BidBonds = () => {
           },
         ]}
       />
-
-      <ConfirmModal
-        title={"Xác nhận"}
-        content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
-        visible={isModal}
-        setVisible={setIsModal}
-        onConfirm={onConfirmStatus}
-      />
       <ManagementGrid
         columns={columns}
         data={data}
@@ -235,7 +217,6 @@ const BidBonds = () => {
           pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
           number_of_elements: state.number_of_elements && state.number_of_elements,
-          // showSideChanger: true,
         }}
         setFilter={setFilter}
         filter={state.filter}

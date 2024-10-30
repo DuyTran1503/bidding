@@ -23,17 +23,17 @@ export const getBiddingTypeById = createAsyncThunk("bidding-type/get-bidding-typ
   }
 });
 
-export const getBiddingTypeAllIds = createAsyncThunk(
-  "bidding-type/get-bidding-type-all-ids",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
-    try {
-      const { response, data } = await client.get<IBiddingType[]>(`${prefix}/all-ids`, payload);
-      return response.status >= 400 ? rejectWithValue(data) : data;
-    } catch (error: any) {
-      return rejectWithValue(error.response.data);
-    }
-  },
-);
+// export const getBiddingTypeAllIds = createAsyncThunk(
+//   "bidding-type/get-bidding-type-all-ids",
+//   async (payload: IThunkPayload, { rejectWithValue }) => {
+//     try {
+//       const { response, data } = await client.get<IBiddingType[]>(`${prefix}/all-ids`, payload);
+//       return response.status >= 400 ? rejectWithValue(data) : data;
+//     } catch (error: any) {
+//       return rejectWithValue(error.response.data);
+//     }
+//   },
+// );
 
 export const createBiddingType = createAsyncThunk("bidding-type/create-bidding-type", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
