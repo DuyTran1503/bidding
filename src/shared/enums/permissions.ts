@@ -48,6 +48,13 @@ export enum EPermissions {
   UPDATE_SELECTION_METHOD = "update_selection_method",
   DESTROY_SELECTION_METHOD = "destroy_selection_method",
 
+  // ? ProcurementCategorie
+  LIST_PROCUREMENT_CATEGORIE = "list_procurement_categorie",
+  DETAIL_PROCUREMENT_CATEGORIE = "detail_procurement_categorie",
+  CREATE_PROCUREMENT_CATEGORIE = "create_procurement_categorie",
+  UPDATE_PROCUREMENT_CATEGORIE = "update_procurement_categorie",
+  DESTROY_PROCUREMENT_CATEGORIE = "destroy_procurement_categorie",
+
   // staff
   LIST_STAFF = "list_staff",
   DETAIL_STAFF = "detail_staff",
@@ -113,9 +120,7 @@ export enum EPermissions {
   // ? Kết quả đấu thầu
   LIST_BIDDING_RESULT = "list_bidding_result",
   DETAIL_BIDDING_RESULT = "detail_bidding_result",
-  CREATE_BIDDING_RESULT = "create_bidding_result",
-  UPDATE_BIDDING_RESULT = "update_bidding_result",
-  DESTROY_BIDDING_RESULT = "destroy_bidding_result",
+
   //Bảo lãnh dự thầu
   LIST_BIDBOND = "list_bidbond",
   DETAIL_BIDBOND = "detail_bidbond",
@@ -134,12 +139,34 @@ export enum EPermissions {
   CREATE_PROJECT = "create_project",
   UPDATE_PROJECT = "update_project",
   DESTROY_PROJECT = "destroy_project",
+
   // ? Banner
   LIST_BANNER = "list_banner",
   DETAIL_BANNER = "detail_banner",
   CREATE_BANNER = "create_banner",
   UPDATE_BANNER = "update_banner",
   DESTROY_BANNER = "destroy_banner",
+
+  // ? Post
+  LIST_POST = "list_post",
+  DETAIL_POST = "detail_post",
+  CREATE_POST = "create_post",
+  UPDATE_POST = "update_post",
+  DESTROY_POST = "destroy_post",
+
+  // ? Post_catalog
+  LIST_POST_CATALOG = "list_post_catalog",
+  DETAIL_POST_CATALOG = "detail_post_catalog",
+  CREATE_POST_CATALOG = "create_post_catalog",
+  UPDATE_POST_CATALOG = "update_post_catalog",
+  DESTROY_POST_CATALOG = "destroy_post_catalog",
+
+  // ? Support
+  LIST_SUPPORT = "list_support",
+  DETAIL_SUPPORT = "detail_support",
+  CREATE_SUPPORT = "create_support",
+  UPDATE_SUPPORT = "update_support",
+  DESTROY_SUPPORT = "destroy_support",
 
   // Bảo lãnh dự thầu
   LIST_BID_BOND = "list_bidbond",

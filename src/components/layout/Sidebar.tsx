@@ -6,7 +6,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
 // Icons
-import { IoPieChartOutline, IoSettingsOutline } from "react-icons/io5";
+import {
+  IoBusinessOutline,
+  IoNewspaperOutline,
+  IoPieChartOutline,
+  IoSettingsOutline,
+  IoInformationCircleOutline,
+  IoHeadsetOutline,
+} from "react-icons/io5";
 
 // Images
 import logo from "@/assets/images/logo.png";
@@ -48,8 +55,27 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     },
     {
       id: "2",
+      label: "Tin tức",
+      icon: { component: IoNewspaperOutline },
+      items: [
+        {
+          id: "2.1",
+          label: "Danh mục bài viết",
+          path: "post-catalogs",
+          // permissions: EPermissions.LIST_POST_CATALOG,
+        },
+        {
+          id: "2.2",
+          label: "Bài viết",
+          path: "posts",
+          // permissions: EPermissions.LIST_POST,
+        },
+      ],
+    },
+    {
+      id: "2",
       label: "Doanh nghiệp",
-      icon: { component: MdOutlineFactory },
+      icon: { component: IoBusinessOutline },
       items: [
         {
           id: "2.1",
@@ -156,6 +182,24 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "employees",
           // permissions: EPermissions.LIST_EMPLOYEE,
         },
+        {
+          id: "4.4",
+          label: "Bảo lãnh dự thầu",
+          path: "bid-bond",
+          // permissions: EPermissions.LIST_BID_BOND,
+        },
+        {
+          id: "4.5",
+          label: "Tiêu chí đánh giá",
+          path: "evaluation-criteria",
+          permissions: EPermissions.LIST_EVALUATION,
+        },
+        {
+          id: "4.4",
+          label: "Loại hình mua sắm công",
+          path: "procurement-categories",
+          permissions: EPermissions.LIST_PROCUREMENT_CATEGORIE,
+        },
       ],
     },
     {
@@ -221,6 +265,24 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     },
     {
       id: "6",
+      label: "Giới thiệu",
+      icon: { component: IoInformationCircleOutline },
+      path: "introductions",
+    },
+    {
+      id: "7",
+      label: "Hướng dẫn",
+      icon: { component: IoNewspaperOutline },
+      path: "instructs",
+    },
+    {
+      id: "8",
+      label: "Hỗ trợ",
+      icon: { component: IoHeadsetOutline },
+      path: "supports",
+    },
+    {
+      id: "8",
       label: "Components",
       path: "components",
       icon: { component: RxComponent1 },

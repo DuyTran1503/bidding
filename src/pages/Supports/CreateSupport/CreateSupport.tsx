@@ -8,21 +8,21 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { useArchive } from "@/hooks/useArchive";
 import { EPageTypes } from "@/shared/enums/page";
-import { IBiddingResultInitialState, resetStatus } from "@/services/store/biddingResult/biddingResult.slice";
-import BiddingResultForm, { IBiddingResultFormInitialValues } from "../BiddingResultForm";
+import { ISupportInitialState, resetStatus } from "@/services/store/support/support.slice";
+import SupportForm, { ISupportFormInitialValues } from "../SupportForm";
 
-const CreateBiddingResult = () => {
+const CreateSupport = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IBiddingResultFormInitialValues>>(null);
-  const { state } = useArchive<IBiddingResultInitialState>("bidding_result");
+  const formikRef = useRef<FormikProps<ISupportFormInitialValues>>(null);
+  const { state } = useArchive<ISupportInitialState>("support");
 
   useFetchStatus({
-    module: "bidding_result",
+    module: "support",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/bidding-results",
+        navigate: "/supports",
       },
       error: {
         message: state.message,
@@ -33,7 +33,7 @@ const CreateBiddingResult = () => {
   return (
     <>
       <Heading
-        title="Tạo mới lịch sử đấu thầu"
+        title="Thêm mới tài khoản hỗ trợ"
         hasBreadcrumb
         buttons={[
           {
@@ -41,7 +41,7 @@ const CreateBiddingResult = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/bidding-results");
+              navigate("/supports");
             },
           },
           {
@@ -56,9 +56,9 @@ const CreateBiddingResult = () => {
           },
         ]}
       />
-      <BiddingResultForm type={EPageTypes.CREATE} formikRef={formikRef} />
+      <SupportForm type={EPageTypes.CREATE} formikRef={formikRef} />
     </>
   );
 };
 
-export default CreateBiddingResult;
+export default CreateSupport;
