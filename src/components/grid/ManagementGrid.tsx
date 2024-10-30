@@ -8,6 +8,11 @@ import { TableColumnsType } from "antd";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { ISearchTypeTable } from "../table/SearchComponent";
 
+export interface IAdditionalTab {
+  key: string;
+  label: string;
+  content: React.ReactNode;
+}
 export interface IModalProps<T> {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
@@ -33,6 +38,8 @@ export interface IGridProps<T extends ISearchParams> {
   filter?: T;
   scroll?: ScrollProps;
   ModalContent?: (props: IModalProps<T>) => ReactNode;
+  tabLabel?: string;
+  additionalTabs?: IAdditionalTab[];
 }
 
 const ManagementGrid = <T extends ISearchParams>({
@@ -46,6 +53,8 @@ const ManagementGrid = <T extends ISearchParams>({
   filter,
   scroll,
   ModalContent,
+  tabLabel,
+  additionalTabs = [],
 }: IGridProps<T>) => {
   const [modalUpdate, setModalUpdate] = useState(false);
   const [isDetail, setIsDetail] = useState(false);
@@ -64,19 +73,19 @@ const ManagementGrid = <T extends ISearchParams>({
   const renderColumns = useMemo(() => {
     return buttons?.some((button) => button.type === EButtonTypes.VIEW || button.type === EButtonTypes.UPDATE || button.type === EButtonTypes.DESTROY)
       ? ([
-          ...columns,
-          {
-            title: "Hành động",
-            width: "120px",
-            dataIndex: "actions",
-            key: "actions",
-            fixed: "right",
-            align: "center",
-            render(_, record) {
-              return <GridButtons buttons={buttons} record={record as any} onClick={(record, type) => handleButtonClick(record as any, type)} />;
-            },
+        ...columns,
+        {
+          title: "Hành động",
+          width: "120px",
+          dataIndex: "actions",
+          key: "actions",
+          fixed: "right",
+          align: "center",
+          render(_, record) {
+            return <GridButtons buttons={buttons} record={record as any} onClick={(record, type) => handleButtonClick(record as any, type)} />;
           },
-        ] as TableColumnsType)
+        },
+      ] as TableColumnsType)
       : columns;
   }, [JSON.stringify(buttons)]);
   const Modal = useMemo(
@@ -104,6 +113,8 @@ const ManagementGrid = <T extends ISearchParams>({
         setFilter={setFilter}
         fetching={fetching}
         filter={filter!}
+        additionalTabs={additionalTabs}
+        tabLabel={tabLabel} // Truyền tên cho các tab
       />
       {Modal}
     </>

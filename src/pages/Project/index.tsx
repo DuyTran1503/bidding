@@ -1,3 +1,4 @@
+import GenericChart from "@/components/chart/GenericChart";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import ManagementGrid from "@/components/grid/ManagementGrid";
@@ -8,6 +9,8 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
+import { IChartInitialState } from "@/services/store/chart/chart.slice";
+import { projectByIndustry } from "@/services/store/chart/chart.thunk";
 import { IProjectInitialState, resetMessageError, setFilter } from "@/services/store/project/project.slice";
 import { changeStatusProject, deleteProject, getAllProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
@@ -23,7 +26,8 @@ import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
+  // const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
+  const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IChartInitialState>("chart");
   const navigate = useNavigate();
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [isModal, setIsModal] = useState(false);
@@ -72,6 +76,27 @@ const ProjectPage = () => {
       },
     },
   ];
+
+  const additionalTabs = [
+    {
+      key: "extraTab1",
+      label: "Thông tin thêm",
+      content: (
+        <GenericChart
+          chartType="bar"
+          title="Dự án theo ngành"
+          name={stateIndustry.industryData.map(({ name }) => name)}
+          value={stateIndustry.industryData.map(({ value }) => value)}
+          seriesName="Dữ liệu Biểu đồ"
+        />
+      ),
+    },
+    {
+      key: "extraTab2",
+      label: "Thống kê chi tiết",
+      content: <div>Nội dung cho tab bổ sung 2</div>,
+    },
+  ];
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -100,6 +125,12 @@ const ProjectPage = () => {
         dispatchProject(deleteProject(record?.key));
       },
       permission: EPermissions.DESTROY_PROJECT,
+    },
+    {
+      type: EButtonTypes.STATISTICAL,
+      onClick(record) {
+        navigate(`/project/statistical/${record?.key}`);
+      },
     },
   ];
 
@@ -149,6 +180,7 @@ const ProjectPage = () => {
   useEffect(() => {
     dispatchProject(getAllProject({ query: stateProject.filter }));
     dispatchIndustry(getIndustries());
+    dispatchIndustry(projectByIndustry({}));
   }, [JSON.stringify(stateProject.filter)]);
   useEffect(() => {
     if (stateProject.status === EFetchStatus.FULFILLED) {
@@ -205,11 +237,12 @@ const ProjectPage = () => {
           pageSize: stateProject.filter.size ?? 10,
           total: stateProject.totalRecords,
           number_of_elements: stateProject.number_of_elements && stateProject.number_of_elements,
-          // showSideChanger:true
         }}
         setFilter={setFilter}
         filter={stateProject.filter}
         scroll={{ x: 2200 }}
+        tabLabel="Danh sách dữ liệu"
+        additionalTabs={additionalTabs}
       />
     </>
   );

@@ -41,7 +41,7 @@ const bannerSlice = createSlice({
     ...commonStaticReducers<IBannerInitialState>(),
   },
   extraReducers: (builder) => {
-    // ? Get all bidding types
+    // ? Get all Banner
     builder.addCase(getAllBanners.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
       if (payload.data) {
           state.banners = payload.data.data;
@@ -62,7 +62,7 @@ const bannerSlice = createSlice({
       }
     );
 
-    // ? Create bidding type
+    // ? Create Banner
     builder
       .addCase(createBanner.pending, (state) => {
         state.status = EFetchStatus.PENDING;
@@ -78,26 +78,21 @@ const bannerSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
-    // ? Update bidding type
+    // ? Update Banner
     builder
       .addCase(updateBanner.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(updateBanner.fulfilled, (state, { payload }: PayloadAction<IResponse<IBanner> | any>) => {
+      .addCase(updateBanner.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Cập nhập thành công";
-        if (payload.data) {
-          const index = state.banners.findIndex((type) => type.id === payload.data.id);
-          if (index !== -1) {
-            state.banners[index] = payload.data;
-          }
-        }
+        
       })
       .addCase(updateBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors);
       });
-    // ? Delete bidding type
+    // ? Delete Banner
     builder
       .addCase(deleteBanner.pending, (state) => {
         state.status = EFetchStatus.PENDING;
