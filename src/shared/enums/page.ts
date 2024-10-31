@@ -4,4 +4,5 @@ export enum EPageTypes {
   VIEW = "view",
   DESTROY = "destroy",
   APPROVE = "approve",
+  STATISTICAL = "statistical",
 }
