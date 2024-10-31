@@ -141,7 +141,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tên Dự Án">
                   <FormInput
-                    label="Tên Dự Án"
                     placeholder="Nhập tên dự án..."
                     name="name"
                     value={values.name}
@@ -154,7 +153,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Hình thức lựa chọn nhà thầu">
                   <FormSelect
-                    label="Hình thức lựa chọn nhà thầu "
                     placeholder="Chọn phương thức..."
                     id="selection_method_id"
                     value={values.selection_method_id as string}
@@ -167,7 +165,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Hình thức tham gia đấu thầu">
                   <FormSelect
-                    label="Hình thức tham gia đấu thầu "
                     placeholder="Chọn hình thức..."
                     id="submission_method"
                     value={values.submission_method as string}
@@ -180,7 +177,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Địa Điểm">
                   <FormInput
-                    label="Địa Điểm"
                     placeholder="Nhập địa điểm..."
                     name="location"
                     value={values.location}
@@ -193,7 +189,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Bên Mời Thầu">
                   <FormSelect
-                    label=" Bên Mời Thầu"
                     placeholder="Nhập  bên mời thầu..."
                     id="tenderer_id"
                     value={values.tenderer_id}
@@ -206,7 +201,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Chủ đầu tư">
                   <FormSelect
-                    label=" Chủ đầu tư"
                     placeholder="Nhập  chủ đầu tư..."
                     id="investor_id"
                     value={values.investor_id}
@@ -218,7 +212,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Nguồn Vốn">
                   <FormSelect
-                    label="Nguồn Vốn "
                     placeholder="Nhập nguồn vốn..."
                     id="funding_source_id"
                     value={values.funding_source_id as string}
@@ -232,7 +225,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Người phê duyệt">
                   <FormSelect
-                    label="Người phê duyệt"
                     placeholder="Chọn người phê duyệt..."
                     id="staff_id"
                     value={values.staff_id as string}
@@ -242,11 +234,10 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title=" Dịch vụ mua sắm đầu thầu công">
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title=" Dịch vụ mua sắm đấu thầu công">
                   <FormSelect
                     isMultiple
-                    label=" Dịch vụ mua sắm đầu thầu công"
                     placeholder="Chọn..."
                     id="procurement_id"
                     value={values.procurement_id}
@@ -259,8 +250,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 <FormGroup title=" Ngành Nghề">
                   <FormSelect
                     isMultiple
-                    label=" Ngành Nghề"
-                    placeholder="Nhập  ngành nghề..."
+                    placeholder="Nhập ngành nghề..."
                     id="industry_id"
                     value={values.industry_id}
                     onChange={(e) => setFieldValue("industry_id", e)}
@@ -271,7 +261,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Số quyết định ban hành">
                   <FormInput
-                    label="Số quyết định ban hành"
                     placeholder="Nhập số quyết định ban hành..."
                     name="decision_number_issued"
                     value={values.decision_number_issued}
@@ -284,7 +273,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Quốc Tế">
                   <FormSelect
-                    label="Quốc Tế "
                     placeholder="Nhập thông tin..."
                     id="is_domestic"
                     value={values.is_domestic as unknown as string}
@@ -297,7 +285,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Số Tiền">
                   <FormInput
-                    label="Số Tiền"
                     placeholder="Nhập số tiền..."
                     name="amount"
                     value={values.amount}
@@ -310,7 +297,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tổng đầu tư">
                   <FormInput
-                    label="Số Tiền"
                     placeholder="Nhập số tiền..."
                     name="total_amount"
                     value={values.total_amount}
@@ -324,7 +310,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Địa Điểm Nhận Hồ Sơ">
                   <FormInput
-                    label="Địa Điểm Nhận Hồ Sơ"
                     placeholder="Nhập địa điểm nhận hồ sơ..."
                     name="receiving_place"
                     value={values.receiving_place}
@@ -338,7 +323,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 <FormGroup title="Thời Gian Nộp Hồ Sơ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày bắt đầu nộp hồ sơ"
                     value={values.bid_submission_start ? dayjs(values.bid_submission_start) : null}
                     onChange={(date) => setFieldValue("bid_submission_start", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -349,7 +333,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 <FormGroup title="Ngày kết thúc nộp hồ sơ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày kết thúc nộp hồ sơ"
                     minDate={values.bid_submission_start ? dayjs(values.bid_submission_start) : undefined}
                     value={values.bid_submission_end ? dayjs(values.bid_submission_end) : null}
                     onChange={(date) => setFieldValue("bid_submission_end", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
@@ -360,7 +343,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 <FormGroup title="Ngày Mở Thầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày mở thầu"
                     minDate={values.bid_submission_end ? dayjs(values.bid_submission_end) : undefined}
                     value={values.bid_opening_date ? dayjs(values.bid_opening_date) : null}
                     onChange={(date) => setFieldValue("bid_opening_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
@@ -372,7 +354,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 <FormGroup title="Ngày bắt đầu đấu thầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày bắt đầu đấu thầu"
                     minDate={values.bid_submission_end ? dayjs(values.bid_submission_end) : undefined}
                     value={values.start_time ? dayjs(values.start_time) : null}
                     onChange={(date) => setFieldValue("start_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
@@ -383,7 +364,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 <FormGroup title="Ngày kết thúc đấu thầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày kết thúc đấu thầu"
                     minDate={values.start_time ? dayjs(values.bid_submission_end) : undefined}
                     value={values.end_time ? dayjs(values.end_time) : null}
                     onChange={(date) => setFieldValue("end_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
@@ -395,7 +375,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   <FormGroup title="Ngày phê duyệt">
                     <FormDate
                       disabled
-                      label="Ngày phê duyệt"
                       value={values.approve_at ? dayjs(values.approve_at) : dayjs()}
                       onChange={(date) => setFieldValue("approve_at", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                     />
@@ -407,7 +386,6 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 <FormGroup title="Trạng thái dự án">
                   <FormSelect
                     options={STATUS_PROJECT_ARRAY}
-                    label="Trạng thái dự án"
                     id="status"
                     isDisabled
                     value={values.status && STATUS_PROJECT_ARRAY.find((item) => +item.value === +values.status)?.label}
@@ -423,7 +401,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               </Col>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Mô Tả">
-                  <FormCkEditor label="Mô tả" id="description" value={values.description ?? ""} onChange={(e) => setFieldValue("description", e)} />
+                  <FormCkEditor id="description" value={values.description ?? ""} onChange={(e) => setFieldValue("description", e)} />
                 </FormGroup>
               </Col>
             </Row>

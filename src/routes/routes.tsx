@@ -57,11 +57,8 @@ import CreateProject from "@/pages/Project/Create";
 import UpdateProject from "@/pages/Project/Update";
 import ApproveProject from "@/pages/Project/Approve";
 import BiddingResults from "@/pages/BiddingResults/BiddingResults/BiddingResults";
-import CreateBiddingResult from "@/pages/BiddingResults/CreateBiddingResult/CreateBiddingResult";
-import UpdateBiddingResult from "@/pages/BiddingResults/UpdateBiddingResult/UpdateBiddingResult";
 import Banners from "@/pages/Banners/Banners/Banners";
 import DetailProject from "@/pages/Project/Detail";
-import BidBonds from "@/pages/BidBond";
 import Tasks from "@/pages/Task/Tasks/Task";
 import QuestionsAnswers from "@/pages/Questions_Answers";
 import Employee from "@/pages/Employee";
@@ -69,7 +66,19 @@ import CreateEmployee from "@/pages/Employee/Create";
 import UpdateEmployee from "@/pages/Employee/Update";
 import DetailEmployee from "@/pages/Employee/Detail";
 import FeedbackComplaints from "@/pages/FeedbackComplaint";
+import ProcurementCategories from "@/pages/ProcurementCategories/ProcurementCategories";
+import PostCatalogs from "@/pages/PostCatalogs/PostCatalogs";
+import Posts from "@/pages/Posts/Posts/Posts";
+import CreatePost from "@/pages/Posts/CreatePost/CreatePost";
+import UpdatePost from "@/pages/Posts/UpdatePost/UpdatePost";
+import DetailPost from "@/pages/Posts/DetailPost/DetailPost";
+import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult/DetailBiddingResult";
+import Supports from "@/pages/Supports/Supports/Supports";
+import CreateSupport from "@/pages/Supports/CreateSupport/CreateSupport";
+import DetailSupport from "@/pages/Supports/DetailSupport/DetailSupport";
+import BidBonds from "@/pages/BidBond";
 import EvaluationCriteria from "@/pages/EvaluationCriteria";
+import Statistical from "@/pages/Project/Statistical/index";
 
 export interface IRoute {
   path: string;
@@ -162,6 +171,24 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <SelectionMethods />,
+              },
+            ],
+          },
+          {
+            path: "procurement-categories",
+            pages: [
+              {
+                path: "/",
+                element: () => <ProcurementCategories />,
+              },
+            ],
+          },
+          {
+            path: "post-catalogs",
+            pages: [
+              {
+                path: "/",
+                element: () => <PostCatalogs />,
               },
             ],
           },
@@ -325,12 +352,8 @@ export const routes: IRoute[] = [
                 element: () => <BiddingResults />,
               },
               {
-                path: "/create",
-                element: () => <CreateBiddingResult />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateBiddingResult />,
+                path: "/detail/:id",
+                element: () => <DetailBiddingResult />,
               },
             ],
           },
@@ -340,6 +363,44 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <Banners />,
+              },
+            ],
+          },
+          {
+            path: "posts",
+            pages: [
+              {
+                path: "/",
+                element: () => <Posts />,
+              },
+              {
+                path: "/create",
+                element: () => <CreatePost />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdatePost />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailPost />,
+              },
+            ],
+          },
+          {
+            path: "supports",
+            pages: [
+              {
+                path: "/",
+                element: () => <Supports />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateSupport />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailSupport />,
               },
             ],
           },
@@ -413,6 +474,10 @@ export const routes: IRoute[] = [
               {
                 path: "/approve/:id",
                 element: () => <ApproveProject />,
+              },
+              {
+                path: "/statistical/:id",
+                element: () => <Statistical />,
               },
               {
                 path: "/detail/:id",

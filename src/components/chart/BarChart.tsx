@@ -1,35 +1,70 @@
-import { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import * as echarts from "echarts";
 
-const BarChart = () => {
+interface BarChartProps {
+  name?: string[];
+  value?: number[];
+  seriesName?: string;
+  barColor?: string;
+  tooltipEnabled?: boolean;
+  chartHeight?: number;
+  chartWidth?: string;
+  nameChart: string;
+}
+
+const BarChart: React.FC<BarChartProps> = ({
+  name = [],
+  value = [],
+  seriesName = "Investment",
+  barColor = "#5470C6",
+  tooltipEnabled = true,
+  chartHeight = 400,
+  chartWidth = "100%",
+  nameChart,
+}) => {
+  const chartRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const chartDom = document.querySelector("#bar-chart") as HTMLElement;
+    const chartDom = chartRef.current;
     if (chartDom) {
       const myChart = echarts.init(chartDom);
 
       const option = {
-        tooltip: {},
+        tooltip: {
+          show: tooltipEnabled,
+        },
         xAxis: {
           type: "category",
-          data: ["Project A", "Project B", "Project C", "Project D"],
+          data: name,
         },
         yAxis: {
           type: "value",
         },
         series: [
           {
-            name: "Investment",
+            name: seriesName,
             type: "bar",
-            data: [1200, 2320, 3010, 1540],
+            data: value,
+            itemStyle: {
+              color: barColor,
+            },
           },
         ],
       };
 
       myChart.setOption(option);
-    }
-  }, []);
 
-  return <div id="bar-chart" className="echart min-h-[400px] w-full"></div>;
+      // Xử lý cleanup để giải phóng tài nguyên khi component unmount
+      return () => {
+        myChart.dispose();
+      };
+    }
+  }, [name, value, seriesName, barColor, tooltipEnabled]);
+
+  return <>
+    <h2 className="w-full text-center text-2xl font-bold">{nameChart}</h2>
+    <div ref={chartRef} style={{ minHeight: chartHeight, width: chartWidth }}></div>
+  </>;
 };
 
 export default BarChart;
