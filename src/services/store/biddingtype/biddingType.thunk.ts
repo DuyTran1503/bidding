@@ -35,7 +35,8 @@ export const getBiddingTypeById = createAsyncThunk("bidding-type/get-bidding-typ
 //   },
 // );
 
-export const createBiddingType = createAsyncThunk("bidding-type/create-bidding-type", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const createBiddingType = createAsyncThunk("bidding-type/create-bidding-type", 
+  async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.post(prefix, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;
