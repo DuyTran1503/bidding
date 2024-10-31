@@ -22,11 +22,14 @@ import { procurementSlice } from "./store/procurement/procurement.slice";
 import { biddingResultSlice } from "./store/biddingResult/biddingResult.slice";
 import { biddingHistorySlice } from "./store/biddingHistory/biddingHistory.slice";
 import { bannerSlice } from "./store/banner/banner.slice";
+import { procurementCategorieSlice } from "./store/procurementCategorie/procurementCategorie.slice";
+import { postCatalogSlice } from "./store/postCatalog/postCatalog.slice";
+import { postSlice } from "./store/post/post.slice";
+import { tenderNoticeSlice } from "./store/tenderNotice/tenderNotice.slice";
+import { supportSlice } from "./store/support/support.slice";
 import { evaluationSlice } from "./store/evaluation/evaluation.slice";
-import { taskSlice } from "./store/task/task.slice";
-import { questionsAnswersSlice } from "./store/questions_answers/questions_answers.slice";
-import { employeeSlice } from "./store/employee/employee.slice";
-import { feedbackComplaintSlice as feedbackComplaintSlice } from "./store/feedback_complaint/feedback_complaint.slice";
+import { chartSlice } from "./store/chart/chart.slice";
+import { compareProjectSlice } from "./store/CompareProject/compareProject.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -51,11 +54,14 @@ export const reducers = combineReducers({
   bidding_history: biddingHistorySlice.reducer,
   bidding_result: biddingResultSlice.reducer,
   banner: bannerSlice.reducer,
+  procurement_categorie: procurementCategorieSlice.reducer,
+  post_catalog: postCatalogSlice.reducer,
+  post: postSlice.reducer,
+  support: supportSlice.reducer,
+  tender_notice: tenderNoticeSlice.reducer,
   evaluation: evaluationSlice.reducer,
-  task: taskSlice.reducer,
-  questions_answers: questionsAnswersSlice.reducer,
-  employee: employeeSlice.reducer,
-  feedback_complaint: feedbackComplaintSlice.reducer,
+  chart: chartSlice.reducer,
+  compareproject: compareProjectSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;

@@ -107,7 +107,7 @@ const EvaluationCriteria = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.evaluations && state.evaluations.length > 0
-        ? state.evaluations.map(({ id, project_id, name, weight, description, is_active }, index) => ({
+        ? state.evaluations.map(({ id, project_id, project_name, name, weight, description, is_active }, index) => ({
             index: index + 1,
             key: id,
             id,
