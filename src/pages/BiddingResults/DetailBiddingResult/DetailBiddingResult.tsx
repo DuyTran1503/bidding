@@ -52,10 +52,13 @@ const DetailBiddingResult = () => {
           },
         ]}
       />
-      {state.activeBiddingResult ? (
-        <BiddingResultForm type={EPageTypes.VIEW} formikRef={formikRef} biddingResult={state.activeBiddingResult} />
-      ) : (
-        <div>Loading...</div>
+      {state.activeBiddingResult && (
+        <BiddingResultForm
+          type={EPageTypes.VIEW}
+          formikRef={formikRef}
+          biddingResult={{
+            ...state.activeBiddingResult
+          }} />
       )}
     </>
   );
