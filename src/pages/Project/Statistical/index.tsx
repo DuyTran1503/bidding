@@ -9,35 +9,23 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject, getProjectById } from "@/services/store/project/project.thunk";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
-import useFetchStatus from "@/hooks/useFetchStatus";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { compareBarChartTotalAmount } from "@/services/store/CompareProject/compareProject.thunk";
 import Button from "@/components/common/Button";
-import { ICompareProjectInitialState, resetStatus } from "@/services/store/CompareProject/compareProject.slice";
+import { ICompareProjectInitialState } from "@/services/store/CompareProject/compareProject.slice";
 import { employeeEducationLevelStatisticByEnterprise, projectByFundingsource, projectByIndustry } from "@/services/store/chart/chart.thunk";
 
 const Statistical: React.FC = () => {
     const { state: stateChart, dispatch: dispatchChart } = useArchive<IChartInitialState>("chart");
     const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-    const { state: stateCompare, dispatch: dispatchCompare } = useArchive<ICompareProjectInitialState>("compareproject");
+    const { dispatch: dispatchCompare } = useArchive<ICompareProjectInitialState>("compareproject");
     const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
-    const [selectedProjectIds, setSelectedProjectIds] = useState<number[]>([]);
-    const [treeSelectIds, setTreeSelectIds] = useState<string[]>([]);
+    const [selectedProjectIds, setSelectedProjectIds] = useState<number[] | string[]>([]);
+    const [treeSelectIds, setTreeSelectIds] = useState<string[] | string>([]);
+    const [compareData, setCompareData] = useState<any[]>([]);
+
     const navigate = useNavigate();
     const { id } = useParams();
-
-    useFetchStatus({
-        module: "compareproject",
-        reset: resetStatus,
-        actions: {
-            success: {
-                message: stateCompare.message,
-            },
-            error: {
-                message: stateCompare.message,
-            },
-        },
-    });
 
     useEffect(() => {
         dispatchChart(projectByIndustry({}));
@@ -59,39 +47,37 @@ const Statistical: React.FC = () => {
 
     useEffect(() => {
         if (selectedProjectIds.length > 0) {
-            const requestData = {
-                project_ids: selectedProjectIds,
-            };
-            dispatchCompare(compareBarChartTotalAmount(requestData));
+            dispatchCompare(compareBarChartTotalAmount({ body: { project_ids: selectedProjectIds, } }))
+                .then(unwrapResult)
+                .then((data) => {
+                    setCompareData(data as any[])
+                })
         }
     }, [selectedProjectIds, dispatchCompare]);
 
     useEffect(() => {
         const investorId = stateProject.project?.investor?.id;
-        if (investorId) {
-            dispatchChart(employeeEducationLevelStatisticByEnterprise(investorId));
-        }
+        investorId && dispatchChart(employeeEducationLevelStatisticByEnterprise(investorId))
+
     }, [stateProject.project, dispatchChart]);
 
     const handleAddToCompare = () => {
-        const newIds = treeSelectIds.map(Number); // Chuyển đổi chuỗi thành số
         const investorId = stateProject.project?.investor?.id;
-
         // Tạo mảng project_ids và thêm investorId nếu có
-        const updatedProjectIds = [...new Set([...selectedProjectIds, ...newIds])]; // Kết hợp và loại bỏ trùng lặp
-
-        if (investorId) {
-            updatedProjectIds.push(investorId); // Thêm investorId vào mảng
-        }
-
+        const updatedProjectIds = [...new Set([...treeSelectIds])]; // Kết hợp và loại bỏ trùng lặp
+        updatedProjectIds.push(investorId); // Thêm investorId vào mảng
         setSelectedProjectIds(updatedProjectIds);
-        console.log("Selected IDs from TreeSelect:", updatedProjectIds); // Log các ID đã chọn
     };
 
     const educationData = stateChart.employeeEducationLevelStatisticByEnterprise || {};
-    const names = Object.keys(educationData);
-    const values = Object.values(educationData).map(value => Number(value));
-
+    const nameMapping: Record<string, string> = {
+        after_university: "Sau đại học",
+        university: "Đại học",
+        college: "Cao đẳng",
+        high_school: "Trung học phổ thông",
+        secondary_school: "Trung học cơ sở",
+        primary_school: "Tiểu học",
+    };
     const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
         return data.map((item) => ({
             title: item.name,
@@ -117,13 +103,27 @@ const Statistical: React.FC = () => {
         },
         {
             key: "2",
+            label: "Bảng so sánh tổng số tiền",
+            content: (
+                <GenericChart
+                    chartType="bar"
+                    title="Bảng so sánh tổng số tiền"
+                    name={compareData.map(item => item.name)}
+                    value={compareData.map(item => item.total_amount)}
+                    seriesName="Tổng số tiền"
+                    legendPosition="bottom"
+                />
+            ),
+        },
+        {
+            key: "3",
             label: "Thống kê trình độ học vấn",
             content: (
                 <GenericChart
                     chartType="pie"
                     title="Thống kê trình độ học vấn của nhân viên"
-                    name={names}
-                    value={values}
+                    name={Object.keys(educationData).map((key) => nameMapping[key] || key)}
+                    value={Object.values(educationData).map(Number)}
                     seriesName="Trình độ học vấn"
                 />
             ),
