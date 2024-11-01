@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useArchive } from "@/hooks/useArchive";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
 import GenericChart from "@/components/chart/GenericChart";
@@ -9,90 +9,70 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject, getProjectById } from "@/services/store/project/project.thunk";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
-import useFetchStatus from "@/hooks/useFetchStatus";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { compareBarChartTotalAmount } from "@/services/store/CompareProject/compareProject.thunk";
 import Button from "@/components/common/Button";
-import { ICompareProjectInitialState, resetStatus } from "@/services/store/CompareProject/compareProject.slice";
+import { ICompareProjectInitialState } from "@/services/store/CompareProject/compareProject.slice";
 import { employeeEducationLevelStatisticByEnterprise, projectByFundingsource, projectByIndustry } from "@/services/store/chart/chart.thunk";
-interface IEducationMapping {
-    [key: string]: string; // Chỉ định rằng tất cả các khóa là chuỗi và giá trị cũng là chuỗi
-}
+
 const Statistical: React.FC = () => {
     const { state: stateChart, dispatch: dispatchChart } = useArchive<IChartInitialState>("chart");
     const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-    const { state: stateCompare, dispatch: dispatchCompare } = useArchive<ICompareProjectInitialState>("compareproject");
+    const { dispatch: dispatchCompare } = useArchive<ICompareProjectInitialState>("compareproject");
     const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
-    const [selectedProjectIds, setSelectedProjectIds] = useState<number[] | string[]>([]);
-    const [treeSelectIds, setTreeSelectIds] = useState<string[] | string>([]);
     const [compareData, setCompareData] = useState<any[]>([]);
+    const treeSelectIdsRef = useRef<string[]>([]); // Sử dụng useRef để tránh render lại khi chọn dự án
 
     const navigate = useNavigate();
     const { id } = useParams();
 
-    useFetchStatus({
-        module: "compareproject",
-        reset: resetStatus,
-        actions: {
-            success: {
-                message: stateCompare.message,
-            },
-            error: {
-                message: stateCompare.message,
-            },
-        },
-    });
-
+    // Lấy dữ liệu ban đầu cho biểu đồ và danh sách dự án
     useEffect(() => {
         dispatchChart(projectByIndustry({}));
         dispatchChart(projectByFundingsource({}));
         dispatchProject(getListProject())
             .then(unwrapResult)
             .then((result) => {
-                const fields = result.data;
-                const formattedData = formatTreeData(fields);
+                const formattedData = formatTreeData(result.data);
                 setTreeData(formattedData);
             });
-    }, [dispatchProject]);
+    }, [dispatchChart, dispatchProject]);
 
+    // Lấy dữ liệu dự án theo ID
     useEffect(() => {
         if (id) {
             dispatchProject(getProjectById(id));
         }
     }, [id, dispatchProject]);
 
-    useEffect(() => {
-        if (selectedProjectIds.length > 0) {
-            dispatchCompare(compareBarChartTotalAmount({ body: { projects_ids: selectedProjectIds } }))
-                .then(unwrapResult)
-                .then((data) => {
-                    setCompareData(data as any[])
-                })
-        }
-    }, [selectedProjectIds, dispatchCompare]);
-
+    // Lấy dữ liệu thống kê trình độ học vấn của nhân viên
     useEffect(() => {
         const investorId = stateProject.project?.investor?.id;
-        dispatchChart(employeeEducationLevelStatisticByEnterprise(investorId));
+        if (investorId) {
+            dispatchChart(employeeEducationLevelStatisticByEnterprise(investorId));
+        }
     }, [stateProject.project, dispatchChart]);
 
-    const handleAddToCompare = () => {
+    // Hàm xử lý thêm vào so sánh và gọi API so sánh
+    const handleAddToCompare = useCallback(() => {
         const investorId = stateProject.project?.investor?.id;
-        setSelectedProjectIds([...new Set([...treeSelectIds, investorId].filter(Boolean))]);
-    };
+        const updatedProjectIds = [...new Set([...treeSelectIdsRef.current])];
 
-    const educationData = stateChart.employeeEducationLevelStatisticByEnterprise || {};
-    const names = Object.keys(educationData);
-    const values = Object.values(educationData).map(value => Number(value));
-    const nameMapping: IEducationMapping = {
-        after_university: "Sau đại học",
-        university: "Đại học",
-        college: "Cao đẳng",
-        high_school: "Trung học phổ thông",
-        secondary_school: "Trung học cơ sở",
-        primary_school: "Tiểu học",
-    };
-    const translatedNames = names.map(name => nameMapping[name] || name);
+        if (investorId) {
+            updatedProjectIds.push(investorId);
+        }
+
+        if (updatedProjectIds.length > 0) {
+            // Gọi API so sánh
+            dispatchCompare(compareBarChartTotalAmount({ body: { project_ids: updatedProjectIds } }))
+                .then(unwrapResult)
+                .then((data) => {
+                    setCompareData(data as any[]);
+                });
+        }
+    }, [stateProject.project, dispatchCompare]);
+
+    // Hàm định dạng dữ liệu tree cho Select
     const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
         return data.map((item) => ({
             title: item.name,
@@ -102,7 +82,19 @@ const Statistical: React.FC = () => {
         }));
     };
 
-    const tabItems = [
+    // Chuyển đổi dữ liệu trình độ học vấn của nhân viên
+    const educationData = useMemo(() => stateChart.employeeEducationLevelStatisticByEnterprise || {}, [stateChart]);
+    const nameMapping: Record<string, string> = {
+        after_university: "Sau đại học",
+        university: "Đại học",
+        college: "Cao đẳng",
+        high_school: "Trung học phổ thông",
+        secondary_school: "Trung học cơ sở",
+        primary_school: "Tiểu học",
+    };
+
+    // Tạo `tabItems` chỉ khi `compareData`, `stateChart.industryData`, hoặc `educationData` thay đổi
+    const tabItems = useMemo(() => [
         {
             key: "1",
             label: "Thống kê dự án",
@@ -126,7 +118,10 @@ const Statistical: React.FC = () => {
                     name={compareData.map(item => item.name)}
                     value={compareData.map(item => item.total_amount)}
                     seriesName="Tổng số tiền"
-                    legendPosition="bottom"
+                    height={600}
+                    grid={150}
+                    barWidth={50}
+                    isCurrency={true}
                 />
             ),
         },
@@ -137,18 +132,18 @@ const Statistical: React.FC = () => {
                 <GenericChart
                     chartType="pie"
                     title="Thống kê trình độ học vấn của nhân viên"
-                    name={translatedNames}
-                    value={values}
+                    name={Object.keys(educationData).map((key) => nameMapping[key] || key)}
+                    value={Object.values(educationData).map(Number)}
                     seriesName="Trình độ học vấn"
                 />
             ),
         },
-    ];
+    ], [compareData]);
 
     return (
         <>
             <Heading
-                title={"Thống kê chi tiết " + (stateProject.project?.name || "")}
+                title={`Thống kê chi tiết ${stateProject.project?.name || ""}`}
                 hasBreadcrumb
                 buttons={[
                     {
@@ -166,13 +161,13 @@ const Statistical: React.FC = () => {
                 treeData={treeData}
                 width="400px"
                 multiple
-                onChange={(value) => setTreeSelectIds(value)}
+                onChange={(value) => { treeSelectIdsRef.current = Array.isArray(value) ? value : [value]; }}
             />
             <Button
                 type="primary"
                 text="Thêm vào so sánh"
                 onClick={handleAddToCompare}
-                isDisabled={treeSelectIds.length === 0}
+            // isDisabled={treeSelectIdsRef.current.length === 0}
             />
             <CustomTabs items={tabItems} />
         </>

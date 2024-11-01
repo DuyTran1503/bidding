@@ -80,6 +80,7 @@ const Dashboard: React.FC = () => {
               name={state.fundingData.map(({ name }) => name)}
               value={state.fundingData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
+            // isCurrency={true}
             />
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
