@@ -123,3 +123,37 @@ export const employeeEducationLevelStatisticByEnterprise = createAsyncThunk(
     }
   }
 );
+
+export const topTendersByProjectCount = createAsyncThunk(
+  "chart/top-tenderers-by-project-count",
+  async (payload: IThunkPayload, { rejectWithValue }) => {
+    try {
+      const { data } = await client.get<IChart[]>(`${prefix}/top-tenderers-by-project-count`,  payload );
+      return data.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+    }
+  }
+);
+export const topTendersByProjectTotalAmount = createAsyncThunk(
+  "chart/top-tenderers-by-project-total-amount",
+  async (payload: IThunkPayload, { rejectWithValue }) => {
+    try {
+      const { data } = await client.get<IChart[]>(`${prefix}/top-tenderers-by-project-total-amount`,  payload );
+      return data.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+    }
+  }
+);
+export const topInvestorsByProjectPartial = createAsyncThunk(
+  "chart/top-investors-by-project-partial",
+  async (payload: IThunkPayload, { rejectWithValue }) => {
+    try {
+      const { data } = await client.get<IChart[]>(`${prefix}/top-investors-by-project-partial`,  payload );
+      return data.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+    }
+  }
+);
