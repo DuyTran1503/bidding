@@ -135,11 +135,39 @@ const Enterprise = () => {
       permission: EPermissions.UPDATE_ENTERPRISE,
     },
     {
+      type: EButtonTypes.STATISTICAL,
+      onClick(record) {
+        navigate(`/enterprise/statistical/${record?.key}`);
+      },
+    },
+    {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         enterpriseDispatch(deleteEnterprise(record?.key));
       },
       permission: EPermissions.DESTROY_ENTERPRISE,
+    },
+  ];
+  const additionalTabs = [
+    {
+      key: "1",
+      label: "Doanh nghiệp theo ngành nghề",
+      content: <div>Nội dung cho tab bổ sung 2</div>,
+    },
+    {
+      key: "2",
+      label: "Biểu đồ trạng thái hoạt động",
+      content: <div>Nội dung cho tab bổ sung 2</div>,
+    },
+    {
+      key: "3",
+      label: "Biểu đồ thời gian gia nhập theo năm",
+      content: <div>Nội dung cho tab bổ sung 2</div>,
+    },
+    {
+      key: "4",
+      label: "Biểu đồ doanh nghiệp blacklist",
+      content: <div>Nội dung cho tab bổ sung 2</div>,
     },
   ];
   const search: ISearchTypeTable[] = [
@@ -267,6 +295,8 @@ const Enterprise = () => {
         setFilter={setFilter}
         filter={enterpriseState.filter}
         scroll={{ x: 2100 }}
+        tabLabel="Tổng quan"
+        additionalTabs={additionalTabs}
       />
     </>
   );
