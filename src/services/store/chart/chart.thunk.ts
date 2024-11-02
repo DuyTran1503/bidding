@@ -157,3 +157,25 @@ export const topInvestorsByProjectPartial = createAsyncThunk(
     }
   }
 );
+export const topInvestorsByProjectFull = createAsyncThunk(
+  "chart/top-investors-by-project-full",
+  async (payload: IThunkPayload, { rejectWithValue }) => {
+    try {
+      const { data } = await client.get<IChart[]>(`${prefix}/top-investors-by-project-full`,  payload );
+      return data.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+    }
+  }
+);
+export const topInvestorsByProjectTotalAmount = createAsyncThunk(
+  "chart/top-investors-by-project-total-amount",
+  async (payload: IThunkPayload, { rejectWithValue }) => {
+    try {
+      const { data } = await client.get<IChart[]>(`${prefix}/top-investors-by-project-total-amount`,  payload );
+      return data.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+    }
+  }
+);
