@@ -13,7 +13,9 @@ import {
   projectBySelectionMethod, 
   projectBySubmissionMethod, 
   projectByTendererInvestor, 
+  topInvestorsByProjectFull, 
   topInvestorsByProjectPartial, 
+  topInvestorsByProjectTotalAmount, 
   topTendersByProjectCount,
   topTendersByProjectTotalAmount
 } from "./chart.thunk";
@@ -31,6 +33,8 @@ export interface IChartInitialState extends IInitialState {
   toptenderersbyprojectcountData: IChart[];
   toptenderersbyprojecttotalamountData: IChart[];
   topinvestorsbyprojectpartialData: IChart[];
+  topinvestorsbyprojectfullData: IChart[];
+  topinvestorsbyprojecttotalamountData: IChart[];
 }
 
 // chart project-by-submission-method
@@ -54,6 +58,8 @@ const initialState: IChartInitialState = {
   toptenderersbyprojectcountData:[],
   toptenderersbyprojecttotalamountData:[],
   topinvestorsbyprojectpartialData: [],
+  topinvestorsbyprojectfullData: [],
+  topinvestorsbyprojecttotalamountData: [],
 
   totalRecords: 0,
   filter: {
@@ -188,6 +194,26 @@ const chartSlice = createSlice({
       state.status = EFetchStatus.FULFILLED;
     });
     builder.addCase(topInvestorsByProjectPartial.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+    });
+
+    // chart top-investors-by-project-full
+    builder.addCase(topInvestorsByProjectFull.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.topinvestorsbyprojectfullData = payload;
+      state.status = EFetchStatus.FULFILLED;
+    });
+    builder.addCase(topInvestorsByProjectFull.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+    });
+
+    // chart top-investors-by-total-amount
+    builder.addCase(topInvestorsByProjectTotalAmount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.topinvestorsbyprojecttotalamountData = payload;
+      state.status = EFetchStatus.FULFILLED;
+    });
+    builder.addCase(topInvestorsByProjectTotalAmount.rejected, (state, action) => {
       state.status = EFetchStatus.REJECTED;
       state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
     });
