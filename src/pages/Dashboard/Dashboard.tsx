@@ -11,7 +11,9 @@ import {
   projectBySelectionMethod,
   projectBySubmissionMethod,
   projectByTendererInvestor,
+  topInvestorsByProjectFull,
   topInvestorsByProjectPartial,
+  topInvestorsByProjectTotalAmount,
   topTendersByProjectCount,
   topTendersByProjectTotalAmount
 } from "@/services/store/chart/chart.thunk";
@@ -41,6 +43,8 @@ const Dashboard: React.FC = () => {
     dispatch(topTendersByProjectCount({}));
     dispatch(topTendersByProjectTotalAmount({}));
     dispatch(topInvestorsByProjectPartial({}));
+    dispatch(topInvestorsByProjectFull({}));
+    dispatch(topInvestorsByProjectTotalAmount({}));
   }, [dispatch]);
 
   return (
@@ -241,6 +245,38 @@ const Dashboard: React.FC = () => {
               title="Top 10 đơn vị trúng thầu nhiều nhất theo từng phần"
               name={state.topinvestorsbyprojectpartialData.map(({ name }) => name)}
               value={state.topinvestorsbyprojectpartialData.map(({ value }) => value)}
+              seriesName="Dữ liệu Biểu đồ"
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} xl={12}>
+            <h3 className="text-lg font-semibold mb-4">3.2 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói</h3>
+            <ul className="list-disc list-inside">
+              <li>Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.</li>
+              <li>
+                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình. 
+              </li>
+            </ul>
+            <GenericChart
+              chartType="bar"
+              title="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
+              name={state.topinvestorsbyprojectfullData.map(({ name }) => name)}
+              value={state.topinvestorsbyprojectfullData.map(({ value }) => value)}
+              seriesName="Dữ liệu Biểu đồ"
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} xl={12}>
+            <h3 className="text-lg font-semibold mb-4">3.2 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói</h3>
+            <ul className="list-disc list-inside">
+              <li>Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.</li>
+              <li>
+                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình. 
+              </li>
+            </ul>
+            <GenericChart
+              chartType="bar"
+              title="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
+              name={state.topinvestorsbyprojecttotalamountData.map(({ name }) => name)}
+              value={state.topinvestorsbyprojecttotalamountData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
             />
           </Col>
