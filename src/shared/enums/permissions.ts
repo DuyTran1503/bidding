@@ -120,7 +120,7 @@ export enum EPermissions {
   // ? Kết quả đấu thầu
   LIST_BIDDING_RESULT = "list_bidding_result",
   DETAIL_BIDDING_RESULT = "detail_bidding_result",
-  
+
   //Bảo lãnh dự thầu
   LIST_BIDBOND = "list_bidbond",
   DETAIL_BIDBOND = "detail_bidbond",
@@ -139,28 +139,28 @@ export enum EPermissions {
   CREATE_PROJECT = "create_project",
   UPDATE_PROJECT = "update_project",
   DESTROY_PROJECT = "destroy_project",
-  
+
   // ? Banner
   LIST_BANNER = "list_banner",
   DETAIL_BANNER = "detail_banner",
   CREATE_BANNER = "create_banner",
   UPDATE_BANNER = "update_banner",
   DESTROY_BANNER = "destroy_banner",
-  
+
   // ? Post
   LIST_POST = "list_post",
   DETAIL_POST = "detail_post",
   CREATE_POST = "create_post",
   UPDATE_POST = "update_post",
   DESTROY_POST = "destroy_post",
-  
+
   // ? Post_catalog
   LIST_POST_CATALOG = "list_post_catalog",
   DETAIL_POST_CATALOG = "detail_post_catalog",
   CREATE_POST_CATALOG = "create_post_catalog",
   UPDATE_POST_CATALOG = "update_post_catalog",
   DESTROY_POST_CATALOG = "destroy_post_catalog",
-  
+
   // ? Support
   LIST_SUPPORT = "list_support",
   DETAIL_SUPPORT = "detail_support",
@@ -181,4 +181,28 @@ export enum EPermissions {
   CREATE_EVALUATION = "create_evaluation_criteria",
   UPDATE_EVALUATION = "update_evaluation_criteria",
   DESTROY_EVALUATION = "destroy_evaluation_criteria",
+
+  // ? TASK
+  LIST_TASK = "list_task",
+  DETAIL_TASK = "detail_task",
+  CREATE_TASK = "create_task",
+  UPDATE_TASK = "update_task",
+  DESTROY_TASK = "destroy_task",
+  // Câu hỏi / Câu trả lời
+  LIST_QUESTIONS_ANSWERS = "list_questions_answers",
+  DETAIL_QUESTIONS_ANSWERS = "detail_questions_answers",
+  UPDATE_QUESTIONS_ANSWERS = "update_questions_answers",
+  DESTROY_QUESTIONS_ANSWERS = "destroy_questions_answers",
+
+  // employee
+  LIST_EMPLOYEE = "list_employee",
+  DETAIL_EMPLOYEE = "detail_employee",
+  CREATE_EMPLOYEE = "create_employee",
+  UPDATE_EMPLOYEE = "update_employee",
+  DESTROY_EMPLOYEE = "destroy_employee",
+  // Phản hồi và khiếu nại
+  LIST_FEEDBACK_COMPLAINT = "list_feedback_complaint",
+  DETAIL_FEEDBACK_COMPLAINT = "detail_feedback_complaint",
+  UPDATE_FEEDBACK_COMPLAINT = "update_feedback_complaint",
+  DESTROY_FEEDBACK_COMPLAINT = "destroy_feedback_complaint",
 }

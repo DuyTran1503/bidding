@@ -6,7 +6,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
 // Icons
-import { IoBusinessOutline, IoNewspaperOutline, IoPieChartOutline, IoSettingsOutline, IoInformationCircleOutline, IoHeadsetOutline } from "react-icons/io5";
+import {
+  IoBusinessOutline,
+  IoNewspaperOutline,
+  IoPieChartOutline,
+  IoSettingsOutline,
+  IoInformationCircleOutline,
+  IoHeadsetOutline,
+} from "react-icons/io5";
 
 // Images
 import logo from "@/assets/images/logo.png";
@@ -45,7 +52,8 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       label: "Bảng điều khiển",
       path: "dashboard",
       icon: { component: IoPieChartOutline },
-    }, {
+    },
+    {
       id: "2",
       label: "Tin tức",
       icon: { component: IoNewspaperOutline },
@@ -65,54 +73,54 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       ],
     },
     {
-      id: "3",
+      id: "2",
       label: "Doanh nghiệp",
       icon: { component: IoBusinessOutline },
       items: [
         {
-          id: "3.1",
+          id: "2.1",
           label: "Doanh nghiệp",
           path: "enterprise",
           permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
         },
         {
-          id: "3.2",
+          id: "2.2",
           label: "Loại hình kinh doanh",
           path: "business-activity",
           permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
         },
         {
-          id: "3.2",
+          id: "2.2",
           label: "Lĩnh vực đấu thầu",
           path: "bidding-fields",
           permissions: EPermissions.LIST_BIDDING_FIELD,
         },
         {
-          id: "3.3",
+          id: "2.3",
           label: "Loại hình đấu thầu",
           path: "bidding-types",
           permissions: EPermissions.LIST_BIDDING_TYPE,
         },
         {
-          id: "3.4",
+          id: "2.4",
           label: "Ngành kinh doanh",
           path: "industry",
           permissions: EPermissions.LIST_INDUSTRY,
         },
         {
-          id: "3.5",
+          id: "2.5",
           label: "Nguồn tài trợ",
           path: "funding-sources",
           permissions: EPermissions.LIST_FUNDING_SOURCE,
         },
         {
-          id: "3.6",
+          id: "2.6",
           label: "Nhật ký hoạt động",
           path: "activity-logs",
           permissions: EPermissions.LIST_ACTIVITYLOG,
         },
         {
-          id: "3.7",
+          id: "2.7",
           label: "Hình thức lựa chọn Nhà thầu",
           path: "selection-methods",
           permissions: EPermissions.LIST_SELECTION_METHOD,
@@ -120,27 +128,59 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       ],
     },
     {
-      id: "4",
+      id: "3",
       label: "Dự án",
       icon: { component: MdOutlineFactory },
       items: [
         {
-          id: "4.1",
+          id: "3.1",
           label: "Tài liệu đính kèm",
           path: "attachment",
           permissions: EPermissions.LIST_ATTACHMENT,
         },
         {
-          id: "4.2",
+          id: "3.2",
           label: "Hồ sơ mời thầu",
           path: "bid-document",
           permissions: EPermissions.LIST_BID_DOCUMENT,
         },
         {
-          id: "4.3",
+          id: "3.3",
           label: "Dự án",
           path: "project",
-          // permissions: EPermissions.LIST_BID_DOCUMENT,
+          permissions: EPermissions.LIST_PROJECT,
+        },
+        {
+          id: "3.4",
+          label: "Bảo lãnh dự thầu",
+          path: "bid-bond",
+          // permissions: EPermissions.LIST_BID_BOND,
+        },
+        {
+          id: "3.5",
+          label: "Tiêu chí đánh giá",
+          path: "evaluation_criteria",
+          // permissions: EPermissions.LIST_EVALUATION,
+        },
+      ],
+    },
+
+    {
+      id: "4",
+      label: "Nhân viên",
+      icon: { component: MdOutlineFactory },
+      items: [
+        {
+          id: "4.1",
+          label: "Công việc",
+          path: "task",
+          // permissions: EPermissions.LIST_TASK,
+        },
+        {
+          id: "4.2",
+          label: "Nhân viên",
+          path: "employees",
+          // permissions: EPermissions.LIST_EMPLOYEE,
         },
         {
           id: "4.4",
@@ -198,16 +238,28 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           permissions: EPermissions.LIST_BIDDING_TYPE,
         },
         {
-          id: "5.6",
+          id: "5.7",
           label: "Kết quả đấu thầu",
           path: "bidding-results",
           permissions: EPermissions.LIST_BIDDING_TYPE,
         },
         {
-          id: "5.7",
+          id: "5.8",
           label: "Banner",
           path: "banners",
           permissions: EPermissions.LIST_BANNER,
+        },
+        {
+          id: "4.8",
+          label: "Câu hỏi/ Câu trả lời",
+          path: "questions-answers",
+          // permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
+        },
+        {
+          id: "4.9",
+          label: "Phản hồi và Khiếu nại",
+          path: "feedback-complaint",
+          // permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
         },
       ],
     },

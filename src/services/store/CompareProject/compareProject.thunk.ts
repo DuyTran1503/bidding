@@ -14,7 +14,7 @@ export const compareBarChartTotalAmount = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
     }
-  }
+  },
 );
 
 export const compareConstructionTime = createAsyncThunk(
@@ -26,7 +26,7 @@ export const compareConstructionTime = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
     }
-  }
+  },
 );
 
 export const compareBidSubmissionTime = createAsyncThunk(
@@ -38,7 +38,7 @@ export const compareBidSubmissionTime = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
     }
-  }
+  },
 );
 
 export const comparePieChartTotalAmount = createAsyncThunk(
@@ -50,17 +50,14 @@ export const comparePieChartTotalAmount = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
     }
-  }
+  },
 );
 
-export const compareBidderCount = createAsyncThunk(
-  "compareProject/compareBidderCount",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
-    try {
-      const { data } = await client.post(`${prefix}/compare-bidder-count`, payload);
-      return data.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
-    }
+export const compareBidderCount = createAsyncThunk("compareProject/compareBidderCount", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { data } = await client.post(`${prefix}/compare-bidder-count`, payload);
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
   }
-);
+});

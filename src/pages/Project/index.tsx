@@ -7,6 +7,7 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
 import { projectByIndustry } from "@/services/store/chart/chart.thunk";
 import { IProjectInitialState, resetMessageError, setFilter } from "@/services/store/project/project.slice";
@@ -78,21 +79,22 @@ const ProjectPage = () => {
     {
       key: "extraTab1",
       label: "Thông tin thêm",
-      content: <GenericChart
-        chartType="bar"
-        title="Dự án theo ngành"
-        name={stateIndustry.industryData.map(({ name }) => name)}
-        value={stateIndustry.industryData.map(({ value }) => value)}
-        seriesName="Dữ liệu Biểu đồ"
-      />,
+      content: (
+        <GenericChart
+          chartType="bar"
+          title="Dự án theo ngành"
+          name={stateIndustry.industryData.map(({ name }) => name)}
+          value={stateIndustry.industryData.map(({ value }) => value)}
+          seriesName="Dữ liệu Biểu đồ"
+        />
+      ),
     },
     {
       key: "extraTab2",
       label: "Thống kê chi tiết",
       content: <div>Nội dung cho tab bổ sung 2</div>,
     },
-
-  ]
+  ];
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -108,6 +110,13 @@ const ProjectPage = () => {
       },
       permission: EPermissions.UPDATE_PROJECT,
     },
+    // {
+    //   type: EButtonTypes.APPROVE,
+    //   onClick(record) {
+    //     navigate(`/project/approve/${record?.key}`);
+    //   },
+    //   permission: EPermissions.UPDATE_PROJECT,
+    // },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
@@ -143,16 +152,16 @@ const ProjectPage = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(stateProject.projects)
       ? stateProject.projects.map(({ id, name, investor, total_amount, upload_time, bid_submission_start, bid_opening_date, status }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        investor,
-        total_amount,
-        upload_time,
-        bid_submission_start,
-        bid_opening_date,
-        status,
-      }))
+          index: index + 1,
+          key: id,
+          name,
+          investor,
+          total_amount,
+          upload_time,
+          bid_submission_start,
+          bid_opening_date,
+          status,
+        }))
       : [];
   }, [JSON.stringify(stateProject.projects)]);
 
@@ -168,6 +177,7 @@ const ProjectPage = () => {
 
   useEffect(() => {
     dispatchProject(getAllProject({ query: stateProject.filter }));
+    dispatchIndustry(getIndustries());
     dispatchIndustry(projectByIndustry({}));
   }, [JSON.stringify(stateProject.filter)]);
   useEffect(() => {
