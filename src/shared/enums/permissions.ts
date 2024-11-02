@@ -61,6 +61,7 @@ export enum EPermissions {
   CREATE_STAFF = "create_staff",
   UPDATE_STAFF = "update_staff",
   DESTROY_STAFF = "destroy_staff",
+
   // Lĩnh vực hoạt động
   LIST_BUSINESS_ACTIVITY_TYPE = "list_business_activity_type",
   DETAIL_BUSINESS_ACTIVITY_TYPE = "detail_business_activity_type",
@@ -188,6 +189,7 @@ export enum EPermissions {
   CREATE_TASK = "create_task",
   UPDATE_TASK = "update_task",
   DESTROY_TASK = "destroy_task",
+
   // Câu hỏi / Câu trả lời
   LIST_QUESTIONS_ANSWERS = "list_questions_answers",
   DETAIL_QUESTIONS_ANSWERS = "detail_questions_answers",
@@ -200,9 +202,24 @@ export enum EPermissions {
   CREATE_EMPLOYEE = "create_employee",
   UPDATE_EMPLOYEE = "update_employee",
   DESTROY_EMPLOYEE = "destroy_employee",
+
   // Phản hồi và khiếu nại
   LIST_FEEDBACK_COMPLAINT = "list_feedback_complaint",
   DETAIL_FEEDBACK_COMPLAINT = "detail_feedback_complaint",
   UPDATE_FEEDBACK_COMPLAINT = "update_feedback_complaint",
   DESTROY_FEEDBACK_COMPLAINT = "destroy_feedback_complaint",
+
+  //Giới thiệu 
+  LIST_INTRODUCTION = "list_introduction",
+  CREATE_INTRODUCT = "create_introduction",
+  DETAIL_INTRODUCTION = "detail_introduction",
+  UPDATE_INTRODUCTION = "update_introduction",
+  DESTROY_INTRODUCTION = "destroy_introduction",
+
+  // Hướng dẫn
+  LIST_INSTRUCT = "list_instruct",
+  CREATE_INSTRUCT = "create_instruct",
+  DETAIL_INSTRUCT = "detail_instruct",
+  UPDATE_INSTRUCT = "update_instruct",
+  DESTROY_INSTRUCT = "destroy_instruct",
 }
