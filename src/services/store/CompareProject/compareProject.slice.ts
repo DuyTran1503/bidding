@@ -1,12 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 import { IInitialState } from "@/shared/utils/shared-interfaces";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-
-import { ICompareProject } from './compareProject.model';
-import { transformPayloadErrors } from '@/shared/utils/common/function';
-import { commonStaticReducers } from '@/services/shared';
-import { compareBarChartTotalAmount, compareBidderCount, compareBidSubmissionTime, compareConstructionTime, comparePieChartTotalAmount } from './compareProject.thunk';
-
+import { ICompareProject } from "./compareProject.model";
+import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { commonStaticReducers } from "@/services/shared";
+import {
+  compareBarChartTotalAmount,
+  compareBidderCount,
+  compareBidSubmissionTime,
+  compareConstructionTime,
+  comparePieChartTotalAmount,
+} from "./compareProject.thunk";
 export interface ICompareProjectInitialState extends IInitialState {
   compareBarChartTotalAmount: ICompareProject[];
   compareConstructionTime: ICompareProject[];
@@ -55,10 +59,11 @@ const compareProjectSlice = createSlice({
     };
 
     builder
-      // compareBarChartTotalAmount
+
+      // compareConstructionTime
       .addCase(compareBarChartTotalAmount.pending, pendingReducer)
       .addCase(compareBarChartTotalAmount.fulfilled, (state, { payload }) => 
-        fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Bar Chart)", 'compareBarChartTotalAmount'))
+        fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Construction Time)", 'compareBarChartTotalAmount'))
       .addCase(compareBarChartTotalAmount.rejected, (state, { payload }) => rejectedReducer(state, payload))
 
       // compareConstructionTime
