@@ -30,6 +30,8 @@ import { supportSlice } from "./store/support/support.slice";
 import { evaluationSlice } from "./store/evaluation/evaluation.slice";
 import { chartSlice } from "./store/chart/chart.slice";
 import { compareProjectSlice } from "./store/CompareProject/compareProject.slice";
+import { feedbackComplaintSlice } from "./store/feedback_complaint/feedback_complaint.slice";
+import { questionsAnswersSlice } from "./store/questions_answers/questions_answers.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -60,6 +62,8 @@ export const reducers = combineReducers({
   support: supportSlice.reducer,
   tender_notice: tenderNoticeSlice.reducer,
   evaluation: evaluationSlice.reducer,
+  feedback_complaint: feedbackComplaintSlice.reducer,
+  questions_answers: questionsAnswersSlice.reducer,
   chart: chartSlice.reducer,
   compareproject: compareProjectSlice.reducer,
 });
