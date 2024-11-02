@@ -42,7 +42,6 @@ import DetailFundingSource from "@/pages/FundingSource/Detail";
 import Attachment from "@/pages/Attachment";
 import BidDocument from "@/pages/BidDocument";
 import CreateBidDocument from "@/pages/BidDocument/Create";
-
 import DetailBidDocument from "@/pages/BidDocument/Detail";
 import UpdateBidDocument from "@/pages/BidDocument/Update";
 import DetailEnterprise from "@/pages/Enterprise/Detail";
@@ -60,6 +59,13 @@ import ApproveProject from "@/pages/Project/Approve";
 import BiddingResults from "@/pages/BiddingResults/BiddingResults/BiddingResults";
 import Banners from "@/pages/Banners/Banners/Banners";
 import DetailProject from "@/pages/Project/Detail";
+import Tasks from "@/pages/Task/Tasks/Task";
+import QuestionsAnswers from "@/pages/Questions_Answers";
+import Employee from "@/pages/Employee";
+import CreateEmployee from "@/pages/Employee/Create";
+import UpdateEmployee from "@/pages/Employee/Update";
+import DetailEmployee from "@/pages/Employee/Detail";
+import FeedbackComplaints from "@/pages/FeedbackComplaint";
 import ProcurementCategories from "@/pages/ProcurementCategories/ProcurementCategories";
 import PostCatalogs from "@/pages/PostCatalogs/PostCatalogs";
 import Posts from "@/pages/Posts/Posts/Posts";
@@ -480,11 +486,59 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "evaluation-criteria",
+            path: "evaluation_criteria",
             pages: [
               {
                 path: "/",
                 element: () => <EvaluationCriteria />,
+              },
+            ],
+          },
+          {
+            path: "task",
+            pages: [
+              {
+                path: "/",
+                element: () => <Tasks />,
+              },
+            ],
+          },
+          {
+            path: "questions-answers",
+            pages: [
+              {
+                path: "/",
+                element: () => <QuestionsAnswers />,
+              },
+            ],
+          },
+          {
+            path: "employees",
+            pages: [
+              {
+                path: "/",
+                element: () => <Employee />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateEmployee />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateEmployee />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailEmployee />,
+              },
+            ],
+          },
+          {
+            path: "feedback-complaint",
+            pages: [
+              {
+                path: "/",
+                element: () => <FeedbackComplaints />,
               },
             ],
           },

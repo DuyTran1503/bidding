@@ -6,32 +6,32 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import { resetStatus, setFilter } from "@/services/store/evaluation/evaluation.slice";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { IQuestionsAnswersInitialState } from "@/services/store/questions_answers/questions_answers.slice";
+import { changeStatusQuestionAnswer, deleteQuestionAnswer, getAllQuestionsAnswers } from "@/services/store/questions_answers/questions_answers.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
-import { FaPlus } from "react-icons/fa";
-import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import ActionModule from "./ActionModule";
-import { IEvaluationCriteriaInitialState, resetStatus, setFilter } from "@/services/store/evaluation/evaluation.slice";
-import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/services/store/evaluation/evaluation.thunk";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { getListProject } from "@/services/store/project/project.thunk";
-import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 
-const EvaluationCriteria = () => {
+const QuestionsAnswers = () => {
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
-  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-
+  const { state, dispatch } = useArchive<IQuestionsAnswersInitialState>("questions_answers");
+  const { state: stateProject } = useArchive<IProjectInitialState>("project");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const projectName = (value: number) => {
-    if (stateProject?.listProjects!.length > 0 && !!value) return stateProject?.listProjects!.find((item) => item.id === value)?.name;
+    if (stateProject?.listProjects!.length > 0 && !!value) {
+      return stateProject?.listProjects!.find((item) => item.id === value)?.name;
+    }
   };
+
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -44,7 +44,7 @@ const EvaluationCriteria = () => {
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteEvaluation(record?.key));
+        dispatch(deleteQuestionAnswer(record?.key));
       },
       permission: EPermissions.DESTROY_EVALUATION,
     },
@@ -52,7 +52,7 @@ const EvaluationCriteria = () => {
 
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusEvaluation(String(confirmItem.key)));
+      dispatch(changeStatusQuestionAnswer(String(confirmItem.key)));
     }
   };
   const columns: ColumnsType = [
@@ -61,26 +61,34 @@ const EvaluationCriteria = () => {
       title: "STT",
     },
     {
-      dataIndex: "project_name",
+      dataIndex: "project_id",
       title: "Dự án",
       className: "w-[250px]",
     },
     {
-      dataIndex: "name",
-      title: "Tên tiêu chí",
+      dataIndex: "asked_by",
+      title: "Người hỏi",
       className: "w-[200px]",
     },
     {
-      dataIndex: "weight",
-      title: "Trọng số",
+      dataIndex: "question_content",
+      title: "Nội dung câu hỏi",
+      className: "w-[250px]",
+      render(_, record) {
+        return <div dangerouslySetInnerHTML={{ __html: record?.question_content || "" }} className="text-compact-2"></div>;
+      },
+    },
+    {
+      dataIndex: "answered_by",
+      title: "Người trả lời",
       className: "w-[150px]",
     },
     {
-      dataIndex: "decription",
-      title: "Mô tả",
+      dataIndex: "answer_content",
+      title: "Nội dung câu trả lời",
       className: "w-[250px]",
       render(_, record) {
-        return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }} className="text-compact-2"></div>;
+        return <div dangerouslySetInnerHTML={{ __html: record?.answer_content || "" }} className="text-compact-2"></div>;
       },
     },
 
@@ -106,35 +114,36 @@ const EvaluationCriteria = () => {
 
   const data: ITableData[] = useMemo(
     () =>
-      state.evaluations && state.evaluations.length > 0
-        ? state.evaluations.map(({ id, project_id, project_name, name, weight, description, is_active }, index) => ({
+      state.questions_answers && state.questions_answers.length > 0
+        ? state.questions_answers.map(({ id, project_id, question_content, answer_content, asked_by, answer_by, is_active }, index) => ({
             index: index + 1,
             key: id,
             id,
             project_id,
             project_name: projectName(+project_id!),
-            name,
-            weight,
-            description,
+            question_content,
+            answer_content,
+            asked_by,
+            answer_by,
             is_active,
           }))
         : [],
-    [JSON.stringify(state.evaluations), JSON.stringify(stateProject.listProjects)],
+    [JSON.stringify(state.questions_answers), JSON.stringify(stateProject.listProjects)],
   );
 
   useEffect(() => {
-    dispatch(getAllEvaluations({ query: state.filter }));
-    dispatchProject(getListProject());
+    dispatch(getAllQuestionsAnswers({ query: state.filter }));
+    dispatch(getListProject());
   }, [JSON.stringify(state.filter)]);
 
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
-      dispatch(getAllEvaluations({ query: state.filter }));
+      dispatch(getAllQuestionsAnswers({ query: state.filter }));
     }
   }, [JSON.stringify(state.status)]);
 
   useFetchStatus({
-    module: "evaluation",
+    module: "questions_answers",
     reset: resetStatus,
     actions: {
       success: { message: state.message },
@@ -146,10 +155,6 @@ const EvaluationCriteria = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
-  const statusOptions: IOption[] = statusEnumArray.map((e) => ({
-    value: e,
-    label: mappingStatus[e],
-  }));
   const projectOptions: IOption[] =
     stateProject?.listProjects && stateProject.listProjects.length > 0
       ? stateProject.listProjects.map((e) => ({
@@ -157,48 +162,26 @@ const EvaluationCriteria = () => {
           label: e.name,
         }))
       : [];
-  const search: ISearchTypeTable[] = [
-    {
-      id: "name",
-      placeholder: "Nhập tên tiêu chí đánh giá...",
-      label: "Tên tiêu chí đánh giá",
-      type: "text",
-    },
-    {
-      id: "project",
-      placeholder: "Chọn dự án ...",
-      label: "Loại dự án ",
-      type: "select",
-      options: projectOptions as { value: string; label: string }[],
-    },
-    {
-      id: "is_active",
-      placeholder: "Chọn trạng thái ...",
-      label: "Trạng thái",
-      type: "select",
-
-      options: statusOptions as { value: string; label: string }[],
-    },
-  ];
+  const search: ISearchTypeTable[] = [];
 
   return (
     <>
       <Heading
-        title="Tiêu chí đánh giá"
+        title="Câu hỏi / Câu trả lời"
         ModalContent={(props) => <ActionModule {...(props as any)} />}
         hasBreadcrumb
-        buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
-          {
-            icon: <FaPlus className="text-[18px]" />,
-            permission: EPermissions.CREATE_EVALUATION,
-            text: "Thêm mới",
-          },
-        ]}
+        // buttons={[
+        //   {
+        //     text: "Export",
+        //     type: "ghost",
+        //     icon: <GoDownload className="text-[18px]" />,
+        //   },
+        //   {
+        //     icon: <FaPlus className="text-[18px]" />,
+        //     permission: EPermissions.CREATE_EVALUATION,
+        //     text: "Thêm mới",
+        //   },
+        // ]}
       />
 
       <ConfirmModal
@@ -228,4 +211,4 @@ const EvaluationCriteria = () => {
   );
 };
 
-export default EvaluationCriteria;
+export default QuestionsAnswers;

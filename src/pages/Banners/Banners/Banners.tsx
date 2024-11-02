@@ -17,7 +17,7 @@ import { changeStatusBanner, deleteBanner, getAllBanners } from "@/services/stor
 import { GoDownload } from "react-icons/go";
 import BannerForm from "../BannerForm";
 import { EPermissions } from "@/shared/enums/permissions";
-import Image from "@/components/table/Image";
+import CustomerAvatar from "@/components/common/CustomerAvatar";
 
 const Banners = () => {
   const { state, dispatch } = useArchive<IBannerInitialState>("banner");
@@ -56,7 +56,7 @@ const Banners = () => {
       dataIndex: "path",
       title: "Link",
       render(_, record) {
-        return <Image src={record.path as unknown as string} alt={"Ảnh đại diện"} />;
+        return <CustomerAvatar src={record.path as unknown as string} alt={"Ảnh đại diện"} />;
       },
     },
     {
@@ -75,6 +75,7 @@ const Banners = () => {
   ];
 
   const handleChangeStatus = (item: ITableData) => {
+    setIsModal(true);
     setConfirmItem(item);
   };
 
@@ -97,13 +98,13 @@ const Banners = () => {
     () =>
       state.banners && state.banners.length > 0
         ? state.banners.map(({ id, name, path, is_active }, index) => ({
-          index: index + 1,
-          key: id,
-          id: id,
-          name,
-          path,
-          is_active,
-        }))
+            index: index + 1,
+            key: id,
+            id: id,
+            name,
+            path,
+            is_active,
+          }))
         : [],
     [JSON.stringify(state.banners)],
   );
