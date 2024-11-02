@@ -25,5 +25,7 @@ export enum EPageNames {
   "banners" = "Banner",
   "bid-bond" = "Bão lãnh dự thầu",
   "questions_answers" = "Câu Hỏi/Trả lời",
-  "feedback_complaint" = "Phản hồi và Khiếu nại",
+  "feedbacks_complaints" = "Phản hồi và Khiếu nại",
+  "instructs" = "Hướng dẫn",
+  "introductions" = "Giới thiệu"
 }
