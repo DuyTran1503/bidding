@@ -7,7 +7,6 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
 import { projectByIndustry } from "@/services/store/chart/chart.thunk";
@@ -26,7 +25,6 @@ import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  // const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IChartInitialState>("chart");
   const navigate = useNavigate();
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
