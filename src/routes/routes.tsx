@@ -515,6 +515,15 @@ export const routes: IRoute[] = [
             ],
           },
           {
+            path: "feedback-complaints",
+            pages: [
+              {
+                path: "/",
+                element: () => <FeedbackComplaints />,
+              },
+            ],
+          },
+          {
             path: "employees",
             pages: [
               {
@@ -577,15 +586,7 @@ export const routes: IRoute[] = [
               // },
             ],
           },
-          {
-            path: "feedback-complaint",
-            pages: [
-              {
-                path: "/",
-                element: () => <FeedbackComplaints />,
-              },
-            ],
-          },
+         
         ],
       },
       {
