@@ -32,6 +32,8 @@ import { chartSlice } from "./store/chart/chart.slice";
 import { compareProjectSlice } from "./store/CompareProject/compareProject.slice";
 import { feedbackComplaintSlice } from "./store/feedback_complaint/feedback_complaint.slice";
 import { questionsAnswersSlice } from "./store/questions_answers/questions_answers.slice";
+import { introductionSlice } from "./store/introduction/introduction.slice";
+import { insTructSlice } from "./store/instruct/instruct.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -66,6 +68,8 @@ export const reducers = combineReducers({
   questions_answers: questionsAnswersSlice.reducer,
   chart: chartSlice.reducer,
   compareproject: compareProjectSlice.reducer,
+  introduction: introductionSlice.reducer,
+  instruct: insTructSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;
