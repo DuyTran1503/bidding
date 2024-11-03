@@ -251,13 +251,13 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           permissions: EPermissions.LIST_BANNER,
         },
         {
-          id: "4.8",
+          id: "5.9",
           label: "Câu hỏi/ Câu trả lời",
           path: "questions-answers",
           // permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
         },
         {
-          id: "4.9",
+          id: "5.10",
           label: "Phản hồi và Khiếu nại",
           path: "feedback-complaint",
           // permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
