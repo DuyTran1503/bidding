@@ -9,16 +9,16 @@ interface TableProps {
 
 const TableChart: React.FC<TableProps> = ({ compareData, investorId, valueType = "quantity", chartType = "bar" }) => {
     // Function to convert date strings to year difference or days
-    const formatNumber = (num: number) => {
-        if (num >= 1e9) return new Intl.NumberFormat('vi-VN').format(num / 1e9) + " tỷ";
-        if (num >= 1e6) return new Intl.NumberFormat('vi-VN').format(num / 1e6) + " triệu";
-        return new Intl.NumberFormat('vi-VN').format(num);
-    };
+    // const formatNumber = (num: number) => {
+    //     if (num >= 1e9) return new Intl.NumberFormat('vi-VN').format(num / 1e9) + " tỷ";
+    //     if (num >= 1e6) return new Intl.NumberFormat('vi-VN').format(num / 1e6) + " triệu";
+    //     return new Intl.NumberFormat('vi-VN').format(num);
+    // };
 
     // Hàm định dạng số cho các giá trị khác
     const formatValue = (val: number | string) => {
         if (valueType === "currency") {
-            return formatNumber(Number(val));
+            return new Intl.NumberFormat('vi-VN').format(Number(val)) + " VND";
         } else if (valueType === "date") {
             return convertToYearsOrDays(val);
         } else {

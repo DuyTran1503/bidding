@@ -80,10 +80,6 @@ const Dashboard: React.FC = () => {
         <Row gutter={[24, 24]}>
           <Col xs={24} sm={24} md={12} xl={12}>
             <h3 className="text-lg font-semibold mb-4">2.1 Dự án theo nguồn tài trợ</h3>
-            <ul className="list-disc list-inside">
-              <li>Thể hiện các dự án được tài trợ bởi các nguồn nào (ví dụ: chính phủ, tư nhân, tổ chức quốc tế)</li>
-              <li>Giúp doanh nghiệp nhận diện và đánh giá sự đa dạng của các nguồn tài trợ, từ đó đưa ra chiến lược tiếp cận hoặc tìm kiếm thêm nguồn tài trợ phù hợp.</li>
-            </ul>
             <GenericChart
               chartType="pie"
               title="Dự án theo nguồn tài trợ"
@@ -92,20 +88,26 @@ const Dashboard: React.FC = () => {
               seriesName="Dữ liệu Biểu đồ"
             // isCurrency={true}
             />
+            <ul className="list-disc list-inside">
+              <li>Thể hiện các dự án được tài trợ bởi các nguồn nào (ví dụ: chính phủ, tư nhân, tổ chức quốc tế)</li>
+              <li>Giúp doanh nghiệp nhận diện và đánh giá sự đa dạng của các nguồn tài trợ, từ đó đưa ra chiến lược tiếp cận hoặc tìm kiếm thêm nguồn tài trợ phù hợp.</li>
+            </ul>
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
             <h3 className="text-lg font-semibold mb-4">2.2 Dự án theo ngành</h3>
-            <ul className="list-disc list-inside">
-              <li>Biểu đồ này phân tích số lượng và tỷ lệ dự án trong từng ngành khác nhau.</li>
-              <li>Giúp doanh nghiệp và nhà quản lý lập kế hoạch, ưu tiên ngành phù hợp, điều chỉnh nguồn lực và đầu tư vào các ngành đang phát triển mạnh hoặc tiềm năng.</li>
-            </ul>
             <GenericChart
               chartType="bar"
               title="Dự án theo ngành"
               name={state.industryData.map(({ name }) => name)}
               value={state.industryData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
+              barWidth={50}
+              valueType="quantity"
             />
+            <ul className="list-disc list-inside">
+              <li>Biểu đồ này phân tích số lượng và tỷ lệ dự án trong từng ngành khác nhau.</li>
+              <li>Giúp doanh nghiệp và nhà quản lý lập kế hoạch, ưu tiên ngành phù hợp, điều chỉnh nguồn lực và đầu tư vào các ngành đang phát triển mạnh hoặc tiềm năng.</li>
+            </ul>
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
             <h3 className="text-lg font-semibold mb-4">2.3 Dự án theo phạm vi trong nước/quốc tế</h3>
@@ -175,6 +177,8 @@ const Dashboard: React.FC = () => {
               name={state.organizationData.map(({ name }) => name)}
               value={state.organizationData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
+              barWidth={50}
+              valueType="quantity"
             />
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
@@ -188,11 +192,13 @@ const Dashboard: React.FC = () => {
               </li>
             </ul>
             <GenericChart
-              chartType="bar"
+              chartType="pie"
               title="Thời gian trung bình của dự án theo ngành"
               name={state.durationData.map(({ name }) => name)}
               value={state.durationData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
+              barWidth={50}
+              valueType="date"
             />
           </Col>
         </Row>
@@ -214,6 +220,8 @@ const Dashboard: React.FC = () => {
               name={state.toptenderersbyprojectcountData.map(({ name }) => name)}
               value={state.toptenderersbyprojectcountData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
+              barWidth={50}
+              valueType="quantity"
             />
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
@@ -221,7 +229,7 @@ const Dashboard: React.FC = () => {
             <ul className="list-disc list-inside">
               <li>Đây là biểu đồ thể hiện 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo theo giá.</li>
               <li>
-                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình. 
+                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.
               </li>
             </ul>
             <GenericChart
@@ -230,6 +238,8 @@ const Dashboard: React.FC = () => {
               name={state.toptenderersbyprojecttotalamountData.map(({ name }) => name)}
               value={state.toptenderersbyprojecttotalamountData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
+              barWidth={50}
+              valueType="currency"
             />
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
@@ -237,7 +247,7 @@ const Dashboard: React.FC = () => {
             <ul className="list-disc list-inside">
               <li>Đây là biểu đồ thể hiện 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo theo giá.</li>
               <li>
-                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình. 
+                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.
               </li>
             </ul>
             <GenericChart
@@ -246,6 +256,8 @@ const Dashboard: React.FC = () => {
               name={state.topinvestorsbyprojectpartialData.map(({ name }) => name)}
               value={state.topinvestorsbyprojectpartialData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
+              barWidth={50}
+              valueType="quantity"
             />
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
@@ -253,7 +265,7 @@ const Dashboard: React.FC = () => {
             <ul className="list-disc list-inside">
               <li>Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.</li>
               <li>
-                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình. 
+                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.
               </li>
             </ul>
             <GenericChart
@@ -262,6 +274,8 @@ const Dashboard: React.FC = () => {
               name={state.topinvestorsbyprojectfullData.map(({ name }) => name)}
               value={state.topinvestorsbyprojectfullData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
+              barWidth={50}
+              valueType="quantity"
             />
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
@@ -269,7 +283,7 @@ const Dashboard: React.FC = () => {
             <ul className="list-disc list-inside">
               <li>Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.</li>
               <li>
-                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình. 
+                Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.
               </li>
             </ul>
             <GenericChart
@@ -278,6 +292,8 @@ const Dashboard: React.FC = () => {
               name={state.topinvestorsbyprojecttotalamountData.map(({ name }) => name)}
               value={state.topinvestorsbyprojecttotalamountData.map(({ value }) => value)}
               seriesName="Dữ liệu Biểu đồ"
+              barWidth={50}
+              valueType="currency"
             />
           </Col>
         </Row>
