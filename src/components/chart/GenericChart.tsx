@@ -42,6 +42,9 @@ const GenericChart: React.FC<GenericChartProps> = ({
 
     // Hàm định dạng số với dấu phẩy và đơn vị, làm tròn theo đơn vị khi hiển thị trên biểu đồ
     const formatNumber = (num: number) => {
+        if (num >= 1e18) return new Intl.NumberFormat('vi-VN').format(num / 1e18) + " tỷ tỷ";
+        if (num >= 1e15) return new Intl.NumberFormat('vi-VN').format(num / 1e15) + " triệu tỷ";
+        if (num >= 1e12) return new Intl.NumberFormat('vi-VN').format(num / 1e12) + " nghìn tỷ";
         if (num >= 1e9) return new Intl.NumberFormat('vi-VN').format(num / 1e9) + " tỷ";
         if (num >= 1e6) return new Intl.NumberFormat('vi-VN').format(num / 1e6) + " triệu";
         return new Intl.NumberFormat('vi-VN').format(num);
@@ -61,13 +64,15 @@ const GenericChart: React.FC<GenericChartProps> = ({
     const option = useMemo(() => {
         const seriesData = chartType === "pie"
             ? name?.map((n, i) => ({ name: n, value: value?.[i], itemStyle: { color: colors?.[i] } }))
-            : value?.map((v, i) => ({ value: v, itemStyle: { color: colors?.[i] } })); // Áp dụng màu theo mảng colors
+            : value?.map((v, i) => ({ value: v, itemStyle: { color: colors?.[i] } }));
 
         return {
             tooltip: {
                 show: tooltipEnabled,
                 formatter: (params: any) => {
-                    const formattedValue = formatValue(params.value);
+                    const formattedValue = valueType === "currency"
+                        ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(params.value)
+                        : new Intl.NumberFormat('vi-VN').format(params.value); // Hiển thị giá trị đầy đủ không làm tròn
                     if (chartType === "pie") {
                         return `${params.name}: ${formattedValue} (${params.percent}%)`;
                     }
