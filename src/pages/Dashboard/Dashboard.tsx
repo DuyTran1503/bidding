@@ -233,7 +233,7 @@ const Dashboard: React.FC = () => {
             />
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
-            <h3 className="text-lg font-semibold mb-4">3.2 Top 10 đơn vị trúng thầu nhiều nhất theo từng phần</h3>
+            <h3 className="text-lg font-semibold mb-4">3.3 Top 10 đơn vị trúng thầu nhiều nhất theo từng phần</h3>
             <ul className="list-disc list-inside">
               <li>Đây là biểu đồ thể hiện 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo theo giá.</li>
               <li>
@@ -249,7 +249,7 @@ const Dashboard: React.FC = () => {
             />
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
-            <h3 className="text-lg font-semibold mb-4">3.2 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói</h3>
+            <h3 className="text-lg font-semibold mb-4">3.4 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói</h3>
             <ul className="list-disc list-inside">
               <li>Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.</li>
               <li>
@@ -265,7 +265,7 @@ const Dashboard: React.FC = () => {
             />
           </Col>
           <Col xs={24} sm={24} md={12} xl={12}>
-            <h3 className="text-lg font-semibold mb-4">3.2 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói</h3>
+            <h3 className="text-lg font-semibold mb-4">3.5 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói</h3>
             <ul className="list-disc list-inside">
               <li>Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.</li>
               <li>
@@ -282,12 +282,12 @@ const Dashboard: React.FC = () => {
           </Col>
         </Row>
       </div>
-      <AreaChart />
+      {/* <AreaChart />
       <RadarChart />
       <PieChart />
       <LineChart />
       <Histogram />
-      <ScatterPlot />
+      <ScatterPlot /> */}
     </>
   );
 };
