@@ -104,7 +104,7 @@ const Enterprise = () => {
     {
       title: "Trạng thái",
       dataIndex: "is_active",
-      className: "w-[150px]",
+      className: "w-[105px]",
       render(_, record, index) {
         return (
           <div key={index} className="flex flex-col gap-2">
@@ -294,7 +294,7 @@ const Enterprise = () => {
         }}
         setFilter={setFilter}
         filter={enterpriseState.filter}
-        scroll={{ x: 2100 }}
+        scroll={{ x: 3200 }}
         tabLabel="Tổng quan"
         additionalTabs={additionalTabs}
       />
