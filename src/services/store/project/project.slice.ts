@@ -136,8 +136,8 @@ const projectSlice = createSlice({
 
     builder
       .addCase(getListProject.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
-        if (payload.data) {
-          state.listProjects = payload.data;
+        if (payload.data.data) {
+          state.listProjects = payload.data.data;
         }
       })
       .addCase(getListProject.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {

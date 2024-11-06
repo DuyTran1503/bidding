@@ -10,6 +10,7 @@ import {
   compareBidSubmissionTime,
   compareConstructionTime,
   comparePieChartTotalAmount,
+  detailProjectByIds,
 } from "./compareProject.thunk";
 export interface ICompareProjectInitialState extends IInitialState {
   compareBarChartTotalAmount: ICompareProject[];
@@ -17,6 +18,7 @@ export interface ICompareProjectInitialState extends IInitialState {
   compareBidSubmissionTime: ICompareProject[];
   comparePieChartTotalAmount: ICompareProject[];
   compareBidderCount: ICompareProject[];
+  detailProjectByIds: ICompareProject[];
 }
 
 const initialState: ICompareProjectInitialState = {
@@ -27,6 +29,7 @@ const initialState: ICompareProjectInitialState = {
   compareBidSubmissionTime: [],
   comparePieChartTotalAmount: [],
   compareBidderCount: [],
+  detailProjectByIds: [],
   totalRecords: 0,
   filter: {
     size: 10,
@@ -88,7 +91,13 @@ const compareProjectSlice = createSlice({
       .addCase(compareBidderCount.pending, pendingReducer)
       .addCase(compareBidderCount.fulfilled, (state, { payload }) => 
         fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Bidder Count)", 'compareBidderCount'))
-      .addCase(compareBidderCount.rejected, (state, { payload }) => rejectedReducer(state, payload));
+      .addCase(compareBidderCount.rejected, (state, { payload }) => rejectedReducer(state, payload))
+
+      // compareBidderCount
+      .addCase(detailProjectByIds.pending, pendingReducer)
+      .addCase(detailProjectByIds.fulfilled, (state, { payload }) => 
+        fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Bidder Count)", 'detailProjectByIds'))
+      .addCase(detailProjectByIds.rejected, (state, { payload }) => rejectedReducer(state, payload));
   },
 });
 
