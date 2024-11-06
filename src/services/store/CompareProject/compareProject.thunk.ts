@@ -61,3 +61,12 @@ export const compareBidderCount = createAsyncThunk("compareProject/compareBidder
     return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
   }
 });
+
+export const detailProjectByIds = createAsyncThunk("compareProject/detailProjectByIds", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { data } = await client.post(`${prefix}/detail-project-by-ids`, payload);
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+  }
+});
