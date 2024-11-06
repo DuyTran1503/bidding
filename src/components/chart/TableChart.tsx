@@ -1,19 +1,15 @@
 import React from "react";
+import { Table } from "antd";
+import type { ColumnsType } from "antd/es/table";
 
 interface TableProps {
     compareData: { id: string; name: string; value: number | string }[]; // Data array for the table rows
-    investorId: string; // ID to highlight a specific row
+    projectId: string; // ID to highlight a specific row
     valueType?: "currency" | "quantity" | "date"; // Type of value: currency, quantity, or date
-    chartType?: "bar" | "pie"
+    chartType?: "bar" | "pie";
 }
 
-const TableChart: React.FC<TableProps> = ({ compareData, investorId, valueType = "quantity", chartType = "bar" }) => {
-    // Function to convert date strings to year difference or days
-    // const formatNumber = (num: number) => {
-    //     if (num >= 1e9) return new Intl.NumberFormat('vi-VN').format(num / 1e9) + " tỷ";
-    //     if (num >= 1e6) return new Intl.NumberFormat('vi-VN').format(num / 1e6) + " triệu";
-    //     return new Intl.NumberFormat('vi-VN').format(num);
-    // };
+const TableChart: React.FC<TableProps> = ({ compareData, projectId, valueType = "quantity", chartType = "bar" }) => {
 
     // Hàm định dạng số cho các giá trị khác
     const formatValue = (val: number | string) => {
@@ -51,6 +47,42 @@ const TableChart: React.FC<TableProps> = ({ compareData, investorId, valueType =
         }
     };
 
+    // Cấu hình các cột của bảng
+    const columns: ColumnsType<{ id: string; name: string; value: number | string }> = [
+        {
+            title: 'STT',
+            dataIndex: 'index',
+            key: 'index',
+            render: (_text, _record, index) => index + 1,
+            align: 'center',
+            width: 100,
+        },
+        {
+            title: 'Tên dự án',
+            dataIndex: 'name',
+            key: 'name',
+            align: 'center',
+        },
+        {
+            title: valueType === "currency" ? 'Tổng số tiền' : valueType === "date" ? 'Thời gian' : 'Số lượng',
+            dataIndex: 'value',
+            key: 'value',
+            render: (value) => formatValue(value),
+            align: 'center',
+        },
+    ];
+
+    // Cấu hình dataSource cho bảng, thêm key để mỗi hàng là duy nhất
+    const dataSource = compareData.map((item, index) => ({
+        ...item,
+        key: index,
+        className: item.id === projectId ? "highlight-row" : index % 2 === 0 ? "even-row" : "odd-row",
+    }));
+
+    // Tùy chỉnh kiểu bảng cho các hàng
+    const rowClassName = (record: { id: string }) =>
+        record.id == projectId ? "bg-red-300" : "";
+
     return (
         <>
             {chartType === "bar" && (
@@ -66,37 +98,13 @@ const TableChart: React.FC<TableProps> = ({ compareData, investorId, valueType =
                 </div>
             )}
 
-            <table className="w-full">
-                <thead>
-                    <tr>
-                        <th className="p-3 border border-gray-100 bg-white font-bold text-center">STT</th>
-                        <th className="p-3 border border-gray-100 bg-white font-bold text-center">Tên dự án</th>
-                        <th className="p-3 border border-gray-100 bg-white font-bold text-center">
-                            {valueType === "currency" ? 'Tổng số tiền' : valueType === "date" ? 'Thời gian' : 'Số lượng'}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {compareData.map((item, index) => (
-                        <tr
-                            key={index}
-                            className={
-                                item.id == investorId
-                                    ? "bg-red-300"
-                                    : index % 2 === 0
-                                        ? "bg-gray-25"
-                                        : "bg-white"
-                            }
-                        >
-                            <td className="p-3 border border-gray-100 text-center">{++index}</td>
-                            <td className="p-3 border border-gray-100 text-center">{item.name}</td>
-                            <td className="p-3 border border-gray-100 text-center">
-                                {formatValue(item.value)}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <Table
+                columns={columns}
+                dataSource={dataSource}
+                pagination={false}
+                rowClassName={rowClassName}
+                bordered
+            />
         </>
     );
 };
