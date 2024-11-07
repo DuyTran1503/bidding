@@ -9,8 +9,6 @@ import { useViewport } from "@/hooks/useViewport";
 import { IFeedbackComplaint } from "@/services/store/feedback_complaint/feedback_complaint.model";
 import { IFeedbackComplaintInitialState } from "@/services/store/feedback_complaint/feedback_complaint.slice";
 import { updateFeedbackComplaint } from "@/services/store/feedback_complaint/feedback_complaint.thunk";
-import { IQuestionsAnswers } from "@/services/store/questions_answers/questions_answers.model";
-import { updateQuestionAnswer } from "@/services/store/questions_answers/questions_answers.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { Col, Row } from "antd";
 import { Form, Formik, FormikProps } from "formik";
