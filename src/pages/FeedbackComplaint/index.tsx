@@ -7,20 +7,19 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus, setFilter } from "@/services/store/evaluation/evaluation.slice";
+import { IFeedbackComplaintInitialState } from "@/services/store/feedback_complaint/feedback_complaint.slice";
+import { getAllFeedbackComplaints } from "@/services/store/feedback_complaint/feedback_complaint.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
-import { IQuestionsAnswersInitialState } from "@/services/store/questions_answers/questions_answers.slice";
-import { changeStatusQuestionAnswer, deleteQuestionAnswer, getAllQuestionsAnswers } from "@/services/store/questions_answers/questions_answers.thunk";
+import { changeStatusQuestionAnswer, deleteQuestionAnswer } from "@/services/store/questions_answers/questions_answers.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
+import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ActionModule from "./ActionModule";
-import { IFeedbackComplaintInitialState } from "@/services/store/feedback_complaint/feedback_complaint.slice";
-import { getAllFeedbackComplaints } from "@/services/store/feedback_complaint/feedback_complaint.thunk";
 
 const FeedbackComplaints = () => {
   const navigate = useNavigate();
