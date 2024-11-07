@@ -25,7 +25,7 @@ import { bannerSlice } from "./store/banner/banner.slice";
 import { procurementCategorieSlice } from "./store/procurementCategorie/procurementCategorie.slice";
 import { postCatalogSlice } from "./store/postCatalog/postCatalog.slice";
 import { postSlice } from "./store/post/post.slice";
-import { tenderNoticeSlice } from "./store/tenderNotice/tenderNotice.slice";
+import { tenderNoticeSlice } from "./store/tenderNotice/tenderNotice.slice"; 
 import { supportSlice } from "./store/support/support.slice";
 import { evaluationSlice } from "./store/evaluation/evaluation.slice";
 import { chartSlice } from "./store/chart/chart.slice";
