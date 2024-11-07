@@ -22,9 +22,12 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
+import GenericChart from "@/components/chart/GenericChart";
+import { IChartInitialState } from "@/services/store/chart/chart.slice";
 
 const Enterprise = () => {
   const navigate = useNavigate();
+  const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IChartInitialState>("chart");
   const { state: enterpriseState, dispatch: enterpriseDispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: industryState, dispatch: industryDispatch } = useArchive<IIndustryInitialState>("industry");
   const [isModal, setIsModal] = useState(false);
@@ -125,21 +128,27 @@ const Enterprise = () => {
       onClick(record) {
         navigate(`detail/${record?.key}`);
       },
-      permission: EPermissions.CREATE_ENTERPRISE,
+      // permission: EPermissions.CREATE_ENTERPRISE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/enterprise/update/${record?.key}`);
       },
-      permission: EPermissions.UPDATE_ENTERPRISE,
+      // permission: EPermissions.UPDATE_ENTERPRISE,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         enterpriseDispatch(deleteEnterprise(record?.key));
       },
-      permission: EPermissions.DESTROY_ENTERPRISE,
+      // permission: EPermissions.DESTROY_ENTERPRISE,
+    },
+    {
+      type: EButtonTypes.STATISTICAL,
+      onClick(record) {
+        navigate(`/enterprise/statistical/${record?.key}`);
+      },
     },
   ];
   const search: ISearchTypeTable[] = [
@@ -173,6 +182,28 @@ const Enterprise = () => {
       options: statusOptions as { value: string; label: string }[],
     },
   ];
+
+  const additionalTabs = [
+    {
+      key: "extraTab1",
+      label: "Nhiệm vụ",
+      content: (
+        <GenericChart
+          chartType="bar"
+          title="Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà doanh nghiệp thực hiện"
+          name={stateIndustry.industryData.map(({ name }) => name)}
+          value={stateIndustry.industryData.map(({ value }) => value)}
+          seriesName="Dữ liệu Biểu đồ"
+        />
+      ),
+    },
+    // {
+    //   key: "extraTab2",
+    //   label: "Thống kê chi tiết",
+    //   content: <div>Nội dung cho tab bổ sung 2</div>,
+    // },
+  ];
+
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(enterpriseState.enterprises)
       ? enterpriseState.enterprises.map(
@@ -267,6 +298,8 @@ const Enterprise = () => {
         setFilter={setFilter}
         filter={enterpriseState.filter}
         scroll={{ x: 2100 }}
+        tabLabel="Danh sách dữ liệu"
+        additionalTabs={additionalTabs}
       />
     </>
   );

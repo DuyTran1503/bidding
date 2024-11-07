@@ -168,15 +168,15 @@ const chartSlice = createSlice({
       //   state.loading = false;
       // });
 
-    // chart top-tenderers-by-project-count
-    builder.addCase(topTendersByProjectCount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.toptenderersbyprojectcountData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    });
-    builder.addCase(topTendersByProjectCount.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    });
+      // chart top-tenderers-by-project-count
+      builder.addCase(topTendersByProjectCount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+        state.toptenderersbyprojectcountData = payload;
+        state.status = EFetchStatus.FULFILLED;
+      });
+      builder.addCase(topTendersByProjectCount.rejected, (state, action) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      });
 
     // chart top-tenderers-by-project-total-amount
     builder.addCase(topTendersByProjectTotalAmount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
@@ -217,6 +217,7 @@ const chartSlice = createSlice({
       state.status = EFetchStatus.REJECTED;
       state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
     });
+
   },
 });
 

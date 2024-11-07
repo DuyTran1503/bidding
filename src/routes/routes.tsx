@@ -310,6 +310,10 @@ export const routes: IRoute[] = [
                 path: "/detail/:id",
                 element: () => <DetailEnterprise />,
               },
+              {
+                path: "/statistical/:id",
+                element: () => <Statistical />,
+              },
             ],
           },
           {

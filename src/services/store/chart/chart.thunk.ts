@@ -168,6 +168,7 @@ export const topInvestorsByProjectFull = createAsyncThunk(
     }
   }
 );
+
 export const topInvestorsByProjectTotalAmount = createAsyncThunk(
   "chart/top-investors-by-project-total-amount",
   async (payload: IThunkPayload, { rejectWithValue }) => {

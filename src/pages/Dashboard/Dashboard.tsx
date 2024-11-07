@@ -22,6 +22,7 @@ import Heading from "@/components/layout/Heading";
 import { Col, Row } from "antd";
 import { Link } from "react-router-dom";
 import ChartSection from "@/components/chart/ChartSection";
+// import { avgDifficultyByEnterprise } from "@/services/store/avgDifficultyOfTheTask/avgDifficultyOfTheTask.thunk";
 
 const Dashboard: React.FC = () => {
   const { state, dispatch } = useArchive<IChartInitialState>("chart");

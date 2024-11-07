@@ -180,16 +180,19 @@ const ProjectPage = () => {
     dispatchIndustry(getIndustries());
     dispatchIndustry(projectByIndustry({}));
   }, [JSON.stringify(stateProject.filter)]);
+
   useEffect(() => {
     if (stateProject.status === EFetchStatus.FULFILLED) {
       dispatchProject(getAllProject({ query: stateProject.filter }));
     }
   }, [JSON.stringify(stateProject.status)]);
+
   useEffect(() => {
     return () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
+  
   useFetchStatus({
     module: "project",
     reset: resetMessageError,

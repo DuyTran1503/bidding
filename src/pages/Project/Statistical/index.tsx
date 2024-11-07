@@ -81,7 +81,7 @@ const Statistical: React.FC = () => {
         if (updatedProjectIds.length > 20) {
             message.warning("Bạn chỉ có thể so sánh tối đa 5 dự án cùng lúc.");
             return;
-        }
+        }   
 
         localStorage.setItem("selectedProjectIds", JSON.stringify(updatedProjectIds));
         // console.log("hahaa");
