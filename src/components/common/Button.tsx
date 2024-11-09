@@ -28,7 +28,7 @@ const Button = ({
   kind,
 }: IButtonProps) => {
   const typeClass = {
-    primary: "text-primary-600 border border-primary-500 hover:bg-primary-600 ",
+    primary: "text-primary-600 border border-primary-500 hover:bg-primary-600 hover:text-white",
     ghost: "text-primary-500 bg-primary-50",
     secondary: "text-[#ff460b] border border-[#ff460b] hover:bg-[#f33d07]",
     third: "text-[#d19b3d] border border-[#d19b3d] hover:bg-[#a87722]",
