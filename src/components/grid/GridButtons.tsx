@@ -11,7 +11,7 @@ import { MdInsertChart, MdOutlineCreditScore } from "react-icons/md";
 
 interface IGridButtonsProps {
   buttons: IGridButton[];
-  record: { key: string;[key: string]: any };
+  record: { key: string; [key: string]: any };
   onClick?: (item: any, type: EButtonTypes) => void;
 }
 
