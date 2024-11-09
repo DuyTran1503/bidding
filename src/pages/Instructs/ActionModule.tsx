@@ -1,5 +1,7 @@
+import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
 import FormInputArea from "@/components/form/FormInputArea";
+import FormSwitch from "@/components/form/FormSwitch";
 import { useArchive } from "@/hooks/useArchive";
 import { resetMessageError } from "@/services/store/funding_source/funding_source.slice";
 import { createInstruct } from "@/services/store/instruct/instruct.thunk";
@@ -55,77 +57,25 @@ const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
         }
       }}
     >
-      {({ values, errors, touched, handleBlur, setFieldValue }) => {
+      {({ values, setFieldValue }) => {
         return (
-          <>
-            {/* <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tên nguồn tài trợ">
-                  <FormInput
-                    label="Tên nguồn tài trợ"
-                    placeholder="Tên nguồn tài trợ..."
-                    name="name"
-                    value={values.name}
-                    error={touched.name ? errors.name : ""}
-                    onChange={(e) => setFieldValue("name", e)}
-                    onBlur={handleBlur}
-                  />
+          <Row gutter={[24, 24]}>
+                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormGroup title="Bài giới thiệu">
+                  <FormCkEditor id="instruct" value={values.instruct ?? ""} onChange={(e) => setFieldValue("instruct", e)} />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Loại nguồn tài trợ">
-                  <FormSelect
-                    label="Loại nguồn tài trợ"
-                    placeholder="Chọn loại nguồn tài trợ..."
-                    isDisabled={type === EPageTypes.VIEW}
-                    id="type"
-                    options={convertEnum(TypeFundingSource)}
-                    value={values.type || undefined}
-                    error={touched.type ? errors.type : ""}
-                    onChange={(e) => setFieldValue("type", e)}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Mã nguồn tài trợ">
-                  <FormInput
-                    label="Mã nguồn tài trợ"
-                    placeholder="Mã nguồn tài trợ..."
-                    name="code"
-                    value={values.code}
-                    error={touched.code ? errors.code : ""}
-                    onChange={(e) => setFieldValue("code", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Trạng thái hoạt động">
                   <FormSwitch
-                    checked={!!values.is_active ? true : false}
+                    checked={!!values.is_use ? true : false}
                     onChange={(value) => {
-                      setFieldValue("is_active", value);
+                      setFieldValue("is_use", value);
                     }}
                   />
                 </FormGroup>
               </Col>
-            </Row> */}
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormGroup title="Giới thiệu">
-                  <FormInputArea
-                    label="Giới thiệu"
-                    placeholder="Nhập bài giới thiệu..."
-                    name="instruct"
-                    isReadonly={type === EPageTypes.VIEW}
-                    value={values.instruct}
-                    error={touched.instruct ? errors.instruct : ""}
-                    onChange={(e) => setFieldValue("instruct", e)}
-                  />
-                </FormGroup>
-              </Col>
             </Row>
-          </>
         );
       }}
     </Formik>

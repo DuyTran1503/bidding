@@ -81,6 +81,7 @@ import EvaluationCriteria from "@/pages/EvaluationCriteria";
 import Statistical from "@/pages/Project/Statistical/index";
 import Introductions from "@/pages/Introductions";
 import Instructs from "@/pages/Instructs";
+import CreateInstruct from "@/pages/Instructs/Create";
 
 export interface IRoute {
   path: string;
@@ -563,18 +564,18 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <Instructs />,
               },
-              // {
-              //   path: "/create",
-              //   element: () => <CreateEmployee />,
-              // },
-              // {
-              //   path: "/update/:id",
-              //   element: () => <UpdateEmployee />,
-              // },
-              // {
-              //   path: "/detail/:id",
-              //   element: () => <DetailEmployee />,
-              // },
+              {
+                path: "/create",
+                element: () => <CreateInstruct />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateEmployee />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailEmployee />,
+              },
             ],
           },
           {

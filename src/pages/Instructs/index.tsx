@@ -7,13 +7,10 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
-import { deleteFundingSources } from "@/services/store/funding_source/funding_source.thunk";
 import { IInstructInitialState } from "@/services/store/instruct/instruct.slice";
-import { getAllInstructs } from "@/services/store/instruct/instruct.thunk";
-import { changeStatusIntroduction } from "@/services/store/introduction/introduction.thunk";
+import { changeStatusInstruct, deleteInstruct, getAllInstructs } from "@/services/store/instruct/instruct.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { EPermissions } from "@/shared/enums/permissions";
 import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
@@ -32,23 +29,23 @@ const Instructs = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/funding-sources/detail/${record?.key}`);
+        navigate(`/instruct/detail/${record?.key}`);
       },
-      permission: EPermissions.DETAIL_INSTRUCT,
+      // permission: EPermissions.DETAIL_INSTRUCT,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/funding-sources/update/${record?.key}`);
+        navigate(`/instruct/update/${record?.key}`);
       },
-      permission: EPermissions.UPDATE_INSTRUCT,
+      // permission: EPermissions.UPDATE_INSTRUCT,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteFundingSources(record?.key));
+        dispatch(deleteInstruct(record?.key));
       },
-      permission: EPermissions.DESTROY_INSTRUCT,
+      // permission: EPermissions.DESTROY_INSTRUCT,
     },
   ];
 
@@ -64,19 +61,19 @@ const Instructs = () => {
       className: "w-[250px]",
 
       render(_, record) {
-        return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.instruct || "" }}></div>;
+        return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.introduction || "" }}></div>;
       },
     },
     {
       title: "Trạng thái",
-      dataIndex: "is_active",
+      dataIndex: "is_use",
       className: "w-[150px]",
 
       render(_, record) {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
-            checked={!!record.is_active}
+            checked={!!record.is_use}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
         );
@@ -91,7 +88,7 @@ const Instructs = () => {
 
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusIntroduction(String(confirmItem.key)));
+      dispatch(changeStatusInstruct(String(confirmItem.key)));
     }
   };
 
