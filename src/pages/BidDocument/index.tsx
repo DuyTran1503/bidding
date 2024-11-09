@@ -31,17 +31,17 @@ const BidDocument = () => {
       className: "max-w-[80px]",
     },
     {
-      dataIndex: "id_project",
+      dataIndex: "project_id",
       title: "Dự án",
       className: "max-w-[250px]",
     },
     {
-      dataIndex: "id_enterprise",
+      dataIndex: "enterprise_id",
       title: "Doanh nghiệp",
       className: "max-w-[250px]",
     },
     {
-      dataIndex: "id_bid_bond",
+      dataIndex: "bid_bond_id",
       title: "Bảo lãnh dự thầu",
       className: "max-w-[250px]",
     },
@@ -131,28 +131,33 @@ const BidDocument = () => {
       type: "text",
     },
   ];
-  const data : ITableData[] = useMemo(
-    () => state.bidDocuments && state.bidDocuments.length > 0
-      ? state.bidDocuments.map(({
-            id_project,
-            id_enterprise,
-            id_bid_bond,
-            submission_date,
-            bid_price,
-            implementation_time,
-            validity_period,
-            technical_score,
-            financial_score,
-            totalScore,
-            ranking,
-            status,
-            notes,
-      }, index) => ({
+  const data: ITableData[] = useMemo(() => {
+    if (state.bidDocuments && state.bidDocuments.length > 0) {
+      return state.bidDocuments
+        .map(
+          (
+            {
+              project_id,
+              enterprise_id,
+              bid_bond_id,
+              submission_date,
+              bid_price,
+              implementation_time,
+              validity_period,
+              technical_score,
+              financial_score,
+              totalScore,
+              ranking,
+              status,
+              notes,
+            },
+            index,
+          ) => ({
             index: index + 1,
-            key: id_project,
-            id_project,
-            id_enterprise,
-            id_bid_bond,
+            key: project_id !== undefined ? project_id : 0, // Provide a default value
+            project_id,
+            enterprise_id,
+            bid_bond_id,
             submission_date,
             bid_price,
             implementation_time,
@@ -163,10 +168,12 @@ const BidDocument = () => {
             ranking,
             status,
             notes,
-      }))
-      : [],
-      [JSON.stringify(state.bidDocuments)]
-  );
+          }),
+        )
+        .filter((item) => item.key !== undefined); // Optionally filter out items with undefined keys
+    }
+    return [];
+  }, [JSON.stringify(state.bidDocuments)]);
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);

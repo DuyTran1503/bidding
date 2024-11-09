@@ -17,7 +17,7 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { bidBondEnumArray, mappingBidBond, TypeBidBond } from "@/shared/enums/types";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
 import ActionModule from "./ActionModule";
