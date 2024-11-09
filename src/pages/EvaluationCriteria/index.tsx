@@ -23,7 +23,6 @@ import { getListProject } from "@/services/store/project/project.thunk";
 import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 
 const EvaluationCriteria = () => {
-  const navigate = useNavigate();
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
 
