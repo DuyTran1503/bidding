@@ -164,6 +164,11 @@ const GenericChart: React.FC<GenericChartProps> = ({
 
     const myChart = echarts.init(chartDom);
     myChart.setOption(option);
+
+    // Cleanup function to dispose the ECharts instance
+    return () => {
+      myChart.dispose();
+    };
   }, [option]);
 
   return <div className="mt-4" ref={chartRef} style={{ minHeight: height, width }}></div>;

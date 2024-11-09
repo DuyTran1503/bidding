@@ -16,38 +16,50 @@ import { ICompareProjectInitialState } from "@/services/store/CompareProject/com
 import { employeeEducationLevelStatisticByEnterprise, projectByFundingsource, projectByIndustry } from "@/services/store/chart/chart.thunk";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
-import { getEnterpriseById } from "@/services/store/enterprise/enterprise.thunk";
+import { getEnterpriseById, getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IChartEnterpriseInitialState } from "@/services/store/enterprise_chart/enterprise_chart.slice";
 import FormSelect from "@/components/form/FormSelect";
 import { IOption } from "@/shared/utils/shared-interfaces";
 import { convertDataOptions } from "@/pages/Project/helper";
+import { Form, Formik } from "formik";
+import FormGroup from "@/components/form/FormGroup";
+import { Col, Row } from "antd";
+import { getSalaryOfEmployees } from "@/services/store/enterprise_chart/enterprise_chart.thunk";
+
+interface IProp {
+  ids: string[] | number[];
+}
 
 const StatisticalEnterprise: React.FC = () => {
   const { id } = useParams();
+
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateChartEnterprise, dispatch: dispatchChartEnterprise } = useArchive<IChartEnterpriseInitialState>("chart_enterprise");
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
   const [selectedProjectIds, setSelectedProjectIds] = useState<number[] | string[]>([]);
-  const [treeSelectIds, setTreeSelectIds] = useState<string[] | string>([]);
+  const [ids, setIds] = useState<number[]>([]);
   const [compareData, setCompareData] = useState<any[]>([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatchEnterprise(getIndustries());
+    dispatchEnterprise(getListEnterprise());
   }, [dispatchEnterprise]);
 
   useEffect(() => {
     !!id && dispatchEnterprise(getEnterpriseById(id));
   }, [id]);
 
-  const handleAddToCompare = () => {
-    const id = stateEnterprise.enterprise.id;
-    // Tạo mảng project_ids và thêm investorId nếu có
-    const updatedProjectIds = [...new Set([...treeSelectIds])]; // Kết hợp và loại bỏ trùng lặp
-    updatedProjectIds.push(id); // Thêm investorId vào mảng
-    setSelectedProjectIds(updatedProjectIds);
+  const handleAddToCompare = (data: any) => {
+    if (ids.length && !!id) {
+      const updatedProjectIds = [...new Set([...ids])]; // Kết hợp và loại bỏ trùng lặp
+      updatedProjectIds.push(Number(id)); // Thêm investorId vào mảng
+      if (updatedProjectIds.length > 1) {
+        dispatchChartEnterprise(getSalaryOfEmployees({ body: updatedProjectIds }));
+      }
+    }
   };
+  console.log(selectedProjectIds);
 
   const nameMapping: Record<string, string> = {
     after_university: "Sau đại học",
@@ -65,7 +77,9 @@ const StatisticalEnterprise: React.FC = () => {
       children: item.children ? formatTreeData(item.children) : [],
     }));
   };
-
+  useEffect(() => {
+    dispatchChartEnterprise(getSalaryOfEmployees({ body: [id] }));
+  }, []);
   const tabItems = [
     {
       key: "1",
@@ -81,6 +95,9 @@ const StatisticalEnterprise: React.FC = () => {
       ),
     },
   ];
+  const initialValues: IProp = {
+    ids: ids || [],
+  };
 
   return (
     <>
@@ -98,14 +115,42 @@ const StatisticalEnterprise: React.FC = () => {
           },
         ]}
       />
-      <FormSelect
-        placeholder="Chọn doanh nghiệp..."
-        value={convertDataOptions(stateEnterprise.listEnterprise || [])}
-        width="400px"
-        isMultiple
-        onChange={(value) => setTreeSelectIds(value)}
-      ></FormSelect>
-      <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} isDisabled={treeSelectIds.length === 0} />
+      <Formik
+        initialValues={initialValues}
+        enableReinitialize
+        onSubmit={(data) => {
+          handleAddToCompare(data);
+        }}
+      >
+        {({ values, setFieldValue }) => {
+          return (
+            <Form>
+              <Row className="items-center bg-white">
+                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                  <FormGroup title="Doanh nghiệp" className="bg-[#f9f9fc]">
+                    <FormSelect
+                      placeholder="Chọn doanh nghiệp..."
+                      options={convertDataOptions(stateEnterprise.listEnterprise || []).map((option) => ({
+                        ...option,
+                        disabled: values.ids.includes(id as never), // Disable if the ID is in values.ids
+                      }))}
+                      value={values.ids}
+                      isMultiple
+                      onChange={(e) => {
+                        setFieldValue("ids", e);
+                        setIds(e as any);
+                      }}
+                    ></FormSelect>
+                  </FormGroup>
+                </Col>
+                <Col xs={24} sm={24} md={12} xl={12} className="translate-y-[14px] transform">
+                  <Button type="primary" text="So sánh" kind="submit" isDisabled={ids.length === 0} />
+                </Col>
+              </Row>
+            </Form>
+          );
+        }}
+      </Formik>
       <CustomTabs items={tabItems} />
     </>
   );
