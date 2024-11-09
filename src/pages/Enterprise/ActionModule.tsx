@@ -97,6 +97,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
   }));
   return (
     <Formik
+      enableReinitialize
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={Schema}
