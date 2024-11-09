@@ -18,7 +18,7 @@ import { IIndustry } from "./industry.model";
 export interface IIndustryInitialState extends IInitialState {
   industries: IIndustry[];
   industry?: IIndustry | any;
-  listIndustry?: IIndustry[];
+  listIndustry: IIndustry[];
 }
 
 const initialState: IIndustryInitialState = {
