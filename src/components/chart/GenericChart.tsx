@@ -19,6 +19,11 @@ interface GenericChartProps {
     rotate?: number; // Góc nghiêng khi thấy tên nó bị dài.
     grid?: number; // Điều khiển khoảng cách từ name tới biểu đồ, phù hợp cho cái nào cần cho cái nào có name dài và phải để nghiêng.
     titleFontSize?: number;
+    series?: {
+        name: string;
+        data: (number | string)[];
+        color?: string;
+    }[];
 }
 const fixedColors = [
     "#5470c6", "#91cc75", "#fac858", "#ee6666", "#73c0de",
@@ -33,6 +38,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
     name,
     value,
     seriesName,
+    series,
     chartType,
     colors = fixedColors,
     tooltipEnabled = true,
@@ -126,37 +132,43 @@ const GenericChart: React.FC<GenericChartProps> = ({
             grid: {
                 bottom: grid,
             },
-            series: [
-                {
-                    colors: chartType == "pie" ? colors : undefined,
-                    name: seriesName,
-                    type: chartType,
-                    data: seriesData,
-                    barWidth: computedBarWidth,
-                    label: {
-                        show: true,
-                        fontSize: labelFontSize,
-
-                        // itemStyle: {
-                        //     color: (params: any) => colors[params.dataIndex % colors.length], // Áp dụng màu cho từng phần
-                        // },
-                        grid: {
-                            bottom: grid,
+            series: chartType === "area" && Array.isArray(series)
+                ? series.map((s, index) => ({
+                    name: s.name,
+                    type: "line",
+                    data: s.data,
+                    smooth: true,
+                    areaStyle: {},
+                    itemStyle: { color: s.color || colors[index % colors.length] },
+                }))
+                : [
+                    {
+                        colors: chartType === "pie" ? colors : undefined,
+                        name: seriesName,
+                        type: chartType,
+                        data: seriesData,
+                        barWidth: computedBarWidth,
+                        smooth: chartType === "line",
+                        label: {
+                            show: true,
+                            fontSize: labelFontSize,
+                            grid: {
+                                bottom: grid,
+                            },
+                            formatter: (params: any) => {
+                                if (chartType === "pie") {
+                                    return `${params.name}: ${params.percent}%`;
+                                }
+                                return formatValue(params.value);
+                            },
+                            position: chartType === "pie" ? 'outside' : 'top',
                         },
-                        formatter: (params: any) => {
-                            if (chartType === "pie") {
-                                return `${params.name}: ${params.percent}%`;
-                            }
-                            return formatValue(params.value);
-                        },
-                        position: chartType === "pie" ? 'outside' : 'top',
+                        areaStyle: chartType === "area" ? {} : undefined,
+                        animationDuration,
                     },
-                    areaStyle: chartType === "area" ? {} : undefined,
-                    animationDuration,
-                },
-            ],
+                ],
         };
-    }, [name, value, seriesName, chartType, colors, tooltipEnabled, title, barWidth, legendPosition, animationDuration, labelFontSize, valueType]);
+    }, [name, value, seriesName, chartType, colors, tooltipEnabled, title, barWidth, legendPosition, animationDuration, labelFontSize, valueType, series]);
 
     useEffect(() => {
         const chartDom = chartRef.current;
