@@ -1,5 +1,5 @@
 import { Formik, Form } from "formik";
-import { object, string } from "yup";
+import { object } from "yup";
 import lodash from "lodash";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
