@@ -25,7 +25,7 @@ const chartEnterpriseSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getSalaryOfEmployees.fulfilled, (state, { payload }: PayloadAction<IResponse<IChartEnterprise[]>>) => {
+    builder.addCase(getSalaryOfEmployees.fulfilled, (state, { payload }: PayloadAction<IResponse<IChartEnterprise[]> | any>) => {
       state.salaryOfEmployees = payload.data;
       state.status = EFetchStatus.FULFILLED;
     });
