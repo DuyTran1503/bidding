@@ -15,114 +15,124 @@ import {
   compareBidSubmissionTime,
   compareConstructionTime,
   comparePieChartTotalAmount,
+  detailProjectByIds,
 } from "@/services/store/CompareProject/compareProject.thunk";
 import Button from "@/components/common/Button";
 import { ICompareProjectInitialState } from "@/services/store/CompareProject/compareProject.slice";
-import { employeeEducationLevelStatisticByEnterprise, projectByFundingsource, projectByIndustry } from "@/services/store/chart/chart.thunk";
+import { projectByFundingsource, projectByIndustry } from "@/services/store/chart/chart.thunk";
 import { Col, message, Row } from "antd";
 import TableChart from "@/components/chart/TableChart";
 import { ICompareProject } from "@/services/store/CompareProject/compareProject.model";
+import ProjectDetail from "@/components/chart/ProjectTable";
 
 const Statistical: React.FC = () => {
   const { state: stateChart, dispatch: dispatchChart } = useArchive<IChartInitialState>("chart");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateCompare, dispatch: dispatchCompare } = useArchive<ICompareProjectInitialState>("compareproject");
-  const [showComparisonTabs, setShowComparisonTabs] = useState(false); // Trạng thái để hiển thị các tab so sánh
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const treeSelectIdsRef = useRef<string[]>([]);
+  const previousIdRef = useRef<string | undefined>(undefined);
 
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // Gọi API và lấy danh sách dự án khi component mount
   useEffect(() => {
+    dispatchProject(getListProject());
     dispatchChart(projectByIndustry({}));
     dispatchChart(projectByFundingsource({}));
-    dispatchProject(getListProject());
-  }, [dispatchChart, dispatchProject]);
-
-  // Lấy dữ liệu dự án theo ID
-  useEffect(() => {
     if (id) {
       dispatchProject(getProjectById(id));
     }
-  }, [id, dispatchProject]);
+  }, [id, dispatchChart, dispatchProject]);
 
-  // Cập nhật treeData từ projects khi stateProject.projects thay đổi
   useEffect(() => {
-    const formattedData = formatTreeData(stateProject.listProjects || []);
-    setTreeData(formattedData);
+    if (stateProject.listProjects) {
+      const formattedData = formatTreeData(stateProject.listProjects);
+      setTreeData(formattedData);
+    }
   }, [stateProject.listProjects]);
 
-  // Lấy dữ liệu thống kê trình độ học vấn của nhân viên
-  useEffect(() => {
-    const investorId = stateProject.project?.investor?.id;
-    if (investorId) {
-      dispatchChart(employeeEducationLevelStatisticByEnterprise(investorId));
-    }
-  }, [stateProject.project, dispatchChart]);
+  // useEffect(() => {
+  //     const investor = stateProject.project?.investor?.id;
+  //     if (investor && !stateChart.employeeEducationLevelStatisticByEnterprise) {
+  //         dispatchChart(employeeEducationLevelStatisticByEnterprise(investor));
+  //     }
+  // }, [stateProject.project, stateChart.employeeEducationLevelStatisticByEnterprise, dispatchChart]);
 
-  // Hàm xử lý thêm vào so sánh và gọi API so sánh
-  const fetchComparisonData = useCallback(
+  const fetchAllTabData = useCallback(
     (projectIds: string[]) => {
-      return Promise.all([
+      const fetchPromises = [
+        dispatchCompare(detailProjectByIds({ body: { project_ids: projectIds } })),
         dispatchCompare(compareBarChartTotalAmount({ body: { project_ids: projectIds } })),
-        dispatchCompare(compareBidderCount({ body: { project_ids: projectIds } })),
-        dispatchCompare(compareBidSubmissionTime({ body: { project_ids: projectIds } })),
         dispatchCompare(compareConstructionTime({ body: { project_ids: projectIds } })),
+        dispatchCompare(compareBidSubmissionTime({ body: { project_ids: projectIds } })),
         dispatchCompare(comparePieChartTotalAmount({ body: { project_ids: projectIds } })),
-      ]);
+        dispatchCompare(compareBidderCount({ body: { project_ids: projectIds } })),
+      ];
+      return Promise.all(fetchPromises);
     },
     [dispatchCompare],
   );
 
-  // Gọi API mặc định khi trang tải lần đầu
-  useEffect(() => {
-    const defaultProjectId = stateProject.project?.investor?.id;
-
-    // Kiểm tra nếu dữ liệu đã tồn tại trong stateCompare, chỉ gọi API nếu dữ liệu chưa có
-    if (defaultProjectId && (!stateCompare.compareBarChartTotalAmount || stateCompare.compareBarChartTotalAmount.length === 0)) {
-      fetchComparisonData([defaultProjectId]);
-    }
-  }, [fetchComparisonData, stateProject.project, stateCompare.compareBarChartTotalAmount]);
-
   const handleAddToCompare = useCallback(() => {
-    const investorId = stateProject.project?.investor?.id;
-    const updatedProjectIds = [investorId, ...new Set([...treeSelectIdsRef.current])];
+    const projectId = stateProject.project?.id;
+    if (!projectId) return;
 
-    fetchComparisonData(updatedProjectIds)
+    const updatedProjectIds = Array.from(new Set([projectId, ...treeSelectIdsRef.current]));
+
+    if (updatedProjectIds.length > 20) {
+      message.warning("Bạn chỉ có thể so sánh tối đa 5 dự án cùng lúc.");
+      return;
+    }
+
+    localStorage.setItem("selectedProjectIds", JSON.stringify(updatedProjectIds));
+    // console.log("hahaa");
+    message.loading("Đang so sánh...");
+    fetchAllTabData(updatedProjectIds)
       .then(() => {
-        setShowComparisonTabs(true); // Hiển thị các tab so sánh
-        message.success("So sánh thành công!"); // Hiển thị thông báo thành công
+        message.success("So sánh thành công!");
       })
-      .catch((error) => {
-        message.error("Có lỗi xảy ra trong quá trình so sánh.", error);
+      .catch(() => {
+        message.error("Có lỗi xảy ra trong quá trình so sánh.");
       });
-  }, [stateProject.project, fetchComparisonData]);
+  }, [stateProject.project, fetchAllTabData]);
 
-  // Hàm định dạng dữ liệu tree cho Select
+  useEffect(() => {
+    const savedProjectIds = localStorage.getItem("selectedProjectIds");
+    if (savedProjectIds) {
+      const projectIds = JSON.parse(savedProjectIds);
+      treeSelectIdsRef.current = projectIds;
+      setSelectedIds(projectIds);
+
+      if (previousIdRef.current != id) {
+        // console.log("hehe", projectIds);
+        message.loading("Đang tải lại dữ liệu so sánh...");
+        fetchAllTabData(projectIds);
+      }
+    } else if (id && previousIdRef.current !== id) {
+      const updatedProjectIds = Array.from(new Set([id, ...treeSelectIdsRef.current]));
+      // console.log("huhu");
+      message.loading("Đang tải dữ liệu");
+      fetchAllTabData(updatedProjectIds);
+    }
+  }, [fetchAllTabData, id]);
+
+  useEffect(() => {
+    return () => {
+      localStorage.removeItem("selectedProjectIds");
+    };
+  }, []);
+
   const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
-    return data && data.length
-      ? data?.map((item) => ({
-          title: item.name,
-          value: item.id.toString(),
-          key: item.id.toString(),
-          children: item.children ? formatTreeData(item.children) : [],
-        }))
-      : [];
+    return data.map((item) => ({
+      title: item.name,
+      value: item.id.toString(),
+      key: item.id.toString(),
+      children: item.children ? formatTreeData(item.children) : [],
+    }));
   };
 
-  // Chuyển đổi dữ liệu trình độ học vấn của nhân viên
-  const educationData = useMemo(() => stateChart.employeeEducationLevelStatisticByEnterprise || {}, [stateChart]);
-  const nameMapping: Record<string, string> = {
-    after_university: "Sau đại học",
-    university: "Đại học",
-    college: "Cao đẳng",
-    high_school: "Trung học phổ thông",
-    secondary_school: "Trung học cơ sở",
-    primary_school: "Tiểu học",
-  };
-  const investorId = stateProject.project?.investor?.id;
   const childChartData = useMemo(() => {
     return stateCompare.comparePieChartTotalAmount
       .filter((item: ICompareProject) => Array.isArray(item.children) && item.children.length > 0)
@@ -136,34 +146,16 @@ const Statistical: React.FC = () => {
       }));
   }, [stateCompare.comparePieChartTotalAmount]);
 
-  // Tạo `tabItems` chỉ khi `stateCompare`, `stateChart.industryData`, hoặc `educationData` thay đổi
+  // console.log(stateCompare.detailProjectByIds);
+
+  const projectId = stateProject.project?.id;
   const tabItems = useMemo(
     () => [
-      // Tab đầu tiên luôn hiển thị
       {
         key: "1",
         label: "Thống kê dự án",
-        content: (
-          <>
-            <GenericChart
-              chartType="pie"
-              title="Thống kê trình độ học vấn của nhân viên"
-              name={Object.keys(educationData).map((key) => nameMapping[key] || key)}
-              value={Object.values(educationData).map(Number)}
-              seriesName="Trình độ học vấn"
-              legendPosition="bottom"
-            />
-            <GenericChart
-              chartType="bar"
-              title="Thống kê ngành"
-              name={stateChart.industryData.map(({ name }) => name)}
-              value={stateChart.industryData.map(({ value }) => value)}
-              seriesName="Dữ liệu Ngành"
-            />
-          </>
-        ),
+        content: <ProjectDetail detailProjectByIds={stateCompare.detailProjectByIds} projectId={projectId} />,
       },
-
       {
         key: "2",
         label: "Tổng số tiền",
@@ -174,13 +166,10 @@ const Statistical: React.FC = () => {
               title="Biểu đồ so sánh tổng số tiền"
               name={stateCompare.compareBarChartTotalAmount.map((item) => item.name)}
               value={stateCompare.compareBarChartTotalAmount.map((item) => item.total_amount)}
-              // seriesName="Tổng số tiền"
-              height={600}
               grid={120}
-              barWidth={50}
               valueType="currency"
               rotate={45}
-              colors={stateCompare.compareBarChartTotalAmount.map((item) => (item.id === investorId ? "red" : "#5470C6"))}
+              colors={stateCompare.compareBarChartTotalAmount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
             />
             <TableChart
               compareData={stateCompare.compareBarChartTotalAmount.map((item) => ({
@@ -188,7 +177,7 @@ const Statistical: React.FC = () => {
                 name: item.name,
                 value: item.total_amount,
               }))}
-              investorId={investorId}
+              projectId={projectId}
               valueType="currency"
             />
           </>
@@ -205,11 +194,9 @@ const Statistical: React.FC = () => {
               name={stateCompare.compareConstructionTime.map((item) => item.name)}
               value={stateCompare.compareConstructionTime.map((item) => item.duration)}
               // seriesName="Tổng số tiền"
-              height={600}
-              grid={150}
-              barWidth={50}
+              grid={120}
               valueType="date"
-              colors={stateCompare.compareConstructionTime.map((item) => (item.id === investorId ? "red" : "#5470C6"))}
+              colors={stateCompare.compareBarChartTotalAmount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
             />
             <TableChart
               compareData={stateCompare.compareConstructionTime.map((item) => ({
@@ -217,7 +204,7 @@ const Statistical: React.FC = () => {
                 name: item.name,
                 value: item.duration,
               }))}
-              investorId={stateProject.project?.investor?.id}
+              projectId={projectId}
               valueType="date"
             />
           </>
@@ -234,11 +221,9 @@ const Statistical: React.FC = () => {
               name={stateCompare.compareBidSubmissionTime.map((item) => item.name)}
               value={stateCompare.compareBidSubmissionTime.map((item) => item.duration)}
               seriesName="Ngày"
-              height={600}
-              grid={150}
-              barWidth={50}
+              grid={120}
               valueType="date"
-              colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === investorId ? "red" : "#5470C6"))}
+              colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
             />
             <TableChart
               compareData={stateCompare.compareBidSubmissionTime.map((item) => ({
@@ -246,7 +231,7 @@ const Statistical: React.FC = () => {
                 name: item.name,
                 value: item.duration,
               }))}
-              investorId={stateProject.project?.investor?.id}
+              projectId={projectId}
               valueType="date"
             />
           </>
@@ -258,18 +243,13 @@ const Statistical: React.FC = () => {
         content: (
           <>
             <GenericChart
-              chartType="pie"
+              chartType="bar"
               title="Biểu đồ so sánh tỷ lệ vốn các project con của các dự án "
-              name={stateCompare.comparePieChartTotalAmount.map((item) => item.name)}
+              name={stateCompare.comparePieChartTotalAmount.map((item, index) => `${item.name} (${index + 1})`)}
               value={stateCompare.comparePieChartTotalAmount.map((item) => item.value)}
-              height={600}
-              grid={150}
-              barWidth={50}
               valueType="currency"
               legendPosition="bottom"
-              // colors={stateCompare.comparePieChartTotalAmount.map(item =>
-              //     item.id === investorId ? "red" : "#5470C6"
-              // )}
+              colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
             />
             <Row gutter={[24, 24]} className="mb-8">
               {childChartData.length > 0 &&
@@ -282,6 +262,8 @@ const Statistical: React.FC = () => {
                       value={childData.children.map((child) => child.value)}
                       valueType="currency"
                       legendPosition="bottom"
+                      rotate={100}
+                      titleFontSize={14}
                     />
                   </Col>
                 ))}
@@ -292,7 +274,7 @@ const Statistical: React.FC = () => {
                 name: item.name,
                 value: item.value,
               }))}
-              investorId={stateProject.project?.investor?.id}
+              projectId={projectId}
               valueType="currency"
               chartType="pie"
             />
@@ -310,11 +292,9 @@ const Statistical: React.FC = () => {
               name={stateCompare.compareBidderCount.map((item) => item.name)}
               value={stateCompare.compareBidderCount.map((item) => item.bidder_count)}
               seriesName="Số lượng nhà thầu"
-              height={600}
-              grid={150}
-              barWidth={50}
+              grid={120}
               valueType="quantity"
-              colors={stateCompare.compareBidderCount.map((item) => (item.id === investorId ? "red" : "#5470C6"))}
+              colors={stateCompare.compareBidderCount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
             />
             <TableChart
               compareData={stateCompare.compareBidderCount.map((item) => ({
@@ -322,14 +302,14 @@ const Statistical: React.FC = () => {
                 name: item.name,
                 value: item.bidder_count,
               }))}
-              investorId={stateProject.project?.investor?.id}
+              projectId={projectId}
               valueType="quantity"
             />
           </>
         ),
       },
     ],
-    [showComparisonTabs, stateCompare, stateChart, educationData],
+    [stateCompare, stateChart, id],
   );
 
   return (
@@ -342,9 +322,7 @@ const Statistical: React.FC = () => {
             type: "secondary",
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
-            onClick: () => {
-              navigate("/project");
-            },
+            onClick: () => navigate(-1),
           },
         ]}
       />
@@ -354,13 +332,15 @@ const Statistical: React.FC = () => {
           treeData={treeData}
           width="400px"
           multiple
+          value={selectedIds}
           onChange={(value) => {
-            treeSelectIdsRef.current = Array.isArray(value) ? value : [value];
+            const updatedValues = Array.isArray(value) ? value : [value];
+            setSelectedIds(updatedValues);
+            treeSelectIdsRef.current = updatedValues;
           }}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>
-
       <CustomTabs items={tabItems} />
     </>
   );
