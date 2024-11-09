@@ -1,6 +1,6 @@
 import React from "react";
 import GenericChart from "@/components/chart/GenericChart";
-import { Col } from "antd";
+import { Col, Button, Select } from "antd";
 
 interface ChartSectionProps {
     title: string;
@@ -21,6 +21,13 @@ interface ChartSectionProps {
     rotate?: number;
     grid?: number;
     titleFontSize?: number;
+    className?: string;
+    // New props for select and button functionality
+    selectOptions?: { label: string; value: number }[];
+    selectedValue?: string;
+    onSelectChange?: (value: string) => void;
+    buttonText?: string;
+    onButtonClick?: () => void;
 }
 
 const ChartSection: React.FC<ChartSectionProps> = ({
@@ -28,7 +35,6 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     chartTitle,
     data,
     chartType,
-    // seriesName = "Dữ liệu Biểu đồ",
     barWidth,
     valueType = "quantity",
     description,
@@ -40,17 +46,41 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     rotate = 0,
     grid = 80,
     titleFontSize = 16,
+    className,
+    selectOptions,
+    selectedValue,
+    onSelectChange,
+    buttonText,
+    onButtonClick
 }) => {
     return (
         <Col xs={24} sm={24} md={24} xl={12}>
             <h3 className="text-lg font-semibold mb-4">{title}</h3>
-            {/* <div className="w-full max-w-full overflow-hidden"> */}
+            <div className={`flex flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)] ${className}`}>
+
+                <div className="flex gap-4 items-center">
+                    {selectOptions && onSelectChange && (
+                        <Select
+                            placeholder="Chọn nguồn tài trợ..."
+                            value={selectedValue}
+                            options={selectOptions}
+                            onChange={onSelectChange}
+                            style={{ width: "60%", marginBottom: "1rem" }}
+                        />
+                    )}
+
+                    {buttonText && onButtonClick && (
+                        <Button type="primary" onClick={onButtonClick} style={{ marginBottom: "1rem" }}>
+                            {buttonText}
+                        </Button>
+                    )}
+                </div>
+
                 <GenericChart
                     chartType={chartType}
                     title={chartTitle}
                     name={data.map(({ name }) => name)}
                     value={data.map(({ value }) => value)}
-                    // seriesName={seriesName}
                     barWidth={barWidth}
                     valueType={valueType}
                     colors={colors}
@@ -62,7 +92,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
                     grid={grid}
                     titleFontSize={titleFontSize}
                 />
-            {/* </div> */}
+            </div>
             <ul className="list-disc list-inside mt-4">
                 {description.map((desc, index) => (
                     <li key={index}>{desc}</li>
