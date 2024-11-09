@@ -1,7 +1,6 @@
 import { client } from "@/services/config/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { IChartEnterprise } from "./enterprise_chart.model";
 
 const prefix = "/api/admin/charts/enterprises/";
 
