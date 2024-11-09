@@ -45,7 +45,7 @@ export interface IChartInitialState extends IInitialState {
   topinvestorsbyprojecttotalamountData: IChart[];
   topEnterprisesHaveCompletedProjectsByFundingSource: IChart[];
   topEnterprisesHaveCompletedProjectsByIndustry: IChart[];
-  timeJoiningWebsiteOfEnterprise: IChart[];
+  timeJoiningWebsiteOfEnterprise: IChart[] | any;
   projectsStatusPreMonth: IChart | any;
   industryHasTheMostProject: IChart[];
   industryHasTheMostEnterprise: IChart[];

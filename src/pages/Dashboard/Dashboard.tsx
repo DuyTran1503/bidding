@@ -34,7 +34,6 @@ import { IIndustryInitialState } from "@/services/store/industry/industry.slice"
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import TopEnterpriseChart from "./TopEnterpriseChart";
 import GenericChart from "@/components/chart/GenericChart";
-import { IChart } from "@/services/store/chart/chart.model";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Dashboard: React.FC = () => {
@@ -348,7 +347,7 @@ const Dashboard: React.FC = () => {
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
             <GenericChart
               name={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
-              value={Object.values(state.timeJoiningWebsiteOfEnterprise).map(({ value }) => value)}
+              value={Object.values(state.timeJoiningWebsiteOfEnterprise)}
               chartType="line"
               seriesName="Dữ liệu theo tháng"
               title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
