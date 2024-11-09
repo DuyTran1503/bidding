@@ -9,7 +9,6 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPageTypes } from "@/shared/enums/page";
-import { EPermissions } from "@/shared/enums/permissions";
 import { IEmployeeInitialState, resetStatus } from "@/services/store/employee/employee.slice";
 import { IEmployee } from "@/services/store/employee/employee.model";
 
