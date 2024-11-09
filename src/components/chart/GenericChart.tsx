@@ -8,7 +8,7 @@ interface GenericChartProps {
   chartType: "bar" | "line" | "pie" | "area" | "radar"; // Loại biểu đồ cần hiển thị.
   colors?: string[]; // Mảng màu để tùy chỉnh màu sắc cho các điểm dữ liệu hoặc chuỗi.
   tooltipEnabled?: boolean; // Bật hoặc tắt tooltip cho các điểm dữ liệu.
-  height?: number; // Chiều cao của biểu đồ, đơn vị là pixel.
+  height?: string; // Chiều cao của biểu đồ, đơn vị là pixel.
   width?: string; // Chiều rộng của biểu đồ, ví dụ: "100%" hoặc cụ thể theo pixel.
   title?: string; // Tiêu đề hiển thị trên đầu biểu đồ.
   legendPosition?: "top" | "bottom" | "left" | "right"; // Vị trí và hiển thị ghi chú trên biểu đồ.
@@ -18,27 +18,43 @@ interface GenericChartProps {
   valueType?: "currency" | "quantity" | "date"; // Loại giá trị để hiển thị: giá, số lượng hoặc ngày.
   rotate?: number; // Góc nghiêng khi thấy tên nó bị dài.
   grid?: number; // Điều khiển khoảng cách từ name tới biểu đồ, phù hợp cho cái nào cần cho cái nào có name dài và phải để nghiêng.
+  titleFontSize?: number;
 }
-
+const fixedColors = [
+  "#5470c6",
+  "#91cc75",
+  "#fac858",
+  "#ee6666",
+  "#73c0de",
+  "#3ba272",
+  "#fc8452",
+  "#9a60b4",
+  "#ea7ccc",
+  // "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FFC300", "#DAF7A6",
+  // "#581845", "#C70039", "#900C3F", "#33FFBD", "#FF8C33",
+  // "#8D33FF", "#33A1FF", "#57FF33", "#FFE933", "#F1C40F", "#2980B9",
+  // "#2ECC71", "#E74C3C", "#34495E", "#7D3C98", "#27AE60", "#E67E22",
+  // "#16A085", "#D35400", "#C0392B", "#8E44AD", "#F39C12", "#2C3E50"
+];
 const GenericChart: React.FC<GenericChartProps> = ({
   name,
   value,
   seriesName,
   chartType,
-  colors,
+  colors = fixedColors,
   tooltipEnabled = true,
-  height = 400,
-  width = "100%",
   title,
   legendPosition,
   animationDuration,
-  labelFontSize = 10,
+  labelFontSize = 12,
+  titleFontSize = 16,
   barWidth,
   grid = 80,
   valueType = "quantity", // Mặc định là số lượng
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const computedRotate = name && name.length > 5 ? 45 : 0;
+  const computedBarWidth = name && name.length < 15 ? 45 : 0;
 
   // Hàm định dạng số với dấu phẩy và đơn vị, làm tròn theo đơn vị khi hiển thị trên biểu đồ
   const formatNumber = (num: number) => {
@@ -64,8 +80,8 @@ const GenericChart: React.FC<GenericChartProps> = ({
   const option = useMemo(() => {
     const seriesData =
       chartType === "pie"
-        ? name?.map((n, i) => ({ name: n, value: value?.[i], itemStyle: { color: colors?.[i] } }))
-        : value?.map((v, i) => ({ value: v, itemStyle: { color: colors?.[i] } }));
+        ? name?.map((n, i) => ({ name: n, value: value?.[i], itemStyle: { color: colors[i % colors.length] } }))
+        : value?.map((v, i) => ({ value: v, itemStyle: { color: colors[i] } }));
 
     return {
       tooltip: {
@@ -74,7 +90,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
           const formattedValue =
             valueType === "currency"
               ? new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(params.value)
-              : new Intl.NumberFormat("vi-VN").format(params.value); // Hiển thị giá trị đầy đủ không làm tròn
+              : new Intl.NumberFormat("vi-VN").format(params.value);
           if (chartType === "pie") {
             return `${params.name}: ${formattedValue} (${params.percent}%)`;
           }
@@ -84,12 +100,21 @@ const GenericChart: React.FC<GenericChartProps> = ({
       title: {
         text: title,
         left: "center",
+        textStyle: {
+          fontSize: titleFontSize, // Điều chỉnh kích thước tiêu đề ở đây
+          fontWeight: "bold",
+        },
       },
       legend: legendPosition
         ? {
-            orient: legendPosition === "left" || legendPosition === "right" ? "vertical" : "horizontal",
             [legendPosition]: "0%",
             itemGap: 10,
+            textStyle: {
+              fontSize: 10, // Thay đổi kích thước của legend tại đây
+            },
+            type: "scroll",
+            orient: "horizontal", // Đặt hướng ngang để legend nằm ở phía dưới
+            left: "center",
           }
         : undefined,
       xAxis:
@@ -120,15 +145,21 @@ const GenericChart: React.FC<GenericChartProps> = ({
       },
       series: [
         {
-          colors: colors,
+          colors: chartType == "pie" ? colors : undefined,
           name: seriesName,
           type: chartType,
           data: seriesData,
-          barWidth: barWidth,
+          barWidth: computedBarWidth,
           label: {
             show: true,
             fontSize: labelFontSize,
-            // color: "#333",
+
+            // itemStyle: {
+            //     color: (params: any) => colors[params.dataIndex % colors.length], // Áp dụng màu cho từng phần
+            // },
+            grid: {
+              bottom: grid,
+            },
             formatter: (params: any) => {
               if (chartType === "pie") {
                 return `${params.name}: ${params.percent}%`;
@@ -142,21 +173,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
         },
       ],
     };
-  }, [
-    name,
-    value,
-    seriesName,
-    chartType,
-    colors,
-    tooltipEnabled,
-    title,
-    barWidth,
-    legendPosition,
-    animationDuration,
-    labelFontSize,
-    height,
-    valueType,
-  ]);
+  }, [name, value, seriesName, chartType, colors, tooltipEnabled, title, barWidth, legendPosition, animationDuration, labelFontSize, valueType]);
 
   useEffect(() => {
     const chartDom = chartRef.current;
@@ -164,14 +181,14 @@ const GenericChart: React.FC<GenericChartProps> = ({
 
     const myChart = echarts.init(chartDom);
     myChart.setOption(option);
-
-    // Cleanup function to dispose the ECharts instance
-    return () => {
-      myChart.dispose();
+    const handleResize = () => {
+      myChart.resize();
     };
+
+    window.addEventListener("resize", handleResize);
   }, [option]);
 
-  return <div className="mt-4" ref={chartRef} style={{ minHeight: height, width }}></div>;
+  return <div className="mt-4 flex h-[60vh] w-full items-center justify-center" ref={chartRef}></div>;
 };
 
 export default GenericChart;
