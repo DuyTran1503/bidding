@@ -38,7 +38,7 @@ const UpdateBidDocument = () => {
   }, [id]);
   useEffect(() => {
     if (!!state.bidDocument) {
-      setData(state.bidDocument);
+      setData(state.bidDocument as IBidDocumentInitialValues);
     }
   }, [JSON.stringify(state.bidDocument)]);
 
@@ -46,9 +46,9 @@ const UpdateBidDocument = () => {
     if (data) {
       if (formikRef.current) {
         formikRef.current.setValues({
-          id_project: data?.id_project ?? 0,
-          id_enterprise: data?.id_enterprise ?? 0,
-          id_bid_bond: data?.id_bid_bond ?? 0,
+          project_id: String(data?.project_id) ?? 0,
+          enterprise_id: data?.enterprise_id ?? 0,
+          bid_bond_id: data?.bid_bond_id ?? 0,
           submission_date: data?.submission_date ?? "",
           bid_price: data?.bid_price ?? "",
           implementation_time: data?.implementation_time ?? "",
