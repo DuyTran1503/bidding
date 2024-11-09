@@ -12,7 +12,7 @@ interface IFormTreeSelect {
   value?: string | string[];
   width?: string | number; // Thêm prop cho chiều rộng tùy chỉnh
   multiple?: boolean; // Cho phép chế độ chọn nhiều hoặc đơn
-  height?: string | number; //
+  height?: string | number; // Thêm prop cho chiều cao tùy chỉnh
 }
 
 const FormTreeSelect = ({
@@ -28,9 +28,9 @@ const FormTreeSelect = ({
   multiple = false, // Thiết lập mặc định cho chế độ chọn đơn
   height = "auto", // Thiết lập giá trị mặc định cho chiều cao
 }: IFormTreeSelect) => {
-  const handleChange = (value: string | string[]) => {
+  const handleChange = (newValue: string | string[]) => {
     if (onChange) {
-      onChange(value);
+      onChange(newValue);
     }
   };
 
@@ -59,6 +59,10 @@ const FormTreeSelect = ({
           fieldNames={{ label: "title", value: "value", children: "children" }}
           multiple={multiple} // Cho phép chọn đơn hoặc nhiều dựa trên prop
           style={{ height }}
+          filterTreeNode={(input, treeNode) =>
+            (treeNode.title && treeNode.title.toString().toLowerCase().includes(input.toLowerCase())) || false
+          }
+        // Tùy chỉnh cách thức tìm kiếm
         />
       </ConfigProvider>
 
