@@ -82,6 +82,7 @@ import Statistical from "@/pages/Project/Statistical/index";
 import Introductions from "@/pages/Introductions";
 import Instructs from "@/pages/Instructs";
 import StatisticalEnterprise from "@/pages/Enterprise/Statistical";
+import WorkProgresses from "@/pages/WorkProgresses";
 
 export interface IRoute {
   path: string;
@@ -596,7 +597,7 @@ export const routes: IRoute[] = [
             pages: [
               {
                 path: "/",
-                // element: () => <FeedbackComplaints />,
+                element: () => <WorkProgresses />,
               },
             ],
           },

@@ -1,6 +1,6 @@
-export interface IWorkProgresses {
+export interface IWorkProgress {
     id: string | number,
-    bidding_result_id: string | number,
+    bidding_result_id: number,
     name: string,
     progress: string,
     expense: string
