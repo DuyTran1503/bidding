@@ -593,7 +593,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "work_progresses",
+            path: "work-progresses",
             pages: [
               {
                 path: "/",

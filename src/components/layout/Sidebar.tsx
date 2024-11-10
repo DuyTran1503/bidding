@@ -169,7 +169,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         {
           id: "3.6",
           label: "Tiến độ dự án",
-          path: "work_progresses",
+          path: "work-progresses",
           // permissions: EPermissions.LIST_EVALUATION,
         },
       ],

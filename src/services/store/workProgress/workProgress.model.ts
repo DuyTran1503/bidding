@@ -1,11 +1,14 @@
 export interface IWorkProgress {
     id: string | number,
-    bidding_result_id: number,
+    project_id: string,
+    task_ids: string
     name: string,
+    expense: number,
     progress: string,
-    expense: string
     start_date: Date,
-    end_start: Date,
+    end_date: Date,
     feedback: string,
-    description: string
+    description: string,
+    project?: { id: string; name: string }
+    task?: { id: string; name: string }
 }

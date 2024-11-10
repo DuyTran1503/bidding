@@ -167,7 +167,7 @@ const QuestionsAnswers = () => {
   return (
     <>
       <Heading
-        title="Câu hỏi / Câu trả lời"
+        title="Câu hỏi và Câu trả lời"
         ModalContent={(props) => <ActionModule {...(props as any)} />}
         hasBreadcrumb
         // buttons={[

@@ -77,7 +77,7 @@ export const reducers = combineReducers({
   chart_enterprise: chartEnterpriseSlice.reducer,
   employee: employeeSlice.reducer,
   task: taskSlice.reducer,
-  workProgress: workProgressSlice.reducer,
+  work_progress: workProgressSlice.reducer,
 });
 
-export type RootStateType = ReturnType<typeof reducers>;
+export type RootStateType = ReturnType<typeof reducers>;  

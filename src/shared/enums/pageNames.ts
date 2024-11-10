@@ -24,9 +24,9 @@ export enum EPageNames {
   "post-catalogs" = "Danh mục bài viết",
   "banners" = "Banner",
   "bid-bond" = "Bão lãnh dự thầu",
-  "questions_answers" = "Câu Hỏi/Trả lời",
-  "feedbacks_complaints" = "Phản hồi và Khiếu nại",
+  "questions-answers" = "Câu Hỏi và Trả lời",
+  "feedback-complaint" = "Phản hồi và Khiếu nại",
   "instructs" = "Hướng dẫn",
   "introductions" = "Giới thiệu",
-  "work_progresses" = "Tiến độ dự án"
+  "work-progresses" = "Tiến độ dự án"
 } 
