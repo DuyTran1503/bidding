@@ -1,6 +1,5 @@
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
-import FormInputArea from "@/components/form/FormInputArea";
 import FormSwitch from "@/components/form/FormSwitch";
 import { useArchive } from "@/hooks/useArchive";
 import { resetMessageError } from "@/services/store/funding_source/funding_source.slice";
