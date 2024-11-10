@@ -1,14 +1,14 @@
+import { ETYPEFILE } from "@/shared/enums/fileType";
 import { ResourceType } from "@/shared/enums/resourceType";
 import { IFile } from "@/shared/interface/file";
-import { ForwardedRef, forwardRef, useEffect } from "react";
-import Upload from "../icon/Upload";
 import { getFileExtension } from "@/shared/utils/common/function";
-import { ETYPEFILE } from "@/shared/enums/fileType";
-import Word from "../icon/Word";
-import Pdf from "../icon/Pdf";
-import Excel from "../icon/Excel";
 import { Col, Image, Row } from "antd";
 import { FormikErrors, FormikTouched } from "formik";
+import { ForwardedRef, forwardRef, useEffect } from "react";
+import Excel from "../icon/Excel";
+import Pdf from "../icon/Pdf";
+import Upload from "../icon/Upload";
+import Word from "../icon/Word";
 interface IProps {
   id: string;
   name: string;

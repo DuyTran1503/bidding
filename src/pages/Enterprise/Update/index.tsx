@@ -52,18 +52,18 @@ const UpdateEnterprise = () => {
           representative: data?.representative ?? "",
           phone: data?.phone ?? "",
           email: data?.email ?? "",
-          avatar: data?.avatar ?? "",
+          avatar: data?.avatar ?? undefined,
           taxcode: data?.taxcode ?? "",
           account_ban_at: data?.account_ban_at ?? null,
           website: data?.website ?? "",
-          industries: data?.industries ?? [],
+          industry_id: data?.industry_id ?? [],
           establish_date: data?.establish_date ?? "",
-          organization_type: data?.organization_type ?? "",
+          organization_type: Number(data?.organization_type) ?? "",
           avg_document_rating: data?.avg_document_rating ?? "",
           registration_date: data?.registration_date ?? "",
           registration_number: data?.registration_number ?? "",
-          is_active: data?.is_active ?? false,
-          is_blacklist: data?.is_blacklist ?? false,
+          is_active: data?.is_active ?? 0,
+          is_blacklist: data?.is_blacklist ?? 0,
         });
       }
     }

@@ -22,7 +22,7 @@ const CreateStatisticalReport = () => {
         actions: {
             success: {
                 message: state.message,
-                navigate: "/statistical_reports",
+                navigate: "/statistical-reports",
             },
             error: {
                 message: state.message,
@@ -41,7 +41,7 @@ const CreateStatisticalReport = () => {
                         text: "Hủy",
                         icon: <IoClose className="text-[18px]" />,
                         onClick: () => {
-                            navigate("/statistical_reports");
+                            navigate("/statistical-reports");
                         },
                     },
                     {

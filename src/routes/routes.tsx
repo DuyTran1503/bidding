@@ -42,11 +42,46 @@ import DetailFundingSource from "@/pages/FundingSource/Detail";
 import Attachment from "@/pages/Attachment";
 import BidDocument from "@/pages/BidDocument";
 import CreateBidDocument from "@/pages/BidDocument/Create";
-import CreateAttachment from "@/pages/Attachment/Create";
-import UpdateAttachment from "@/pages/Attachment/Update";
-import DetailAttachment from "@/pages/Attachment/Detail";
 import DetailBidDocument from "@/pages/BidDocument/Detail";
 import UpdateBidDocument from "@/pages/BidDocument/Update";
+import DetailEnterprise from "@/pages/Enterprise/Detail";
+import BiddingHistorys from "@/pages/BiddingHistory/BiddingHistory/BiddingHistory";
+import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/CreateBiddingHistory";
+import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
+import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
+import { EPermissions } from "@/shared/enums/permissions";
+import ActivityLogs from "@/pages/ActivityLogs";
+import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/SelectionMethods";
+import ProjectPage from "@/pages/Project";
+import CreateProject from "@/pages/Project/Create";
+import UpdateProject from "@/pages/Project/Update";
+import ApproveProject from "@/pages/Project/Approve";
+import BiddingResults from "@/pages/BiddingResults/BiddingResults/BiddingResults";
+import Banners from "@/pages/Banners/Banners/Banners";
+import DetailProject from "@/pages/Project/Detail";
+import Tasks from "@/pages/Task/Tasks/Task";
+import QuestionsAnswers from "@/pages/Questions_Answers";
+import Employee from "@/pages/Employee";
+import CreateEmployee from "@/pages/Employee/Create";
+import UpdateEmployee from "@/pages/Employee/Update";
+import DetailEmployee from "@/pages/Employee/Detail";
+import FeedbackComplaints from "@/pages/FeedbackComplaint";
+import ProcurementCategories from "@/pages/ProcurementCategories/ProcurementCategories";
+import PostCatalogs from "@/pages/PostCatalogs/PostCatalogs";
+import Posts from "@/pages/Posts/Posts/Posts";
+import CreatePost from "@/pages/Posts/CreatePost/CreatePost";
+import UpdatePost from "@/pages/Posts/UpdatePost/UpdatePost";
+import DetailPost from "@/pages/Posts/DetailPost/DetailPost";
+import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult/DetailBiddingResult";
+import Supports from "@/pages/Supports/Supports/Supports";
+import CreateSupport from "@/pages/Supports/CreateSupport/CreateSupport";
+import DetailSupport from "@/pages/Supports/DetailSupport/DetailSupport";
+import BidBonds from "@/pages/BidBond";
+import EvaluationCriteria from "@/pages/EvaluationCriteria";
+import Statistical from "@/pages/Project/Statistical/index";
+import Introductions from "@/pages/Introductions";
+import Instructs from "@/pages/Instructs";
+import StatisticalEnterprise from "@/pages/Enterprise/Statistical";
 
 export interface IRoute {
   path: string;
@@ -96,7 +131,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "bidding_fields",
+            path: "bidding-fields",
             pages: [
               {
                 path: "/",
@@ -117,7 +152,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "bidding_types",
+            path: "bidding-types",
             pages: [
               {
                 path: "/",
@@ -130,6 +165,33 @@ export const routes: IRoute[] = [
               {
                 path: "/update/:id",
                 element: () => <UpdateBiddingType />,
+              },
+            ],
+          },
+          {
+            path: "selection-methods",
+            pages: [
+              {
+                path: "/",
+                element: () => <SelectionMethods />,
+              },
+            ],
+          },
+          {
+            path: "procurement-categories",
+            pages: [
+              {
+                path: "/",
+                element: () => <ProcurementCategories />,
+              },
+            ],
+          },
+          {
+            path: "post-catalogs",
+            pages: [
+              {
+                path: "/",
+                element: () => <PostCatalogs />,
               },
             ],
           },
@@ -159,7 +221,7 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "business_activity",
+            path: "business-activity",
             pages: [
               {
                 path: "/",
@@ -218,6 +280,19 @@ export const routes: IRoute[] = [
             ],
           },
           {
+            path: "activity-logs",
+            pages: [
+              {
+                path: "/",
+                element: () => <ActivityLogs />,
+              },
+              // {
+              //   path: "/detail/:id",
+              //   element: () => <DetailActi />,
+              // },
+            ],
+          },
+          {
             path: "enterprise",
             pages: [
               {
@@ -232,10 +307,18 @@ export const routes: IRoute[] = [
                 path: "/update/:id",
                 element: () => <UpdateEnterprise />,
               },
+              {
+                path: "/detail/:id",
+                element: () => <DetailEnterprise />,
+              },
+              {
+                path: "/statistical/:id",
+                element: () => <StatisticalEnterprise />,
+              },
             ],
           },
           {
-            path: "statistical_reports",
+            path: "statistical-reports",
             pages: [
               {
                 path: "/",
@@ -252,23 +335,89 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "attachment",
+            path: "bidding-historys",
+            pages: [
+              {
+                path: "/",
+                element: () => <BiddingHistorys />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBiddingHistory />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBiddingHistory />,
+              },
+            ],
+          },
+          {
+            path: "bidding-results",
+            pages: [
+              {
+                path: "/",
+                element: () => <BiddingResults />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBiddingResult />,
+              },
+            ],
+          },
+          {
+            path: "banners",
+            pages: [
+              {
+                path: "/",
+                element: () => <Banners />,
+              },
+            ],
+          },
+          {
+            path: "posts",
+            pages: [
+              {
+                path: "/",
+                element: () => <Posts />,
+              },
+              {
+                path: "/create",
+                element: () => <CreatePost />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdatePost />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailPost />,
+              },
+            ],
+          },
+          {
+            path: "supports",
+            pages: [
+              {
+                path: "/",
+                element: () => <Supports />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateSupport />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailSupport />,
+              },
+            ],
+          },
+          {
+            path: "permissions",
+            middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
             pages: [
               {
                 path: "/",
                 element: () => <Attachment />,
-              },
-              {
-                path: "/create",
-                element: () => <CreateAttachment />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateAttachment />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailAttachment />,
               },
             ],
           },
@@ -290,6 +439,164 @@ export const routes: IRoute[] = [
               {
                 path: "/detail/:id",
                 element: () => <DetailBidDocument />,
+              },
+            ],
+          },
+          {
+            path: "bid-bond",
+            pages: [
+              {
+                path: "/",
+                element: () => <BidBonds />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateBidDocument />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateBidDocument />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBidDocument />,
+              },
+            ],
+          },
+          {
+            path: "project",
+            pages: [
+              {
+                path: "/",
+                element: () => <ProjectPage />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateProject />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateProject />,
+              },
+              {
+                path: "/approve/:id",
+                element: () => <ApproveProject />,
+              },
+              {
+                path: "/statistical/:id",
+                element: () => <Statistical />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailProject />,
+              },
+            ],
+          },
+          {
+            path: "evaluation_criteria",
+            pages: [
+              {
+                path: "/",
+                element: () => <EvaluationCriteria />,
+              },
+            ],
+          },
+          {
+            path: "task",
+            pages: [
+              {
+                path: "/",
+                element: () => <Tasks />,
+              },
+            ],
+          },
+          {
+            path: "questions-answers",
+            pages: [
+              {
+                path: "/",
+                element: () => <QuestionsAnswers />,
+              },
+            ],
+          },
+          {
+            path: "employees",
+            pages: [
+              {
+                path: "/",
+                element: () => <Employee />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateEmployee />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateEmployee />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailEmployee />,
+              },
+            ],
+          },
+          {
+            path: "introductions",
+            pages: [
+              {
+                path: "/",
+                element: () => <Introductions />,
+              },
+              // {
+              //   path: "/create",
+              //   element: () => <CreateEmployee />,
+              // },
+              // {
+              //   path: "/update/:id",
+              //   element: () => <UpdateEmployee />,
+              // },
+              // {
+              //   path: "/detail/:id",
+              //   element: () => <DetailEmployee />,
+              // },
+            ],
+          },
+          {
+            path: "instructs",
+            pages: [
+              {
+                path: "/",
+                element: () => <Instructs />,
+              },
+              // {
+              //   path: "/create",
+              //   element: () => <CreateEmployee />,
+              // },
+              // {
+              //   path: "/update/:id",
+              //   element: () => <UpdateEmployee />,
+              // },
+              // {
+              //   path: "/detail/:id",
+              //   element: () => <DetailEmployee />,
+              // },
+            ],
+          },
+          {
+            path: "feedback-complaint",
+            pages: [
+              {
+                path: "/",
+                element: () => <FeedbackComplaints />,
+              },
+            ],
+          },
+          {
+            path: "work_progresses",
+            pages: [
+              {
+                path: "/",
+                // element: () => <FeedbackComplaints />,
               },
             ],
           },

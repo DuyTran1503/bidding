@@ -18,7 +18,7 @@ import { IIndustry } from "./industry.model";
 export interface IIndustryInitialState extends IInitialState {
   industries: IIndustry[];
   industry?: IIndustry | any;
-  listIndustry?: IIndustry[];
+  listIndustry: IIndustry[];
 }
 
 const initialState: IIndustryInitialState = {
@@ -122,7 +122,7 @@ const industrySlice = createSlice({
     builder
       .addCase(getIndustries.fulfilled, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {
         if (payload.data) {
-          state.listIndustry = payload.data.data;
+          state.listIndustry = payload.data;
         }
       })
       .addCase(getIndustries.rejected, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {

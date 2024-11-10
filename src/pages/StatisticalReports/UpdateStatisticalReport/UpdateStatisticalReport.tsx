@@ -25,7 +25,7 @@ const UpdateStatisticalReport = () => {
     actions: {
       success: {
         message: state.message,
-        navigate: "/statistical_reports",
+        navigate: "/statistical-reports",
       },
       error: {
         message: state.message,
@@ -52,6 +52,9 @@ const UpdateStatisticalReport = () => {
           name: data.name,
           description: data.description,
           is_active: data.is_active,
+          user_id: data.user_id || "",
+          type: data.type || "",
+          period: data.period || "",
         });
       }
     }
@@ -68,7 +71,7 @@ const UpdateStatisticalReport = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/statistical_reports");
+              navigate("/statistical-reports");
             },
           },
           {
