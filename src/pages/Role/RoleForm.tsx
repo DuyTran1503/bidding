@@ -107,6 +107,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
         idsForKeys.push(matchingPair.id);
       }
     }
+    console.log("log1");
 
     return idsForKeys;
   };
@@ -153,8 +154,10 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
               )
             : [],
         };
+        console.log(body);
+
         if (type === EPageTypes.CREATE) {
-          dispatch(createRole({ body }));
+          // dispatch(createRole({ body }));
         } else if (type === EPageTypes.UPDATE) {
           const updateData = { ...body, id: role?.id };
           dispatch(updateRole({ body: updateData, id: role?.id }));
@@ -183,6 +186,8 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
                     // @ts-ignore
                     checkedKeys={values.permissions}
                     onCheck={(checkedKeys) => {
+                      console.log(checkedKeys);
+
                       setFieldValue("permissions", checkedKeys);
                     }}
                   />

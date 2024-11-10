@@ -14,7 +14,7 @@ import { convertDataOptions } from "@/pages/Project/helper";
 import { Form, Formik } from "formik";
 import FormGroup from "@/components/form/FormGroup";
 import { Col, Row } from "antd";
-import { getSalaryOfEmployees } from "@/services/store/enterprise_chart/enterprise_chart.thunk";
+import { getEmployeeResultBiddingStatistic, getSalaryOfEmployees } from "@/services/store/enterprise_chart/enterprise_chart.thunk";
 
 interface IProp {
   ids: string[] | number[];
@@ -29,6 +29,7 @@ const StatisticalEnterprise: React.FC = () => {
   const [selectedProjectIds, setSelectedProjectIds] = useState<number[] | string[]>([]);
   const [ids, setIds] = useState<number[]>([]);
   const [compareData, setCompareData] = useState<any[]>([]);
+  const [selectedTabKey, setSelectedTabKey] = useState("1");
 
   const navigate = useNavigate();
 
@@ -41,11 +42,16 @@ const StatisticalEnterprise: React.FC = () => {
   }, [id]);
 
   const handleAddToCompare = (data: any) => {
-    if (ids.length && !!id) {
-      const updatedProjectIds = [...new Set([...ids])]; // Kết hợp và loại bỏ trùng lặp
-      updatedProjectIds.push(Number(id)); // Thêm investorId vào mảng
-      if (updatedProjectIds.length > 1) {
-        dispatchChartEnterprise(getSalaryOfEmployees({ body: updatedProjectIds }));
+    if (ids.length && id) {
+      const projectIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
+      setSelectedProjectIds(projectIds);
+
+      if (projectIds.length > 1) {
+        if (selectedTabKey === "1") {
+          dispatchChartEnterprise(getSalaryOfEmployees({ body: projectIds }));
+        } else if (selectedTabKey === "2") {
+          dispatchChartEnterprise(getEmployeeResultBiddingStatistic({ body: projectIds }));
+        }
       }
     }
   };
@@ -68,27 +74,67 @@ const StatisticalEnterprise: React.FC = () => {
     }));
   };
   useEffect(() => {
-    dispatchChartEnterprise(getSalaryOfEmployees({ body: [id] }));
-  }, []);
+    if (selectedTabKey) {
+      const projectIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
+      setSelectedProjectIds(projectIds);
+
+      if (selectedTabKey === "1") {
+        dispatchChartEnterprise(getSalaryOfEmployees({ body: projectIds }));
+      } else if (selectedTabKey === "2") {
+        dispatchChartEnterprise(getEmployeeResultBiddingStatistic({ body: projectIds }));
+      }
+    }
+  }, [selectedTabKey]);
   const tabItems = [
     {
       key: "1",
-      label: "Thống kê dự án",
+      label: "Thống kê lương trung bình ",
       content: (
         <GenericChart
           chartType="bar"
-          title="Thống kê ngành"
+          title="Thống kê lương trung bình "
           name={stateChartEnterprise.salaryOfEmployees.map(({ enterprise }) => enterprise)}
           value={stateChartEnterprise.salaryOfEmployees.map((item) => item.salaryAvg)}
           seriesName="Dữ liệu Ngành"
         />
       ),
     },
+    {
+      key: "2",
+      label: "Thống kê số lượng gói thâu đã trúng ",
+      content: (
+        <div className="flex">
+          <GenericChart
+            chartType="pie"
+            title="Thống kê số lượng gói thâu đã trúng "
+            name={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
+            value={stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.numberProjectWinning)}
+            seriesName="Số lượng gói thâu đã trúng"
+          />
+          <GenericChart
+            chartType="pie"
+            title="Thống kê giá trúng thầu trung bình  "
+            name={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
+            value={stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.averageWinningAmount)}
+            seriesName="Giá trúng thầu trung bình "
+          />
+          <GenericChart
+            chartType="pie"
+            title="Thống kê tổng gói thầu đã trúng "
+            name={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
+            value={stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.totalWinningAmount)}
+            seriesName="Tổng gói thầu đã trúng"
+          />
+        </div>
+      ),
+    },
   ];
   const initialValues: IProp = {
     ids: ids || [],
   };
-
+  const handleTabChange = (key: string) => {
+    setSelectedTabKey(key);
+  };
   return (
     <>
       <Heading
@@ -141,7 +187,8 @@ const StatisticalEnterprise: React.FC = () => {
           );
         }}
       </Formik>
-      <CustomTabs items={tabItems} />
+      <CustomTabs items={tabItems} selectedKey={selectedTabKey} onChange={handleTabChange} />
+      {/* {tabItems.find((item) => item.key === selectedTabKey)?.content} */}
     </>
   );
 };
