@@ -12,7 +12,7 @@ import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import ActionModule from "../ActionModule";
 
-const DetailWorkProgres = () => {
+const DetailWorkProgress = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IWorkProgress>>(null);
@@ -57,4 +57,4 @@ const DetailWorkProgres = () => {
   );
 };
 
-export default DetailWorkProgres;
+export default DetailWorkProgress;

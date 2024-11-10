@@ -83,6 +83,9 @@ import Introductions from "@/pages/Introductions";
 import Instructs from "@/pages/Instructs";
 import StatisticalEnterprise from "@/pages/Enterprise/Statistical";
 import WorkProgresses from "@/pages/WorkProgresses";
+import CreateWorkProgress from "@/pages/WorkProgresses/Create";
+import UpdateWorkProgress from "@/pages/WorkProgresses/Update";
+import DetailWorkProgress from "@/pages/WorkProgresses/Detail";
 
 export interface IRoute {
   path: string;
@@ -598,6 +601,18 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <WorkProgresses />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateWorkProgress />,
+              },
+              {
+                path: "/update",
+                element: () => <UpdateWorkProgress />,
+              },
+              {
+                path: "/detail",
+                element: () => <DetailWorkProgress />,
               },
             ],
           },

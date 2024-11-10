@@ -3,19 +3,21 @@ import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { ITask } from "./task.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
-import { getAllTasks, createTask, updateTask, deleteTask, getTaskById } from "./task.thunk";
+import { getAllTasks, createTask, updateTask, deleteTask, getTaskById, getListTask } from "./task.thunk";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
 
 export interface ITaskInitialState extends IInitialState {
   tasks: ITask[];
   activeTask: ITask | undefined;
+  listTasks : ITask[]
 }
 
 const initialState: ITaskInitialState = {
   status: EFetchStatus.IDLE,
   message: "",
   tasks: [],
+  listTasks: [],
   activeTask: undefined,
   totalRecords: 0,
   totalPages: 0,
@@ -100,6 +102,16 @@ const taskSlice = createSlice({
       })
       .addCase(deleteTask.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+
+      builder
+      .addCase(getListTask.fulfilled, (state, { payload }: PayloadAction<IResponse<ITask[]> | any>) => {
+        if (payload.data.data) {
+          state.listTasks = payload.data.data;
+        }
+      })
+      .addCase(getListTask.rejected, (state, { payload }: PayloadAction<IResponse<ITask[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
   },

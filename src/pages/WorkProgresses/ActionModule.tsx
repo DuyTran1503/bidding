@@ -1,105 +1,94 @@
 import FormDate from "@/components/form/FormDate";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import FormRadio from "@/components/form/FormRadio";
 import FormSelect from "@/components/form/FormSelect";
-import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import { useArchive } from "@/hooks/useArchive";
-import { IEmployee } from "@/services/store/employee/employee.model";
-import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
-import { createEmployee, updateEmployee } from "@/services/store/employee/employee.thunk";
-import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
-import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
-import { mappingGender, statusEnumArray } from "@/shared/enums/gender";
-import { educationLevelEnumArray, mappingEducationLevel } from "@/shared/enums/level";
+import { resetMessageError } from "@/services/store/enterprise/enterprise.slice";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { IWorkProgressInitialState } from "@/services/store/workProgress/workProgress.slice";
+import { createWorkProgress, updateWorkProgress } from "@/services/store/workProgress/workProgress.thunk";
 import { EPageTypes } from "@/shared/enums/page";
-import { employeeEnumArray, mappingEmployee } from "@/shared/enums/types";
-import { phoneRegex } from "@/shared/utils/common/function";
-import { IOption } from "@/shared/utils/shared-interfaces";
 import { FormikRefType } from "@/shared/utils/shared-types";
-import { Col, RadioChangeEvent, Row } from "antd";
+import { Col, Row } from "antd";
 import dayjs from "dayjs";
 import { Form, Formik } from "formik";
 import lodash from "lodash";
 import { useEffect } from "react";
 import { object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
-import { IWorkProgress } from "@/services/store/workProgress/workProgress.model";
-import { IWorkProgressInitialState } from "@/services/store/workProgress/workProgress.slice";
-// interface TreeNode {
-//   title: string;
-//   key: string;
-//   id: number | null;
-//   children?: TreeNode[];
-// }
+import { ITask } from "@/services/store/task/task.model";
+import { getListTask } from "@/services/store/task/task.thunk";
+import { ITaskInitialState } from "@/services/store/task/task.slice";
 
 interface IWorkProgressFormProps {
-  formikRef?: FormikRefType<IEmployee>;
+  formikRef?: FormikRefType<IWorkProgressInitialValues>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
-  workProgress?: IWorkProgress;
+  workProgress?: IWorkProgressInitialValues;
 }
 
-const ActionModule = ({ formikRef, type, workProgress }: IWorkProgressFormProps) => {
-  const { dispatch } = useArchive<IWorkProgressInitialState>("work_progress");
-  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+export interface IWorkProgressInitialValues {
+  id?: string;
+  project_id: string;
+  task_ids: string;
+  name: string;
+  expense: number | string;
+  progress: string;
+  start_date: string | Date;
+  end_date: string | Date;
+  feedback: string;
+  description: string;
+}
 
-  const initialValues: IWorkProgress = {
+const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormProps) => {
+  const { dispatch: dispatchWorkProgress } = useArchive<IWorkProgressInitialState>("work_progress");
+  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
+
+  const initialValues: IWorkProgressInitialValues = {
     id: workProgress?.id ?? "",
     name: workProgress?.name ?? "",
+    expense: workProgress?.expense ?? "",
+    progress: workProgress?.progress ?? "",
+    start_date: workProgress?.start_date ?? "",
+    end_date: workProgress?.end_date ?? "",
+    feedback: workProgress?.feedback ?? "",
+    description: workProgress?.description ?? "",
     project_id: workProgress?.project_id ?? "",
-    name: workProgress?.name ?? "",
-    id: workProgress?.id ?? "",
-    id: workProgress?.id ?? "",
-    id: workProgress?.id ?? "",
-    id: workProgress?.id ?? "",
-    
+    task_id: workProgress?.task_id ?? "",
   };
-  const validationSchema = object().shape({
-    name: string()
-      .trim()
-      .matches(/^[^\d]*$/, "Họ tên không được chứa số")
-      .required("Vui lòng nhập họ tên")
-      .max(255, "Số ký tự tối đa là 255 ký tự"),
-    email: string()
-      .trim()
-      .required("Vui lòng nhập địa chỉ email")
-      .email("Địa chỉ email không hợp lệ")
-      .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Vui lòng nhập lại! định dạng email chưa đúng")
-      .max(255, "Số ký tự tối đa là 255 ký tự"),
-    phone: string().trim().required("Vui lòng nhập số điện thoại").matches(phoneRegex, "Số điện thoại không hợp lệ"),
+  const Schema = object().shape({
+    name: string().trim().required("Vui lòng không để trống trường này"),
+    expense: string().trim().required("Vui lòng không để trống trường này"),
+    progress: string().trim().required("Vui lòng không để trống trường này"),
+    start_date: string().trim().required("Vui lòng không để trống trường này"),
+    feedback: string().trim().required("Vui lòng không để trống trường này"),
+    end_date: string().trim().required("Vui lòng không để trống trường này"),
+    description: string().trim().required("Vui lòng không để trống trường này"),
+    project_id: string().trim().required("Vui lòng không để trống trường này"),
+    task_id: string().trim().required("Vui lòng không để trống trường này"),
   });
-  const genderOptions: IOption[] = statusEnumArray.map((key) => ({
-    value: key,
-    label: mappingGender[key],
-  }));
-
-  const optionEducation: IOption[] = educationLevelEnumArray.map((e) => ({
-    label: mappingEducationLevel[e],
-    value: e,
-  }));
-  const optionStatus: IOption[] = employeeEnumArray.map((e) => ({
-    label: mappingEmployee[e],
-    value: e,
-  }));
   useEffect(() => {
-    dispatchEnterprise(getListEnterprise());
-  }, [dispatchEnterprise]);
+    return () => {
+      dispatchWorkProgress(resetMessageError());
+    };
+  }, []);
+  useEffect(() => {
+    dispatchProject(getListProject());
+    dispatchTask(getListTask())
+  }, []);
+
   return (
     <Formik
       enableReinitialize
       innerRef={formikRef}
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      validationSchema={Schema}
       onSubmit={(data) => {
-        const body = {
-          ...lodash.omit(data, "id"),
-        };
         if (type === EPageTypes.CREATE) {
-          return dispatch(createEmployee(body as any));
-        }
-        if (type === EPageTypes.UPDATE) {
-          const payload = employee?.avatar === body.avatar ? (({ avatar, ...rest }) => rest)(body) : body;
-          return dispatch(updateEmployee({ body: payload, param: String(employee?.id) }));
+          dispatchWorkProgress(createWorkProgress({ body: lodash.omit(data, "id") }));
+        } else if (type === EPageTypes.UPDATE && workProgress?.id) {
+          dispatchWorkProgress(updateWorkProgress({ body: lodash.omit(data, "id"), param: workProgress.id }));
         }
       }}
     >
@@ -107,214 +96,98 @@ const ActionModule = ({ formikRef, type, workProgress }: IWorkProgressFormProps)
         return (
           <Form>
             <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Tên nhân viên">
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Tên tiến độ">
                   <FormInput
-                    type="text"
-                    label="Tên nhân viên"
-                    isDisabled={type === "view"}
-                    value={values.name ?? ""}
+                    placeholder="Nhập tên tiến độ..."
                     name="name"
+                    value={values.name}
                     error={touched.name ? errors.name : ""}
-                    placeholder="Nhập tên nhân viên..."
-                    onChange={(value) => {
-                      setFieldValue("name", value);
-                    }}
+                    onChange={(e) => setFieldValue("name", e)}
                     onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Mã nhân viên">
-                  <FormInput
-                    label="Mã nhân viên"
-                    type="text"
-                    isDisabled={type === "view"}
-                    value={values.code ?? ""}
-                    name="code"
-                    error={touched.code ? errors.code : ""}
-                    placeholder="Nhập mã nhân viên..."
-                    onChange={(value) => {
-                      setFieldValue("code", value);
-                    }}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title=" Công ty làm việc">
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Dự án ">
                   <FormSelect
-                    label="Công ty làm việc"
-                    placeholder="Chọn công ty..."
-                    id="enterprise_id"
-                    value={values.enterprise_id || undefined}
-                    onChange={(e) => setFieldValue("enterprise_id", e)}
-                    options={convertDataOptions(stateEnterprise.listEnterprise || [])}
+                    isDisabled={type === EPageTypes.VIEW} 
+                    value={values.project_id}
+                    id="project_id"
+                    placeholder="Chọn"
+                    error={touched.project_id ? errors.project_id : ""}
+                    onChange={(value) => setFieldValue("project_id", value)}
+                    options={convertDataOptions(stateProject.listProjects || [])}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Email">
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Tiến độ">
                   <FormInput
-                    label="Email"
-                    type="text"
-                    isDisabled={type === "view"}
-                    value={values.email ?? ""}
-                    name="email"
-                    error={touched.email ? errors.email : ""}
-                    placeholder="Nhập email..."
-                    onChange={(value) => {
-                      setFieldValue("email", value);
-                    }}
+                    placeholder="Nhập tiến độ..."
+                    name="progress"
+                    value={values.progress}
+                    error={touched.progress ? errors.progress : ""}
+                    onChange={(e) => setFieldValue("progress", e)}
                     onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Số điện thoại">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+                <FormGroup title=" Ngành Nghề">
+                  <FormSelect
+                    isMultiple
+                    placeholder="Nhập ngành nghề..."
+                    id="task_id"
+                    value={values.task_id}
+                    onChange={(e) => setFieldValue("task_id", e)}
+                    options={convertDataOptions(stateTask?.listTasks || [])}
+                  />
+                </FormGroup>
+              </Col>
+
+
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Chi phí">
                   <FormInput
-                    label="Số điện thoại"
-                    type="text"
-                    isDisabled={type === "view"}
-                    value={values.phone ?? ""}
-                    name="phone"
-                    error={touched.phone ? errors.phone : ""}
-                    placeholder="Nhập số điện thoại..."
-                    onChange={(value) => {
-                      setFieldValue("phone", value);
-                    }}
+                    placeholder="Nhập tiến độ..."
+                    name="progress"
+                    value={values.progress}
+                    error={touched.progress ? errors.progress : ""}
+                    onChange={(e) => setFieldValue("progress", e)}
                     onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Mã số thuế">
+
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Nhận xét">
                   <FormInput
-                    label="Mã số thuế"
-                    type="number"
-                    isDisabled={type === "view"}
-                    value={values.taxcode ?? ""}
-                    name="taxcode"
-                    error={touched.taxcode ? errors.taxcode : ""}
-                    placeholder="Nhập mã số thuế..."
-                    onChange={(value) => {
-                      setFieldValue("taxcode", value);
-                    }}
+                    placeholder="Nhập nhập xét..."
+                    name="feedback"
+                    value={values.progress}
+                    error={touched.progress ? errors.progress : ""}
+                    onChange={(e) => setFieldValue("progress", e)}
                     onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Mức lương">
-                  <FormInput
-                    label="Mức lương"
-                    type="number"
-                    isDisabled={type === "view"}
-                    value={values.salary ?? ""}
-                    name="salary"
-                    error={touched.salary ? errors.salary : ""}
-                    placeholder="Nhập mức lương..."
-                    onChange={(value) => {
-                      setFieldValue("salary", value);
-                    }}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Ngày sinh">
+
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Ngày bắt dầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày sinh"
-                    value={values.birthday ? dayjs(values.birthday) : null}
-                    onChange={(date) => setFieldValue("birthday", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Địa chỉ">
-                  <FormInput
-                    label="Địa chỉ"
-                    type="text"
-                    isDisabled={type === "view"}
-                    value={values.address ?? ""}
-                    name="address"
-                    error={touched.address ? errors.address : ""}
-                    placeholder="Nhập địa chỉ..."
-                    onChange={(value) => {
-                      setFieldValue("address", value);
-                    }}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Ngày bắt đầu ">
-                  <FormDate
-                    disabled={type === EPageTypes.VIEW}
-                    label="Ngày bắt đầu "
                     value={values.start_date ? dayjs(values.start_date) : null}
                     onChange={(date) => setFieldValue("start_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Ngày kết thúc ">
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Ngày kết thúc">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày kết thúc "
-                    minDate={values.start_date ? dayjs(values.start_date) : undefined}
                     value={values.end_date ? dayjs(values.end_date) : null}
                     onChange={(date) => setFieldValue("end_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
-                  />
-                </FormGroup>
-              </Col>
-
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Trình độ học vấn">
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    label="Trình độ học vấn"
-                    value={values.education_level}
-                    options={optionEducation}
-                    id="education_level"
-                    placeholder="Chọn mức độ..."
-                    onChange={(value) => setFieldValue("education_level", value)}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Giới tính" className="gap-[6px]">
-                  <FormRadio
-                    title="Giới tính"
-                    options={genderOptions}
-                    value={values.gender && (genderOptions.find((item) => +item.value === +values.gender)?.value as string)}
-                    onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Trạng thái làm việc">
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    label="Trạng thái làm việc"
-                    value={values.status}
-                    options={optionStatus}
-                    id="status"
-                    placeholder="Chọn mức độ..."
-                    onChange={(value) => setFieldValue("status", value)}
-                  />
-                </FormGroup>
-              </Col>
-
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Ảnh đại diện">
-                  <FormUploadFile
-                    isMultiple={false}
-                    value={values.avatar}
-                    onChange={(e: any) => {
-                      setFieldValue("avatar", e);
-                    }}
                   />
                 </FormGroup>
               </Col>
@@ -326,4 +199,4 @@ const ActionModule = ({ formikRef, type, workProgress }: IWorkProgressFormProps)
   );
 };
 
-export default ActionModule;
+export default WorkProgressForm;

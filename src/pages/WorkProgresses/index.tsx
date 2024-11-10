@@ -11,6 +11,7 @@ import { IWorkProgressInitialState } from "@/services/store/workProgress/workPro
 import { deleteWorkProgress, getAllWorkProgresses } from "@/services/store/workProgress/workProgress.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { List } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
@@ -21,16 +22,12 @@ const WorkProgresses = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IWorkProgressInitialState>("work_progress");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  const projectName = (value: number) => {
-    if (stateProject?.listProjects!.length > 0 && !!value) {
-      return stateProject?.listProjects!.find((item) => item.id === value)?.name;
-    }
-  };
 
   const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",
+      className: "w-[200px]",
     },
     {
       dataIndex: "project",
@@ -68,20 +65,37 @@ const WorkProgresses = () => {
       className: "w-[200px]",
     },
     {
-        dataIndex: "desciption",
-        title: "Mô tả",
-        className: "w-[250px]",
-  
-        render(_, record) {
-          return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
-        },
+      dataIndex: "desciption",
+      title: "Mô tả",
+      className: "w-[250px]",
+
+      render(_, record) {
+        return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
+      },
     },
     {
-        dataIndex: "task_ids",
-        title: "Nhiệm vụ",
-        className: "w-[200px]",
+      dataIndex: "task",
+      title: "Nhiệm vụ",
+      className: "w-[200px]",
+      render(_, record) {
+        // console.log(record?.task?.map(item=>item.name));
+
+        return (
+          <List
+          dataSource={record?.task || []}  // Gán dataSource là mảng task từ record
+          renderItem={(stateProject) => (
+            <List.Item
+              style={{
+                padding: '4px 8px',  
+              }}
+            >
+              {stateProject.name} {/* Hiển thị tên của mỗi nhiệm vụ */}
+            </List.Item>
+          )}
+        />
+        );
+      },
     },
-    
   ];
   const buttons: IGridButton[] = [
     {
@@ -149,19 +163,18 @@ const WorkProgresses = () => {
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.workProgresses)
-      ? state.workProgresses.map((workProgress, index) => ({
+      ? state.workProgresses.map((item, index) => ({
           index: index + 1,
-          key: workProgress.id, // Use workProgress.id as the unique key
-          project: projectName(+workProgress?.project?.id!),
-          name: workProgress.name,
-          process: workProgress.progress,
-          expense: workProgress.expense,
-          start_date: workProgress.start_date,
-          end_date: workProgress.end_date,
-          feedback: workProgress.feedback,
-          description: workProgress.description,
-          task_ids: workProgress.task_ids
-
+          key: item.id, // Use item.id as the unique key
+          project: item.project,
+          name: item.name,
+          progress: item.progress,
+          expense: item.expense,
+          start_date: item.start_date,
+          end_date: item.end_date,
+          feedback: item.feedback,
+          description: item.description,
+          task: item.task,
         }))
       : [];
   }, [JSON.stringify(state.workProgresses)]);
@@ -194,7 +207,7 @@ const WorkProgresses = () => {
             text: "Thêm tiến độ dự án",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
-              navigate("/employees/create");
+              navigate("/work-progresses/create");
             },
           },
         ]}

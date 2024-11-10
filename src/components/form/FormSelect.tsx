@@ -4,10 +4,10 @@ import clsx from "clsx";
 
 interface IFormSelect {
   label?: string;
-  placeholder?: string;
+  placeholder: string;
   options: IOption[];
   defaultValue?: number[] | string[] | string | number;
-  value?: string | string[] | number[];
+  value?: string | string[] | number[]; 
   isMultiple?: boolean;
   error?: string;
   isDisabled?: boolean;
