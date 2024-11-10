@@ -82,17 +82,17 @@ const WorkProgresses = () => {
 
         return (
           <List
-          dataSource={record?.task || []}  // Gán dataSource là mảng task từ record
-          renderItem={(stateProject) => (
-            <List.Item
-              style={{
-                padding: '4px 8px',  
-              }}
-            >
-              {stateProject.name} {/* Hiển thị tên của mỗi nhiệm vụ */}
-            </List.Item>
-          )}
-        />
+            dataSource={record?.task || []} // Gán dataSource là mảng task từ record
+            renderItem={(stateProject) => (
+              <List.Item
+                style={{
+                  padding: "4px 8px",
+                }}
+              >
+                {stateProject.name}
+              </List.Item>
+            )}
+          />
         );
       },
     },
@@ -101,14 +101,14 @@ const WorkProgresses = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/work-progress/detail/${record?.key}`);
+        navigate(`/work-progresses/detail/${record?.key}`);
       },
       // permission: EPermissions.DETAIL_EMPLOYEE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/work-progress/update/${record?.key}`);
+        navigate(`/work-progresses/update/${record?.key}`);
       },
       // permission: EPermissions.UPDATE_EMPLOYEE,
     },
@@ -175,6 +175,7 @@ const WorkProgresses = () => {
           feedback: item.feedback,
           description: item.description,
           task: item.task,
+          task_id: item.task_ids
         }))
       : [];
   }, [JSON.stringify(state.workProgresses)]);

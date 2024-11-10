@@ -23,7 +23,7 @@ const CreateWorkProgress = () => {
     actions: {
       success: {
         message: state.message,
-        navigate: "/work_progresses",
+        navigate: "/work-progresses",
       },
       error: {
         message: state.message,
@@ -42,21 +42,22 @@ const CreateWorkProgress = () => {
             text: "Cancel",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/work_progresses");
+              navigate("/work-progresses");
             },
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,
             text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
-            // permission: EPermissions.CREATE_EMPLOYEE,
             onClick: () => {
-              formikRef && formikRef.current && formikRef.current.handleSubmit();
+              if (formikRef.current) {
+                formikRef.current.handleSubmit();
+              }
             },
           },
         ]}
       />
-      <ActionModule formikRef={formikRef} type={EPageTypes.CREATE} />
+       <ActionModule type={EPageTypes.CREATE} formikRef={formikRef}/>
     </>
   );
 };

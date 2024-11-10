@@ -1,3 +1,4 @@
+import FormCkEditor from "@/components/form/FormCkEditor";
 import FormDate from "@/components/form/FormDate";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
@@ -6,9 +7,12 @@ import { useArchive } from "@/hooks/useArchive";
 import { resetMessageError } from "@/services/store/enterprise/enterprise.slice";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
+import { ITaskInitialState } from "@/services/store/task/task.slice";
 import { IWorkProgressInitialState } from "@/services/store/workProgress/workProgress.slice";
 import { createWorkProgress, updateWorkProgress } from "@/services/store/workProgress/workProgress.thunk";
 import { EPageTypes } from "@/shared/enums/page";
+import { TypeFeedback } from "@/shared/enums/typeFeedback";
+import { convertEnum } from "@/shared/utils/common/convertEnum";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, Row } from "antd";
 import dayjs from "dayjs";
@@ -17,9 +21,7 @@ import lodash from "lodash";
 import { useEffect } from "react";
 import { object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
-import { ITask } from "@/services/store/task/task.model";
 import { getListTask } from "@/services/store/task/task.thunk";
-import { ITaskInitialState } from "@/services/store/task/task.slice";
 
 interface IWorkProgressFormProps {
   formikRef?: FormikRefType<IWorkProgressInitialValues>;
@@ -43,7 +45,7 @@ export interface IWorkProgressInitialValues {
 const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormProps) => {
   const { dispatch: dispatchWorkProgress } = useArchive<IWorkProgressInitialState>("work_progress");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
+  // const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
 
   const initialValues: IWorkProgressInitialValues = {
     id: workProgress?.id ?? "",
@@ -55,7 +57,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
     feedback: workProgress?.feedback ?? "",
     description: workProgress?.description ?? "",
     project_id: workProgress?.project_id ?? "",
-    task_id: workProgress?.task_id ?? "",
+    task_ids: workProgress?.task_ids ?? "",
   };
   const Schema = object().shape({
     name: string().trim().required("Vui lòng không để trống trường này"),
@@ -66,7 +68,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
     end_date: string().trim().required("Vui lòng không để trống trường này"),
     description: string().trim().required("Vui lòng không để trống trường này"),
     project_id: string().trim().required("Vui lòng không để trống trường này"),
-    task_id: string().trim().required("Vui lòng không để trống trường này"),
+    // task_ids: string().trim().required("Vui lòng không để trống trường này"),
   });
   useEffect(() => {
     return () => {
@@ -75,7 +77,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
   }, []);
   useEffect(() => {
     dispatchProject(getListProject());
-    dispatchTask(getListTask())
+    // dispatchTask(getListTask())
   }, []);
 
   return (
@@ -99,7 +101,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tên tiến độ">
                   <FormInput
-                    placeholder="Nhập tên tiến độ..."
+                    placeholder="Nhập..."
                     name="name"
                     value={values.name}
                     error={touched.name ? errors.name : ""}
@@ -109,22 +111,24 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Dự án ">
+                <FormGroup title="Dự án">
                   <FormSelect
-                    isDisabled={type === EPageTypes.VIEW} 
-                    value={values.project_id}
+                    placeholder="Chọn dự án..."
                     id="project_id"
-                    placeholder="Chọn"
+                    value={values.project_id as string}
                     error={touched.project_id ? errors.project_id : ""}
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(stateProject.listProjects || [])}
+                    options={convertDataOptions(stateProject?.listProjects || [])}
+                    onChange={(e) => setFieldValue("project_id", e)}
                   />
                 </FormGroup>
               </Col>
+            </Row>
+
+            <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tiến độ">
                   <FormInput
-                    placeholder="Nhập tiến độ..."
+                    placeholder="Nhập..."
                     name="progress"
                     value={values.progress}
                     error={touched.progress ? errors.progress : ""}
@@ -133,48 +137,54 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title=" Ngành Nghề">
+              {/* <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Nhiệm vụ">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
+                    placeholder="Chọn nhiệm vụ..."
                     isMultiple
-                    placeholder="Nhập ngành nghề..."
-                    id="task_id"
-                    value={values.task_id}
-                    onChange={(e) => setFieldValue("task_id", e)}
+                    value={values.task_ids}
+                    id="task_ids"
+                    onChange={(e) => {
+                      setFieldValue("task_ids", e);
+                    }}
                     options={convertDataOptions(stateTask?.listTasks || [])}
                   />
                 </FormGroup>
-              </Col>
-
-
+              </Col> */}
+            </Row>
+            <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Chi phí">
                   <FormInput
-                    placeholder="Nhập tiến độ..."
-                    name="progress"
-                    value={values.progress}
-                    error={touched.progress ? errors.progress : ""}
-                    onChange={(e) => setFieldValue("progress", e)}
+                    placeholder="Nhập..."
+                    name="expense"
+                    value={values.expense}
+                    error={touched.expense ? errors.expense : ""}
+                    onChange={(e) => setFieldValue("expense", e)}
                     onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>
-
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Nhận xét">
-                  <FormInput
-                    placeholder="Nhập nhập xét..."
-                    name="feedback"
-                    value={values.progress}
-                    error={touched.progress ? errors.progress : ""}
-                    onChange={(e) => setFieldValue("progress", e)}
-                    onBlur={handleBlur}
+                  <FormSelect
+                    label="Loại nguồn tài trợ"
+                    placeholder="Chọn loại nguồn tài trợ..."
+                    isDisabled={type === EPageTypes.VIEW}
+                    id="feedback"
+                    options={convertEnum(TypeFeedback)}
+                    value={values.feedback || undefined}
+                    error={touched.feedback ? errors.feedback : ""}
+                    onChange={(e) => setFieldValue("feedback", e)}
                   />
                 </FormGroup>
               </Col>
+            </Row>
 
+            <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Ngày bắt dầu">
+                <FormGroup title="Ngày bắt đâu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     value={values.start_date ? dayjs(values.start_date) : null}
@@ -189,6 +199,14 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     value={values.end_date ? dayjs(values.end_date) : null}
                     onChange={(date) => setFieldValue("end_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
+                </FormGroup>
+              </Col>
+            </Row>
+
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormGroup title="Mô tả">
+                  <FormCkEditor id="description" value={values.description ?? ""} onChange={(e) => setFieldValue("description", e)} />
                 </FormGroup>
               </Col>
             </Row>
