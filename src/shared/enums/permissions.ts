@@ -182,6 +182,13 @@ export enum EPermissions {
   CREATE_EVALUATION = "create_evaluation_criteria",
   UPDATE_EVALUATION = "update_evaluation_criteria",
   DESTROY_EVALUATION = "destroy_evaluation_criteria",
+  
+  // Tiêu chí đánh giá
+  LIST_EVALUATE = "list_evaluatE_criteria",
+  DETAIL_EVALUATE = "detail_evaluatE_criteria",
+  CREATE_EVALUATE = "create_evaluatE_criteria",
+  UPDATE_EVALUATE = "update_evaluatE_criteria",
+  DESTROY_EVALUATE = "destroy_evaluatE_criteria",
 
   // ? TASK
   LIST_TASK = "list_task",

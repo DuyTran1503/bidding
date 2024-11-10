@@ -46,13 +46,10 @@ const SupportForm = ({ visible, type, setVisible, item }: ISupportFormProps) => 
                 .unwrap()
                 .catch((error) => {
                     const apiErrors = error?.errors || {};
-                    setErrors(apiErrors);
-                })
-                .then(() => {
-                    setVisible(false);
-                })
+                    setErrors(apiErrors); // Sử dụng setErrors để gán lỗi từ API vào form
+                });
         }
-    };
+    };    
 
     return (
         <Dialog
@@ -103,7 +100,7 @@ const SupportForm = ({ visible, type, setVisible, item }: ISupportFormProps) => 
                                     <FormSelect
                                         placeholder="Chọn loại hỗ trợ"
                                         isDisabled={type === "view"}
-                                        defaultValue={values.type || "Chọn loại hỗ trợ"}
+                                        defaultValue={values.type}
                                         onChange={(value) => setFieldValue("type", Number(value))}
                                         options={[
                                             { value: 1, label: "Khác" },

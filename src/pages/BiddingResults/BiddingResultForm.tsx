@@ -10,6 +10,8 @@ import FormSwitch from "@/components/form/FormSwitch";
 import { createBiddingResult, updateBiddingResult } from "@/services/store/biddingResult/biddingResult.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import FormCkEditor from "@/components/form/FormCkEditor";
+import { IProject } from "@/services/store/project/project.model";
+import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 
 interface IBiddingResultFormProps {
     formikRef?: any;
@@ -18,8 +20,8 @@ interface IBiddingResultFormProps {
 }
 
 export interface IBiddingResultFormInitialValues {
-    project: string;
-    enterprise: string;
+    project: IProject;
+    enterprise: IEnterprise;
     decision_number: string;
     decision_date: string;
     is_active: string;
@@ -29,8 +31,8 @@ const BiddingResultForm = ({ formikRef, type, biddingResult }: IBiddingResultFor
     const { dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
 
     const initialValues: IBiddingResultFormInitialValues = {
-        project: biddingResult?.project || "",
-        enterprise: biddingResult?.enterprise || "",
+        project: biddingResult?.project as IProject,
+        enterprise: biddingResult?.enterprise as IEnterprise,
         decision_number: biddingResult?.decision_number || "",
         decision_date: biddingResult?.decision_date || "",
         is_active: biddingResult?.is_active ? "1" : "0",
@@ -71,9 +73,9 @@ const BiddingResultForm = ({ formikRef, type, biddingResult }: IBiddingResultFor
                                     type="text"
                                     isDisabled={type === "view"}
                                     label="Tên loại sự kiện đấu thầu"
-                                    value={values.enterprise}
-                                    name="enterprise"
-                                    error={touched.enterprise ? errors.enterprise : ""}
+                                    value={values.project?.name}
+                                    name="project?.name"
+                                    error={touched.project?.name ? errors.project?.name : ""}
                                     placeholder="Nhập loại sự kiện đấu thầu..."
                                     onChange={(value) => setFieldValue("name", value)}
                                     onBlur={handleBlur}
@@ -88,17 +90,6 @@ const BiddingResultForm = ({ formikRef, type, biddingResult }: IBiddingResultFor
                                     }}
                                 />
                             </Col>
-                            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                                <FormSwitch
-                                    label="Trạng thái"
-                                    checked={values.is_active === "1"}
-                                    onChange={(value) => {
-                                        setFieldValue("is_active", value ? "1" : "0");
-                                    }}
-                                />
-                            </Col>
-                        </Row>
-                        <Row gutter={[24, 24]}>
                             <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                                 <FormCkEditor
                                     id="decision_date"

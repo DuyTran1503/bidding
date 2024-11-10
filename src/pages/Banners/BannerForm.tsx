@@ -61,6 +61,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
       screenSize={screenSize}
       handleSubmit={() => {
         formikRef.current && formikRef.current.handleSubmit();
+        setVisible(false)
       }}
       visible={visible}
       setVisible={setVisible}

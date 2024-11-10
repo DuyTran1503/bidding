@@ -1,6 +1,5 @@
 export interface ISupport {
     id: string;
-    // user_id: string;
     sender?: { id: number; name: string };
     title: string;
     email: string;

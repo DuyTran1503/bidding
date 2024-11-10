@@ -265,6 +265,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "feedback-complaint",
           // permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
         },
+        {
+          id: "5.11",
+          label: "Đánh giá",
+          path: "evaluates",
+          // permissions: EPermissions.LIST_EVALUATE,
+        },
       ],
     },
     {

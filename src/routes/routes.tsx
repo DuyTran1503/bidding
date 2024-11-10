@@ -74,13 +74,12 @@ import UpdatePost from "@/pages/Posts/UpdatePost/UpdatePost";
 import DetailPost from "@/pages/Posts/DetailPost/DetailPost";
 import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult/DetailBiddingResult";
 import Supports from "@/pages/Supports/Supports/Supports";
-import CreateSupport from "@/pages/Supports/CreateSupport/CreateSupport";
-import DetailSupport from "@/pages/Supports/DetailSupport/DetailSupport";
 import BidBonds from "@/pages/BidBond";
 import EvaluationCriteria from "@/pages/EvaluationCriteria";
 import Statistical from "@/pages/Project/Statistical/index";
 import Introductions from "@/pages/Introductions";
 import Instructs from "@/pages/Instructs";
+import Evaluates from "@/pages/Evaluates/Evaluates";
 // import StatisticalEnterprise from "@/pages/Enterprise/Statistical";
 
 export interface IRoute {
@@ -192,6 +191,15 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <PostCatalogs />,
+              },
+            ],
+          },
+          {
+            path: "evaluates",
+            pages: [
+              {
+                path: "/",
+                element: () => <Evaluates />,
               },
             ],
           },
@@ -400,15 +408,7 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <Supports />,
-              },
-              {
-                path: "/create",
-                element: () => <CreateSupport />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailSupport />,
-              },
+              }
             ],
           },
           {

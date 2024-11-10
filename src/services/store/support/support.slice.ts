@@ -24,9 +24,6 @@ const initialState: ISupportInitialState = {
   supports: [],
   activeSupport: undefined,
   totalRecords: 0,
-  totalPages: 0,
-  pageSize: 10,
-  currentPage: 1,
   filter: {
     size: 10,
     page: 1,
