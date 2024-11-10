@@ -81,7 +81,11 @@ import EvaluationCriteria from "@/pages/EvaluationCriteria";
 import Statistical from "@/pages/Project/Statistical/index";
 import Introductions from "@/pages/Introductions";
 import Instructs from "@/pages/Instructs";
+<<<<<<< HEAD
 import CreateInstruct from "@/pages/Instructs/Create";
+=======
+import StatisticalEnterprise from "@/pages/Enterprise/Statistical";
+>>>>>>> 291455d1f38a901563a46c42154c2c7ab79deaf8
 
 export interface IRoute {
   path: string;
@@ -310,6 +314,10 @@ export const routes: IRoute[] = [
               {
                 path: "/detail/:id",
                 element: () => <DetailEnterprise />,
+              },
+              {
+                path: "/statistical/:id",
+                element: () => <StatisticalEnterprise />,
               },
             ],
           },
@@ -584,6 +592,15 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <FeedbackComplaints />,
+              },
+            ],
+          },
+          {
+            path: "work_progresses",
+            pages: [
+              {
+                path: "/",
+                // element: () => <FeedbackComplaints />,
               },
             ],
           },

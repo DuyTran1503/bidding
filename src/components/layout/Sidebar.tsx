@@ -13,6 +13,8 @@ import {
   IoSettingsOutline,
   IoInformationCircleOutline,
   IoHeadsetOutline,
+  IoClose,
+  IoMenu,
 } from "react-icons/io5";
 
 // Images
@@ -46,31 +48,13 @@ const Sidebar = ({ children }: PropsWithChildren) => {
   const [openingMenuId, setOpeningMenuId] = useState<string | null>();
   const { pathname } = useLocation();
   const activePath = lodash.last(lodash.remove(pathname.split("/")));
+  const [isSidebarVisible, setSidebarVisible] = useState<boolean>(false);
   const menuItems: IMenuItem[] = [
     {
       id: "1",
       label: "Bảng điều khiển",
       path: "dashboard",
       icon: { component: IoPieChartOutline },
-    },
-    {
-      id: "2",
-      label: "Tin tức",
-      icon: { component: IoNewspaperOutline },
-      items: [
-        {
-          id: "2.1",
-          label: "Danh mục bài viết",
-          path: "post-catalogs",
-          // permissions: EPermissions.LIST_POST_CATALOG,
-        },
-        {
-          id: "2.2",
-          label: "Bài viết",
-          path: "posts",
-          // permissions: EPermissions.LIST_POST,
-        },
-      ],
     },
     {
       id: "2",
@@ -127,6 +111,26 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
       ],
     },
+    {
+      id: "9",
+      label: "Tin tức",
+      icon: { component: IoNewspaperOutline },
+      items: [
+        {
+          id: "9.1",
+          label: "Danh mục bài viết",
+          path: "post-catalogs",
+          // permissions: EPermissions.LIST_POST_CATALOG,
+        },
+        {
+          id: "9.2",
+          label: "Bài viết",
+          path: "posts",
+          // permissions: EPermissions.LIST_POST,
+        },
+      ],
+    },
+
     {
       id: "3",
       label: "Dự án",
@@ -291,9 +295,18 @@ const Sidebar = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      {/* Page parent */}
+      {/* Button to toggle sidebar on small screens */}
+      <button
+        className="fixed top-7 left-6 z-50 block md:hidden bg-blue-200 hover:bg-blue-500 text-white p-2 rounded"
+        onClick={() => setSidebarVisible(!isSidebarVisible)}
+      >
+        {isSidebarVisible ? <IoClose size={24} /> : <IoMenu size={24} />}
+      </button>
+
       <div className="flex h-dvh select-none bg-gray-25">
-        <aside className="fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white">
+        {/* Sidebar */}
+        <div className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 
+        ${isSidebarVisible ? 'translate-x-0' : '-translate-x-full'}`}>
           {/* Logo */}
           <div className="flex cursor-pointer items-center gap-3 px-5 py-6" onClick={() => navigate("/")}>
             <img src={logo} alt="" className="h-[34px] w-[34px]" />
@@ -305,7 +318,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
             {menuItems.map((item, index) => {
               return (
                 <div key={index} className="flex flex-col gap-2">
-                  {/* Parent Item */}
                   {checkPermission(state.profile?.permissions, item.permissions) && (
                     <MenuItem
                       onClick={() => {
@@ -319,7 +331,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
                       isChildActive={item.items?.some((i) => !!i.path && i.path === activePath)}
                     />
                   )}
-                  {/* Child Item */}
                   {activeMenuItemId === item.id && item.items?.some((child) => checkPermission(state.profile?.permissions, child.permissions)) && (
                     <div className="flex flex-col gap-2">
                       {item.items?.map((child, index) => {
@@ -335,10 +346,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
               );
             })}
           </nav>
-        </aside>
+        </div>
 
-        <main className="ml-[264px] flex grow flex-col gap-6 overflow-y-scroll p-6">{children}</main>
-      </div>
+        {/* Main content */}
+        <main className="ml-0 md:ml-[264px] flex grow flex-col gap-6 overflow-y-scroll p-6">
+          {children}
+        </main></div>
     </>
   );
 };
