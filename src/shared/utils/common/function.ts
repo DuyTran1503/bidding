@@ -1,4 +1,5 @@
 import { ETYPEFILE } from "@/shared/enums/fileType";
+import { E_TYPE_ACTIVITY } from "@/shared/enums/typeActivityLog";
 import { PayloadErrors } from "@/shared/interface/error";
 
 export const phoneRegex = /^(?:\+84|0084|0)?[235789][0-9]{8}$/;
@@ -73,3 +74,8 @@ export const convertDataOption = (data: any[]) => {
 export const selectedData = (data: any[], id: string | number) => {
   return data?.find((item: any) => item.id === +id);
 };
+
+export const convertEnumToArray = Object.keys(E_TYPE_ACTIVITY).map((key) => ({
+  value: key,
+  label: E_TYPE_ACTIVITY[key as keyof typeof E_TYPE_ACTIVITY],
+}));

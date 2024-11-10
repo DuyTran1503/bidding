@@ -5,6 +5,7 @@ import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { ISearchParams } from "@/shared/utils/shared-interfaces";
 import { useDispatch } from "react-redux";
 import SearchComponent, { ISearchProps } from "./SearchComponent";
+import CustomTabs from "./CustomTabs";
 
 export interface ITableData {
   key: React.Key;
@@ -22,6 +23,13 @@ export interface ScrollProps {
 export interface ISearchTable {
   status: { value: string; label: string }[];
 }
+
+export interface IAdditionalTab {
+  key: string;
+  label: string;
+  content: React.ReactNode
+}
+
 interface IPrimaryTableProps<T extends ISearchParams> extends ISearchProps<T> {
   columns: ColumnsType;
   data: ITableData[];
@@ -35,6 +43,8 @@ interface IPrimaryTableProps<T extends ISearchParams> extends ISearchProps<T> {
     number_of_elements?: number;
   };
   fetching?: Function;
+  tabLabel?: string;
+  additionalTabs?: IAdditionalTab[]
 }
 
 const PrimaryTable = <T extends ISearchParams>({
@@ -46,6 +56,8 @@ const PrimaryTable = <T extends ISearchParams>({
   fetching,
   filter,
   scroll,
+  tabLabel = "Danh sách dữ liệu",
+  additionalTabs = []
   // ...rest
 }: IPrimaryTableProps<T>) => {
   const dispatch = useDispatch();
@@ -57,61 +69,77 @@ const PrimaryTable = <T extends ISearchParams>({
   const handleTableChange = (pagination: any) => {
     dispatch(
       setFilter({
-        _page: pagination.current,
-        _size: pagination.pageSize,
+        page: pagination.current,
+        size: pagination.pageSize,
       }),
     );
   };
+  const newHandleTableChange = (newPagination: TablePaginationConfig) => {
+    const newFilter: ISearchParams = {
+      page: newPagination.current,
+      size: newPagination.pageSize,
+    };
+
+    dispatch(setFilter(newFilter));
+
+    if (fetching) {
+      dispatch(fetching());
+    }
+  }
+
+  const newPagination = pagination
+    ? {
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+      total: pagination.total,
+      showSizeChanger: pagination.showSideChanger ?? false,
+      showTotal: (total: number, [start, end]: [number, number]) => getShowingText(total, [start, end]),
+      onChange: handleTableChange,
+    }
+    : false;
+
+  const tabItems = [
+    {
+      key: "table",
+      label: tabLabel,
+      content: (
+        <Table
+          onChange={newHandleTableChange}
+          columns={columns}
+          dataSource={data}
+          pagination={newPagination}
+          scroll={scroll}
+          rowKey="key"
+        />
+      ),
+    },
+    ...additionalTabs,
+  ];
 
   useEffect(() => {
     if (fetching) {
       dispatch(fetching());
     }
   }, [dispatch]);
+
   return (
     <div className="primary-table flex w-full flex-col gap-6">
       {search && (
-        <>
-          {/* <FilterTableStatus options={search.status} /> */}
-          <SearchComponent search={search} setFilter={setFilter} filter={filter} />
-          {/* <div className="flex gap-4"> */}
-          {/* <FormInput icon={IoSearchOutline} placeholder="Search product. . ." type="text" /> */}
-          {/* <DateRangePicker /> */}
-          {/* </div> */}
-        </>
+        <SearchComponent search={search} setFilter={setFilter} filter={filter} />
       )}
-      <Table
-        onChange={(newPagination: TablePaginationConfig) => {
-          const newFilter: ISearchParams = {
-            page: newPagination.current,
-            size: newPagination.pageSize,
-          };
-
-          dispatch(setFilter(newFilter));
-
-          if (fetching) {
-            dispatch(fetching());
-          }
-        }}
-        columns={columns}
-        dataSource={data}
-        // pagination={false}
-        pagination={
-          pagination
-            ? {
-                current: pagination.current,
-                pageSize: pagination.pageSize,
-                total: pagination.total,
-                showSizeChanger: pagination.showSideChanger ?? false,
-                showTotal: (total, [start, end]) => getShowingText(total, [start, end]),
-                onChange: handleTableChange,
-              }
-            : false
-        }
-        className="shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]"
-        rowKey="key"
-        scroll={scroll}
-      />
+      {additionalTabs.length > 0 ? (
+        <CustomTabs items={tabItems} />
+      ) : (
+        <Table
+          onChange={newHandleTableChange}
+          columns={columns}
+          dataSource={data}
+          pagination={newPagination}
+          scroll={scroll}
+          rowKey="key"
+          className="shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]"
+        />
+      )}
       {/* <div className="flex items-center justify-between">
         <div>
           Hiển thị {pagination?.current} - {pagination?.pageSize} trên tổng {pagination?.total}
