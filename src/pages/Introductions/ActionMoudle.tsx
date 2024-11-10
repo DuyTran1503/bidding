@@ -73,7 +73,7 @@ const IntroductionForm = ({ formikRef, type, introduction }: IIntroductionFormPr
                 <FormGroup title="Trạng thái hoạt động">
                   <FormSwitch
                     checked={!!values.is_use ? true : false}
-                    onChange={(value) => {
+                    onChange={(value) => {  
                       setFieldValue("is_use", value);
                     }}
                   />

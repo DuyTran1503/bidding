@@ -11,8 +11,7 @@ import { useRef } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import ActionModule from "../ActionModule";
-import { EPermissions } from "@/shared/enums/permissions";
+import InstructForm from "../ActionModule";
 
 const CreateInstruct = () => {
   const navigate = useNavigate();
@@ -57,7 +56,7 @@ const CreateInstruct = () => {
           },
         ]}
       />
-      <ActionModule formikRef={formikRef} type={EPageTypes.CREATE} />
+      <InstructForm formikRef={formikRef} type={EPageTypes.CREATE} />
     </>
   );
 };

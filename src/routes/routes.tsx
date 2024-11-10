@@ -83,6 +83,7 @@ import Introductions from "@/pages/Introductions";
 import Instructs from "@/pages/Instructs";
 import StatisticalEnterprise from "@/pages/Enterprise/Statistical";
 import CreateIntroduction from "@/pages/Introductions/Create";
+import CreateInstruct from "@/pages/Instructs/Create";
 
 export interface IRoute {
   path: string;
@@ -571,7 +572,7 @@ export const routes: IRoute[] = [
               },
               {
                 path: "/create",
-                // element: () => <CreateInstruct />,
+                element: () => <CreateInstruct />,
               },
               {
                 path: "/update/:id",

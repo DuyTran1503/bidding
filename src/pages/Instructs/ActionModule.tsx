@@ -1,6 +1,5 @@
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
-import FormInputArea from "@/components/form/FormInputArea";
 import FormSwitch from "@/components/form/FormSwitch";
 import { useArchive } from "@/hooks/useArchive";
 import { resetMessageError } from "@/services/store/funding_source/funding_source.slice";
@@ -61,7 +60,7 @@ const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
         return (
           <Row gutter={[24, 24]}>
                 <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormGroup title="Bài giới thiệu">
+                <FormGroup title="Bài hướng dẫn">
                   <FormCkEditor id="instruct" value={values.instruct ?? ""} onChange={(e) => setFieldValue("instruct", e)} />
                 </FormGroup>
               </Col>
