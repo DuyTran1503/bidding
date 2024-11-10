@@ -33,14 +33,14 @@ const StatisticalReports = () => {
         {
             type: EButtonTypes.VIEW,
             onClick(record) {
-                navigate(`/statistical_reports/update/${record?.key}`);
+                navigate(`update/${record?.key}`);
             },
             permission: EPermissions.DETAIL_STATISTICAL_REPORT,
         },
         {
             type: EButtonTypes.UPDATE,
             onClick(record) {
-                navigate(`/statistical_reports/update/${record?.key}`);
+                navigate(`update/${record?.key}`);
             },
             permission: EPermissions.UPDATE_STATISTICAL_REPORT,
         },
@@ -59,8 +59,16 @@ const StatisticalReports = () => {
             title: "STT",
         },
         {
+            dataIndex: "type",
+            title: "Type",
+        },
+        {
             dataIndex: "name",
             title: "Name",
+        },
+        {
+            dataIndex: "period",
+            title: "Period",
         },
         {
             dataIndex: "description",
@@ -104,10 +112,13 @@ const StatisticalReports = () => {
     const data: ITableData[] = useMemo(
         () =>
             state.statisticalReports && state.statisticalReports.length > 0
-                ? state.statisticalReports.map(({ id, name, description, is_active }, index) => ({
+                ? state.statisticalReports.map(({ id, user_id, name, type, period, description, is_active }, index) => ({
                     index: index + 1,
                     key: id,
+                    user_id,
                     name,
+                    type,
+                    period,
                     description,
                     is_active,
                 }))
@@ -149,7 +160,7 @@ const StatisticalReports = () => {
                         icon: <FaPlus className="text-[18px]" />,
                         // permission: EPermissions.CREATE_STATISTICALREPORT,
                         text: "Thêm mới",
-                        onClick: () => navigate("/statistical_reports/create"),
+                        onClick: () => navigate("create"),
                     },
                 ]}
             />

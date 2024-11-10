@@ -6,7 +6,6 @@ import { ColumnsType } from "antd/es/table";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
-import { setFilter } from "@/services/store/role/role.slice";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
@@ -14,9 +13,10 @@ import { useEffect, useMemo, useState } from "react";
 import { changeStatusStaff, deleteStaff, getAllStaff } from "@/services/store/account/account.thunk";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
-import { IAccountInitialState, resetStatus } from "@/services/store/account/account.slice";
+import { IAccountInitialState, resetStatus, setFilter } from "@/services/store/account/account.slice";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
+import CustomerAvatar from "@/components/common/CustomerAvatar";
 
 const Staffs = () => {
   const navigate = useNavigate();
@@ -35,6 +35,9 @@ const Staffs = () => {
     {
       dataIndex: "avatar",
       title: "Ảnh đại diện",
+      render(_, record) {
+        return <CustomerAvatar src={record.avatar} alt={"Ảnh đại diện"} />;
+      },
     },
     {
       dataIndex: "email",
@@ -83,6 +86,7 @@ const Staffs = () => {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteStaff(record?.key));
+        dispatch(getAllStaff({ query: state.filter }));
       },
       permission: EPermissions.DESTROY_STAFF,
     },
@@ -97,17 +101,17 @@ const Staffs = () => {
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.staffs)
-      ? state.staffs.map(({ id_user, name, type, role_name, avatar, email, phone, account_ban_at }, index) => ({
-        index: index + 1,
-        key: id_user,
-        name,
-        avatar,
-        email,
-        type,
-        role_name,
-        phone,
-        account_ban_at,
-      }))
+      ? state.staffs.map(({ id, name, type, role_name, avatar, email, phone, account_ban_at }, index) => ({
+          index: index + 1,
+          key: id,
+          name,
+          avatar,
+          email,
+          type,
+          role_name,
+          phone,
+          account_ban_at,
+        }))
       : [];
   }, [JSON.stringify(state.staffs)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -117,7 +121,6 @@ const Staffs = () => {
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
       dispatch(changeStatusStaff(String(confirmItem.key)));
-      dispatch(getAllStaff({ query: state.filter }));
     }
   };
 

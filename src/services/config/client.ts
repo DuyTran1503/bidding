@@ -8,6 +8,7 @@ export const client = {
     accessToken: () => {
       try {
         return JSON.parse(localStorage.getItem("accessToken") as string);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         return "";
       }
@@ -15,6 +16,7 @@ export const client = {
     refreshToken: () => {
       try {
         return JSON.parse(localStorage.getItem("refreshToken") as string);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         return "";
       }
