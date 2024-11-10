@@ -108,6 +108,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
       }
     }
     console.log("log1");
+    console.log("log2");
 
     return idsForKeys;
   };
