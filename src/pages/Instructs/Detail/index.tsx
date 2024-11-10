@@ -11,6 +11,7 @@ import { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import ActionModule from "../ActionModule";
+import IntroductionForm from "@/pages/Introductions/ActionMoudle";
 
 const DetailInstruct = () => {
   const { id } = useParams();
@@ -52,7 +53,7 @@ const DetailInstruct = () => {
           },
         ]}
       />
-      {state.instruct && <ActionModule type={EPageTypes.UPDATE} formikRef={formikRef} instruct={state.instruct} />}
+      {state.instruct && <IntroductionForm type={EPageTypes.UPDATE} formikRef={formikRef} instruct={state.instruct} />}
     </>
   );
 };

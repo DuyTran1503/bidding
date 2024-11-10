@@ -35,7 +35,7 @@ const CreateIntroduction = () => {
   return (
     <>
       <Heading
-        title="Tạo mới nhân viên"
+        title="Tạo mới giới thiệu"
         hasBreadcrumb
         buttons={[
           {

@@ -14,6 +14,7 @@ import { IEmployeeInitialState, resetStatus } from "@/services/store/employee/em
 import { IInstruct } from "@/services/store/instruct/instruct.mode";
 import { IInstructInitialState } from "@/services/store/instruct/instruct.slice";
 import { getInstructById } from "@/services/store/instruct/instruct.thunk";
+import IntroductionForm from "@/pages/Introductions/ActionMoudle";
 
 const UpdateInstruct = () => {
   const { id } = useParams();
@@ -61,7 +62,7 @@ const UpdateInstruct = () => {
           },
         ]}
       />
-      {state.instruct && <ActionModule type={EPageTypes.UPDATE} formikRef={formikRef} instruct={state.instruct} />}
+      {state.instruct && <IntroductionForm type={EPageTypes.UPDATE} formikRef={formikRef} instruct={state.instruct} />}
     </>
   );
 };

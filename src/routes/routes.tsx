@@ -84,6 +84,10 @@ import Instructs from "@/pages/Instructs";
 import StatisticalEnterprise from "@/pages/Enterprise/Statistical";
 import CreateIntroduction from "@/pages/Introductions/Create";
 import CreateInstruct from "@/pages/Instructs/Create";
+import UpdateInstruct from "@/pages/Instructs/Update";
+import DetailInstruct from "@/pages/Instructs/Detail";
+import UpdateIntroduction from "@/pages/Introductions/Update";
+import DetailIntroduction from "@/pages/Introductions/Detail";
 
 export interface IRoute {
   path: string;
@@ -553,14 +557,14 @@ export const routes: IRoute[] = [
                 path: "/create",
                 element: () => <CreateIntroduction />,
               },
-              // {
-              //   path: "/update/:id",
-              //   element: () => <UpdateEmployee />,
-              // },
-              // {
-              //   path: "/detail/:id",
-              //   element: () => <DetailEmployee />,
-              // },
+              {
+                path: "/update/:id",
+                element: () => <UpdateIntroduction />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailIntroduction />,
+              },
             ],
           },
           {
@@ -576,11 +580,11 @@ export const routes: IRoute[] = [
               },
               {
                 path: "/update/:id",
-                element: () => <UpdateEmployee />,
+                element: () => <UpdateInstruct />,
               },
               {
                 path: "/detail/:id",
-                element: () => <DetailEmployee />,
+                element: () => <DetailInstruct />,
               },
             ],
           },

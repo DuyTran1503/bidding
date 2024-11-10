@@ -34,21 +34,21 @@ const Introductions = () => {
       onClick(record) {
         navigate(`/introductions/detail/${record?.key}`);
       },
-      permission: EPermissions.DETAIL_INTRODUCTION,
+      // permission: EPermissions.DETAIL_INTRODUCTION,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/introductions/update/${record?.key}`);
       },
-      permission: EPermissions.UPDATE_INTRODUCTION,
+      // permission: EPermissions.UPDATE_INTRODUCTION,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteFundingSources(record?.key));
       },
-      permission: EPermissions.DESTROY_INTRODUCTION,
+      // permission: EPermissions.DESTROY_INTRODUCTION,
     },
   ];
 

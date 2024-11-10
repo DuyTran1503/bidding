@@ -29,14 +29,14 @@ const Instructs = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/instruct/detail/${record?.key}`);
+        navigate(`/instructs/detail/${record?.key}`);
       },
       // permission: EPermissions.DETAIL_INSTRUCT,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/instruct/update/${record?.key}`);
+        navigate(`/instructs/update/${record?.key}`);
       },
       // permission: EPermissions.UPDATE_INSTRUCT,
     },

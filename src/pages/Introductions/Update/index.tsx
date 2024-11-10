@@ -13,7 +13,7 @@ import { IoClose, IoSaveOutline } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import IntroductionForm from "../ActionMoudle";
 
-const UpdateEmployee = () => {
+const UpdateIntroduction = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IIntroduction>>(null);
@@ -64,4 +64,4 @@ const UpdateEmployee = () => {
   );
 };
 
-export default UpdateEmployee;
+export default UpdateIntroduction;

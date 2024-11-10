@@ -11,7 +11,7 @@ import { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import IntroductionForm from "../ActionMoudle";
-const DetailEmployee = () => {
+const DetailIntroduction = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IIntroduction>>(null);
@@ -56,4 +56,4 @@ const DetailEmployee = () => {
   );
 };
 
-export default DetailEmployee;
+export default DetailIntroduction;
