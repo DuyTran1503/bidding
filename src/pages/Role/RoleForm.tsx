@@ -107,7 +107,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
         idsForKeys.push(matchingPair.id);
       }
     }
-    console.log(mappingKeyWithId);
+    console.log("log1");
 
     return idsForKeys;
   };
