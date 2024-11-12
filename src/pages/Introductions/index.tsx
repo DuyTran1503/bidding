@@ -69,14 +69,14 @@ const Introductions = () => {
     },
     {
       title: "Trạng thái",
-      dataIndex: "is_active",
+      dataIndex: "is_use",
       className: "w-[150px]",
 
       render(_, record) {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record)}
-            checked={!!record.is_active}
+            checked={!!record.is_use}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
         );

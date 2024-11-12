@@ -22,7 +22,7 @@ interface IIntroductionFormProps {
 export interface IIntroductionInitialValues {
   id?: string;
   introduction: string;
-  is_use: string;
+  is_use: string ;
 }
 
 const IntroductionForm = ({ formikRef, type, introduction }: IIntroductionFormProps) => {
@@ -69,14 +69,14 @@ const IntroductionForm = ({ formikRef, type, introduction }: IIntroductionFormPr
             </Row>
             <Row gutter={[24, 24]}>
             <Col xs={24} sm={24} className="mb-4">
-                <FormGroup title="Trạng thái hoạt động">
-                  <FormSwitch
-                    checked={!!values.is_use ? true : false}
-                    onChange={(value) => {  
-                      setFieldValue("is_use", value);
-                    }}
-                  />
-                </FormGroup>
+              <FormGroup title="Trạng thái hoạt động">
+                <FormSwitch
+                  checked={!!values.is_use ? true : false}
+                  onChange={(value) => {  
+                    setFieldValue("is_use", value);
+                  }}
+                />
+              </FormGroup>
               </Col>
             </Row>
           </>
