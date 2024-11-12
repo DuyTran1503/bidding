@@ -102,6 +102,7 @@ const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) =
                                         placeholder="Nhập doanh nghiệp"
                                         id="enterprise_id"
                                         value={values.enterprise_id}
+                                        error={touched.enterprise_id ? errors.enterprise_id : ""}
                                         onChange={(e) => setFieldValue("enterprise_id", e)}
                                         options={convertDataOptions(stateEnterprise.listEnterprise || [])}
                                     />
@@ -113,26 +114,27 @@ const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) =
                                         placeholder="Nhập dự án"
                                         id="project_id"
                                         value={values.project_id}
+                                        error={touched.project_id ? errors.project_id : ""}
                                         onChange={(e) => setFieldValue("project_id", e)}
                                         options={convertDataOptions(stateProject.listProjects || [])}
                                     />
                                 </FormGroup>
                             </Col>
-                            <Col xs={24} sm={24} md={24} xl={24}>
-                                <FormGroup title="Tên danh mục bài viết">
+                            <Col xs={24} sm={24} md={12} xl={12}>
+                                <FormGroup title="Tiêu đề">
                                     <FormInput
                                         type="text"
                                         isDisabled={type === "view"}
-                                        value={values.title}
-                                        name="title"
-                                        error={touched.title ? errors.title : ""}
-                                        placeholder="Nhập tên danh mục bài viết..."
-                                        onChange={(value) => setFieldValue("title", value)}
+                                        value={values.evaluate}
+                                        name="evaluate"
+                                        error={touched.evaluate ? errors.evaluate : ""}
+                                        placeholder="Nhập tiêu đề..."
+                                        onChange={(value) => setFieldValue("evaluate", value)}
                                         onBlur={handleBlur}
                                     />
                                 </FormGroup>
                             </Col>
-                            <Col xs={24} sm={24} md={24} xl={24}>
+                            <Col xs={24} sm={24} md={12} xl={12}>
                                 <FormGroup title="Điểm">
                                     <FormInput
                                         type="number"
@@ -147,15 +149,15 @@ const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) =
                                 </FormGroup>
                             </Col>
                             <Col xs={24} sm={24} md={24} xl={24}>
-                                <FormGroup title="Tên danh mục bài viết">
+                                <FormGroup title="Tiêu đề dài">
                                     <FormInput
                                         type="text"
                                         isDisabled={type === "view"}
-                                        value={values.evaluate}
-                                        name="evaluate"
-                                        error={touched.evaluate ? errors.evaluate : ""}
-                                        placeholder="Nhập tên danh mục bài viết..."
-                                        onChange={(value) => setFieldValue("evaluate", value)}
+                                        value={values.title}
+                                        name="title"
+                                        error={touched.title ? errors.title : ""}
+                                        placeholder="Nhập tiêu đề dài..."
+                                        onChange={(value) => setFieldValue("title", value)}
                                         onBlur={handleBlur}
                                     />
                                 </FormGroup>

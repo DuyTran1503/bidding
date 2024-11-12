@@ -72,7 +72,6 @@ import Posts from "@/pages/Posts/Posts/Posts";
 import CreatePost from "@/pages/Posts/CreatePost/CreatePost";
 import UpdatePost from "@/pages/Posts/UpdatePost/UpdatePost";
 import DetailPost from "@/pages/Posts/DetailPost/DetailPost";
-import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult/DetailBiddingResult";
 import Supports from "@/pages/Supports/Supports/Supports";
 import BidBonds from "@/pages/BidBond";
 import EvaluationCriteria from "@/pages/EvaluationCriteria";
@@ -365,10 +364,6 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <BiddingResults />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailBiddingResult />,
               },
             ],
           },

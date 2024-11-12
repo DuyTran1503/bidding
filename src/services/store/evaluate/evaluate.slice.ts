@@ -10,7 +10,6 @@ import {
   deleteEvaluate, 
   getEvaluateById, 
 } from "./evaluate.thunk";
-import { transformPayloadErrors } from '@/shared/utils/common/function';
 import { IError } from '@/shared/interface/error';
 
 export interface IEvaluateInitialState extends IInitialState {
@@ -56,7 +55,7 @@ const evaluateSlice = createSlice({
       getEvaluateById.fulfilled, (state, { payload }: PayloadAction<IResponse<IEvaluate> | any>) => {
         if (payload.data) {
           state.activeEvaluate = payload.data;
-          state.message = transformPayloadErrors(payload?.errors);
+          state.message = payload.message;
         }
       }
     );
@@ -75,7 +74,7 @@ const evaluateSlice = createSlice({
       })
       .addCase(createEvaluate.rejected, (state, {payload}: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.message);
+        state.message = payload.message;
       });
     // ? Update bidding type
     builder
@@ -94,7 +93,7 @@ const evaluateSlice = createSlice({
       })
       .addCase(updateEvaluate.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message;
       });
     // ? Delete bidding type
     builder
@@ -108,7 +107,7 @@ const evaluateSlice = createSlice({
       })
       .addCase(deleteEvaluate.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message;
       });
   },
 });

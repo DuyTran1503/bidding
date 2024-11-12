@@ -40,6 +40,7 @@ const Evaluates = () => {
         {
             dataIndex: "index",
             title: "STT",
+            className: "w-4",
         },
         {
             dataIndex: "evaluate",

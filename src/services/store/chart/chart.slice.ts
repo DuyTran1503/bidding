@@ -89,6 +89,7 @@ const chartSlice = createSlice({
   extraReducers: (builder) => {
     const pendingReducer = (state: IChartInitialState) => {
       state.status = EFetchStatus.PENDING;
+      state.loading = true;
     };
 
     const fulfilledReducer = (state: IChartInitialState, payload: any, message: string, key: keyof IChartInitialState) => {
@@ -97,6 +98,7 @@ const chartSlice = createSlice({
       if (payload) {
         state[key] = payload;
       }
+      state.loading = false;
     };
 
     const rejectedReducer = (state: IChartInitialState, payload: any) => {
@@ -105,9 +107,11 @@ const chartSlice = createSlice({
     };
 
     // chart project-by-fundingsource
-    builder.addCase(projectByIndustry.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+    builder
+    .addCase(projectByIndustry.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
       state.industryData = payload;
       state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
     })
     .addCase(projectByIndustry.rejected, (state, action) => {
       state.status = EFetchStatus.REJECTED;
@@ -258,13 +262,13 @@ const chartSlice = createSlice({
       fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Construction Time)", 'timeJoiningWebsiteOfEnterprise'))
     .addCase(timeJoiningWebsiteOfEnterprise.rejected, (state, { payload }) => rejectedReducer(state, payload))
 
-// projects-status-per-month
+    // projects-status-per-month
     .addCase(projectsStatusPreMonth.pending, pendingReducer)
     .addCase(projectsStatusPreMonth.fulfilled, (state, { payload }) => 
       fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Construction Time)", 'projectsStatusPreMonth'))
     .addCase(projectsStatusPreMonth.rejected, (state, { payload }) => rejectedReducer(state, payload))
 
-// industry-has-the-most-project
+    // industry-has-the-most-project
     .addCase(industryHasTheMostProject.pending, pendingReducer)
     .addCase(industryHasTheMostProject.fulfilled, (state, { payload }) => 
       fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Construction Time)", 'industryHasTheMostProject'))

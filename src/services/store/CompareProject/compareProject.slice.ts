@@ -46,6 +46,7 @@ const compareProjectSlice = createSlice({
   extraReducers: (builder) => {
     const pendingReducer = (state: ICompareProjectInitialState) => {
       state.status = EFetchStatus.PENDING;
+      state.loading = true;
     };
 
     const fulfilledReducer = (state: ICompareProjectInitialState, payload: any, message: string, key: keyof ICompareProjectInitialState) => {
@@ -54,6 +55,7 @@ const compareProjectSlice = createSlice({
       if (payload) {
         state[key] = payload;
       }
+      state.loading = false;
     };
 
     const rejectedReducer = (state: ICompareProjectInitialState, payload: any) => {

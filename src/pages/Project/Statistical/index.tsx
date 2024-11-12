@@ -20,10 +20,12 @@ import {
 import Button from "@/components/common/Button";
 import { ICompareProjectInitialState } from "@/services/store/CompareProject/compareProject.slice";
 import { projectByFundingsource, projectByIndustry } from "@/services/store/chart/chart.thunk";
-import { Col, message, Row } from "antd";
+import { Col, message, Row, Spin } from "antd";
 import TableChart from "@/components/chart/TableChart";
 import { ICompareProject } from "@/services/store/CompareProject/compareProject.model";
 import ProjectDetail from "@/components/chart/ProjectTable";
+import { RootStateType } from "@/services/reducers";
+import { useSelector } from "react-redux";
 
 const Statistical: React.FC = () => {
   const { state: stateChart, dispatch: dispatchChart } = useArchive<IChartInitialState>("chart");
@@ -33,6 +35,7 @@ const Statistical: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const treeSelectIdsRef = useRef<string[]>([]);
   const previousIdRef = useRef<string | undefined>(undefined);
+  const loading = useSelector((state: RootStateType) => state.chart.loading);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -147,7 +150,13 @@ const Statistical: React.FC = () => {
   }, [stateCompare.comparePieChartTotalAmount]);
 
   // console.log(stateCompare.detailProjectByIds);
-
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-lvh">
+        <Spin tip="Loading..." size="large" />
+      </div>
+    );
+  }
   const projectId = stateProject.project?.id;
   const tabItems = useMemo(
     () => [

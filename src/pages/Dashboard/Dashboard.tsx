@@ -25,7 +25,7 @@ import {
   topTendersByProjectTotalAmount,
 } from "@/services/store/chart/chart.thunk";
 import Heading from "@/components/layout/Heading";
-import { Col, Row, Select } from "antd";
+import { Col, Row, Select, Spin } from "antd";
 import { Link } from "react-router-dom";
 import ChartSection from "@/components/chart/ChartSection";
 import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
@@ -34,34 +34,35 @@ import { IIndustryInitialState } from "@/services/store/industry/industry.slice"
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import TopEnterpriseChart from "./TopEnterpriseChart";
 import GenericChart from "@/components/chart/GenericChart";
+import { useSelector } from "react-redux";
+import { RootStateType } from "@/services/reducers";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Dashboard: React.FC = () => {
   const { state, dispatch } = useArchive<IChartInitialState>("chart");
-  // const { state, dispatch } = useArchive<IChartInitialState>("chart");
   const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
   const [selectedYear, setSelectedYear] = useState<string>(yearOptions[0]);
-
   const [selectedFundingSource, setSelectedFundingSource] = useState<string>();
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
+  const loading = useSelector((state: RootStateType) => state.chart.loading);
 
   useEffect(() => {
-    dispatch(projectByIndustry({}));
-    dispatch(projectByFundingsource({}));
-    dispatch(averageProjectPurationByIndustry({}));
-    dispatch(projectByDomestic({}));
-    dispatch(projectByOrganizationType({}));
-    dispatch(projectBySelectionMethod({}));
-    dispatch(projectBySubmissionMethod({}));
-    dispatch(projectByTendererInvestor({}));
-    dispatch(topTendersByProjectCount({}));
-    dispatch(topTendersByProjectTotalAmount({}));
-    dispatch(topInvestorsByProjectPartial({}));
-    dispatch(topInvestorsByProjectFull({}));
-    dispatch(topInvestorsByProjectTotalAmount({}));
-    dispatchFundingSource(getListFundingSource());
-    dispatchIndustry(getIndustries());
+        dispatch(projectByIndustry({})),
+        dispatch(projectByFundingsource({})),
+        dispatch(averageProjectPurationByIndustry({})),
+        dispatch(projectByDomestic({})),
+        dispatch(projectByOrganizationType({})),
+        dispatch(projectBySelectionMethod({})),
+        dispatch(projectBySubmissionMethod({})),
+        dispatch(projectByTendererInvestor({})),
+        dispatch(topTendersByProjectCount({})),
+        dispatch(topTendersByProjectTotalAmount({})),
+        dispatch(topInvestorsByProjectPartial({})),
+        dispatch(topInvestorsByProjectFull({})),
+        dispatch(topInvestorsByProjectTotalAmount({})),
+        dispatchFundingSource(getListFundingSource()),
+        dispatchIndustry(getIndustries());
   }, []);
 
   useEffect(() => {
@@ -115,7 +116,13 @@ const Dashboard: React.FC = () => {
   const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
   const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
   const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
-
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-lvh">
+        <Spin tip="Loading..." size="large" />
+      </div>
+    );
+  }
   return (
     <>
       <Heading title="Tổng quan về đấu thầu" hasBreadcrumb />
