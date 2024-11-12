@@ -45,7 +45,7 @@ export interface IWorkProgressInitialValues {
 const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormProps) => {
   const { dispatch: dispatchWorkProgress } = useArchive<IWorkProgressInitialState>("work_progress");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  // const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
+  const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
 
   const initialValues: IWorkProgressInitialValues = {
     id: workProgress?.id ?? "",
@@ -77,7 +77,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
   }, []);
   useEffect(() => {
     dispatchProject(getListProject());
-    // dispatchTask(getListTask())
+    dispatchTask(getListTask())
   }, []);
 
   return (
@@ -137,7 +137,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              {/* <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Nhiệm vụ">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -151,7 +151,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     options={convertDataOptions(stateTask?.listTasks || [])}
                   />
                 </FormGroup>
-              </Col> */}
+              </Col> 
             </Row>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">

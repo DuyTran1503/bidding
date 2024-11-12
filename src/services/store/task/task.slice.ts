@@ -69,7 +69,7 @@ const taskSlice = createSlice({
       })
       .addCase(createTask.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message
       });
     // ? Update bidding type
     builder

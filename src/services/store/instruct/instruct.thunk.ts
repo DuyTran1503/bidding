@@ -55,7 +55,7 @@ export const changeStatusInstruct = createAsyncThunk(
   "instructs/change-status-instructs",
   async (id: string, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
+      const { response, data } = await client.put(`${prefix}/${id}/toggle-status`);
       return response.status >= 400 ? rejectWithValue(data) : id;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
