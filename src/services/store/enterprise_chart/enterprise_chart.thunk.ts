@@ -35,3 +35,25 @@ export const getEmployeeProjectStatistic = createAsyncThunk(
     }
   },
 );
+export const getAverageDifficultyLevelTasks = createAsyncThunk(
+  "enterprises/average-difficulty-level-tasks-by-enterprise",
+  async (payload: IThunkPayload, { rejectWithValue }) => {
+    try {
+      const { response, data } = await client.post(prefix + "average-difficulty-level-tasks-by-enterprise", payload);
+      return response.status >= 400 ? rejectWithValue(data) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+export const getEmployeeQuantityStatistic = createAsyncThunk(
+  "enterprises/employee-qty-statistic-by-enterprise",
+  async (payload: IThunkPayload, { rejectWithValue }) => {
+    try {
+      const { response, data } = await client.post(prefix + "employee-qty-statistic-by-enterprise", payload);
+      return response.status >= 400 ? rejectWithValue(data) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
