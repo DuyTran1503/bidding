@@ -14,3 +14,7 @@ export interface IBiddingStatistic {
   tendererProjectCount: number;
   investorProjectCount: number;
 }
+export interface INumberOfEmployeeEnterprise {
+  enterprise: string;
+  quantityEmployee: number;
+}
