@@ -206,13 +206,21 @@ const GenericChart: React.FC<GenericChartProps> = ({
     const chartDom = chartRef.current;
     if (!chartDom) return;
 
+    // Initialize the chart
     const myChart = echarts.init(chartDom);
     myChart.setOption(option);
+
     const handleResize = () => {
       myChart.resize();
     };
 
     window.addEventListener("resize", handleResize);
+
+    // Cleanup function to dispose of the chart instance
+    return () => {
+      myChart.dispose(); // Dispose of the chart
+      window.removeEventListener("resize", handleResize); // Clean up the event listener
+    };
   }, [option]);
 
   return <div className="mt-4 flex h-[60vh] w-full items-center justify-center" ref={chartRef}></div>;
