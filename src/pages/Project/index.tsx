@@ -223,6 +223,7 @@ const ProjectPage = () => {
         data={data}
         search={search}
         buttons={buttons}
+        isManyAction={true}
         pagination={{
           current: stateProject.filter.page ?? 1,
           pageSize: stateProject.filter.size ?? 10,
