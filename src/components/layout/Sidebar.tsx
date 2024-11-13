@@ -254,7 +254,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "5.9",
-          label: "Câu hỏi/ Câu trả lời",
+          label: "Câu hỏi và Câu trả lời",
           path: "questions-answers",
           // permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
         },
