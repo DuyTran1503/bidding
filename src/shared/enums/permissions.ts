@@ -222,4 +222,11 @@ export enum EPermissions {
   DETAIL_INSTRUCT = "detail_instruct",
   UPDATE_INSTRUCT = "update_instruct",
   DESTROY_INSTRUCT = "destroy_instruct",
+
+  // Dannh tiếng
+  LIST_REPUTATION = "list_reputation",
+  CREATE_REPUTATION = "create_reputation",
+  DETAIL_REPUTATION = "detail_reputation",
+  UPDATE_REPUTATION = "update_reputation",
+  DESTROY_REPUTATION = "destroy_reputation",
 }

@@ -81,6 +81,7 @@ import EvaluationCriteria from "@/pages/EvaluationCriteria";
 import Statistical from "@/pages/Project/Statistical/index";
 import Introductions from "@/pages/Introductions";
 import Instructs from "@/pages/Instructs";
+import Reputation from "@/pages/Reputations";
 
 export interface IRoute {
   path: string;
@@ -583,6 +584,15 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <FeedbackComplaints />,
+              },
+            ],
+          },
+          {
+            path: "reputations",
+            pages: [
+              {
+                path: "/",
+                element: () => <Reputation />,
               },
             ],
           },

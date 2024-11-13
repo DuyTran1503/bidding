@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import React from "react";
 
 export interface ISearchTypeTable {
-  type: "text" | "select" | "treeSelect" | "datetime";
+  type: "text" | "select" | "treeSelect" | "datetime" ;
   value?: string;
   onChange?: (value: string | string[]) => void;
   isMultiple?: boolean;

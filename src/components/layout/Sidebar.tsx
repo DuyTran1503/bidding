@@ -128,6 +128,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "selection-methods",
           permissions: EPermissions.LIST_SELECTION_METHOD,
         },
+        {
+          id: "2.8",
+          label: "Danh tiếng",
+          path: "reputations",
+          // permissions: EPermissions.LIST_REPUTATION,
+        },
       ],
     },
     {

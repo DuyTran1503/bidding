@@ -27,5 +27,6 @@ export enum EPageNames {
   "questions_answers" = "Câu Hỏi/Trả lời",
   "feedbacks_complaints" = "Phản hồi và Khiếu nại",
   "instructs" = "Hướng dẫn",
-  "introductions" = "Giới thiệu"
+  "introductions" = "Giới thiệu",
+  "reputations" = "Danh tiếng"
 }
