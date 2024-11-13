@@ -58,25 +58,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     },
     {
       id: "2",
-      label: "Tin tức",
-      icon: { component: IoNewspaperOutline },
-      items: [
-        {
-          id: "2.1",
-          label: "Danh mục bài viết",
-          path: "post-catalogs",
-          // permissions: EPermissions.LIST_POST_CATALOG,
-        },
-        {
-          id: "2.2",
-          label: "Bài viết",
-          path: "posts",
-          // permissions: EPermissions.LIST_POST,
-        },
-      ],
-    },
-    {
-      id: "2",
       label: "Doanh nghiệp",
       icon: { component: IoBusinessOutline },
       items: [
@@ -130,6 +111,26 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
       ],
     },
+    {
+      id: "9",
+      label: "Tin tức",
+      icon: { component: IoNewspaperOutline },
+      items: [
+        {
+          id: "9.1",
+          label: "Danh mục bài viết",
+          path: "post-catalogs",
+          // permissions: EPermissions.LIST_POST_CATALOG,
+        },
+        {
+          id: "9.2",
+          label: "Bài viết",
+          path: "posts",
+          // permissions: EPermissions.LIST_POST,
+        },
+      ],
+    },
+
     {
       id: "3",
       label: "Dự án",
@@ -254,7 +255,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "5.9",
-          label: "Câu hỏi và Câu trả lời",
+          label: "Câu hỏi/ Câu trả lời",
           path: "questions-answers",
           // permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
         },

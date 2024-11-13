@@ -22,11 +22,14 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
+import GenericChart from "@/components/chart/GenericChart";
+import { IChartInitialState } from "@/services/store/chart/chart.slice";
 
 const Enterprise = () => {
   const navigate = useNavigate();
   const { state: enterpriseState, dispatch: enterpriseDispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: industryState, dispatch: industryDispatch } = useArchive<IIndustryInitialState>("industry");
+  const { state, dispatch } = useArchive<IChartInitialState>("chart");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const industry = (value: number[]) => {
@@ -104,7 +107,7 @@ const Enterprise = () => {
     {
       title: "Trạng thái",
       dataIndex: "is_active",
-      className: "w-[150px]",
+      className: "w-[105px]",
       render(_, record, index) {
         return (
           <div key={index} className="flex flex-col gap-2">
@@ -135,11 +138,68 @@ const Enterprise = () => {
       permission: EPermissions.UPDATE_ENTERPRISE,
     },
     {
+      type: EButtonTypes.STATISTICAL,
+      onClick(record) {
+        navigate(`/enterprise/statistical/${record?.key}`);
+      },
+    },
+    {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         enterpriseDispatch(deleteEnterprise(record?.key));
       },
       permission: EPermissions.DESTROY_ENTERPRISE,
+    },
+  ];
+  const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
+  const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
+  const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
+  const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
+  const additionalTabs = [
+    {
+      key: "1",
+      label: "Doanh nghiệp theo ngành nghề",
+      content: (
+        <GenericChart
+          name={state.industryHasTheMostEnterprise.map(({ industry }) => industry)}
+          value={state.industryHasTheMostEnterprise.map(({ total_enterprise }) => total_enterprise)}
+          chartType="bar"
+          title="Biểu đồ số lượng dự án phân bổ theo ngành nghề"
+        />
+      ),
+    },
+    {
+      key: "2",
+      label: "Biểu đồ thời gian gia nhập theo năm",
+      content: (
+        <GenericChart
+          name={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
+          value={Object.values(state.timeJoiningWebsiteOfEnterprise).map(({ value }) => value)}
+          chartType="line"
+          seriesName="Dữ liệu theo tháng"
+          title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
+          tooltipEnabled
+          legendPosition="bottom"
+        />
+      ),
+    },
+    {
+      key: "3",
+      label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
+      content: (
+        <GenericChart
+          name={names}
+          chartType="area" // Loại biểu đồ là area
+          title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+          tooltipEnabled
+          legendPosition="bottom"
+          series={[
+            { name: "Hoàn thành", data: completedValues },
+            { name: "Phê duyệt", data: approvedValues },
+            { name: "Mở thầu", data: openedBiddingValues },
+          ]}
+        />
+      ),
     },
   ];
   const search: ISearchTypeTable[] = [
@@ -225,6 +285,10 @@ const Enterprise = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
+<<<<<<< HEAD
+=======
+
+>>>>>>> c9843c114bb21f52324f28d188c3ec3bcb431663
   return (
     <>
       <Heading
@@ -266,7 +330,9 @@ const Enterprise = () => {
         }}
         setFilter={setFilter}
         filter={enterpriseState.filter}
-        scroll={{ x: 2100 }}
+        scroll={{ x: 3200 }}
+        tabLabel="Tổng quan"
+        additionalTabs={additionalTabs}
       />
     </>
   );
