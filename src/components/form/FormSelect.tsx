@@ -9,7 +9,7 @@ interface IFormSelect {
   defaultValue?: number[] | string[] | string | number;
   value?: string | string[] | number[];
   isMultiple?: boolean;
-  error?: string | string[  ];
+  error?: string | string[];
   isDisabled?: boolean;
   onChange?: (value: string | string[]) => void;
   id?: string;

@@ -25,7 +25,7 @@ import {
   topTendersByProjectTotalAmount,
 } from "@/services/store/chart/chart.thunk";
 import Heading from "@/components/layout/Heading";
-import { Col, message, Row, Select } from "antd";
+import { Col, message, Row, Select, Spin } from "antd";
 import { Link } from "react-router-dom";
 import ChartSection from "@/components/chart/ChartSection";
 import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
@@ -139,13 +139,13 @@ const Dashboard: React.FC = () => {
   const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
   const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
   const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
-  // if (loading) {
-  //   return (
-  //     <div className="flex items-center justify-center h-lvh">
-  //       <Spin tip="Loading..." size="large" />
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-lvh">
+        <Spin tip="Loading..." size="large" />
+      </div>
+    );
+  }
   return (
     <>
       <Heading title="Tổng quan về đấu thầu" hasBreadcrumb />
