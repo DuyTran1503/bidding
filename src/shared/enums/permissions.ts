@@ -211,7 +211,7 @@ export enum EPermissions {
 
   //Giới thiệu 
   LIST_INTRODUCTION = "list_introduction",
-  CREATE_INTRODUCT = "create_introduction",
+  CREATE_INTRODUCTION = "create_introduction",
   DETAIL_INTRODUCTION = "detail_introduction",
   UPDATE_INTRODUCTION = "update_introduction",
   DESTROY_INTRODUCTION = "destroy_introduction",

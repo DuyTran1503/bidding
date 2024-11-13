@@ -74,7 +74,9 @@ const insTructSlice = createSlice({
       })
       .addCase(createInstruct.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message;
+        // console.log(payload.message);
+        
       });
     builder
       .addCase(updateInstruct.pending, (state) => {
@@ -99,7 +101,9 @@ const insTructSlice = createSlice({
       })
       .addCase(changeStatusInstruct.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message =payload.message;
+        
+        
       });
     // ? Delete tag
     builder

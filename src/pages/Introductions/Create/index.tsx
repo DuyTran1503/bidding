@@ -13,6 +13,7 @@ import { EPageTypes } from "@/shared/enums/page";
 import { FormikProps } from "formik";
 import { useRef } from "react";
 import IntroductionForm from "../ActionMoudle";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const CreateIntroduction = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const CreateIntroduction = () => {
             isLoading: state.status === EFetchStatus.PENDING,
             text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
-            // permission: EPermissions.CREATE_EMPLOYEE,
+            // permission: EPermissions.CREATE_INTRODUCTION,
             onClick: () => {
               formikRef && formikRef.current && formikRef.current.handleSubmit();
             },

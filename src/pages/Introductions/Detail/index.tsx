@@ -10,11 +10,11 @@ import { FormikProps } from "formik";
 import { useEffect, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
-import IntroductionForm from "../ActionMoudle";
+import IntroductionForm, { IIntroductionInitialValues } from "../ActionMoudle";
 const DetailIntroduction = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IIntroduction>>(null);
+  const formikRef = useRef<FormikProps<IIntroductionInitialValues>>(null);
   const { state, dispatch } = useArchive<IIntroductionInitialState>("introduction");
 
   useFetchStatus({
