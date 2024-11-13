@@ -16,6 +16,7 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IBidDocumentInitialState, resetStatus, setFilter } from "@/services/store/bid_document/bid_document.slice";
 import { changeStatusBidDocument, deleteBidDocument, getAllBidDocument } from "@/services/store/bid_document/bid_document.thunk";
 import CommonSwitch from "@/components/common/CommonSwitch";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const BidDocument = () => {
   const navigate = useNavigate();
@@ -27,57 +28,57 @@ const BidDocument = () => {
     {
       dataIndex: "index",
       title: "STT",
-      className: "w-[100px]",
+      className: "max-w-[80px]",
     },
     {
-      dataIndex: "id_project",
+      dataIndex: "project_id",
       title: "Dự án",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
-      dataIndex: "id_enterprise",
+      dataIndex: "enterprise_id",
       title: "Doanh nghiệp",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
-      dataIndex: "id_bid_bond",
+      dataIndex: "bid_bond_id",
       title: "Bảo lãnh dự thầu",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "submission_date",
       title: "Ngày nộp hồ sơ",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "bid_price",
       title: "Giá thầu",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "implementation_time",
       title: "Thời gian thực hiện",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "technical_score",
       title: "Điểm kỹ thuật",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "financial_score",
       title: "Điểm tài chính",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "totalScore",
       title: "Tổng điểm",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     {
       dataIndex: "ranking",
       title: "Thứ hạng",
-      className: "w-[250px]",
+      className: "max-w-[250px]",
     },
     // {
     //   dataIndex: "status",
@@ -105,21 +106,21 @@ const BidDocument = () => {
       onClick(record) {
         navigate(`/bid-document/detail/${record?.key}`);
       },
-      // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/bid-document/update/${record?.key}`);
       },
-      // permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteBidDocument(record?.key));
       },
-      // permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
     },
   ];
   const search: ISearchTypeTable[] = [
@@ -131,13 +132,14 @@ const BidDocument = () => {
     },
   ];
   const data: ITableData[] = useMemo(() => {
-    return Array.isArray(state.bidDocuments)
-      ? state.bidDocuments.map(
+    if (state.bidDocuments && state.bidDocuments.length > 0) {
+      return state.bidDocuments
+        .map(
           (
             {
-              id_project,
-              id_enterprise,
-              id_bid_bond,
+              project_id,
+              enterprise_id,
+              bid_bond_id,
               submission_date,
               bid_price,
               implementation_time,
@@ -152,10 +154,10 @@ const BidDocument = () => {
             index,
           ) => ({
             index: index + 1,
-            key: id_project,
-            id_project,
-            id_enterprise,
-            id_bid_bond,
+            key: project_id !== undefined ? project_id : 0, // Provide a default value
+            project_id,
+            enterprise_id,
+            bid_bond_id,
             submission_date,
             bid_price,
             implementation_time,
@@ -168,7 +170,9 @@ const BidDocument = () => {
             notes,
           }),
         )
-      : [];
+        .filter((item) => item.key !== undefined); // Optionally filter out items with undefined keys
+    }
+    return [];
   }, [JSON.stringify(state.bidDocuments)]);
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);

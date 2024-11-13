@@ -44,7 +44,10 @@ export interface IRoleFormInitialValues {
   name: string;
   permissions: string[];
 }
-
+interface MappingItem {
+  key: string;
+  id: number;
+}
 const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
   const [treePermissions, setTreePermissions] = useState<DataNode[]>([]);
   const [loading, setLoading] = useState(true);
@@ -113,29 +116,36 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
 
   const getAllKeysAndIds = (permissionNodes: TreeNode[]): { key: string; id: number }[] => {
     const result: { key: string; id: number }[] = [];
-    const seenIds = new Set<number>();
 
     for (const node of permissionNodes) {
-      if (!seenIds.has(node.id!)) {
-        seenIds.add(node.id!);
-        result.push({ key: node.key, id: node.id! });
-      }
+      // Luôn thêm node vào kết quả
+      result.push({ key: node.key, id: node.id! });
 
       if (node.children && node.children.length > 0) {
         const childrenResult = getAllKeysAndIds(node.children);
-        for (const { key, id } of childrenResult) {
-          if (!seenIds.has(id)) {
-            seenIds.add(id);
-            result.push({ key, id });
-          }
-        }
+        result.push(...childrenResult); // Thêm tất cả kết quả của children vào result
       }
     }
-
     return result;
   };
   const mappingKeyWithId = getAllKeysAndIds(convertPermissionsToTree(state.permissions));
-  const updateDataChecked = mappingKeyWithId.filter((item: any) => role?.permissions.map((ele) => +ele).includes(item.id)).map((item) => item.key);
+
+  const updateDataChecked = (() => {
+    const lastItemById: Record<number, string> = {};
+
+    // Lưu phần tử cuối cùng cho mỗi ID
+    mappingKeyWithId.forEach((item: MappingItem) => {
+      lastItemById[item.id] = item.key; // Lưu key của phần tử cuối cùng
+    });
+
+    // Lọc các ID có trong quyền
+    const allowedIds = new Set(role?.permissions.map((ele) => +ele));
+
+    // Lấy key của các phần tử cuối cùng có ID trong quyền
+    return Object.entries(lastItemById)
+      .filter(([id]) => allowedIds.has(Number(id))) // Kiểm tra xem ID có trong quyền không
+      .map(([, key]) => key); // Lấy key
+  })();
 
   return (
     <Formik
@@ -153,10 +163,14 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
               )
             : [],
         };
+        const newBody = {
+          ...lodash.omit(data, "id"),
+          permissions: [...new Set(body.permissions)],
+        };
         if (type === EPageTypes.CREATE) {
-          dispatch(createRole({ body }));
+          dispatch(createRole({ body: newBody }));
         } else if (type === EPageTypes.UPDATE) {
-          const updateData = { ...body, id: role?.id };
+          const updateData = { ...newBody, id: role?.id };
           dispatch(updateRole({ body: updateData, id: role?.id }));
         }
       }}

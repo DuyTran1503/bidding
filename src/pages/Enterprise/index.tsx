@@ -16,15 +16,43 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IEnterpriseInitialState, resetStatus, setFilter } from "@/services/store/enterprise/enterprise.slice";
-import { changeStatusEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { changeStatusActiveEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
 import { EPermissions } from "@/shared/enums/permissions";
+import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
+import { getIndustries } from "@/services/store/industry/industry.thunk";
+import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
+import GenericChart from "@/components/chart/GenericChart";
+import { IChartInitialState } from "@/services/store/chart/chart.slice";
 
 const Enterprise = () => {
   const navigate = useNavigate();
-  const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { state: enterpriseState, dispatch: enterpriseDispatch } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { state: industryState, dispatch: industryDispatch } = useArchive<IIndustryInitialState>("industry");
+  const { state, dispatch } = useArchive<IChartInitialState>("chart");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+  const industry = (value: number[]) => {
+    if (industryState?.listIndustry!.length > 0 && value.length) {
+      return industryState.listIndustry!.filter((item) => value.includes(+item.id)).map((item) => item.name);
+    }
+  };
+
+  const typeOptions: IOption[] = typeEnterpriseEnumArray.map((e) => ({
+    value: e,
+    label: mappingTypeEnterprise[e],
+  }));
+  const statusOptions: IOption[] = statusEnumArray.map((e) => ({
+    value: e,
+    label: mappingStatus[e],
+  }));
+  // Hoặc sử dụng toán tử nullish coalescing
+  const industryOptions: IOption[] = industryState?.listIndustry?.length
+    ? industryState.listIndustry.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }))
+    : [];
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -46,10 +74,6 @@ const Enterprise = () => {
       title: "Loại hình doanh nghiệp",
       className: "w-[250px]",
       render(_, record, index) {
-        const typeOptions: IOption[] = typeEnterpriseEnumArray.map((e) => ({
-          value: e,
-          label: mappingTypeEnterprise[e],
-        }));
         const organization_type = typeOptions.find((e) => +e.value === +record?.organization_type)?.label;
         return <Fragment key={index}>{organization_type}</Fragment>;
       },
@@ -70,15 +94,12 @@ const Enterprise = () => {
       className: "w-[250px]",
     },
     {
-      dataIndex: "industries",
+      dataIndex: "industry_id",
       title: "Lĩnh vực hoạt động",
-      render(_, record: { industries: { id: string; name: string }[] }) {
+      className: "w-[200px]",
+      render(_, record) {
         return (
-          <div className="flex flex-col">
-            {record.industries.map((item, index) => (
-              <div key={index}>{item?.name}</div>
-            ))}
-          </div>
+          <div className="flex flex-col">{record?.enterprises?.map((item: string, index: number) => <div key={index}>{item ? item : ""}</div>)}</div>
         );
       },
     },
@@ -86,120 +107,177 @@ const Enterprise = () => {
     {
       title: "Trạng thái",
       dataIndex: "is_active",
-      className: "w-[150px]",
+      className: "w-[105px]",
       render(_, record, index) {
         return (
           <div key={index} className="flex flex-col gap-2">
             <CommonSwitch
               onChange={() => handleChangeStatus(record)}
-              checked={!!record.is_active}
-              title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
-            />
-            <CommonSwitch
-              onChange={() => handleChangeStatus(record)}
-              checked={!!record.is_blacklist}
-              title={`Bạn có chắc chắn muốn ${record.is_blacklist ? "bỏ danh sách đen" : "thêm vào danh sách đen"} doanh nghiệp này?`}
-            />
-            <CommonSwitch
-              onChange={() => handleChangeStatus(record)}
-              checked={!!record.account_ban_at}
-              title={`Bạn có chắc chắn muốn ${record.account_ban_at ? "bỏ cấm" : "cấm"} doanh nghiệp này?`}
+              checked={+record.is_active === STATUS.ACTIVE}
+              title={`Bạn có chắc chắn muốn ${record.is_active === STATUS.ACTIVE ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
             />
           </div>
         );
       },
     },
-    // {
-    //   title: "Trạng thái blacklist",
-    //   dataIndex: "is_blacklist",
-    //   render(_, record) {
-    //     return (
-    //       <CommonSwitch
-    //         onChange={() => handleChangeStatus(record)}
-    //         checked={!!record.is_blacklist}
-    //         title={`Bạn có chắc chắn muốn ${record.is_blacklist ? "bỏ cấm" : "cấm"} tài khoản này?`}
-    //       />
-    //     );
-    //   },
-    // },
   ];
+
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/enterprise/detail/${record?.key}`);
+        navigate(`detail/${record?.key}`);
       },
       permission: EPermissions.CREATE_ENTERPRISE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        console.log(record);
-
         navigate(`/enterprise/update/${record?.key}`);
       },
       permission: EPermissions.UPDATE_ENTERPRISE,
     },
     {
+      type: EButtonTypes.STATISTICAL,
+      onClick(record) {
+        navigate(`/enterprise/statistical/${record?.key}`);
+      },
+    },
+    {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteEnterprise(record?.key));
+        enterpriseDispatch(deleteEnterprise(record?.key));
       },
       permission: EPermissions.DESTROY_ENTERPRISE,
+    },
+  ];
+  const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
+  const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
+  const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
+  const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
+  const additionalTabs = [
+    {
+      key: "1",
+      label: "Doanh nghiệp theo ngành nghề",
+      content: (
+        <GenericChart
+          name={state.industryHasTheMostEnterprise.map(({ industry }) => industry)}
+          value={state.industryHasTheMostEnterprise.map(({ total_enterprise }) => total_enterprise)}
+          chartType="bar"
+          title="Biểu đồ số lượng dự án phân bổ theo ngành nghề"
+        />
+      ),
+    },
+    {
+      key: "2",
+      label: "Biểu đồ thời gian gia nhập theo năm",
+      content: (
+        <GenericChart
+          name={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
+          value={Object.values(state.timeJoiningWebsiteOfEnterprise).map(({ value }) => value)}
+          chartType="line"
+          seriesName="Dữ liệu theo tháng"
+          title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
+          tooltipEnabled
+          legendPosition="bottom"
+        />
+      ),
+    },
+    {
+      key: "3",
+      label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
+      content: (
+        <GenericChart
+          name={names}
+          chartType="area" // Loại biểu đồ là area
+          title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+          tooltipEnabled
+          legendPosition="bottom"
+          series={[
+            { name: "Hoàn thành", data: completedValues },
+            { name: "Phê duyệt", data: approvedValues },
+            { name: "Mở thầu", data: openedBiddingValues },
+          ]}
+        />
+      ),
     },
   ];
   const search: ISearchTypeTable[] = [
     {
       id: "name",
-      placeholder: "Nhập ...",
-      label: "Loại hình doanh nghiệp",
+      placeholder: "Nhập tên  ...",
+      label: "Tên doanh nghiệp ",
       type: "text",
+    },
+    {
+      id: "organization_type",
+      placeholder: "Chọn tên doanh nghiệp ...",
+      label: "Loại hình doanh nghiệp ",
+      type: "select",
+      options: typeOptions as { value: string; label: string }[],
+    },
+    {
+      id: "industry_ids",
+      placeholder: "Chọn lĩnh vực hoạt dộng ...",
+      label: "Lĩnh vực hoạt dộng ",
+      type: "select",
+      isMultiple: true,
+      options: industryOptions as { value: string; label: string }[],
+    },
+    {
+      id: "is_active",
+      placeholder: "Chọn trạng thái ...",
+      label: "Trạng thái",
+      type: "select",
+
+      options: statusOptions as { value: string; label: string }[],
     },
   ];
   const data: ITableData[] = useMemo(() => {
-    return Array.isArray(state.enterprises)
-      ? state.enterprises.map(
-          ({ id, name, organization_type, industries, representative, phone, email, address, is_active, is_blacklist }, index) => ({
+    return Array.isArray(enterpriseState.enterprises)
+      ? enterpriseState.enterprises.map(
+          ({ id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at }, index) => ({
             index: index + 1,
             key: id,
             name,
             representative,
-            industries,
+            enterprises: (industry_id?.length && industry(industry_id)) || [],
             organization_type,
             phone,
             email,
             address,
             is_active,
             is_blacklist,
+            account_ban_at,
           }),
         )
       : [];
-  }, [JSON.stringify(state.enterprises)]);
+  }, [JSON.stringify(enterpriseState.enterprises)]);
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
   };
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusEnterprise(String(confirmItem.key)));
-      dispatch(getAllEnterprise({ query: state.filter }));
+      enterpriseDispatch(changeStatusActiveEnterprise(String(confirmItem.key)));
     }
   };
   useEffect(() => {
-    dispatch(getAllEnterprise({ query: state.filter }));
-  }, [JSON.stringify(state.filter)]);
+    enterpriseDispatch(getAllEnterprise({ query: enterpriseState.filter }));
+    industryDispatch(getIndustries());
+  }, [JSON.stringify(enterpriseState.filter)]);
   useEffect(() => {
-    if (state.status === EFetchStatus.FULFILLED) {
-      dispatch(getAllEnterprise({ query: state.filter }));
+    if (enterpriseState.status === EFetchStatus.FULFILLED) {
+      enterpriseDispatch(getAllEnterprise({ query: enterpriseState.filter }));
     }
-  }, [JSON.stringify(state.status)]);
+  }, [JSON.stringify(enterpriseState.status)]);
 
   useFetchStatus({
     module: "enterprise",
     reset: resetStatus,
     actions: {
-      success: { message: state.message },
-      error: { message: state.message },
+      success: { message: enterpriseState.message },
+      error: { message: enterpriseState.message },
     },
   });
   useEffect(() => {
@@ -207,6 +285,7 @@ const Enterprise = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
+
   return (
     <>
       <Heading
@@ -240,15 +319,17 @@ const Enterprise = () => {
         search={search}
         buttons={buttons}
         pagination={{
-          current: state.filter.page ?? 1,
-          pageSize: state.filter.size ?? 10,
-          total: state.totalRecords,
-          number_of_elements: state.number_of_elements && state.number_of_elements,
+          current: enterpriseState.filter.page ?? 1,
+          pageSize: enterpriseState.filter.size ?? 10,
+          total: enterpriseState.totalRecords,
+          number_of_elements: enterpriseState.number_of_elements && enterpriseState.number_of_elements,
           // showSideChanger:true
         }}
         setFilter={setFilter}
-        filter={state.filter}
-        scroll={{ x: 2200 }}
+        filter={enterpriseState.filter}
+        scroll={{ x: 3200 }}
+        tabLabel="Tổng quan"
+        additionalTabs={additionalTabs}
       />
     </>
   );

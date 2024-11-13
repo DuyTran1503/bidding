@@ -22,7 +22,7 @@ const CreateBiddingType = () => {
     actions: {
       success: {
         message: state.message,
-        navigate: "/bidding_types",
+        navigate: "/bidding-types",
       },
       error: {
         message: state.message,
@@ -41,7 +41,7 @@ const CreateBiddingType = () => {
             text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/bidding_types");
+              navigate("/bidding-types");
             },
           },
           {
