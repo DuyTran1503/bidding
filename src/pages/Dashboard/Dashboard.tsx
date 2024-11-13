@@ -32,11 +32,11 @@ import { getListFundingSource } from "@/services/store/funding_source/funding_so
 import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
-import TopEnterpriseChart from "./TopEnterpriseChart";
 import GenericChart from "@/components/chart/GenericChart";
 import { useSelector } from "react-redux";
 import { RootStateType } from "@/services/reducers";
 import AreaChart from "@/components/chart/AreaChart";
+import TopEnterpriseChart from "@/components/chart/TopEnterpriseChart";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Dashboard: React.FC = () => {
