@@ -25,7 +25,7 @@ import {
   topTendersByProjectTotalAmount,
 } from "@/services/store/chart/chart.thunk";
 import Heading from "@/components/layout/Heading";
-import { Col, Row, Select, Spin } from "antd";
+import { Col, message, Row, Select } from "antd";
 import { Link } from "react-router-dom";
 import ChartSection from "@/components/chart/ChartSection";
 import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
@@ -36,49 +36,70 @@ import TopEnterpriseChart from "./TopEnterpriseChart";
 import GenericChart from "@/components/chart/GenericChart";
 import { useSelector } from "react-redux";
 import { RootStateType } from "@/services/reducers";
+import AreaChart from "@/components/chart/AreaChart";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Dashboard: React.FC = () => {
   const { state, dispatch } = useArchive<IChartInitialState>("chart");
   const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
-  const [selectedYear, setSelectedYear] = useState<string>(yearOptions[0]);
+  // const [selectedYear, setSelectedYear] = useState<string>(yearOptions[0]);
   const [selectedFundingSource, setSelectedFundingSource] = useState<string>();
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
   const loading = useSelector((state: RootStateType) => state.chart.loading);
+  const [selectedYearTimeJoining, setSelectedYearTimeJoining] = useState<string>(yearOptions[0]);
+  const [selectedYearIndustryEnterprise, setSelectedYearIndustryEnterprise] = useState<string>(yearOptions[0]);
+  const [selectedYearIndustryProject, setSelectedYearIndustryProject] = useState<string>(yearOptions[0]);
+  const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
 
   useEffect(() => {
-        dispatch(projectByIndustry({})),
-        dispatch(projectByFundingsource({})),
-        dispatch(averageProjectPurationByIndustry({})),
-        dispatch(projectByDomestic({})),
-        dispatch(projectByOrganizationType({})),
-        dispatch(projectBySelectionMethod({})),
-        dispatch(projectBySubmissionMethod({})),
-        dispatch(projectByTendererInvestor({})),
-        dispatch(topTendersByProjectCount({})),
-        dispatch(topTendersByProjectTotalAmount({})),
-        dispatch(topInvestorsByProjectPartial({})),
-        dispatch(topInvestorsByProjectFull({})),
-        dispatch(topInvestorsByProjectTotalAmount({})),
-        dispatchFundingSource(getListFundingSource()),
-        dispatchIndustry(getIndustries());
+    dispatch(projectByIndustry({})),
+      dispatch(projectByFundingsource({})),
+      dispatch(averageProjectPurationByIndustry({})),
+      dispatch(projectByDomestic({})),
+      dispatch(projectByOrganizationType({})),
+      dispatch(projectBySelectionMethod({})),
+      dispatch(projectBySubmissionMethod({})),
+      dispatch(projectByTendererInvestor({})),
+      dispatch(topTendersByProjectCount({})),
+      dispatch(topTendersByProjectTotalAmount({})),
+      dispatch(topInvestorsByProjectPartial({})),
+      dispatch(topInvestorsByProjectFull({})),
+      dispatch(topInvestorsByProjectTotalAmount({})),
+      dispatchFundingSource(getListFundingSource()),
+      dispatchIndustry(getIndustries());
   }, []);
 
   useEffect(() => {
-    if (selectedYear) {
-      dispatch(timeJoiningWebsiteOfEnterprise({ body: { year: selectedYear } }));
-      dispatch(projectsStatusPreMonth({ body: { year: selectedYear } }));
-      dispatch(industryHasTheMostProject({ body: { year: selectedYear } }));
-      dispatch(industryHasTheMostEnterprise({ body: { year: selectedYear } }));
+    if (selectedYearTimeJoining) {
+      dispatch(timeJoiningWebsiteOfEnterprise({ body: { year: selectedYearTimeJoining } }));
     }
-  }, [selectedYear, dispatch]);
+  }, [selectedYearTimeJoining, dispatch]);
+
+  useEffect(() => {
+    if (selectedYearIndustryEnterprise) {
+      dispatch(industryHasTheMostEnterprise({ body: { year: selectedYearIndustryEnterprise } }));
+    }
+  }, [selectedYearIndustryEnterprise, dispatch]);
+
+  useEffect(() => {
+    if (selectedYearIndustryProject) {
+      dispatch(industryHasTheMostProject({ body: { year: selectedYearIndustryProject } }));
+    }
+  }, [selectedYearIndustryProject, dispatch]);
+
+  useEffect(() => {
+    if (selectedYearProjectStatus) {
+      dispatch(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
+    }
+  }, [selectedYearProjectStatus, dispatch]);
 
   useEffect(() => {
     if (stateFundingSource.listFundingSources.length > 0 && !selectedFundingSource) {
       setSelectedFundingSource(String(stateFundingSource.listFundingSources[0].id));
     }
   }, [stateFundingSource, selectedFundingSource]);
+
   useEffect(() => {
     if (stateIndustry.listIndustry.length > 0 && !selectedIndustry) {
       setSelectedIndustry(String(stateIndustry.listIndustry[0].id));
@@ -105,24 +126,26 @@ const Dashboard: React.FC = () => {
     }
   }, [selectedIndustry, dispatch]);
 
-  const handleFundingSourceChange = (value: string) => setSelectedFundingSource(value);
-  const handleIndustryChange = (value: string) => setSelectedIndustry(value);
-
-  const handleYearChange = (value: string) => {
-    setSelectedYear(value);
-  };
+  const handleFundingSourceChange = (value: string) => {
+    message.loading("Đang tải dữ liệu");
+    setSelectedFundingSource(value);
+  }
+  const handleIndustryChange = (value: string) => {
+    message.loading("Đang tải dữ liệu");
+    setSelectedIndustry(value);
+  }
   const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
 
   const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
   const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
   const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-lvh">
-        <Spin tip="Loading..." size="large" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex items-center justify-center h-lvh">
+  //       <Spin tip="Loading..." size="large" />
+  //     </div>
+  //   );
+  // }
   return (
     <>
       <Heading title="Tổng quan về đấu thầu" hasBreadcrumb />
@@ -167,6 +190,7 @@ const Dashboard: React.FC = () => {
               "Thể hiện các dự án được tài trợ bởi các nguồn nào (ví dụ: chính phủ, tư nhân, tổ chức quốc tế)",
               "Giúp doanh nghiệp nhận diện và đánh giá sự đa dạng của các nguồn tài trợ, từ đó đưa ra chiến lược tiếp cận hoặc tìm kiếm thêm nguồn tài trợ phù hợp.",
             ]}
+            loading={loading}
           />
           <ChartSection
             title="2.2 Dự án theo ngành"
@@ -179,6 +203,7 @@ const Dashboard: React.FC = () => {
               "Biểu đồ này phân tích số lượng và tỷ lệ dự án trong từng ngành khác nhau.",
               "Giúp doanh nghiệp và nhà quản lý lập kế hoạch, ưu tiên ngành phù hợp, điều chỉnh nguồn lực và đầu tư vào các ngành đang phát triển mạnh hoặc tiềm năng.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -190,6 +215,7 @@ const Dashboard: React.FC = () => {
               "Phân loại các dự án thành trong nước hoặc quốc tế, giúp đánh giá phạm vi và quy mô địa lý của các dự án.",
               "Hỗ trợ doanh nghiệp xác định mức độ phụ thuộc vào nguồn lực trong nước hay quốc tế, đưa ra quyết định chiến lược mở rộng và phát triển dự án.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -201,6 +227,7 @@ const Dashboard: React.FC = () => {
               "Phân loại các dự án theo phương pháp lựa chọn nhà thầu (đấu thầu công khai, đấu thầu hạn chế)",
               "Giúp đánh giá hiệu quả, tính minh bạch của từng phương pháp, đưa ra quyết định cải thiện quy trình đấu thầu nhằm nâng cao chất lượng đấu thầu.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -212,6 +239,7 @@ const Dashboard: React.FC = () => {
               "Phân tích cách thức nộp thầu của các dự án (trực tuyến, trực tiếp)",
               "Thúc đẩy cải tiến công nghệ, tối ưu hóa quy trình nộp thầu theo xu hướng số hóa, giúp tiết kiệm thời gian và chi phí.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -223,6 +251,7 @@ const Dashboard: React.FC = () => {
               "Thống kê số liệu về nhà thầu và nhà đầu tư của các dự án, từ đó xác định những đối tượng tham gia chính",
               "Hỗ trợ xây dựng hồ sơ đối tác, cải thiện mối quan hệ với các nhà thầu và nhà đầu tư, giúp thu hút đầu tư và tạo cơ hội hợp tác tiềm năng cho dự án.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -236,6 +265,7 @@ const Dashboard: React.FC = () => {
               "Cho thấy các dự án được thực hiện bởi loại hình tổ chức nào (nhà nước, ngoài nhà nước)",
               "Hỗ trợ doanh nghiệp xác định các loại hình tổ chức có khả năng hợp tác cao hoặc có ưu thế triển khai dự án, từ đó xây dựng chiến lược hợp tác phù hợp.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -248,6 +278,7 @@ const Dashboard: React.FC = () => {
               "Biểu đồ này thể hiện thời gian trung bình hoàn thành các dự án trong từng ngành khác nhau, giúp nhận biết ngành nào có chu kỳ dự án dài hoặc ngắn hơn.",
               "Giúp doanh nghiệp lập kế hoạch hiệu quả hơn, phân bổ tài nguyên đúng cho các dự án trong ngành có thời gian ngắn hoặc dài, điều chỉnh chiến lược để đảm bảo tiến độ và tối ưu hóa nguồn lực.",
             ]}
+            loading={loading}
           />
         </Row>
       </div>
@@ -265,6 +296,7 @@ const Dashboard: React.FC = () => {
               "Đây là biểu đồ thể hiện 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo số lượng.",
               "Giúp doanh nghiệp nắm bắt được các đơn vị mời thầu có bao nhiêu gói thầu.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -278,6 +310,7 @@ const Dashboard: React.FC = () => {
               "Đây là biểu đồ thể hiện 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo giá.",
               "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -291,6 +324,7 @@ const Dashboard: React.FC = () => {
               "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo từng phần.",
               "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -304,6 +338,7 @@ const Dashboard: React.FC = () => {
               "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.",
               "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
             ]}
+            loading={loading}
           />
 
           <ChartSection
@@ -317,6 +352,7 @@ const Dashboard: React.FC = () => {
               "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.",
               "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
             ]}
+            loading={loading}
           />
         </Row>
       </div>
@@ -343,15 +379,22 @@ const Dashboard: React.FC = () => {
       </div>
       <div className="w-full">
         <h2 className="mb-4 text-xl font-semibold">5. Bảng xếp hạng Doanh Nghiệp theo năm</h2>
-        <Select
+        {/* <Select
           placeholder="Chọn năm..."
           value={selectedYear}
           onChange={handleYearChange}
           options={yearOptions.map((year) => ({ label: year, value: year }))}
           style={{ width: 150, marginBottom: 16 }}
-        />
+        /> */}
         <Row gutter={[24, 24]}>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
+            <Select
+              placeholder="Chọn năm..."
+              value={selectedYearTimeJoining}
+              onChange={setSelectedYearTimeJoining}
+              options={yearOptions.map((year) => ({ label: year, value: year }))}
+              style={{ width: 150, marginBottom: 16 }}
+            />
             <GenericChart
               name={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
               value={Object.values(state.timeJoiningWebsiteOfEnterprise)}
@@ -360,36 +403,57 @@ const Dashboard: React.FC = () => {
               title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
               tooltipEnabled
               legendPosition="bottom"
+              loading={loading}
             />
           </div>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
+            <Select
+              placeholder="Chọn năm..."
+              value={selectedYearIndustryEnterprise}
+              onChange={setSelectedYearIndustryEnterprise}
+              options={yearOptions.map((year) => ({ label: year, value: year }))}
+              style={{ width: 150, marginBottom: 16 }}
+            />
             <GenericChart
               name={state.industryHasTheMostEnterprise.map(({ industry }) => industry)}
               value={state.industryHasTheMostEnterprise.map(({ total_enterprise }) => total_enterprise)}
               chartType="bar"
               title="Biểu đồ số lượng dự án phân bổ theo ngành nghề"
+              loading={loading}
             />
           </div>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
+            <Select
+              placeholder="Chọn năm..."
+              value={selectedYearIndustryProject}
+              onChange={setSelectedYearIndustryProject}
+              options={yearOptions.map((year) => ({ label: year, value: year }))}
+              style={{ width: 150, marginBottom: 16 }}
+            />
             <GenericChart
               name={state.industryHasTheMostProject.map(({ industry }) => industry)}
               value={state.industryHasTheMostProject.map(({ total_project }) => total_project)}
               chartType="bar"
               title="Biểu đồ số lượng doanh nghiệp phân bổ theo ngành nghề"
+              loading={loading}
             />
           </div>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
-            <GenericChart
-              name={names}
-              chartType="area" // Loại biểu đồ là area
-              title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
-              tooltipEnabled
-              legendPosition="bottom"
+            <Select
+              placeholder="Chọn năm..."
+              value={selectedYearProjectStatus}
+              onChange={setSelectedYearProjectStatus}
+              options={yearOptions.map((year) => ({ label: year, value: year }))}
+              style={{ width: 150, marginBottom: 16 }}
+            />
+            <AreaChart
               series={[
                 { name: "Hoàn thành", data: completedValues },
                 { name: "Phê duyệt", data: approvedValues },
                 { name: "Mở thầu", data: openedBiddingValues },
               ]}
+              categories={names}
+              title="Sales Dashboard"
             />
           </div>
           {/* <AreaChart /> */}

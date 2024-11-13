@@ -89,7 +89,6 @@ const chartSlice = createSlice({
   extraReducers: (builder) => {
     const pendingReducer = (state: IChartInitialState) => {
       state.status = EFetchStatus.PENDING;
-      state.loading = true;
     };
 
     const fulfilledReducer = (state: IChartInitialState, payload: any, message: string, key: keyof IChartInitialState) => {
@@ -98,7 +97,6 @@ const chartSlice = createSlice({
       if (payload) {
         state[key] = payload;
       }
-      state.loading = false;
     };
 
     const rejectedReducer = (state: IChartInitialState, payload: any) => {
@@ -106,143 +104,7 @@ const chartSlice = createSlice({
       state.message = transformPayloadErrors(payload?.errors);
     };
 
-    // chart project-by-fundingsource
     builder
-    .addCase(projectByIndustry.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.industryData = payload;
-      state.status = EFetchStatus.FULFILLED;
-      state.loading = false;
-    })
-    .addCase(projectByIndustry.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-    // chart project-by-fundingsource
-    .addCase(projectByFundingsource.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.fundingData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(projectByFundingsource.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-
-    // chart project-by-domestic
-    .addCase(projectByDomestic.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.domesticData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(projectByDomestic.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-
-    // chart project-by-submission-method
-    .addCase(projectBySubmissionMethod.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.submissionData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(projectBySubmissionMethod.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-
-    // chart project-by-selection-method
-    .addCase(projectBySelectionMethod.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.selectionData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(projectBySelectionMethod.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-    
-    // chart project-by-tenderer-investor
-    .addCase(projectByTendererInvestor.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.tendererData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(projectByTendererInvestor.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-    
-    // chart project-by-organization-type
-    .addCase(projectByOrganizationType.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.organizationData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(projectByOrganizationType.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-    
-    // chart average-project-duration-by-industry
-    .addCase(averageProjectPurationByIndustry.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.durationData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(averageProjectPurationByIndustry.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-    
-      // ? Get By ID
-      .addCase(
-        employeeEducationLevelStatisticByEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IChart> | any>) => {
-        state.employeeEducationLevelStatisticByEnterprise = payload.data;
-        state.loading = false;
-      })
-
-    // chart top-tenderers-by-project-count
-    .addCase(topTendersByProjectCount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.toptenderersbyprojectcountData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(topTendersByProjectCount.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-
-    // chart top-tenderers-by-project-total-amount
-    .addCase(topTendersByProjectTotalAmount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.toptenderersbyprojecttotalamountData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(topTendersByProjectTotalAmount.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-
-    // chart top-investors-by-project-partial
-    .addCase(topInvestorsByProjectPartial.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.topinvestorsbyprojectpartialData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(topInvestorsByProjectPartial.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-
-    // chart top-investors-by-project-full
-    .addCase(topInvestorsByProjectFull.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.topinvestorsbyprojectfullData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(topInvestorsByProjectFull.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
-
-    // chart top-investors-by-total-amount
-    .addCase(topInvestorsByProjectTotalAmount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
-      state.topinvestorsbyprojecttotalamountData = payload;
-      state.status = EFetchStatus.FULFILLED;
-    })
-    .addCase(topInvestorsByProjectTotalAmount.rejected, (state, action) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
-    })
 
     // top-enterprises-have-completed-projects-by-funding-source/{fundingSource?}
     .addCase(topEnterprisesHaveCompletedProjectsByFundingSource.pending, pendingReducer)
@@ -280,6 +142,206 @@ const chartSlice = createSlice({
       fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Construction Time)", 'industryHasTheMostEnterprise'))
     .addCase(industryHasTheMostEnterprise.rejected, (state, { payload }) => rejectedReducer(state, payload))
 
+    // chart project-by-fundingsource
+    .addCase(projectByIndustry.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(projectByIndustry.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.industryData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(projectByIndustry.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+    // chart project-by-fundingsource
+    .addCase(projectByFundingsource.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(projectByFundingsource.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.fundingData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(projectByFundingsource.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+
+    // chart project-by-domestic
+    .addCase(projectByDomestic.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(projectByDomestic.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.domesticData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(projectByDomestic.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+
+    // chart project-by-submission-method
+    .addCase(projectBySubmissionMethod.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(projectBySubmissionMethod.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.submissionData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(projectBySubmissionMethod.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+
+    // chart project-by-selection-method
+    .addCase(projectBySelectionMethod.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(projectBySelectionMethod.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.selectionData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(projectBySelectionMethod.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+    
+    // chart project-by-tenderer-investor
+    .addCase(projectByTendererInvestor.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(projectByTendererInvestor.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.tendererData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(projectByTendererInvestor.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+    
+    // chart project-by-organization-type
+    .addCase(projectByOrganizationType.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(projectByOrganizationType.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.organizationData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(projectByOrganizationType.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+    
+    // chart average-project-duration-by-industry
+    .addCase(averageProjectPurationByIndustry.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(averageProjectPurationByIndustry.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.durationData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(averageProjectPurationByIndustry.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+    
+      // ? Get By ID
+      .addCase(
+        employeeEducationLevelStatisticByEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IChart> | any>) => {
+        state.employeeEducationLevelStatisticByEnterprise = payload.data;
+        state.loading = false;
+      })
+
+    // chart top-tenderers-by-project-count
+    .addCase(topTendersByProjectCount.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(topTendersByProjectCount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.toptenderersbyprojectcountData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(topTendersByProjectCount.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+
+    // chart top-tenderers-by-project-total-amount
+    .addCase(topTendersByProjectTotalAmount.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(topTendersByProjectTotalAmount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.toptenderersbyprojecttotalamountData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(topTendersByProjectTotalAmount.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+
+    // chart top-investors-by-project-partial
+    .addCase(topInvestorsByProjectPartial.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(topInvestorsByProjectPartial.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.topinvestorsbyprojectpartialData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(topInvestorsByProjectPartial.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+
+    // chart top-investors-by-project-full
+    .addCase(topInvestorsByProjectFull.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(topInvestorsByProjectFull.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.topinvestorsbyprojectfullData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(topInvestorsByProjectFull.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
+
+    // chart top-investors-by-total-amount
+    .addCase(topInvestorsByProjectTotalAmount.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(topInvestorsByProjectTotalAmount.fulfilled, (state, { payload }: PayloadAction<IChart[]>) => {
+      state.topinvestorsbyprojecttotalamountData = payload;
+      state.status = EFetchStatus.FULFILLED;
+      state.loading = false;
+    })
+    .addCase(topInvestorsByProjectTotalAmount.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = action.payload as string || "Có lỗi xảy ra khi tải dữ liệu";
+      state.loading = false;
+    })
   },
 });
 

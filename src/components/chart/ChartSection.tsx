@@ -28,6 +28,7 @@ interface ChartSectionProps {
     onSelectChange?: (value: string) => void;
     buttonText?: string;
     onButtonClick?: () => void;
+    loading?: boolean;
 }
 
 const ChartSection: React.FC<ChartSectionProps> = ({
@@ -51,7 +52,8 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     selectedValue,
     onSelectChange,
     buttonText,
-    onButtonClick
+    onButtonClick,
+    loading
 }) => {
     return (
         <Col xs={24} sm={24} md={24} xl={12}>
@@ -91,6 +93,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
                     rotate={rotate}
                     grid={grid}
                     titleFontSize={titleFontSize}
+                    loading={loading}
                 />
             </div>
             <ul className="list-disc list-inside mt-4">

@@ -2,31 +2,30 @@ import React from "react";
 import { ApexOptions } from "apexcharts";
 import Chart from "react-apexcharts";
 
-const AreaChart: React.FC = () => {
-  const series = [
-    {
-      name: "Sales",
-      data: [13, 31, 45, 34, 23, 65, 23],
-    },
-    {
-      name: "Rates",
-      data: [9, 31, 94, 22, 23, 12, 23],
-    },
-    {
-      name: "Customer",
-      data: [21, 21, 11, 34, 43, 76, 23],
-    },
-  ];
+interface AreaChartProps {
+  series: { name: string; data: number[] }[]; // Dữ liệu cho từng dòng trong biểu đồ
+  categories: string[]; // Các nhãn trên trục x
+  height?: number; // Chiều cao của biểu đồ, tùy chọn
+  colors?: string[]; // Màu sắc cho từng dòng
+  title?: string; // Tiêu đề biểu đồ, tùy chọn
+}
 
+const AreaChart: React.FC<AreaChartProps> = ({ 
+  series, 
+  categories, 
+  height = 350, 
+  colors = ["#4154f1", "#2eca6a", "#ff771d"], 
+  title 
+}) => {
   const options: ApexOptions = {
     chart: {
-      height: 350,
       type: "area",
+      height,
       toolbar: {
         show: false,
       },
     },
-    colors: ["#4154f1", "#2eca6a", "#ff771d"],
+    colors,
     fill: {
       type: "gradient",
       gradient: {
@@ -45,7 +44,7 @@ const AreaChart: React.FC = () => {
     },
     xaxis: {
       type: "category",
-      categories: ["Jan", "Feb", "Mar", "Apr", "May"],
+      categories,
     },
     tooltip: {
       x: {
@@ -55,9 +54,17 @@ const AreaChart: React.FC = () => {
     markers: {
       size: 4,
     },
+    title: {
+      text: title,
+      align: 'center',
+      style: {
+        fontSize: '16px',
+        fontWeight: 'bold',
+      }
+    }
   };
 
-  return <Chart options={options} series={series} type="area" height={350} />;
+  return <Chart options={options} series={series} type="area" height={height} />;
 };
 
 export default AreaChart;
