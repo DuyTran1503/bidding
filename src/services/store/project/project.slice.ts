@@ -103,6 +103,7 @@ const projectSlice = createSlice({
       .addCase(approveProject.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Phê duyệt thành công";
+        
       })
       .addCase(approveProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;

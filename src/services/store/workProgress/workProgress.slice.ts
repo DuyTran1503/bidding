@@ -77,10 +77,12 @@ const workProgressSlice = createSlice({
       .addCase(createWorkProgress.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Tạo mới thành công ";
+        
       })
       .addCase(createWorkProgress.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message;
+
       });
     builder
       .addCase(updateWorkProgress.pending, (state) => {

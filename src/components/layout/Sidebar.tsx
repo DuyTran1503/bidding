@@ -166,6 +166,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "evaluation_criteria",
           // permissions: EPermissions.LIST_EVALUATION,
         },
+        {
+          id: "3.6",
+          label: "Tiến độ dự án",
+          path: "work-progresses",
+          // permissions: EPermissions.LIST_EVALUATION,
+        },
       ],
     },
 
