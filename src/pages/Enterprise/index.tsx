@@ -22,11 +22,14 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
+import GenericChart from "@/components/chart/GenericChart";
+import { IChartInitialState } from "@/services/store/chart/chart.slice";
 
 const Enterprise = () => {
   const navigate = useNavigate();
   const { state: enterpriseState, dispatch: enterpriseDispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: industryState, dispatch: industryDispatch } = useArchive<IIndustryInitialState>("industry");
+  const { state, dispatch } = useArchive<IChartInitialState>("chart");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const industry = (value: number[]) => {
@@ -148,26 +151,55 @@ const Enterprise = () => {
       permission: EPermissions.DESTROY_ENTERPRISE,
     },
   ];
+  const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
+  const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
+  const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
+  const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
   const additionalTabs = [
     {
       key: "1",
       label: "Doanh nghiệp theo ngành nghề",
-      content: <div>Nội dung cho tab bổ sung 2</div>,
+      content: (
+        <GenericChart
+          name={state.industryHasTheMostEnterprise.map(({ industry }) => industry)}
+          value={state.industryHasTheMostEnterprise.map(({ total_enterprise }) => total_enterprise)}
+          chartType="bar"
+          title="Biểu đồ số lượng dự án phân bổ theo ngành nghề"
+        />
+      ),
     },
     {
       key: "2",
-      label: "Biểu đồ trạng thái hoạt động",
-      content: <div>Nội dung cho tab bổ sung 2</div>,
+      label: "Biểu đồ thời gian gia nhập theo năm",
+      content: (
+        <GenericChart
+          name={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
+          value={Object.values(state.timeJoiningWebsiteOfEnterprise).map(({ value }) => value)}
+          chartType="line"
+          seriesName="Dữ liệu theo tháng"
+          title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
+          tooltipEnabled
+          legendPosition="bottom"
+        />
+      ),
     },
     {
       key: "3",
-      label: "Biểu đồ thời gian gia nhập theo năm",
-      content: <div>Nội dung cho tab bổ sung 2</div>,
-    },
-    {
-      key: "4",
-      label: "Biểu đồ doanh nghiệp blacklist",
-      content: <div>Nội dung cho tab bổ sung 2</div>,
+      label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
+      content: (
+        <GenericChart
+          name={names}
+          chartType="area" // Loại biểu đồ là area
+          title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+          tooltipEnabled
+          legendPosition="bottom"
+          series={[
+            { name: "Hoàn thành", data: completedValues },
+            { name: "Phê duyệt", data: approvedValues },
+            { name: "Mở thầu", data: openedBiddingValues },
+          ]}
+        />
+      ),
     },
   ];
   const search: ISearchTypeTable[] = [

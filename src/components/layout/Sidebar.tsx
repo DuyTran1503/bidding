@@ -166,12 +166,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "evaluation_criteria",
           // permissions: EPermissions.LIST_EVALUATION,
         },
-        {
-          id: "3.6",
-          label: "Tiến độ dự án",
-          path: "work-progresses",
-          // permissions: EPermissions.LIST_EVALUATION,
-        },
       ],
     },
 
@@ -261,7 +255,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "5.9",
-          label: "Câu hỏi/ Câu trả lời",
+          label: "Câu hỏi và Câu trả lời",
           path: "questions-answers",
           // permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
         },

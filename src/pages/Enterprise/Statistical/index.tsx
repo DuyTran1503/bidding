@@ -14,7 +14,11 @@ import { convertDataOptions } from "@/pages/Project/helper";
 import { Form, Formik } from "formik";
 import FormGroup from "@/components/form/FormGroup";
 import { Col, Row } from "antd";
-import { getEmployeeResultBiddingStatistic, getSalaryOfEmployees } from "@/services/store/enterprise_chart/enterprise_chart.thunk";
+import {
+  getEmployeeQuantityStatistic,
+  getEmployeeResultBiddingStatistic,
+  getSalaryOfEmployees,
+} from "@/services/store/enterprise_chart/enterprise_chart.thunk";
 
 interface IProp {
   ids: string[] | number[];
@@ -48,6 +52,8 @@ const StatisticalEnterprise: React.FC = () => {
 
       if (projectIds.length > 1) {
         if (selectedTabKey === "1") {
+          dispatchChartEnterprise(getEmployeeQuantityStatistic({ body: projectIds }));
+        } else if (selectedTabKey === "2") {
           dispatchChartEnterprise(getSalaryOfEmployees({ body: projectIds }));
         } else if (selectedTabKey === "2") {
           dispatchChartEnterprise(getEmployeeResultBiddingStatistic({ body: projectIds }));
@@ -79,8 +85,10 @@ const StatisticalEnterprise: React.FC = () => {
       setSelectedProjectIds(projectIds);
 
       if (selectedTabKey === "1") {
-        dispatchChartEnterprise(getSalaryOfEmployees({ body: projectIds }));
+        dispatchChartEnterprise(getEmployeeQuantityStatistic({ body: projectIds }));
       } else if (selectedTabKey === "2") {
+        dispatchChartEnterprise(getSalaryOfEmployees({ body: projectIds }));
+      } else if (selectedTabKey === "3") {
         dispatchChartEnterprise(getEmployeeResultBiddingStatistic({ body: projectIds }));
       }
     }
@@ -88,6 +96,19 @@ const StatisticalEnterprise: React.FC = () => {
   const tabItems = [
     {
       key: "1",
+      label: "Thống kê nhân viên ",
+      content: (
+        <GenericChart
+          chartType="pie"
+          title="Thống kê nhân viên "
+          name={stateChartEnterprise.numberOfEmployeeEnterprise.map(({ enterprise }) => enterprise)}
+          value={stateChartEnterprise.numberOfEmployeeEnterprise.map((item) => item.quantityEmployee)}
+          seriesName="Số lượng nhận viên"
+        />
+      ),
+    },
+    {
+      key: "2",
       label: "Thống kê lương trung bình ",
       content: (
         <GenericChart
@@ -95,12 +116,12 @@ const StatisticalEnterprise: React.FC = () => {
           title="Thống kê lương trung bình "
           name={stateChartEnterprise.salaryOfEmployees.map(({ enterprise }) => enterprise)}
           value={stateChartEnterprise.salaryOfEmployees.map((item) => item.salaryAvg)}
-          seriesName="Dữ liệu Ngành"
+          seriesName="Thống kê lương trung bình"
         />
       ),
     },
     {
-      key: "2",
+      key: "3",
       label: "Thống kê số lượng gói thâu đã trúng ",
       content: (
         <div className="flex">
@@ -176,7 +197,7 @@ const StatisticalEnterprise: React.FC = () => {
                         setFieldValue("ids", e);
                         setIds(e as any);
                       }}
-                    ></FormSelect>
+                     />
                   </FormGroup>
                 </Col>
                 <Col xs={24} sm={24} md={12} xl={12} className="translate-y-[14px] transform">
