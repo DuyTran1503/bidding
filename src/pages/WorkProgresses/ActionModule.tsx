@@ -31,8 +31,8 @@ interface IWorkProgressFormProps {
 
 export interface IWorkProgressInitialValues {
   id?: string;
-  project_id: string;
-  task_ids: string;
+  project_id?: string;
+  task_ids?: string[];
   name: string;
   expense: number | string;
   progress: string;
@@ -47,6 +47,8 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
 
+  console.log(workProgress);
+
   const initialValues: IWorkProgressInitialValues = {
     id: workProgress?.id ?? "",
     name: workProgress?.name ?? "",
@@ -56,8 +58,8 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
     end_date: workProgress?.end_date ?? "",
     feedback: workProgress?.feedback ?? "",
     description: workProgress?.description ?? "",
-    project_id: workProgress?.project_id ?? "",
-    task_ids: workProgress?.task_ids ?? "",
+    project_id: workProgress?.project_id ?? undefined,
+    task_ids: workProgress?.task_ids ?? [],
   };
   const Schema = object().shape({
     name: string().trim().required("Vui lòng không để trống trường này"),
@@ -77,7 +79,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
   }, []);
   useEffect(() => {
     dispatchProject(getListProject());
-    dispatchTask(getListTask())
+    // dispatchTask(getListTask())
   }, []);
 
   return (
@@ -113,9 +115,10 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Dự án">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn dự án..."
                     id="project_id"
-                    value={values.project_id as string}
+                    value={values.project_id}
                     error={touched.project_id ? errors.project_id : ""}
                     options={convertDataOptions(stateProject?.listProjects || [])}
                     onChange={(e) => setFieldValue("project_id", e)}

@@ -1,6 +1,6 @@
 export interface IWorkProgress {
     id: string ,
-    project_id: number[],
+    project_id?: string,
     task_ids: number[],
     name: string,
     expense: number | string,
@@ -10,6 +10,6 @@ export interface IWorkProgress {
     feedback: string,
     description: string,
 
-    project?: string
+    project?: {id: string, name: string}
     task?: { id: string; name: string }
 }

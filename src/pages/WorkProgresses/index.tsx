@@ -10,6 +10,7 @@ import { getListProject } from "@/services/store/project/project.thunk";
 import { IWorkProgressInitialState } from "@/services/store/workProgress/workProgress.slice";
 import { deleteWorkProgress, getAllWorkProgresses } from "@/services/store/workProgress/workProgress.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
+import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { List } from "antd";
 import { ColumnsType } from "antd/es/table";
@@ -23,6 +24,12 @@ const WorkProgresses = () => {
   const { state, dispatch } = useArchive<IWorkProgressInitialState>("work_progress");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
 
+  const projectName = (value: number) => {
+    if (stateProject?.listProjects!.length > 0 && !!value) {
+      return stateProject?.listProjects!.find((item) => item.id === value)?.name;
+    }
+  };
+
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -30,55 +37,26 @@ const WorkProgresses = () => {
       className: "w-[200px]",
     },
     {
-      dataIndex: "project",
+      dataIndex: "project_id",
       title: "Dự án",
       className: "w-[200px]",
     },
-    {
-      dataIndex: "name",
-      title: "Tên tiến độ",
-      className: "w-[200px]",
-    },
+    // {
+    //   dataIndex: "name",
+    //   title: "Tên tiến độ",
+    //   className: "w-[200px]",
+    // },
     {
       dataIndex: "progress",
       title: "Tiến độ",
       className: "w-[200px]",
     },
     {
-      dataIndex: "expense",
-      title: "Chi phí",
-      className: "w-[200px]",
-    },
-    {
-      dataIndex: "start_date",
-      title: "Ngày bắt đầu",
-      className: "w-[200px]",
-    },
-    {
-      dataIndex: "end_date",
-      title: "Ngày kết thúc",
-      className: "w-[200px]",
-    },
-    {
-      dataIndex: "feedback",
-      title: "Nhận xét",
-      className: "w-[200px]",
-    },
-    {
-      dataIndex: "desciption",
-      title: "Mô tả",
-      className: "w-[250px]",
-
-      render(_, record) {
-        return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
-      },
-    },
-    {
       dataIndex: "task",
       title: "Nhiệm vụ",
       className: "w-[200px]",
       render(_, record) {
-        // console.log(record?.task?.map(item=>item.name));
+        // console.log(record?.project?.map(item=>item.name));
 
         return (
           <List
@@ -96,19 +74,50 @@ const WorkProgresses = () => {
         );
       },
     },
+    {
+      dataIndex: "feedback",
+      title: "Nhận xét",
+      className: "w-[200px]",
+    },
+    {
+      dataIndex: "expense",
+      title: "Chi phí",
+      className: "w-[200px]",
+    },
+    {
+      dataIndex: "start_date",
+      title: "Ngày bắt đầu",
+      className: "w-[200px]",
+    },
+    {
+      dataIndex: "end_date",
+      title: "Ngày kết thúc",
+      className: "w-[200px]",
+    },
+    
+    // {
+    //   dataIndex: "desciption",
+    //   title: "Mô tả",
+    //   className: "w-[250px]",
+
+    //   render(_, record) {
+    //     return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
+    //   },
+    // },
+
   ];
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/work-progresses/detail/${record?.key}`);
+        navigate(`detail/${record?.key}`);
       },
-      // permission: EPermissions.DETAIL_EMPLOYEE,
+      // permission: EPermissions.DETAIL_WORK_PROGRESS,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/work-progresses/update/${record?.key}`);
+        navigate(`update/${record?.key}`);
       },
       // permission: EPermissions.UPDATE_EMPLOYEE,
     },
@@ -121,12 +130,12 @@ const WorkProgresses = () => {
     },
   ];
   const search: ISearchTypeTable[] = [
-    // {
-    //   id: "name",
-    //   placeholder: "Nhập tên nhân viên...",
-    //   title: "Tên nhân viên",
-    //   type: "text",
-    // },
+    {
+      id: "name",
+      placeholder: "Nhập tên nhân viên...",
+      title: "Tên nhân viên",
+      type: "text",
+    },
     // {
     //   id: "email",
     //   placeholder: "Nhập email...",
@@ -161,25 +170,51 @@ const WorkProgresses = () => {
     //   options: enterpriseOption as { value: string; label: string }[],
     // },
   ];
-  const data: ITableData[] = useMemo(() => {
-    return Array.isArray(state.workProgresses)
-      ? state.workProgresses.map((item, index) => ({
-          index: index + 1,
-          key: item.id, // Use item.id as the unique key
-          project: item.project,
-          name: item.name,
-          progress: item.progress,
-          expense: item.expense,
-          start_date: item.start_date,
-          end_date: item.end_date,
-          feedback: item.feedback,
-          description: item.description,
-          task: item.task,
-          task_id: item.task_ids
-        }))
-      : [];
-  }, [JSON.stringify(state.workProgresses)]);
-
+  // const data: ITableData[] = useMemo(() => {
+  //   return Array.isArray(state.workProgresses)
+  //     ? state.workProgresses.map((item, index) => ({
+  //         index: index + 1,
+  //         key: item.id, // Use item.id as the unique key
+  //         project_id: item.project_id ? projectName(Number(item.project_id)) : '',
+  //         name: item.name,
+  //         progress: item.progress,
+  //         expense: item.expense,
+  //         start_date: item.start_date,
+  //         end_date: item.end_date,
+  //         feedback: item.feedback,
+  //         description: item.description,
+  //         task: item.task,
+  //         task_ids: item.task_ids 
+  //       }))
+        
+  //     : [];
+  // }, [JSON.stringify(state.workProgresses), stateProject?.listProjects]);
+  
+  const data: ITableData[] = useMemo(
+    () =>
+      state.workProgresses && state.workProgresses.length > 0
+        ? state.workProgresses.map(
+            (
+              { id, project_id, name, progress, expense, start_date, end_date, task_ids, feedback, description },
+              index,
+            ) => ({
+              index: index + 1,
+              key: id,
+              project_id: projectName(+project_id!),
+              name,
+              progress ,
+              expense,
+              start_date,
+              end_date ,
+              feedback,
+              description,
+              task_ids,
+            }),
+          )
+        : [],
+    [JSON.stringify(state.workProgress), JSON.stringify(stateProject?.listProjects)],
+  );
+  
   useFetchStatus({
     module: "work_progress",
     reset: resetStatus,
@@ -191,8 +226,11 @@ const WorkProgresses = () => {
 
   useEffect(() => {
     dispatch(getAllWorkProgresses({ query: state.filter }));
-    dispatchProject(getListProject());
   }, [JSON.stringify(state.filter), JSON.stringify(state.status)]);
+
+  useEffect(() => {
+    dispatch(getListProject());
+  },[dispatchProject])
   return (
     <>
       <Heading

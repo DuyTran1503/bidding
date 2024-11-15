@@ -607,11 +607,11 @@ export const routes: IRoute[] = [
                 element: () => <CreateWorkProgress />,
               },
               {
-                path: "/update",
+                path: "/update/:id",
                 element: () => <UpdateWorkProgress />,
               },
               {
-                path: "/detail",
+                path: "/detail/:id",
                 element: () => <DetailWorkProgress />,
               },
             ],
