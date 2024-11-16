@@ -8,7 +8,6 @@ import { resetStatus, setFilter } from "@/services/store/employee/employee.slice
 import { IWorkProgressInitialState } from "@/services/store/workProgress/workProgress.slice";
 import { deleteWorkProgress, getAllWorkProgresses } from "@/services/store/workProgress/workProgress.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
@@ -19,13 +18,6 @@ import { useNavigate } from "react-router-dom";
 const WorkProgresses = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IWorkProgressInitialState>("work_progress");
-  // const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-
-  // const projectName = (value: number) => {
-  //   if (stateProject?.listProjects!.length > 0 && !!value) {
-  //     return stateProject?.listProjects!.find((item) => item.id === value)?.name;
-  //   }
-  // };
 
   const columns: ColumnsType = [
     {
@@ -80,15 +72,6 @@ const WorkProgresses = () => {
       className: "w-[200px]",
     },
 
-    // {
-    //   dataIndex: "desciption",
-    //   title: "Mô tả",
-    //   className: "w-[250px]",
-
-    //   render(_, record) {
-    //     return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
-    //   },
-    // },
   ];
   const buttons: IGridButton[] = [
     {
@@ -120,39 +103,7 @@ const WorkProgresses = () => {
       title: "Tên nhân viên",
       type: "text",
     },
-    // {
-    //   id: "email",
-    //   placeholder: "Nhập email...",
-    //   title: "Tên email",
-    //   type: "text",
-    // },
-    // {
-    //   id: "address",
-    //   placeholder: "Nhập địa chỉ...",
-    //   title: "Tên địa chỉ",
-    //   type: "text",
-    // },
-    // {
-    //   id: "status",
-    //   placeholder: "Chọn trạng thái làm việc...",
-    //   title: "Tên trạng thái làm việc",
-    //   type: "select",
-    //   options: optionStatus,
-    // },
-    // {
-    //   id: "status",
-    //   placeholder: "Chọn trình độ học vấn...",
-    //   title: "Tên trình độ học vấn",
-    //   type: "select",
-    //   options: optionEducation,
-    // },
-    // {
-    //   id: "enterprise_id",
-    //   placeholder: "Chọn tên doanh nghiệp...",
-    //   title: "Tên doanh nghiệp",
-    //   type: "select",
-    //   options: enterpriseOption as { value: string; label: string }[],
-    // },
+
   ];
 
   const data: ITableData[] = useMemo(
@@ -172,7 +123,7 @@ const WorkProgresses = () => {
             task,
           }))
         : [],
-    [JSON.stringify(state.workProgress)],
+    [state.workProgresses],
   );
 
   useFetchStatus({
@@ -184,19 +135,10 @@ const WorkProgresses = () => {
     },
   });
 
-  // useEffect(() => {
-  //   if (state.status === EFetchStatus.FULFILLED) {
-  //     dispatch(getAllWorkProgresses({query: state.status}))
-  //   }
-  // },[JSON.stringify(state.status)])
-
   useEffect(() => {
-    dispatch(getAllWorkProgresses({ query: state.filter }));
-  }, [JSON.stringify(state.filter)]);
+    dispatch(getAllWorkProgresses({ query: {} })); // Load toàn bộ dữ liệu khi component mount
+  }, []);
 
-  // useEffect(() => {
-  //   dispatch(getListProject());
-  // },[dispatchProject])
   return (
     <>
       <Heading
