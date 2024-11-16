@@ -179,7 +179,7 @@ const Employee = () => {
   useEffect(() => {
     dispatch(getAllEmployee({ query: state.filter }));
     dispatchEnterprise(getListEnterprise());
-  }, [JSON.stringify(state.filter), JSON.stringify(state.status)]);
+  }, [JSON.stringify(state.filter)]);
   return (
     <>
       <Heading

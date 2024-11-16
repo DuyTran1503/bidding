@@ -56,7 +56,7 @@ const DetailProject = () => {
           },
         ]}
       />
-      <ActionModule type={EPageTypes.UPDATE} formikRef={formikRef} project={data} />
+      <ActionModule type={EPageTypes.VIEW} formikRef={formikRef} project={data} />
     </>
   );
 };

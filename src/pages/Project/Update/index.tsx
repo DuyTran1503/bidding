@@ -42,6 +42,7 @@ const UpdateProject = () => {
       setData(state.project);
     }
   }, [JSON.stringify(state.project)]);
+
   return (
     <>
       <Heading

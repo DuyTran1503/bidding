@@ -34,8 +34,15 @@ export interface IProject {
   files?: File[];
   decision_number_issued: string;
   upload_time?: string;
+  industries?: number[];
+  funding_source?: string;
+  staff?: string;
+  procurement_categories?: number[];
+  selection_method?: string;
+  attachments?: File[];
 }
 export interface INewProject extends IProject {
-  tenderer_id: number[];
-  investor_id: number[];
+  tenderer_id: number | null;
+  investor_id: number | null;
+  children?: INewProject[];
 }
