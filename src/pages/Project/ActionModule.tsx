@@ -23,10 +23,10 @@ import { SUBMIT_METHOD } from "@/shared/enums/submissionMethod";
 import { convertEnum } from "@/shared/utils/common/convertEnum";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
-import { convertDataOptions } from "./helper";
+import { convertDataOptions, convertToFileObject } from "./helper";
 import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
-import { createProject } from "@/services/store/project/project.thunk";
+import { createProject, updateProject } from "@/services/store/project/project.thunk";
 import { IAccountInitialState } from "@/services/store/account/account.slice";
 import { getListStaff } from "@/services/store/account/account.thunk";
 import { IProcurementInitialState } from "@/services/store/procurement/procurement.slice";
@@ -38,7 +38,10 @@ interface IPropProject {
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW | EPageTypes.APPROVE;
   project?: INewProject;
 }
-
+type FileObject = {
+  path: string;
+  [key: string]: any; // Chấp nhận các thuộc tính khác
+};
 const ActionModule = ({ formikRef, type, project }: IPropProject) => {
   const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
@@ -52,13 +55,13 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
     parent_id: project ? project.parent_id : null,
     children: project ? project.children : [],
     name: project ? project.name : "",
-    selection_method_id: project ? project.selection_method_id : undefined,
+    selection_method_id: project ? project.selection_method : undefined,
     location: project ? project.location : "",
-    tenderer_id: project?.tenderer_id || [],
-    investor_id: project?.investor_id || [],
-    funding_source_id: project?.funding_source_id || undefined,
-    staff_id: project?.staff_id || undefined,
-    industry_id: project?.industry_id || [],
+    tenderer_id: +project?.tenderer! || null,
+    investor_id: +project?.investor! || null,
+    funding_source_id: project?.funding_source || undefined,
+    staff_id: project?.staff || undefined,
+    industry_id: project?.industries || [],
     is_domestic: project?.is_domestic || DOMESTIC.INSIDE,
     amount: project?.amount || 0,
     total_amount: project?.total_amount || 0,
@@ -72,33 +75,21 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
     decision_number_approve: project?.decision_number_approve || "",
     description: project?.description || "",
     status: project?.status || STATUS_PROJECT.AWAITING,
-    procurement_id: project?.procurement_id || [],
+    procurement_id: project?.procurement_categories || [],
     submission_method: project?.submission_method || SUBMIT_METHOD.online,
-    files: project?.files || [],
+    files: project?.attachments || [],
     decision_number_issued: project?.decision_number_issued || "",
   };
-  const stringRegex = /^[\p{L}0-9\s._`-]*$/u;
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const Schema = object().shape({
     parent_id: number().nullable(),
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    bidding_field_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     staff_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
+    industry_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
     selection_method_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    release_date: date().required("Vui lòng không để trống trường này"),
-    decision_issuance: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    owner_representative: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    tenderer_representative: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     location: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     funding_source_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    tender_package_price: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    submission_deadline: date().required("Vui lòng không để trống trường này"),
-    invest_total: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    tender_date: date().required("Vui lòng không để trống trường này"),
-    enterprise_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    technical_requirements: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     attached_documents: array().min(1, "Vui lòng chọn ít nhất một tài liệu đính kèm"),
-    start_bidding: date().required("Vui lòng không để trống trường này"),
-    location_bidding: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     start_time: date().required("Vui lòng không để trống trường này"),
     end_time: date().required("Vui lòng không để trống trường này"),
     status: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
@@ -116,6 +107,12 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
     value: item,
     label: mappingDOMESTIC[item],
   }));
+  const mergeFiles = (projectFiles: FileObject[], dataFiles: FileObject[]): FileObject[] => {
+    const dataPaths = new Set(dataFiles.map((file) => file.path));
+    const filteredProjectFiles = projectFiles.filter((file) => !dataPaths.has(file.path));
+    const newFiles = dataFiles.filter((file) => !projectFiles.some((pFile) => pFile.path === file.path));
+    return [...filteredProjectFiles, ...newFiles];
+  };
 
   return (
     <Formik
@@ -124,10 +121,19 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
         const data = {
           ...lodash.omit(values, "id", "children"),
         };
+
         if (type === EPageTypes.CREATE) {
           return dispatchProject(createProject(data as Omit<INewProject, "id">));
         }
         if (type === EPageTypes.APPROVE) {
+          return;
+        }
+        if (type === EPageTypes.UPDATE && project?.id) {
+          const updatedFiles =
+            initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
+
+          const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ files, ...rest }) => rest)(data);
+          dispatchEnterprise(updateProject({ body: newData, param: String(project.id) }));
         }
       }}
       enableReinitialize
@@ -141,6 +147,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tên Dự Án">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập tên dự án..."
                     name="name"
                     value={values.name}
@@ -153,6 +160,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Hình thức lựa chọn nhà thầu">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn phương thức..."
                     id="selection_method_id"
                     value={values.selection_method_id as string}
@@ -165,18 +173,20 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Hình thức tham gia đấu thầu">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn hình thức..."
                     id="submission_method"
                     value={values.submission_method as string}
                     error={touched.submission_method ? errors.submission_method : ""}
                     onChange={(e) => setFieldValue("submission_method", e)}
-                    options={convertEnum(SUBMIT_METHOD)}
+                    options={convertEnum(SUBMIT_METHOD, true)}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Địa Điểm">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập địa điểm..."
                     name="location"
                     value={values.location}
@@ -189,9 +199,10 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Bên Mời Thầu">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập  bên mời thầu..."
                     id="tenderer_id"
-                    value={values.tenderer_id}
+                    value={values.tenderer_id!}
                     onChange={(e) => setFieldValue("tenderer_id", e)}
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}
                   />
@@ -201,9 +212,10 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Chủ đầu tư">
                   <FormSelect
-                    placeholder="Nhập  chủ đầu tư..."
+                    isDisabled={type === EPageTypes.VIEW}
+                    placeholder="Nhập chủ đầu tư..."
                     id="investor_id"
-                    value={values.investor_id}
+                    value={values.investor_id!}
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}
                     onChange={(e) => setFieldValue("investor_id", e)}
                   />
@@ -212,6 +224,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Nguồn Vốn">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập nguồn vốn..."
                     id="funding_source_id"
                     value={values.funding_source_id as string}
@@ -225,6 +238,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Người phê duyệt">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn người phê duyệt..."
                     id="staff_id"
                     value={values.staff_id as string}
@@ -234,9 +248,10 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Dịch vụ mua sắm đấu thầu công">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     isMultiple
                     placeholder="Chọn..."
                     id="procurement_id"
@@ -249,6 +264,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Ngành Nghề">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     isMultiple
                     placeholder="Nhập ngành nghề..."
                     id="industry_id"
@@ -261,6 +277,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Số quyết định ban hành">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập số quyết định ban hành..."
                     name="decision_number_issued"
                     value={values.decision_number_issued}
@@ -273,6 +290,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Quốc Tế">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập thông tin..."
                     id="is_domestic"
                     value={values.is_domestic as unknown as string}
@@ -285,6 +303,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Số Tiền">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập số tiền..."
                     name="amount"
                     value={values.amount}
@@ -297,6 +316,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tổng đầu tư">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập số tiền..."
                     name="total_amount"
                     value={values.total_amount}
@@ -310,6 +330,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Địa Điểm Nhận Hồ Sơ">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập địa điểm nhận hồ sơ..."
                     name="receiving_place"
                     value={values.receiving_place}
@@ -385,9 +406,9 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Trạng thái dự án">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     options={STATUS_PROJECT_ARRAY}
                     id="status"
-                    isDisabled
                     value={values.status && STATUS_PROJECT_ARRAY.find((item) => +item.value === +values.status)?.label}
                     error={touched.status ? errors.status : ""}
                     onChange={(e) => setFieldValue("status", e)}
@@ -401,7 +422,12 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               </Col>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Mô Tả">
-                  <FormCkEditor id="description" value={values.description ?? ""} onChange={(e) => setFieldValue("description", e)} />
+                  <FormCkEditor
+                    disabled={type === EPageTypes.VIEW}
+                    id="description"
+                    value={values.description ?? ""}
+                    onChange={(e) => setFieldValue("description", e)}
+                  />
                 </FormGroup>
               </Col>
             </Row>

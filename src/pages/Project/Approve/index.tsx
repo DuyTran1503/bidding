@@ -24,7 +24,7 @@ import FormInput from "@/components/form/FormInput";
 import { mixed, object, string } from "yup";
 
 interface IApprove {
-  status: STATUS_PROJECT;
+  status?: STATUS_PROJECT;
   decision_number_approve: string;
   notes?: string;
   initialStatus?: string;
@@ -64,15 +64,15 @@ const ApproveProject = () => {
       })
       .required("Không để trống trường này"),
 
-    decision_number_approve: string()
-      .trim()
-      .when("status", (_, schema) => {
-        return is_approve ? schema.required("Không để trống trường này") : schema.notRequired();
-      }),
+    // decision_number_approve: string()
+    //   .trim()
+    //   .when("status", (_, schema) => {
+    //     return is_approve ? schema.required("Không để trống trường này") : schema.notRequired();
+    //   }),
   });
   const initialValues: IApprove = {
-    status: data?.status || STATUS_PROJECT.AWAITING,
-    decision_number_approve: "",
+    status: data?.status || undefined,
+    decision_number_approve: state.project.decision_number_issued || "",
     notes: "",
     initialStatus: (data?.status as any) || "",
   };
@@ -141,8 +141,9 @@ const ApproveProject = () => {
                         label="Số quyết định phê duyệt"
                         placeholder="Nhập số quyết định phê duyệt..."
                         name="decision_number_approve"
-                        value={values.decision_number_approve}
-                        error={touched.decision_number_approve ? errors.decision_number_approve : ""}
+                        isReadonly
+                        value={state.project.decision_number_issued ?? values.decision_number_approve}
+                        // error={touched.decision_number_issued ? errors.decision_number_issued : ""}
                         onChange={(e) => setFieldValue("decision_number_approve", e)}
                         onBlur={handleBlur}
                       />
@@ -155,7 +156,7 @@ const ApproveProject = () => {
                         label="Trạng thái dự án"
                         id="status"
                         // isDisabled
-                        value={values.status && STATUS_PROJECT_ARRAY.find((item) => +item.value === +values.status)?.label}
+                        value={values.status && STATUS_PROJECT_ARRAY.find((item) => +item.value === +values?.status!)?.label}
                         error={touched.status ? errors.status : ""}
                         onChange={(e) => {
                           setFieldValue("status", e);
@@ -173,7 +174,7 @@ const ApproveProject = () => {
                   <Button
                     kind="submit"
                     type="third"
-                    text={"Trả về"}
+                    text={"Trở về"}
                     onClick={() => {
                       setIsApprove(false);
                       handleSubmit();
