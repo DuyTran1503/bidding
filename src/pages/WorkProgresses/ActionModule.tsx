@@ -45,9 +45,7 @@ export interface IWorkProgressInitialValues {
 const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormProps) => {
   const { dispatch: dispatchWorkProgress } = useArchive<IWorkProgressInitialState>("work_progress");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
-
-  console.log(workProgress);
+  const { state: stateTask} = useArchive<ITaskInitialState>("task");
 
   const initialValues: IWorkProgressInitialValues = {
     id: workProgress?.id ?? "",
@@ -79,7 +77,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
   }, []);
   useEffect(() => {
     dispatchProject(getListProject());
-    // dispatchTask(getListTask())
+    // dispatchTask(getListTask()) 
   }, []);
 
   return (

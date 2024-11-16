@@ -1,7 +1,10 @@
+import { IProject } from "../project/project.model";
+import { ITask } from "../task/task.model";
+
 export interface IWorkProgress {
     id: string ,
     project_id?: string,
-    task_ids: number[],
+    task_ids?: number[],
     name: string,
     expense: number | string,
     progress: string,
@@ -9,7 +12,6 @@ export interface IWorkProgress {
     end_date: string | Date,
     feedback: string,
     description: string,
-
-    project?: {id: string, name: string}
-    task?: { id: string; name: string }
+    project: IProject,
+    task:ITask[]
 }
