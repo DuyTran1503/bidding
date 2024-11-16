@@ -111,3 +111,12 @@ export const deleteTask = createAsyncThunk("task/delete-task", async (id: number
     return rejectWithValue(error.response.data);
   }
 });
+
+export const getListTask = createAsyncThunk("staff/tasks", async (_, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<ITask[]>(`/api/admin/tasks`);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
