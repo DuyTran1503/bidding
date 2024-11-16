@@ -54,6 +54,7 @@ const compareProjectSlice = createSlice({
       if (payload) {
         state[key] = payload;
       }
+      state.loading = false;
     };
 
     const rejectedReducer = (state: ICompareProjectInitialState, payload: any) => {

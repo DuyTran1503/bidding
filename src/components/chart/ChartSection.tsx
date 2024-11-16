@@ -1,6 +1,6 @@
 import React from "react";
 import GenericChart from "@/components/chart/GenericChart";
-import { Col, Button, Select } from "antd";
+import {  Button, Select } from "antd";
 
 interface ChartSectionProps {
     title: string;
@@ -51,10 +51,10 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     selectedValue,
     onSelectChange,
     buttonText,
-    onButtonClick
+    onButtonClick,
 }) => {
     return (
-        <Col xs={24} sm={24} md={24} xl={12}>
+        <>
             <h3 className="text-lg font-semibold mb-4">{title}</h3>
             <div className={`flex flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)] ${className}`}>
 
@@ -98,7 +98,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
                     <li key={index}>{desc}</li>
                 ))}
             </ul>
-        </Col>
+        </>
     );
 };
 

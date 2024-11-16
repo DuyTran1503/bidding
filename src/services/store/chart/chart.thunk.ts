@@ -169,46 +169,41 @@ export const topInvestorsByProjectTotalAmount = createAsyncThunk(
 );
 
 // top-enterprises-have-completed-projects-by-funding-source/{fundingSource?}
-export const topEnterprisesHaveCompletedProjectsByFundingSource = createAsyncThunk(
-  "topEnterprisesHaveCompletedProjectsByFundingSource",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
-    try {
-      const { data } = await client.post(`${prefix}/top-enterprises-have-completed-projects-by-funding-source`, payload);
-      return data.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
-    }
-  },
-);
+export const topEnterprisesHaveCompletedProjectsByFundingSource = 
+createAsyncThunk("topEnterprisesHaveCompletedProjectsByFundingSource", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { data } = await client.post(`${prefix}/top-enterprises-have-completed-projects-by-funding-source`, payload);
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+  }
+});
 
 // top-enterprises-have-completed-projects-by-industry
-export const topEnterprisesHaveCompletedProjectsByIndustry = createAsyncThunk(
-  "topEnterprisesHaveCompletedProjectsByIndustry",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
-    try {
-      const { data } = await client.post(`${prefix}/top-enterprises-have-completed-projects-by-industry`, payload);
-      return data.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
-    }
-  },
-);
+export const topEnterprisesHaveCompletedProjectsByIndustry = 
+createAsyncThunk("topEnterprisesHaveCompletedProjectsByIndustry", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { data } = await client.post(`${prefix}/top-enterprises-have-completed-projects-by-industry`, payload);
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+  }
+});
 
-// time-joining-website-of-enterprise Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm
-export const timeJoiningWebsiteOfEnterprise = createAsyncThunk(
-  "timeJoiningWebsiteOfEnterprise",
-  async (payload: IThunkPayload, { rejectWithValue }) => {
-    try {
-      const { data } = await client.post(`${prefix}/time-joining-website-of-enterprise`, payload);
-      return data.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
-    }
-  },
-);
+// time-joining-website-of-enterprise
+export const timeJoiningWebsiteOfEnterprise = 
+createAsyncThunk("timeJoiningWebsiteOfEnterprise", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { data } = await client.post(`${prefix}/time-joining-website-of-enterprise`, payload);
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+  }
+});
 
-// projects-status-per-month Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng
-export const projectsStatusPreMonth = createAsyncThunk("projectsStatusPreMonth", async (payload: IThunkPayload, { rejectWithValue }) => {
+// projects-status-per-month
+export const projectsStatusPreMonth = 
+createAsyncThunk("projectsStatusPreMonth", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { data } = await client.post(`${prefix}/projects-status-per-month`, payload);
     return data.data;
@@ -217,8 +212,9 @@ export const projectsStatusPreMonth = createAsyncThunk("projectsStatusPreMonth",
   }
 });
 
-// industry-has-the-most-project Biểu đồ thể hiện số lượng dự án theo ngành nghề
-export const industryHasTheMostProject = createAsyncThunk("industryHasTheMostProject", async (payload: IThunkPayload, { rejectWithValue }) => {
+// industry-has-the-most-project
+export const industryHasTheMostProject = 
+createAsyncThunk("industryHasTheMostProject", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { data } = await client.post(`${prefix}/industry-has-the-most-project`, payload);
     return data.data;
@@ -227,8 +223,9 @@ export const industryHasTheMostProject = createAsyncThunk("industryHasTheMostPro
   }
 });
 
-// industry-has-the-most-enterprise Biểu đồ số lượng doanh nghiệp phân bổ theo ngành nghề
-export const industryHasTheMostEnterprise = createAsyncThunk("industryHasTheMostEnterprise ", async (payload: IThunkPayload, { rejectWithValue }) => {
+// industry-has-the-most-enterprise
+export const industryHasTheMostEnterprise  = 
+createAsyncThunk("industryHasTheMostEnterprise ", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { data } = await client.post(`${prefix}/industry-has-the-most-enterprise `, payload);
     return data.data;

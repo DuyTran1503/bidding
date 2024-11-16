@@ -4,7 +4,7 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
@@ -15,6 +15,8 @@ import { deletePost, getAllPosts } from "@/services/store/post/post.thunk";
 import { GoDownload } from "react-icons/go";
 import { EButtonTypes } from "@/shared/enums/button";
 import Image from "@/components/table/Image";
+import { mappingStatust } from "@/shared/enums/types";
+import { statusEnumArray } from "@/shared/enums/statusActive";
 
 const Posts = () => {
   const navigate = useNavigate();
@@ -116,6 +118,10 @@ const Posts = () => {
     //   },
     // },
   ];
+  const optionStatus: IOption[] = statusEnumArray.map((e) => ({
+    label: mappingStatust[e],
+    value: e,
+  }));
 
   const search: ISearchTypeTable[] = [
     {
@@ -123,6 +129,13 @@ const Posts = () => {
       placeholder: "Nhập tiêu đề bài viết...",
       label: "Tiêu đề bài viết",
       type: "text",
+    },
+    {
+      id: "status",
+      placeholder: "Chọn trạng thái...",
+      title: "Tên trạng thái",
+      type: "select",
+      options: optionStatus,
     },
   ];
 
