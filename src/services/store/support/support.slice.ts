@@ -56,7 +56,7 @@ const supportSlice = createSlice({
       getSupportById.fulfilled, (state, { payload }: PayloadAction<IResponse<ISupport> | any>) => {
         if (payload.data) {
           state.activeSupport = payload.data;
-          state.message = transformPayloadErrors(payload?.errors);
+          state.message = payload.message || transformPayloadErrors(payload?.errors);
         }
       }
     );
@@ -75,7 +75,7 @@ const supportSlice = createSlice({
       })
       .addCase(createSupport.rejected, (state, {payload}: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Delete Support
     builder
@@ -89,7 +89,7 @@ const supportSlice = createSlice({
       })
       .addCase(deleteSupport.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Update the status
     builder
@@ -102,7 +102,7 @@ const supportSlice = createSlice({
       })
       .addCase(changeStatusSupport.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
   },
 });

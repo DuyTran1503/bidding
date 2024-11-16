@@ -56,7 +56,7 @@ const postCatalogSlice = createSlice({
     builder.addCase(getPostCatalogById.fulfilled, (state, { payload }: PayloadAction<IResponse<IPostCatalog> | any>) => {
       if (payload.data) {
         state.activePostCatalog = payload.data;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       }
     });
     
@@ -107,7 +107,7 @@ const postCatalogSlice = createSlice({
       })
       .addCase(deletePostCatalog.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     builder
       .addCase(changeStatusPostCatalog.pending, (state) => {
@@ -119,7 +119,7 @@ const postCatalogSlice = createSlice({
       })
       .addCase(changeStatusPostCatalog.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
   },
 });

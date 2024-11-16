@@ -56,7 +56,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
   titleFontSize = 16,
   barWidth,
   grid = 80,
-  valueType = "quantity", // Mặc định là số lượng
+  valueType = "quantity",
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const computedRotate = name && name.length > 5 ? 45 : 0;
@@ -113,38 +113,38 @@ const GenericChart: React.FC<GenericChartProps> = ({
       },
       legend: legendPosition
         ? {
-            [legendPosition]: "0%",
-            itemGap: 10,
-            textStyle: {
-              fontSize: 10, // Thay đổi kích thước của legend tại đây
-            },
-            type: "scroll",
-            orient: "horizontal", // Đặt hướng ngang để legend nằm ở phía dưới
-            left: "center",
-          }
+          [legendPosition]: "0%",
+          itemGap: 10,
+          textStyle: {
+            fontSize: 10, // Thay đổi kích thước của legend tại đây
+          },
+          type: "scroll",
+          orient: "horizontal", // Đặt hướng ngang để legend nằm ở phía dưới
+          left: "center",
+        }
         : undefined,
       xAxis:
         chartType !== "pie"
           ? {
-              type: "category",
-              data: name,
-              axisLabel: {
-                interval: 0,
-                rotate: computedRotate,
-                verticalAlign: "top",
-                overflow: "truncate",
-                formatter: (value: string) => (name && name.length > 4 && value.length > 20 ? value.substring(0, 20) + "..." : value),
-              },
-            }
+            type: "category",
+            data: name,
+            axisLabel: {
+              interval: 0,
+              rotate: computedRotate,
+              verticalAlign: "top",
+              overflow: "truncate",
+              formatter: (value: string) => (name && name.length > 4 && value.length > 20 ? value.substring(0, 20) + "..." : value),
+            },
+          }
           : undefined,
       yAxis:
         chartType !== "pie"
           ? {
-              type: "value",
-              axisLabel: {
-                formatter: (value: number) => formatValue(value),
-              },
-            }
+            type: "value",
+            axisLabel: {
+              formatter: (value: number) => formatValue(value),
+            },
+          }
           : undefined,
       grid: {
         bottom: grid,
@@ -152,39 +152,39 @@ const GenericChart: React.FC<GenericChartProps> = ({
       series:
         chartType === "area" && Array.isArray(series)
           ? series.map((s, index) => ({
-              name: s.name,
-              type: "line",
-              data: s.data,
-              smooth: true,
-              areaStyle: {},
-              itemStyle: { color: s.color || colors[index % colors.length] },
-            }))
+            name: s.name,
+            type: "line",
+            data: s.data,
+            smooth: true,
+            areaStyle: {},
+            itemStyle: { color: s.color || colors[index % colors.length] },
+          }))
           : [
-              {
-                colors: chartType === "pie" ? colors : undefined,
-                name: seriesName,
-                type: chartType,
-                data: seriesData,
-                barWidth: computedBarWidth,
-                smooth: chartType === "line",
-                label: {
-                  show: true,
-                  fontSize: labelFontSize,
-                  grid: {
-                    bottom: grid,
-                  },
-                  formatter: (params: any) => {
-                    if (chartType === "pie") {
-                      return `${params.name}: ${params.percent}%`;
-                    }
-                    return formatValue(params.value);
-                  },
-                  position: chartType === "pie" ? "outside" : "top",
+            {
+              colors: chartType === "pie" ? colors : undefined,
+              name: seriesName,
+              type: chartType,
+              data: seriesData,
+              barWidth: computedBarWidth,
+              smooth: chartType === "line",
+              label: {
+                show: true,
+                fontSize: labelFontSize,
+                grid: {
+                  bottom: grid,
                 },
-                areaStyle: chartType === "area" ? {} : undefined,
-                animationDuration,
+                formatter: (params: any) => {
+                  if (chartType === "pie") {
+                    return `${params.name}: ${params.percent}%`;
+                  }
+                  return formatValue(params.value);
+                },
+                position: chartType === "pie" ? "outside" : "top",
               },
-            ],
+              areaStyle: chartType === "area" ? {} : undefined,
+              animationDuration,
+            },
+          ],
     };
   }, [
     name,
@@ -206,24 +206,18 @@ const GenericChart: React.FC<GenericChartProps> = ({
     const chartDom = chartRef.current;
     if (!chartDom) return;
 
-    // Initialize the chart
     const myChart = echarts.init(chartDom);
     myChart.setOption(option);
-
     const handleResize = () => {
       myChart.resize();
     };
 
     window.addEventListener("resize", handleResize);
-
-    // Cleanup function to dispose of the chart instance
-    return () => {
-      myChart.dispose(); // Dispose of the chart
-      window.removeEventListener("resize", handleResize); // Clean up the event listener
-    };
   }, [option]);
 
-  return <div className="mt-4 flex h-[60vh] w-full items-center justify-center" ref={chartRef}></div>;
+  return <div className="mt-4 flex h-[60vh] w-full items-center justify-center">
+    <div ref={chartRef} style={{ height: "100%", width: "100%" }} />
+  </div>
 };
 
 export default GenericChart;

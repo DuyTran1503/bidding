@@ -57,7 +57,7 @@ const biddingResultSlice = createSlice({
       getBiddingResultById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingResult> | any>) => {
         if (payload.data) {
           state.activeBiddingResult = payload.data;
-          state.message = transformPayloadErrors(payload?.errors);
+          state.message = payload.message || transformPayloadErrors(payload?.errors);
         }
       }
     );
@@ -76,7 +76,7 @@ const biddingResultSlice = createSlice({
       })
       .addCase(createBiddingResult.rejected, (state, {payload}: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Update bidding history
     builder
@@ -95,7 +95,7 @@ const biddingResultSlice = createSlice({
       })
       .addCase(updateBiddingResult.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Delete bidding history
     builder
@@ -109,7 +109,7 @@ const biddingResultSlice = createSlice({
       })
       .addCase(deleteBiddingResult.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
       builder
       .addCase(changeStatusBiddingResult.pending, (state) => {
@@ -121,7 +121,7 @@ const biddingResultSlice = createSlice({
       })
       .addCase(changeStatusBiddingResult.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
   },
 });

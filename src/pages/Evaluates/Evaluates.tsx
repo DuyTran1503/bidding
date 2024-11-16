@@ -8,89 +8,89 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
+import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IBiddingResultInitialState, resetStatus, setFilter } from "@/services/store/biddingResult/biddingResult.slice";
-import { getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
-// import { EPermissions } from "@/shared/enums/permissions";
 import { GoDownload } from "react-icons/go";
-import DetailBiddingResult from "../DetailBiddingResult/DetailBiddingResult";
+import { IEvaluateInitialState, resetStatus, setFilter } from "@/services/store/evaluate/evaluate.slice";
+import { deleteEvaluate, getAllEvaluates } from "@/services/store/evaluate/evaluate.thunk";
+import EvaluateForm from "./EvaluateForm";
 
-const BiddingResults = () => {
-    const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
+const Evaluates = () => {
+    const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
 
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
-        },
-        {
-            type: EButtonTypes.CREATE,
+            //   permission: EPermissions.DETAIL_EVALUATE,
         },
         {
             type: EButtonTypes.UPDATE,
+            // permission: EPermissions.UPDATE_EVALUATE,
+        },
+        {
+            type: EButtonTypes.DESTROY,
+            onClick(record) {
+                dispatch(deleteEvaluate(record?.key));
+            },
+            // permission: EPermissions.DESTROY_EVALUATE,
         },
     ];
 
-    const columns: ColumnsType = [
+    const columns: ColumnsType<ITableData> = [
         {
             dataIndex: "index",
             title: "STT",
+            className: "w-4",
         },
         {
-            dataIndex: "project",
-            title: "Tên dự án",
-            render: (_, record) => {
-                return <span>{record.project?.name || "Không có tên dự án"}</span>;
-            },
+            dataIndex: "evaluate",
+            title: "Tên danh mục",
+            className: "w-[300px]",
         },
         {
-            dataIndex: "project",
-            title: "Tổng chi phí",
-            render: (_, record) => {
-                return <span>{record.project?.total_amount || "Không có tên dự án"}</span>;
-            },
+            dataIndex: "project.name",
+            title: "Cái chó gì",
+            className: "w-[300px]",
         },
         {
-            dataIndex: "enterprise",
-            title: "Doanh nghiệp trúng thầu",
-            render: (_, record) => {
-                return <span>{record.enterprise?.address || "Không có tên dự án"}</span>;
-            },
+            dataIndex: "score",
+            title: "Tên danh mục",
+            className: "w-[300px]",
         },
         {
-            dataIndex: "decision_date",
-            title: "Thời gian kết thúc",
-        }
+            dataIndex: "title",
+            title: "Mô tả",
+            className: "w-[300px]",
+        },
     ];
 
     const search: ISearchTypeTable[] = [
         {
-            id: "name",
-            placeholder: "Nhập tên lĩnh vực...",
-            label: "Tên lĩnh vực",
+            id: "title",
+            placeholder: "Nhập tên vai trò...",
+            label: "Tên vai trò",
             type: "text",
         },
     ];
 
     const data: ITableData[] = useMemo(
         () =>
-            state.biddingResults && state.biddingResults.length > 0
-                ? state.biddingResults.map(({ id, project, enterprise, bid_document, win_amount, decision_number, decision_date, is_active }, index) => ({
+            state.evaluates && state.evaluates.length > 0
+                ? state.evaluates.map(({ id, title, score, evaluate, project }, index) => ({
                     index: index + 1,
                     key: id,
-                    project,
-                    enterprise,
-                    bid_document,
-                    win_amount,
-                    decision_number,
-                    decision_date,
-                    is_active,
+                    id: id,
+                    title,
+                    score,
+                    evaluate,
+                    project
                 }))
                 : [],
-        [JSON.stringify(state.biddingResults)],
+        [JSON.stringify(state.evaluates)],
     );
 
     useFetchStatus({
-        module: "bidding_result",
+        module: "evaluate",
         reset: resetStatus,
         actions: {
             success: { message: state.message },
@@ -100,25 +100,30 @@ const BiddingResults = () => {
 
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
-            dispatch(getAllBiddingResults({ query: state.filter }));
+            dispatch(getAllEvaluates({ query: state.filter }));
         }
     }, [JSON.stringify(state.status)]);
 
     useEffect(() => {
-        dispatch(getAllBiddingResults({ query: state.filter }));
+        dispatch(getAllEvaluates({ query: state.filter }));
     }, [JSON.stringify(state.filter)]);
 
     return (
         <>
             <Heading
-                title="Kết quả đấu thầu"
+                title="Danh mục bài viết"
                 hasBreadcrumb
-                ModalContent={(props) => <DetailBiddingResult {...(props as any)} />}
+                ModalContent={(props) => <EvaluateForm {...(props as any)} />}
                 buttons={[
                     {
                         text: "Export",
                         type: "ghost",
                         icon: <GoDownload className="text-[18px]" />,
+                    },
+                    {
+                        icon: <FaPlus className="text-[18px]" />,
+                        // permission: EPermissions.CREATE_EVALUATE,
+                        text: "Thêm mới",
                     },
                 ]}
             />
@@ -134,10 +139,10 @@ const BiddingResults = () => {
                 }}
                 setFilter={setFilter}
                 filter={state.filter}
-                ModalContent={(props) => <DetailBiddingResult {...(props as any)} />}
+                ModalContent={(props) => <EvaluateForm {...(props as any)} />}
             />
         </>
     );
 };
 
-export default BiddingResults;
+export default Evaluates;

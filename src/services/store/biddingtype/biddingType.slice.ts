@@ -56,7 +56,7 @@ const biddingTypeSlice = createSlice({
     builder.addCase(getBiddingTypeById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingType> | any>) => {
       if (payload.data) {
         state.activeBiddingType = payload.data;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       }
     });
 
@@ -74,7 +74,7 @@ const biddingTypeSlice = createSlice({
       })
       .addCase(createBiddingType.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Update bidding type
     builder
@@ -93,7 +93,7 @@ const biddingTypeSlice = createSlice({
       })
       .addCase(updateBiddingType.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Delete bidding type
     builder
@@ -107,7 +107,7 @@ const biddingTypeSlice = createSlice({
       })
       .addCase(deleteBiddingType.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     builder
       .addCase(changeStatusBiddingType.pending, (state) => {
@@ -119,7 +119,7 @@ const biddingTypeSlice = createSlice({
       })
       .addCase(changeStatusBiddingType.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
   },
 });

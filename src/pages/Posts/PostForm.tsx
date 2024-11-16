@@ -112,7 +112,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                                     />
                                 </FormGroup>
                             </Col>
- 
+
                             <Col xs={24} sm={24} md={12} xl={12}>
                                 <FormGroup title="Danh mục bài viết">
                                     <FormSelect
@@ -162,7 +162,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                                 </FormGroup>
                             </Col>
 
-                            <Col xs={24} sm={24} md={12} xl={12}>
+                            <Col xs={24} sm={24} md={24} xl={24}>
                                 <FormGroup title="Hình ảnh">
                                     <FormUploadFile
                                         isMultiple={false}
@@ -172,7 +172,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                                 </FormGroup>
                             </Col>
 
-                            <Col xs={24} sm={24} md={12} xl={12}>
+                            <Col xs={24} sm={24} md={24} xl={24}>
                                 <FormGroup title="Nội dung">
                                     <FormCkEditor
                                         id="content"
