@@ -24,7 +24,11 @@ import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
 import GenericChart from "@/components/chart/GenericChart";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
+import AbleBarChart from "@/components/chart/Axis";
+import { industryHasTheMostEnterprise, projectsStatusPreMonth } from "@/services/store/chart/chart.thunk";
+import { Select } from "antd";
 
+const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Enterprise = () => {
   const navigate = useNavigate();
   const { state: enterpriseState, dispatch: enterpriseDispatch } = useArchive<IEnterpriseInitialState>("enterprise");
@@ -32,6 +36,7 @@ const Enterprise = () => {
   const { state, dispatch } = useArchive<IChartInitialState>("chart");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+  const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
   const industry = (value: number[]) => {
     if (industryState?.listIndustry!.length > 0 && value.length) {
       return industryState.listIndustry!.filter((item) => value.includes(+item.id)).map((item) => item.name);
@@ -49,9 +54,9 @@ const Enterprise = () => {
   // Hoặc sử dụng toán tử nullish coalescing
   const industryOptions: IOption[] = industryState?.listIndustry?.length
     ? industryState.listIndustry.map((item) => ({
-        value: item.id,
-        label: item.name,
-      }))
+      value: item.id,
+      label: item.name,
+    }))
     : [];
   const columns: ColumnsType = [
     {
@@ -157,7 +162,7 @@ const Enterprise = () => {
   const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
   const additionalTabs = [
     {
-      key: "1",
+      key: "2",
       label: "Doanh nghiệp theo ngành nghề",
       content: (
         <GenericChart
@@ -168,37 +173,43 @@ const Enterprise = () => {
         />
       ),
     },
-    {
-      key: "2",
-      label: "Biểu đồ thời gian gia nhập theo năm",
-      content: (
-        <GenericChart
-          name={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
-          value={Object.values(state.timeJoiningWebsiteOfEnterprise).map(({ value }) => value)}
-          chartType="line"
-          seriesName="Dữ liệu theo tháng"
-          title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
-          tooltipEnabled
-          legendPosition="bottom"
-        />
-      ),
-    },
+    // {
+    //   key: "2",
+    //   label: "Biểu đồ thời gian gia nhập theo năm",
+    //   content: (
+    //     <GenericChart
+    //       name={state.timeJoiningWebsiteOfEnterprise}
+    //       value={state.timeJoiningWebsiteOfEnterprise.map(({ value }) => value)}
+    //       chartType="line"
+    //       seriesName="Dữ liệu theo tháng"
+    //       title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
+    //       tooltipEnabled
+    //       legendPosition="bottom"
+    //     />
+    //   ),
+    // },
     {
       key: "3",
       label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
       content: (
-        <GenericChart
-          name={names}
-          chartType="area" // Loại biểu đồ là area
-          title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
-          tooltipEnabled
-          legendPosition="bottom"
-          series={[
-            { name: "Hoàn thành", data: completedValues },
-            { name: "Phê duyệt", data: approvedValues },
-            { name: "Mở thầu", data: openedBiddingValues },
-          ]}
-        />
+        <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
+          <Select
+            placeholder="Chọn năm..."
+            value={selectedYearProjectStatus}
+            onChange={setSelectedYearProjectStatus}
+            options={yearOptions.map((year) => ({ label: year, value: year }))}
+            style={{ width: 150, marginBottom: 16 }}
+          />
+          <AbleBarChart
+            xAxisData={names}
+            title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+            data={[
+              { name: "Hoàn thành", values: completedValues },
+              { name: "Phê duyệt", values: approvedValues },
+              { name: "Mở thầu", values: openedBiddingValues },
+            ]}
+          />
+        </div>
       ),
     },
   ];
@@ -236,27 +247,35 @@ const Enterprise = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(enterpriseState.enterprises)
       ? enterpriseState.enterprises.map(
-          ({ id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at }, index) => ({
-            index: index + 1,
-            key: id,
-            name,
-            representative,
-            enterprises: (industry_id?.length && industry(industry_id)) || [],
-            organization_type,
-            phone,
-            email,
-            address,
-            is_active,
-            is_blacklist,
-            account_ban_at,
-          }),
-        )
+        ({ id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at }, index) => ({
+          index: index + 1,
+          key: id,
+          name,
+          representative,
+          enterprises: (industry_id?.length && industry(industry_id)) || [],
+          organization_type,
+          phone,
+          email,
+          address,
+          is_active,
+          is_blacklist,
+          account_ban_at,
+        }),
+      )
       : [];
   }, [JSON.stringify(enterpriseState.enterprises)]);
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
   };
+
+  useEffect(() => {
+    dispatch(industryHasTheMostEnterprise({}))
+    if (selectedYearProjectStatus) {
+      dispatch(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
+    }
+  }, [selectedYearProjectStatus, dispatch]);
+
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
       enterpriseDispatch(changeStatusActiveEnterprise(String(confirmItem.key)));

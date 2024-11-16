@@ -8,7 +8,6 @@ import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { ISupportInitialState, resetStatus, setFilter } from "@/services/store/support/support.slice";
 import { changeStatusSupport, deleteSupport, getAllSupports } from "@/services/store/support/support.thunk";
@@ -18,9 +17,9 @@ import FormRadio from "@/components/form/FormRadio";
 import FormModal from "@/components/form/FormModal";
 import { mappingSupport, statusEnumArray } from "@/shared/enums/support";
 import { RadioChangeEvent } from "antd";
+import SupportForm from "../SupportForm";
 
 const Supports = () => {
-  const navigate = useNavigate();
   const { state, dispatch } = useArchive<ISupportInitialState>("support");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
@@ -34,9 +33,6 @@ const Supports = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
-      onClick(record) {
-        navigate(`/supports/detail/${record?.key}`);
-      },
     },
     {
       type: EButtonTypes.DESTROY,
@@ -177,6 +173,7 @@ const Supports = () => {
       <Heading
         title="Thư hỗ trợ"
         hasBreadcrumb
+        ModalContent={(props) => <SupportForm {...(props as any)} />}
         buttons={[
           {
             text: "Export",
@@ -186,7 +183,6 @@ const Supports = () => {
           {
             icon: <FaPlus className="text-[18px]" />,
             text: "Thêm mới",
-            onClick: () => navigate("create"),
           },
         ]}
       />
@@ -200,7 +196,6 @@ const Supports = () => {
           value={selectedStatus}
           options={statusOptions}
           onChange={(e: RadioChangeEvent) => {
-            // console.log("Selected status:", e.target.value);
             setSelectedStatus(e.target.value)
           }}
         />
@@ -213,10 +208,12 @@ const Supports = () => {
         pagination={{
           current: state.filter.page ?? 1,
           pageSize: state.filter.size ?? 10,
-          total: state.totalRecords!,
+          total: state.totalRecords,
+          number_of_elements: state.number_of_elements && state.number_of_elements,
         }}
         setFilter={setFilter}
         filter={state.filter}
+        ModalContent={(props) => <SupportForm {...(props as any)} />}
       />
     </>
   );

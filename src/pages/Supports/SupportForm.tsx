@@ -1,77 +1,87 @@
 import { useArchive } from "@/hooks/useArchive";
-import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikProps } from "formik";
 import lodash from "lodash";
-import { ISupportInitialState } from "@/services/store/support/support.slice";
 import { Col, Row } from "antd";
+import Dialog from "@/components/dialog/Dialog";
+import { Dispatch, SetStateAction, useRef } from "react";
+import { EButtonTypes } from "@/shared/enums/button";
+import Button from "@/components/common/Button";
+import { useViewport } from "@/hooks/useViewport";
+import { ISupport } from "@/services/store/support/support.model";
+import { ISupportInitialState } from "@/services/store/support/support.slice";
 import { createSupport } from "@/services/store/support/support.thunk";
-import { FormikRefType } from "@/shared/utils/shared-types";
-import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
-import { useEffect, useState } from "react";
-import { EPageTypes } from "@/shared/enums/page";
 import FormSelect from "@/components/form/FormSelect";
+import FormGroup from "@/components/form/FormGroup";
+import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 
 interface ISupportFormProps {
-    formikRef?: FormikRefType<ISupportFormInitialValues>;
-    type: EPageTypes;
-    support?: ISupportFormInitialValues;
+    type?: EButtonTypes;
+    visible: boolean;
+    setVisible: Dispatch<SetStateAction<boolean>>;
+    item?: ISupport;
 }
 
-export interface ISupportFormInitialValues {
-    id: string;
-    title: string;
-    email: string;
-    phone: string;
-    content: string;
-    document?: File | string;
-    type: number;
-    status: string;
-}
+const SupportForm = ({ visible, type, setVisible, item }: ISupportFormProps) => {
+    const formikRef = useRef<FormikProps<ISupport>>(null);
+    const { dispatch } = useArchive<ISupportInitialState>("support");
+    const { screenSize } = useViewport();
+    const initialValues: ISupport = {
+        id: item?.id || "",
+        title: item?.title || "",
+        email: item?.email || "",
+        phone: item?.phone || "",
+        content: item?.content || "",
+        document: item?.document || undefined,
+        type: item?.type || 0,
+        status: item?.status || "sent",
+    };
 
-const SupportForm = ({ formikRef, type, support }: ISupportFormProps) => {
-    const [loading, setLoading] = useState(false);
-    const { dispatch, state } = useArchive<ISupportInitialState>("support");
-
-    const initialValues: ISupportFormInitialValues = {
-        id: support?.id || "",
-        title: support?.title || "",
-        email: support?.email || "",
-        phone: support?.phone || "",
-        content: support?.content || "",
-        document: support?.document || undefined,
-        type: support?.type || 0,
-        status: support?.status || "sent",
+    const handleSubmit = (data: ISupport, { setErrors }: { setErrors: (errors: any) => void }) => {
+        const body = {
+            ...lodash.omit(data, "key", "index"),
+        };
+        if (type === EButtonTypes.CREATE) {
+            dispatch(createSupport(body as Omit<ISupport, "id">))
+                .unwrap()
+                .catch((error) => {
+                    const apiErrors = error?.errors || {};
+                    setErrors(apiErrors);
+                })
+                .then(() => {
+                    setVisible(false);
+                })
+        }
     };
 
     return (
-        <Formik
-            innerRef={formikRef}
-            initialValues={initialValues}
-            enableReinitialize={true}
-            onSubmit={(data, { setErrors }) => {
-                const body = {
-                    ...lodash.omit(data, "id"),
-                };
-                if (type === EPageTypes.CREATE) {
-                    dispatch(createSupport(body as Omit<ISupportFormInitialValues, "id">))
-                        .unwrap()
-                        .catch((error) => {
-                            const apiErrors = error?.errors || {};
-                            setErrors(apiErrors);
-                        });
-                }
+        <Dialog
+            screenSize={screenSize}
+            handleSubmit={() => {
+                formikRef.current && formikRef.current.handleSubmit();
             }}
+            visible={visible}
+            setVisible={setVisible}
+            title={type === EButtonTypes.CREATE ? "Tạo mới công tác" : type === EButtonTypes.UPDATE ? "Cập nhật công tác" : "Chi tiết công tác"}
+            footerContent={
+                <div className="flex items-center justify-center gap-2">
+                    <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
+                    {type !== EButtonTypes.VIEW && (
+                        <Button
+                            key="submit"
+                            kind="submit"
+                            text={"Lưu"}
+                            onClick={() => {
+                                formikRef.current && formikRef.current.handleSubmit();
+                            }}
+                        />
+                    )}
+                </div>
+            }
         >
-            {({ values, errors, touched, handleBlur, setFieldValue }) => {
-                useEffect(() => {
-                    if (!loading) {
-                        setLoading(true);
-                    }
-                }, [loading, state.filter, setFieldValue, dispatch]);
-
-                return (
-                    <Form className="flex flex-col gap-6">
+            <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+                {({ values, handleBlur, setFieldValue, touched, errors }) => (
+                    <Form className="mt-3">
                         <Row gutter={[24, 24]}>
                             <Col xs={24} sm={24} md={12} xl={12}>
                                 <FormGroup title="Yêu cầu hỗ trợ hỗ trợ" required>
@@ -94,12 +104,13 @@ const SupportForm = ({ formikRef, type, support }: ISupportFormProps) => {
                                         placeholder="Chọn loại hỗ trợ"
                                         isDisabled={type === "view"}
                                         defaultValue={values.type || "Chọn loại hỗ trợ"}
+                                        onChange={(value) => setFieldValue("type", Number(value))}
                                         options={[
-                                            { value: "1", label: "Khác" },
-                                            { value: "2", label: "Kỹ thuật" },
-                                            { value: "3", label: "Tự vấn đấu thầu" },
-                                            { value: "4", label: "Hỗ trợ tài khoản" },
-                                            { value: "5", label: "Báo lỗi" },
+                                            { value: 1, label: "Khác" },
+                                            { value: 2, label: "Kỹ thuật" },
+                                            { value: 3, label: "Tư vấn đấu thầu" },
+                                            { value: 4, label: "Hỗ trợ tài khoản" },
+                                            { value: 5, label: "Báo lỗi" },
                                         ]}
                                     />
                                 </FormGroup>
@@ -135,7 +146,7 @@ const SupportForm = ({ formikRef, type, support }: ISupportFormProps) => {
                                 </FormGroup>
                             </Col>
 
-                            <Col xs={24} sm={24} md={12} xl={12}>
+                            <Col xs={24} sm={24} md={24} xl={24}>
                                 <FormGroup title="Nội dung hỗ trợ">
                                     <FormInput
                                         type="text"
@@ -161,9 +172,9 @@ const SupportForm = ({ formikRef, type, support }: ISupportFormProps) => {
                             </Col>
                         </Row>
                     </Form>
-                );
-            }}
-        </Formik>
+                )}
+            </Formik>
+        </Dialog>
     );
 };
 
