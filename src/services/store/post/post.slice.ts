@@ -57,7 +57,7 @@ const postSlice = createSlice({
       getPostById.fulfilled, (state, { payload }: PayloadAction<IResponse<IPost> | any>) => {
         if (payload.data) {
           state.activePost = payload.data;
-          state.message = transformPayloadErrors(payload?.errors);
+          state.message = payload.message || transformPayloadErrors(payload?.errors);
         }
       }
     );
@@ -76,7 +76,7 @@ const postSlice = createSlice({
       })
       .addCase(createPost.rejected, (state, {payload}: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Update Post
     builder
@@ -95,7 +95,7 @@ const postSlice = createSlice({
       })
       .addCase(updatePost.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Delete Post
     builder
@@ -109,7 +109,7 @@ const postSlice = createSlice({
       })
       .addCase(deletePost.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
       builder
       .addCase(changeStatusPost.pending, (state) => {
@@ -121,7 +121,7 @@ const postSlice = createSlice({
       })
       .addCase(changeStatusPost.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
   },
 });

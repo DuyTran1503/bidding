@@ -59,7 +59,7 @@ const biddingFieldSlice = createSlice({
       .addCase(getAllBiddingFields.rejected, (state, { payload }: PayloadAction<any>) => {
         if (payload) {
           state.status = EFetchStatus.REJECTED;
-          state.message = transformPayloadErrors(payload?.errors);
+          state.message = payload.message ||transformPayloadErrors(payload?.errors);
         }
       });
     builder
@@ -70,7 +70,7 @@ const biddingFieldSlice = createSlice({
       })
       .addCase(getBiddingFieldById.rejected, (state, { payload }: PayloadAction<any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message ||transformPayloadErrors(payload?.errors);
       });
 
     builder
@@ -81,7 +81,7 @@ const biddingFieldSlice = createSlice({
       })
       .addCase(getBiddingFieldAllIds.rejected, (state, { payload }: PayloadAction<any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message ||transformPayloadErrors(payload?.errors);
       });
 
     // ? Create bidding field
@@ -98,7 +98,7 @@ const biddingFieldSlice = createSlice({
       })
       .addCase(createBiddingField.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message ||transformPayloadErrors(payload?.errors);
       });
     // ? Update bidding field
     builder
@@ -117,7 +117,7 @@ const biddingFieldSlice = createSlice({
       })
       .addCase(updateBiddingField.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message ||transformPayloadErrors(payload?.errors);
       });
     // ? Delete bidding field
     builder
@@ -131,7 +131,7 @@ const biddingFieldSlice = createSlice({
       })
       .addCase(deleteBiddingField.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message ||transformPayloadErrors(payload?.errors);
       });
     builder
       .addCase(changeStatusBiddingField.pending, (state) => {
@@ -143,7 +143,7 @@ const biddingFieldSlice = createSlice({
       })
       .addCase(changeStatusBiddingField.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message ||transformPayloadErrors(payload?.errors);
       });
   },
 });

@@ -59,13 +59,13 @@ const selectionMethodSlice = createSlice({
     builder.addCase(getSelectionMethodById.fulfilled, (state, { payload }: PayloadAction<IResponse<ISelectionMethod> | any>) => {
       if (payload.data) {
         state.activeSelectionMethod = payload.data;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       }
     });
     builder.addCase(getListSelectionMethods.fulfilled, (state, { payload }: PayloadAction<IResponse<ISelectionMethod[]> | any>) => {
       if (payload.data) {
         state.listSelectionMethods = payload.data.map((item: ISelectionMethod) => ({ ...item, name: item.method_name }));
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       }
     });
     // ? Create selection method
@@ -115,7 +115,7 @@ const selectionMethodSlice = createSlice({
       })
       .addCase(deleteSelectionMethod.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     builder
       .addCase(changeStatusSelectionMethod.pending, (state) => {
@@ -127,7 +127,7 @@ const selectionMethodSlice = createSlice({
       })
       .addCase(changeStatusSelectionMethod.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
   },
 });

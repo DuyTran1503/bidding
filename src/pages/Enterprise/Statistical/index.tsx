@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useArchive } from "@/hooks/useArchive";
-import GenericChart from "@/components/chart/GenericChart";
 import CustomTabs from "@/components/table/CustomTabs";
 import Heading from "@/components/layout/Heading";
 import { IoClose } from "react-icons/io5";
@@ -15,24 +14,34 @@ import { Form, Formik } from "formik";
 import FormGroup from "@/components/form/FormGroup";
 import { Col, Row } from "antd";
 import {
-  getEmployeeQuantityStatistic,
+  averageDifficultyLevelTasksByEmployee,
+  averageDifficultyLevelTasksByEnterprise,
+  averageFeedbackByEmployee,
+  detailEnterpriseByIds,
+  getEmployeeProjectStatistic,
   getEmployeeResultBiddingStatistic,
-  getSalaryOfEmployees,
+  projectCompletedByEnterprise,
+  projectWonByEnterprise,
 } from "@/services/store/enterprise_chart/enterprise_chart.thunk";
+import EnterpriseDetail from "./EnterpriseTable";
+import GenericChart from "@/components/chart/GenericChart";
+import AbleBarChart from "@/components/chart/Axis";
 
 interface IProp {
   ids: string[] | number[];
+  year: string[] | number[];
 }
+
+const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 
 const StatisticalEnterprise: React.FC = () => {
   const { id } = useParams();
 
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateChartEnterprise, dispatch: dispatchChartEnterprise } = useArchive<IChartEnterpriseInitialState>("chart_enterprise");
-  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
-  const [selectedProjectIds, setSelectedProjectIds] = useState<number[] | string[]>([]);
+  const [, setSelectedEnterpriseIds] = useState<number[] | string[]>([]);
   const [ids, setIds] = useState<number[]>([]);
-  const [compareData, setCompareData] = useState<any[]>([]);
+  const [year, setYear] = useState<number[]>([]);
   const [selectedTabKey, setSelectedTabKey] = useState("1");
 
   const navigate = useNavigate();
@@ -45,113 +54,182 @@ const StatisticalEnterprise: React.FC = () => {
     !!id && dispatchEnterprise(getEnterpriseById(id));
   }, [id]);
 
-  const handleAddToCompare = (data: any) => {
+  const handleAddToCompare = () => {
     if (ids.length && id) {
-      const projectIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
-      setSelectedProjectIds(projectIds);
+      const enterpriseIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
+      setSelectedEnterpriseIds(enterpriseIds);
 
-      if (projectIds.length > 1) {
+      if (enterpriseIds.length > 1) {
         if (selectedTabKey === "1") {
-          dispatchChartEnterprise(getEmployeeQuantityStatistic({ body: projectIds }));
+          dispatchChartEnterprise(detailEnterpriseByIds({ body: { ids: enterpriseIds } }));
         } else if (selectedTabKey === "2") {
-          dispatchChartEnterprise(getSalaryOfEmployees({ body: projectIds }));
-        } else if (selectedTabKey === "2") {
-          dispatchChartEnterprise(getEmployeeResultBiddingStatistic({ body: projectIds }));
+          dispatchChartEnterprise(getEmployeeProjectStatistic({ body: enterpriseIds }));
+        } else if (selectedTabKey === "3") {
+          dispatchChartEnterprise(getEmployeeResultBiddingStatistic({ body: enterpriseIds }));
+        } else if (selectedTabKey === "4") {
+          dispatchChartEnterprise(averageDifficultyLevelTasksByEnterprise({ body: enterpriseIds }));
+        } else if (selectedTabKey === "5") {
+          dispatchChartEnterprise(averageDifficultyLevelTasksByEmployee({ body: enterpriseIds }));
+        } else if (selectedTabKey === "6") {
+          dispatchChartEnterprise(averageFeedbackByEmployee({ body: enterpriseIds }));
+        } else if (selectedTabKey === "7") {
+          dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: year } }));
+        } else if (selectedTabKey === "8") {
+          dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: year } }));
         }
       }
     }
   };
-  console.log(selectedProjectIds);
-
-  const nameMapping: Record<string, string> = {
-    after_university: "Sau đại học",
-    university: "Đại học",
-    college: "Cao đẳng",
-    high_school: "Trung học phổ thông",
-    secondary_school: "Trung học cơ sở",
-    primary_school: "Tiểu học",
-  };
-  const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
-    return data.map((item) => ({
-      title: item.name,
-      value: item.id.toString(),
-      key: item.id.toString(),
-      children: item.children ? formatTreeData(item.children) : [],
-    }));
-  };
   useEffect(() => {
     if (selectedTabKey) {
-      const projectIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
-      setSelectedProjectIds(projectIds);
+      const enterpriseIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
+      setSelectedEnterpriseIds(enterpriseIds);
 
       if (selectedTabKey === "1") {
-        dispatchChartEnterprise(getEmployeeQuantityStatistic({ body: projectIds }));
+        dispatchChartEnterprise(detailEnterpriseByIds({ body: { ids: enterpriseIds } }));
       } else if (selectedTabKey === "2") {
-        dispatchChartEnterprise(getSalaryOfEmployees({ body: projectIds }));
+        dispatchChartEnterprise(getEmployeeProjectStatistic({ body: enterpriseIds }));
       } else if (selectedTabKey === "3") {
-        dispatchChartEnterprise(getEmployeeResultBiddingStatistic({ body: projectIds }));
+        dispatchChartEnterprise(getEmployeeResultBiddingStatistic({ body: enterpriseIds }));
+      } else if (selectedTabKey === "4") {
+        dispatchChartEnterprise(averageDifficultyLevelTasksByEnterprise({ body: enterpriseIds }));
+      } else if (selectedTabKey === "5") {
+        dispatchChartEnterprise(averageDifficultyLevelTasksByEmployee({ body: enterpriseIds }));
+      } else if (selectedTabKey === "6") {
+        dispatchChartEnterprise(averageFeedbackByEmployee({ body: enterpriseIds }));
+      } else if (selectedTabKey === "7") {
+        dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: year } }));
+      } else if (selectedTabKey === "8") {
+        dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: year } }));
       }
     }
   }, [selectedTabKey]);
+
+  // const nameMapping: Record<string, string> = {
+  //   after_university: "Sau đại học",
+  //   university: "Đại học",
+  //   college: "Cao đẳng",
+  //   high_school: "Trung học phổ thông",
+  //   secondary_school: "Trung học cơ sở",
+  //   primary_school: "Tiểu học",
+  // };
+
+  const enterpriseId = stateEnterprise.enterprise?.id;
   const tabItems = [
     {
       key: "1",
-      label: "Thống kê nhân viên ",
+      label: "Biểu đồ thống kê số lượng dự án của doanh nghiệp",
       content: (
-        <GenericChart
-          chartType="pie"
-          title="Thống kê nhân viên "
-          name={stateChartEnterprise.numberOfEmployeeEnterprise.map(({ enterprise }) => enterprise)}
-          value={stateChartEnterprise.numberOfEmployeeEnterprise.map((item) => item.quantityEmployee)}
-          seriesName="Số lượng nhận viên"
-        />
+        <EnterpriseDetail detailEnterpriseByIds={stateChartEnterprise.detailEnterpriseByIds} enterpriseId={enterpriseId} />
       ),
     },
     {
       key: "2",
-      label: "Thống kê lương trung bình ",
+      label: "Biểu đồ thống kê số lượng dự án của doanh nghiệp",
       content: (
-        <GenericChart
-          chartType="bar"
-          title="Thống kê lương trung bình "
-          name={stateChartEnterprise.salaryOfEmployees.map(({ enterprise }) => enterprise)}
-          value={stateChartEnterprise.salaryOfEmployees.map((item) => item.salaryAvg)}
-          seriesName="Thống kê lương trung bình"
-        />
+        <AbleBarChart
+          data={[
+            { name: "Đã đầu tư", values: stateChartEnterprise.getEmployeeProjectStatistic.map((item) => item.tendererProjectCount) },
+            { name: "Đã đăng tải", values: stateChartEnterprise.getEmployeeProjectStatistic.map((item) => item.investorProjectCount) },
+          ]}
+          xAxisData={stateChartEnterprise.getEmployeeProjectStatistic.map(({ enterprise }) => enterprise)}
+          title="Biểu đồ thống kê dự án đã đăng tải và dự án đã đầu tư của doanh nghiệp" />
       ),
     },
     {
       key: "3",
       label: "Thống kê số lượng gói thâu đã trúng ",
       content: (
-        <div className="flex">
-          <GenericChart
-            chartType="pie"
-            title="Thống kê số lượng gói thâu đã trúng "
-            name={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
-            value={stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.numberProjectWinning)}
-            seriesName="Số lượng gói thâu đã trúng"
-          />
-          <GenericChart
-            chartType="pie"
-            title="Thống kê giá trúng thầu trung bình  "
-            name={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
-            value={stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.averageWinningAmount)}
-            seriesName="Giá trúng thầu trung bình "
-          />
-          <GenericChart
-            chartType="pie"
-            title="Thống kê tổng gói thầu đã trúng "
-            name={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
-            value={stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.totalWinningAmount)}
-            seriesName="Tổng gói thầu đã trúng"
-          />
-        </div>
+        <AbleBarChart
+          data={[
+            { name: "Số dự án", values: stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.numberProjectWinning) },
+            { name: "Số tiền", values: stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.averageWinningAmount) },
+            { name: "Tổng số tiền thắng", values: stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.totalWinningAmount) },
+          ]}
+          xAxisData={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
+          title="Biểu đồ thống kê số lượng dự án đã trúng,giá trúng thầu trung bình và tổng giá trị thầu đã trúng của doanh nghiệp" />
+      ),
+    },
+    {
+      key: "4",
+      label: "Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà doanh nghiệp thực hiện",
+      content: (
+        <GenericChart
+          chartType="bar"
+          grid={120}
+          title="Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà doanh nghiệp thực hiện"
+          name={stateChartEnterprise.averageDifficultyLevelTasksByEnterprise.map(({ enterprise_name }) => enterprise_name)}
+          value={stateChartEnterprise.averageDifficultyLevelTasksByEnterprise.map((item) => item.average_difficulty)}
+          seriesName="Mức độ khó khăn trung bình"
+        />
+
+      ),
+    },
+    {
+      key: "5",
+      label: "Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà nhân viên thực hiện",
+      content: (
+        <GenericChart
+          chartType="bar"
+          grid={120}
+          title="Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà nhân viên thực hiện"
+          name={stateChartEnterprise.averageDifficultyLevelTasksByEmployee.map(({ employee_name }) => employee_name)}
+          value={stateChartEnterprise.averageDifficultyLevelTasksByEmployee.map((item) => item.average_difficulty)}
+          seriesName="Mức độ khó khăn trung bình"
+        />
+
+      ),
+    },
+    {
+      key: "6",
+      label: "Biểu đồ thống kê đánh giá trung bình của nhân viên",
+      content: (
+        <GenericChart
+          chartType="bar"
+          grid={120}
+          title="Biểu đồ thống kê đánh giá trung bình của nhân viên"
+          name={stateChartEnterprise.averageFeedbackByEmployee.map(({ employee_name }) => employee_name)}
+          value={stateChartEnterprise.averageFeedbackByEmployee.map((item) => item.average_feedback)}
+          seriesName="Mức độ khó khăn trung bình"
+        />
+
+      ),
+    },
+    {
+      key: "7",
+      label: "Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm",
+      content: (
+        <AbleBarChart
+          title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
+          xAxisData={Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`)}
+          data={stateChartEnterprise.projectCompletedByEnterprise.map((enterprise) => ({
+            name: enterprise.enterprise_name,
+            values: enterprise.monthly_data.map((item) => item.completed_projects || 0),
+          }))}
+
+        />
+      ),
+    },
+    {
+      key: "8",
+      label: "Biểu đồ thống kê số lượng dự án đã trúng thầu của doanh nghiệp theo từng tháng trong năm",
+      content: (
+        <AbleBarChart
+          title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
+          xAxisData={Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`)}
+          data={stateChartEnterprise.projectWonByEnterprise.map((enterprise) => ({
+            name: enterprise.enterprise_name,
+            values: enterprise.monthly_data.map((item) => item.won_projects || 0),
+          }))}
+
+        />
+
       ),
     },
   ];
   const initialValues: IProp = {
     ids: ids || [],
+    year: year || [],
   };
   const handleTabChange = (key: string) => {
     setSelectedTabKey(key);
@@ -175,33 +253,43 @@ const StatisticalEnterprise: React.FC = () => {
       <Formik
         initialValues={initialValues}
         enableReinitialize
-        onSubmit={(data) => {
-          handleAddToCompare(data);
+        onSubmit={() => {
+          handleAddToCompare();
         }}
       >
         {({ values, setFieldValue }) => {
           return (
             <Form>
-              <Row className="items-center bg-white">
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Row className="items-center">
+                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                   <FormGroup title="Doanh nghiệp" className="bg-[#f9f9fc]">
-                    <FormSelect
-                      placeholder="Chọn doanh nghiệp..."
-                      options={convertDataOptions(stateEnterprise.listEnterprise || []).map((option) => ({
-                        ...option,
-                        disabled: values.ids.includes(id as never), // Disable if the ID is in values.ids
-                      }))}
-                      value={values.ids}
-                      isMultiple
-                      onChange={(e) => {
-                        setFieldValue("ids", e);
-                        setIds(e as any);
-                      }}
-                     />
+                    <div className="flex w-full gap-4">
+                      <FormSelect
+                        showLabel={false}
+                        placeholder="Chọn doanh nghiệp..."
+                        options={convertDataOptions(stateEnterprise.listEnterprise || []).map((option) => ({
+                          ...option,
+                          disabled: values.ids.includes(id as never), // Disable if the ID is in values.ids
+                        }))}
+                        value={values.ids}
+                        isMultiple
+                        onChange={(e) => {
+                          setFieldValue("ids", e);
+                          setIds(e as any);
+                        }} />
+                      <FormSelect
+                        showLabel={false}
+                        className="w-80"
+                        placeholder="Chọn năm..."
+                        options={yearOptions.map((year) => ({ label: year, value: year }))}
+                        value={values.year}
+                        onChange={(e) => {
+                          setFieldValue("year", e);
+                          setYear(e as any);
+                        }} />
+                      <Button className="w-48" type="primary" text="So sánh" kind="submit" isDisabled={ids.length === 0} />
+                    </div>
                   </FormGroup>
-                </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="translate-y-[14px] transform">
-                  <Button type="primary" text="So sánh" kind="submit" isDisabled={ids.length === 0} />
                 </Col>
               </Row>
             </Form>

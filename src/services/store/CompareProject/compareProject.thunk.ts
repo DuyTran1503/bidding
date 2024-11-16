@@ -53,6 +53,7 @@ export const comparePieChartTotalAmount = createAsyncThunk(
   },
 );
 
+// compare-bidder-count
 export const compareBidderCount = createAsyncThunk("compareProject/compareBidderCount", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { data } = await client.post(`${prefix}/compare-bidder-count`, payload);
@@ -62,6 +63,7 @@ export const compareBidderCount = createAsyncThunk("compareProject/compareBidder
   }
 });
 
+// detail-project-by-ids
 export const detailProjectByIds = createAsyncThunk("compareProject/detailProjectByIds", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { data } = await client.post(`${prefix}/detail-project-by-ids`, payload);

@@ -9,13 +9,27 @@ interface IFormSelect {
   defaultValue?: number[] | string[] | string | number;
   value?: string | string[] | number[]; 
   isMultiple?: boolean;
-  error?: string;
+  error?: string | string[];
   isDisabled?: boolean;
   onChange?: (value: string | string[]) => void;
   id?: string;
+  className?: string;
+  showLabel?: boolean; // Thêm prop showLabel
 }
 
-const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isMultiple, onChange, value, error }: IFormSelect) => {
+const FormSelect = ({
+  label,
+  className,
+  isDisabled,
+  placeholder,
+  options,
+  defaultValue,
+  isMultiple,
+  onChange,
+  value,
+  error,
+  showLabel = true, // Mặc định là true nếu không truyền vào
+}: IFormSelect) => {
   const handleChange = (value: string | string[]) => {
     if (onChange) {
       onChange(value);
@@ -23,8 +37,10 @@ const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isM
   };
 
   return (
-    <div>
-      <div className="text-m-medium mb-1 w-full text-black-300">{label}</div>
+    <>
+      {showLabel && label && (
+        <div className="text-m-medium mb-1 w-full text-black-300">{label}</div>
+      )}
       <ConfigProvider
         theme={{
           components: {
@@ -39,10 +55,14 @@ const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isM
           allowClear
           maxTagCount={"responsive"}
           disabled={isDisabled}
-          className={clsx("text-m-medium w-full", isDisabled && "opacity-65", {
-            "border-red-500": !!error,
-            "select-none !bg-gray-50 !text-black-300": error,
-          })}
+          className={clsx(
+            `text-m-medium w-full ${className}`,
+            isDisabled && "opacity-65",
+            {
+              "border-red-500": !!error,
+              "select-none !bg-gray-50 !text-black-300": error,
+            }
+          )}
           mode={isMultiple ? "multiple" : undefined}
           defaultValue={defaultValue}
           value={value}
@@ -50,18 +70,24 @@ const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isM
           showSearch
           placeholder={placeholder ?? "Chọn..."}
           optionFilterProp="label"
-          filterSort={(optionA, optionB) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
+          filterSort={(optionA, optionB) =>
+            (optionA?.label ?? "")
+              .toLowerCase()
+              .localeCompare((optionB?.label ?? "").toLowerCase())
+          }
           options={options}
         />
         {!!error && (
           <div
-            className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white")}
+            className={clsx(
+              "placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white"
+            )}
           >
             {error}
           </div>
         )}
       </ConfigProvider>
-    </div>
+    </>
   );
 };
 
