@@ -1,6 +1,6 @@
 import React from "react";
 import GenericChart from "@/components/chart/GenericChart";
-import {  Button, Select } from "antd";
+import { Button, Select } from "antd";
 
 interface ChartSectionProps {
     title: string;
@@ -28,6 +28,7 @@ interface ChartSectionProps {
     onSelectChange?: (value: string) => void;
     buttonText?: string;
     onButtonClick?: () => void;
+    loading?: boolean;
 }
 
 const ChartSection: React.FC<ChartSectionProps> = ({
