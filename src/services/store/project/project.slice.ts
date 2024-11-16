@@ -14,7 +14,7 @@ import {
 } from "./project.thunk.ts";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
-import { IProject } from "./project.model.ts";
+import { INewProject, IProject } from "./project.model.ts";
 
 export interface IProjectInitialState extends IInitialState {
   projects: IProject[];
@@ -47,6 +47,10 @@ const projectSlice = createSlice({
     resetMessageError(state) {
       state.message = "";
     },
+    resetStatus(state) {
+      state.status = EFetchStatus.IDLE;
+      state.message = "";
+    },
   },
 
   extraReducers(builder) {
@@ -62,12 +66,21 @@ const projectSlice = createSlice({
         state.message = transformPayloadErrors(payload?.errors);
       });
     builder
-      .addCase(getProjectById.fulfilled, (state, { payload }: PayloadAction<IProject> | any) => {
-        state.project = payload.data;
+      .addCase(getProjectById.fulfilled, (state, { payload }: PayloadAction<INewProject> | any) => {
+        state.project = {
+          ...payload.data,
+          industries: payload?.data?.industries?.map((item: any) => item.id),
+          procurement_categories: payload?.data?.procurement_categories?.map((item: any) => item.id),
+          funding_source: payload?.data?.funding_source?.id,
+          investor: payload?.data?.investor.id,
+          tenderer: payload?.data?.tenderer.id,
+          selection_method: payload?.data?.selection_method.id,
+          staff: payload?.data?.staff?.id,
+          attachments: payload?.data?.attachments,
+        };
         state.loading = false;
       })
       .addCase(getProjectById.rejected, (state, { payload }: PayloadAction<IProject> | any) => {
-        state.project = payload.data;
         state.message = transformPayloadErrors(payload?.errors);
         state.loading = true;
       });

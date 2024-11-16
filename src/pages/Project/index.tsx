@@ -10,7 +10,7 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
 import { projectByIndustry } from "@/services/store/chart/chart.thunk";
-import { IProjectInitialState, resetMessageError, setFilter } from "@/services/store/project/project.slice";
+import { IProjectInitialState, resetStatus, setFilter } from "@/services/store/project/project.slice";
 import { changeStatusProject, deleteProject, getAllProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
@@ -99,7 +99,7 @@ const ProjectPage = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`detail/${record?.key}`);
+        navigate(`/project/detail/${record?.key}`);
       },
       permission: EPermissions.DETAIL_PROJECT,
     },
@@ -107,6 +107,13 @@ const ProjectPage = () => {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/project/update/${record?.key}`);
+      },
+      permission: EPermissions.UPDATE_PROJECT,
+    },
+    {
+      type: EButtonTypes.APPROVE,
+      onClick(record) {
+        navigate(`/project/approve/${record?.key}`);
       },
       permission: EPermissions.UPDATE_PROJECT,
     },
@@ -185,7 +192,7 @@ const ProjectPage = () => {
   }, []);
   useFetchStatus({
     module: "project",
-    reset: resetMessageError,
+    reset: resetStatus,
     actions: {
       success: { message: stateProject.message },
       error: { message: stateProject.message },
@@ -223,7 +230,6 @@ const ProjectPage = () => {
         data={data}
         search={search}
         buttons={buttons}
-        isManyAction={true}
         pagination={{
           current: stateProject.filter.page ?? 1,
           pageSize: stateProject.filter.size ?? 10,
