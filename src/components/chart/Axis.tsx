@@ -20,7 +20,7 @@ const posList = [
 interface AbleBarChartProps {
     data: {
         name: string;
-        values: number[];
+        values?: number[];
     }[];
     xAxisData: string[];
     title: string;
@@ -58,8 +58,14 @@ const AbleBarChart: React.FC<AbleBarChartProps> = ({
             align: config.align,
             verticalAlign: config.verticalAlign,
             rotate: config.rotate,
-            fontSize: 16,
-            formatter: "{c}  {name|{a}}",
+            fontSize: 13,
+            formatter: (params) => {
+                // Dùng toán tử optional chaining và thay thế undefined bằng chuỗi rỗng
+                const truncatedName = (params.seriesName ?? "").length > 30
+                    ? (params.seriesName ?? "").substring(0, 30) + "..."
+                    : params.seriesName ?? "";  // Nếu seriesName là undefined, trả về chuỗi rỗng
+                return `${params.value}  ${truncatedName}`;  // Hiển thị giá trị và tên đã cắt ngắn
+            },
             rich: { name: {} },
         };
 
@@ -81,6 +87,9 @@ const AbleBarChart: React.FC<AbleBarChartProps> = ({
             legend: {
                 data: data.map((item) => item.name),
                 top: "bottom",
+                type: "scroll",
+                orient: "horizontal", // Đặt hướng ngang để legend nằm ở phía dưới
+                left: "center",
             },
             toolbox: {
                 show: true,
@@ -141,7 +150,7 @@ const AbleBarChart: React.FC<AbleBarChartProps> = ({
             >
                 {showControls ? "Close Controls" : "Open Controls"}
             </button>
-            <div className="w-full h-[60vh]" ref={chartRef}></div>
+            <div className="w-full h-[80vh]" ref={chartRef}></div>
 
             {showControls && (
                 <div
