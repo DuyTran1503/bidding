@@ -19,13 +19,14 @@ interface RowType {
 const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, projectId }) => {
     // Tạo dữ liệu dạng hàng cho bảng với kiểu `RowType`
     const rows: RowType[] = [
-        { key: 'id', title: 'ID Dự án', dataIndex: 'id' },
+        // { key: 'id', title: 'ID Dự án', dataIndex: 'id' },
         { key: 'name', title: 'Tên dự án', dataIndex: 'name' },
         { key: 'decision_number_issued', title: 'Số quyết định', dataIndex: 'decision_number_issued' },
         { key: 'tenderer', title: 'Nhà thầu', dataIndex: 'tenderer', render: (item) => item?.name || 'Không có' },
         { key: 'investor', title: 'Nhà đầu tư', dataIndex: 'investor', render: (item) => item?.name || 'Không có' },
-        { key: 'staff', title: 'Trưởng dự án', dataIndex: 'staff', render: (item) => item?.name || 'Không có' },
+        { key: 'staff', title: 'Người phê duyệt', dataIndex: 'staff', render: (item) => item?.name || 'Không có' },
         { key: 'selection_method', title: 'Hình thức lựa chọn', dataIndex: 'selection_method', render: (item) => item?.method_name || 'Không có' },
+        { key: 'submistion_method', title: 'Phương thức nộp', dataIndex: 'submistion_method', render: (item) => item?.submistion_method || 'Không có' },
         { key: 'location', title: 'Địa điểm', dataIndex: 'location' },
         { key: 'receiving_place', title: 'Nơi nhận', dataIndex: 'receiving_place' },
         {
@@ -40,7 +41,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, proje
         },
         { key: 'start_time', title: 'Ngày bắt đầu', dataIndex: 'start_time' },
         { key: 'end_time', title: 'Ngày kết thúc', dataIndex: 'end_time' },
-        { key: 'children', title: 'Gói thầu con', dataIndex: 'children', render: (item) => item.length },
+        { key: 'children', title: 'Số lượng gói thầu con', dataIndex: 'children', render: (item) => item.length },
     ];
 
     // Tách dự án có `id` trùng với `projectId` và các dự án còn lại

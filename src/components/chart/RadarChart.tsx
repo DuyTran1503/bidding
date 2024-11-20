@@ -13,7 +13,7 @@ const RadarChart = () => {
         },
         radar: {
           shape: "circle",
-          indicator: [
+          indicator: [  
             { name: "Sales", max: 6500 },
             { name: "MKT", max: 6644 },
             { name: "IT", max: 5000 },
