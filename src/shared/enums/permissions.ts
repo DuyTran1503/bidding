@@ -222,4 +222,11 @@ export enum EPermissions {
   DETAIL_INSTRUCT = "detail_instruct",
   UPDATE_INSTRUCT = "update_instruct",
   DESTROY_INSTRUCT = "destroy_instruct",
+
+  // Tiến độ dự án
+  LIST_WORK_PROGRESS = "list_work_progress",
+  CREATE_WORK_PROGRESS = "create_work_progress",
+  DETAIL_WORK_PROGRESS = "detail_work_progress",
+  UPDATE_WORK_PROGRESS = "update_work_progress",
+  DESTROY_WORK_PROGRESS = "destroy_work_progress",
 }

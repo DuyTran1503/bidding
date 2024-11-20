@@ -38,6 +38,7 @@ import { chartEnterpriseSlice } from "./store/enterprise_chart/enterprise_chart.
 import { employeeSlice } from "./store/employee/employee.slice";
 import { taskSlice } from "./store/task/task.slice";
 import { evaluateSlice } from "./store/evaluate/evaluate.slice";
+import { workProgressSlice } from "./store/workProgresses/workProgresses.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -77,6 +78,7 @@ export const reducers = combineReducers({
   chart_enterprise: chartEnterpriseSlice.reducer,
   employee: employeeSlice.reducer,
   task: taskSlice.reducer,
+  work_progress: workProgressSlice.reducer,
   evaluate: evaluateSlice.reducer,
 });
 

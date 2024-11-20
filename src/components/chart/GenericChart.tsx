@@ -133,7 +133,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
               rotate: computedRotate,
               verticalAlign: "top",
               overflow: "truncate",
-              formatter: (value: string) => (name && name.length > 4 && value.length > 20 ? value.substring(0, 20) + "..." : value),
+              formatter: (value: string) => (name && name.length > 1 && value.length > 10 ? value.substring(0, 10) + "..." : value),
             },
           }
           : undefined,
