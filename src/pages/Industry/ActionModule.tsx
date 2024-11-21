@@ -43,7 +43,8 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
     business_activity_type_id: industry?.business_activity_type_id ?? "",
   };
   const tagSchema = object().shape({
-    name: string().trim().required("Vui lòng không để trống trường này"),
+    name: string().trim().required("Vui lòng nhập tên ngành kinh doanh"),
+    
   });
   useEffect(() => {
     return () => {
@@ -71,9 +72,8 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
           <Form>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tên nghành kinh doanh">
+                <FormGroup title="Tên nghành kinh doanh" required>
                   <FormInput
-                    label="Tên nghành kinh doanh"
                     placeholder="Tên nghành kinh doanh..."
                     name="name"
                     value={values.name}
@@ -85,9 +85,8 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Ngành nghề kinh doanh">
+                <FormGroup title="Ngành nghề kinh doanh" required>
                   <FormSelect
-                    label="Ngành nghề kinh doanh"
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."
                     options={convertDataOption(businessState?.listBusinessActivities!)}
@@ -105,17 +104,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
             </Row>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                {/* <FormGroup title="Mô tả">
-                  <FormInputArea
-                    label="Mô tả"
-                    placeholder="Nhập mô tả..."
-                    name="description"
-                    isReadonly={type === EPageTypes.VIEW}
-                    value={values.description}
-                    error={touched.description ? errors.description : ""}
-                    onChange={(e) => setFieldValue("description", e)}
-                  />
-                </FormGroup> */}
+                <FormGroup title="Mô tả">
                 <FormCkEditor
                   id="description"
                   direction="vertical"
@@ -123,6 +112,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                   setFieldValue={setFieldValue}
                   disabled={type === EPageTypes.VIEW}
                 />
+                </FormGroup>
               </Col>
             </Row>
             <Row gutter={[24, 24]}>

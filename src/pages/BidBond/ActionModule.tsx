@@ -99,10 +99,10 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
   }, [visible]);
   return (
     <Dialog
+     screenSize={screenSize}
       handleSubmit={() => {
         formikRef.current && formikRef.current.handleSubmit();
       }}
-      screenSize={screenSize}
       visible={visible}
       setVisible={setVisible}
       title={
