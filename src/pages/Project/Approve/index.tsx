@@ -100,15 +100,6 @@ const ApproveProject = () => {
               navigate("/project");
             },
           },
-          //   {
-          //     isLoading: state.status === EFetchStatus.PENDING,
-          //     text: "Trả về",
-          //     icon: <MdOutlineEditOff className="text-[18px]" />,
-          //     type: "third",
-          //     onClick: () => {
-          //       setVisible(true);
-          //     },
-          //   },
           {
             isLoading: state.status === EFetchStatus.PENDING,
             text: "Phê duyệt",
@@ -173,11 +164,11 @@ const ApproveProject = () => {
                 <div className="flex items-center justify-center gap-2">
                   <Button
                     kind="submit"
-                    type="third"
+                    type="secondary"
                     text={"Trở về"}
                     onClick={() => {
                       setIsApprove(false);
-                      handleSubmit();
+                      setVisible(false);
                     }}
                   />
                   <Button

@@ -129,11 +129,11 @@ const Dashboard: React.FC = () => {
   const handleFundingSourceChange = (value: string) => {
     message.loading("Đang tải dữ liệu");
     setSelectedFundingSource(value);
-  }
+  };
   const handleIndustryChange = (value: string) => {
     message.loading("Đang tải dữ liệu");
     setSelectedIndustry(value);
-  }
+  };
   const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
 
   const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
@@ -141,8 +141,8 @@ const Dashboard: React.FC = () => {
   const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-lvh">
-        <Spin tip="Loading..." size="large" />
+      <div className="flex h-lvh items-center justify-center">
+        <Spin tip="Loading..." size="large" spinning={true} />
       </div>
     );
   }
@@ -218,7 +218,6 @@ const Dashboard: React.FC = () => {
                 "Hỗ trợ doanh nghiệp xác định mức độ phụ thuộc vào nguồn lực trong nước hay quốc tế, đưa ra quyết định chiến lược mở rộng và phát triển dự án.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -231,7 +230,6 @@ const Dashboard: React.FC = () => {
                 "Giúp đánh giá hiệu quả, tính minh bạch của từng phương pháp, đưa ra quyết định cải thiện quy trình đấu thầu nhằm nâng cao chất lượng đấu thầu.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -244,7 +242,6 @@ const Dashboard: React.FC = () => {
                 "Thúc đẩy cải tiến công nghệ, tối ưu hóa quy trình nộp thầu theo xu hướng số hóa, giúp tiết kiệm thời gian và chi phí.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -257,7 +254,6 @@ const Dashboard: React.FC = () => {
                 "Hỗ trợ xây dựng hồ sơ đối tác, cải thiện mối quan hệ với các nhà thầu và nhà đầu tư, giúp thu hút đầu tư và tạo cơ hội hợp tác tiềm năng cho dự án.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -272,7 +268,6 @@ const Dashboard: React.FC = () => {
                 "Hỗ trợ doanh nghiệp xác định các loại hình tổ chức có khả năng hợp tác cao hoặc có ưu thế triển khai dự án, từ đó xây dựng chiến lược hợp tác phù hợp.",
               ]}
             />
-
           </Col>
 
           <Col xs={24} sm={24} md={24} xl={12}>
@@ -306,7 +301,6 @@ const Dashboard: React.FC = () => {
                 "Giúp doanh nghiệp nắm bắt được các đơn vị mời thầu có bao nhiêu gói thầu.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -321,7 +315,6 @@ const Dashboard: React.FC = () => {
                 "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -338,7 +331,6 @@ const Dashboard: React.FC = () => {
             />
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
-
             <ChartSection
               title="3.4 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
               chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
@@ -353,7 +345,6 @@ const Dashboard: React.FC = () => {
             />
           </Col>
           <Col xs={24} sm={24} md={24} xl={24}>
-
             <ChartSection
               title="3.5 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
               chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
@@ -373,24 +364,24 @@ const Dashboard: React.FC = () => {
         <h2 className="mb-4 text-xl font-semibold">4. Bảng xếp hạng Doanh Nghiệp</h2>
         <Row gutter={[24, 24]}>
           <Col xs={24} sm={24} md={24} xl={24}>
-          <TopEnterpriseChart
-            title="Top 10 doanh nghiệp đã hoàn thành dự án theo nguồn tài trợ"
-            data={state.topEnterprisesHaveCompletedProjectsByFundingSource}
-            selectedValue={selectedFundingSource}
-            options={stateFundingSource.listFundingSources.map((fs: any) => ({ label: fs.name, value: String(fs.id) }))}
-            onChange={handleFundingSourceChange}
-            placeholder="Chọn nguồn tài trợ..."
-          />
+            <TopEnterpriseChart
+              title="Top 10 doanh nghiệp đã hoàn thành dự án theo nguồn tài trợ"
+              data={state.topEnterprisesHaveCompletedProjectsByFundingSource}
+              selectedValue={selectedFundingSource}
+              options={stateFundingSource.listFundingSources.map((fs: any) => ({ label: fs.name, value: String(fs.id) }))}
+              onChange={handleFundingSourceChange}
+              placeholder="Chọn nguồn tài trợ..."
+            />
           </Col>
           <Col xs={24} sm={24} md={24} xl={24}>
-          <TopEnterpriseChart
-            title="Top 10 doanh nghiệp đã hoàn thành dự án theo ngành"
-            data={state.topEnterprisesHaveCompletedProjectsByIndustry}
-            selectedValue={selectedIndustry}
-            options={stateIndustry.listIndustry.map((ind: any) => ({ label: ind.name, value: String(ind.id) }))}
-            onChange={handleIndustryChange}
-            placeholder="Chọn ngành..."
-          />
+            <TopEnterpriseChart
+              title="Top 10 doanh nghiệp đã hoàn thành dự án theo ngành"
+              data={state.topEnterprisesHaveCompletedProjectsByIndustry}
+              selectedValue={selectedIndustry}
+              options={stateIndustry.listIndustry.map((ind: any) => ({ label: ind.name, value: String(ind.id) }))}
+              onChange={handleIndustryChange}
+              placeholder="Chọn ngành..."
+            />
           </Col>
         </Row>
       </div>
