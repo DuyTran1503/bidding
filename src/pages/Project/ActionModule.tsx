@@ -13,7 +13,7 @@ import { EPageTypes } from "@/shared/enums/page";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, Row } from "antd";
 import { Form, Formik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { array, date, number, object, string } from "yup";
 import dayjs from "dayjs";
 import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
@@ -37,12 +37,13 @@ interface IPropProject {
   formikRef?: FormikRefType<INewProject>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW | EPageTypes.APPROVE;
   project?: INewProject;
+  isChildren?: boolean;
 }
 type FileObject = {
   path: string;
   [key: string]: any; // Chấp nhận các thuộc tính khác
 };
-const ActionModule = ({ formikRef, type, project }: IPropProject) => {
+const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) => {
   const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
   const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
@@ -50,36 +51,42 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
   const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
-  const initialValues: INewProject = {
-    id: project ? project.id : 0,
-    parent_id: project ? project.parent_id : null,
-    children: project ? project.children : [],
-    name: project ? project.name : "",
-    selection_method_id: project ? project.selection_method : undefined,
-    location: project ? project.location : "",
-    tenderer_id: +project?.tenderer! || null,
-    investor_id: +project?.investor! || null,
-    funding_source_id: project?.funding_source || undefined,
-    staff_id: project?.staff || undefined,
-    industry_id: project?.industries || [],
-    is_domestic: project?.is_domestic || DOMESTIC.INSIDE,
-    amount: project?.amount || 0,
-    total_amount: project?.total_amount || 0,
-    receiving_place: project?.receiving_place || "",
-    bid_submission_start: project?.bid_submission_start || "",
-    bid_submission_end: project?.bid_submission_end || "",
-    bid_opening_date: project?.bid_opening_date || "",
-    start_time: project?.start_time || "",
-    end_time: project?.end_time || "",
-    approve_at: project?.approve_at || "",
-    decision_number_approve: project?.decision_number_approve || "",
-    description: project?.description || "",
-    status: project?.status || STATUS_PROJECT.AWAITING,
-    procurement_id: project?.procurement_categories || [],
-    submission_method: project?.submission_method || SUBMIT_METHOD.online,
-    files: project?.attachments || [],
-    decision_number_issued: project?.decision_number_issued || "",
-  };
+
+  const [children, setChildren] = useState(project?.children || []);
+  const initialValues: INewProject = useMemo(
+    () => ({
+      id: project ? project.id : 0,
+      parent_id: project ? project.parent_id : null,
+      children: children,
+      name: project ? project.name : "",
+      selection_method_id: project ? project.selection_method : undefined,
+      location: project ? project.location : "",
+      tenderer_id: +project?.tenderer! || null,
+      investor_id: +project?.investor! || null,
+      funding_source_id: project?.funding_source || undefined,
+      staff_id: project?.staff || undefined,
+      industry_id: project?.industries || [],
+      is_domestic: project?.is_domestic || DOMESTIC.INSIDE,
+      amount: project?.amount || 0,
+      total_amount: project?.total_amount || 0,
+      receiving_place: project?.receiving_place || "",
+      bid_submission_start: project?.bid_submission_start || "",
+      bid_submission_end: project?.bid_submission_end || "",
+      bid_opening_date: project?.bid_opening_date || "",
+      start_time: project?.start_time || "",
+      end_time: project?.end_time || "",
+      approve_at: project?.approve_at || "",
+      decision_number_approve: project?.decision_number_approve || "",
+      description: project?.description || "",
+      status: project?.status || STATUS_PROJECT.AWAITING,
+      procurement_id: project?.procurement_categories || [],
+      submission_method: project?.submission_method || SUBMIT_METHOD.online,
+      files: project?.attachments || [],
+      decision_number_issued: project?.decision_number_issued || "",
+      fileChildren: [],
+    }),
+    [project, children],
+  );
   const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const Schema = object().shape({
     parent_id: number().nullable(),
@@ -116,11 +123,32 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
 
   return (
     <Formik
+      validationSchema={Schema}
+      enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => {
         const data = {
           ...lodash.omit(values, "id", "children"),
         };
+        if (isChildren) {
+          const newChild = {
+            ...lodash.omit(values, ["id", "children", "files"]), // Loại bỏ trường không cần thiết
+            parent_id: project?.id || null,
+            children: [], // Đảm bảo không lồng nhau quá mức
+            files: [], // Không sao chép `files` từ parent
+          };
+
+          setChildren((prevChildren: any) => {
+            if (!lodash.isEqual(prevChildren, [...prevChildren, newChild])) {
+              const updatedChildren = [...prevChildren, newChild];
+              formikRef?.current?.setFieldValue("children", updatedChildren); // Cập nhật khi có thay đổi
+              return updatedChildren;
+            }
+            return prevChildren; // Không thay đổi nếu dữ liệu giống nhau
+          });
+
+          return;
+        }
 
         if (type === EPageTypes.CREATE) {
           return dispatchProject(createProject(data as Omit<INewProject, "id">));
@@ -136,11 +164,11 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
           dispatchEnterprise(updateProject({ body: newData, param: String(project.id) }));
         }
       }}
-      enableReinitialize
-      validationSchema={Schema}
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
+        console.log(values.files);
+
         return (
           <Form>
             <Row gutter={[24, 12]}>
@@ -277,10 +305,10 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Số quyết định ban hành">
                   <FormInput
-                    isDisabled={type === EPageTypes.VIEW}
+                    isDisabled={type === EPageTypes.VIEW || type === EPageTypes.APPROVE}
                     placeholder="Nhập số quyết định ban hành..."
                     name="decision_number_issued"
-                    value={values.decision_number_issued}
+                    value={values.decision_number_issued || ""}
                     error={touched.decision_number_issued ? errors.decision_number_issued : ""}
                     onChange={(e) => setFieldValue("decision_number_issued", e)}
                     onBlur={handleBlur}
@@ -417,7 +445,26 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               </Col>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Tài liệu đính kèm">
-                  <FormUploadFile isMultiple value={values.files} onChange={(e) => setFieldValue("files", e)} />
+                  <FormUploadFile
+                    isMultiple
+                    value={values.files}
+                    onChange={(e) => {
+                      // In ra console để kiểm tra giá trị
+                      console.log("Files changed:", e);
+                      // Đảm bảo setFieldValue được gọi cho files
+                      setFieldValue("files", e);
+                    }}
+                  />
+                  <FormUploadFile
+                    isMultiple
+                    value={values.fileChildren}
+                    onChange={(e) => {
+                      // In ra console để kiểm tra giá trị
+                      console.log("FileChildren changed:", e);
+                      // Đảm bảo setFieldValue được gọi cho fileChildren
+                      setFieldValue("fileChildren", e);
+                    }}
+                  />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">

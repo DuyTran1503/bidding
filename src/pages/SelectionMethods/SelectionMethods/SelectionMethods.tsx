@@ -129,7 +129,7 @@ const SelectionMethods = () => {
   return (
     <>
       <Heading
-        title="Hình thức lựa chọn Nhà thầu"
+        title="Hình thức lựa chọn đấu thầu"
         hasBreadcrumb
         ModalContent={(props) => <SelectionMethodForm {...(props as any)} />}
         buttons={[

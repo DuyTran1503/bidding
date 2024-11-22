@@ -73,7 +73,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
           <>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tên nguồn tài trợ" required>
+                <FormGroup title="Tên nguồn tài trợ" required={true}>
                   <FormInput
                     placeholder="Tên nguồn tài trợ..."
                     name="name"

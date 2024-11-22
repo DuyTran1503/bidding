@@ -5,18 +5,20 @@ import { INewProject } from "@/services/store/project/project.model";
 import { IProjectInitialState, resetStatus } from "@/services/store/project/project.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { FormikProps } from "formik";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import ActionModule from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
-
+import ChildrenProject from "../ChildrenProject";
+import Button from "@/components/common/Button";
+const Children = ActionModule;
 const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
   const { state } = useArchive<IProjectInitialState>("project");
-
+  const [isCreatePackageVisible, setCreatePackageVisible] = useState(false);
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -30,6 +32,15 @@ const CreateProject = () => {
       },
     },
   });
+  const handleCreatePackage = () => {
+    setCreatePackageVisible(true);
+  };
+  const handleAddChild = (newChild: INewProject) => {
+    if (formikRef.current) {
+      const currentValues = formikRef.current.values;
+      formikRef.current.setFieldValue("children", [...currentValues.children, newChild]);
+    }
+  };
   return (
     <>
       <Heading
@@ -45,6 +56,12 @@ const CreateProject = () => {
             },
           },
           {
+            type: "primary",
+            text: "Tạo gói thầu",
+            icon: <FaPlus className="text-[18px]" />,
+            onClick: handleCreatePackage,
+          },
+          {
             isLoading: state.status === EFetchStatus.PENDING,
             text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
@@ -57,6 +74,31 @@ const CreateProject = () => {
         ]}
       />
       <ActionModule type={EPageTypes.CREATE} formikRef={formikRef} />
+      <ChildrenProject
+        onSave={handleAddChild}
+        title="Tạo gói thầu cho dự án"
+        visible={isCreatePackageVisible}
+        setVisible={setCreatePackageVisible}
+        footerContent={
+          <div className="flex items-center justify-center gap-2">
+            <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setCreatePackageVisible(false)} />
+            <Button
+              key="submit"
+              kind="submit"
+              text={"Lưu"}
+              onClick={() => {
+                if (formikRef.current) {
+                  formikRef.current?.handleSubmit();
+                  // setCreatePackageVisible(false);
+                }
+              }}
+            />
+          </div>
+        }
+        type={EPageTypes.CREATE}
+      >
+        <Children formikRef={formikRef} isChildren type={EPageTypes.CREATE} />
+      </ChildrenProject>
     </>
   );
 };

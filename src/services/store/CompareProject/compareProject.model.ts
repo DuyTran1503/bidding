@@ -115,7 +115,7 @@ export interface ICompareProject {
     location?: string;
     amount?: string;
     description?: string | null;
-    submission_method?: string | null;
+    submistion_method?: string | null;
     receiving_place?: string | null;
     bid_submission_start?: string;
     bid_submission_end?: string;
