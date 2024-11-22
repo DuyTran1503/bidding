@@ -25,7 +25,7 @@ import {
   topInvestorsByProjectPartial,
   topInvestorsByProjectTotalAmount,
   topTendersByProjectCount,
-  topTendersByProjectTotalAmount
+  topTendersByProjectTotalAmount,
 } from "@/services/store/chart/chart.thunk";
 import { Col, Row, Select, Spin } from "antd";
 import React, { useEffect, useState } from "react";
@@ -88,8 +88,8 @@ const Dashboard: React.FC = () => {
   const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-lvh">
-        <Spin tip="Loading..." size="large" />
+      <div className="flex h-lvh items-center justify-center">
+        <Spin tip="Loading..." size="large" spinning={true} />
       </div>
     );
   }
@@ -165,7 +165,6 @@ const Dashboard: React.FC = () => {
                 "Hỗ trợ doanh nghiệp xác định mức độ phụ thuộc vào nguồn lực trong nước hay quốc tế, đưa ra quyết định chiến lược mở rộng và phát triển dự án.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -178,7 +177,6 @@ const Dashboard: React.FC = () => {
                 "Giúp đánh giá hiệu quả, tính minh bạch của từng phương pháp, đưa ra quyết định cải thiện quy trình đấu thầu nhằm nâng cao chất lượng đấu thầu.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -191,7 +189,6 @@ const Dashboard: React.FC = () => {
                 "Thúc đẩy cải tiến công nghệ, tối ưu hóa quy trình nộp thầu theo xu hướng số hóa, giúp tiết kiệm thời gian và chi phí.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -204,7 +201,6 @@ const Dashboard: React.FC = () => {
                 "Hỗ trợ xây dựng hồ sơ đối tác, cải thiện mối quan hệ với các nhà thầu và nhà đầu tư, giúp thu hút đầu tư và tạo cơ hội hợp tác tiềm năng cho dự án.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -219,7 +215,6 @@ const Dashboard: React.FC = () => {
                 "Hỗ trợ doanh nghiệp xác định các loại hình tổ chức có khả năng hợp tác cao hoặc có ưu thế triển khai dự án, từ đó xây dựng chiến lược hợp tác phù hợp.",
               ]}
             />
-
           </Col>
 
           <Col xs={24} sm={24} md={24} xl={12}>
@@ -253,7 +248,6 @@ const Dashboard: React.FC = () => {
                 "Giúp doanh nghiệp nắm bắt được các đơn vị mời thầu có bao nhiêu gói thầu.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -268,7 +262,6 @@ const Dashboard: React.FC = () => {
                 "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
               ]}
             />
-
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
@@ -285,7 +278,6 @@ const Dashboard: React.FC = () => {
             />
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
-
             <ChartSection
               title="3.4 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
               chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
@@ -300,7 +292,6 @@ const Dashboard: React.FC = () => {
             />
           </Col>
           <Col xs={24} sm={24} md={24} xl={24}>
-
             <ChartSection
               title="3.5 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
               chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
@@ -335,10 +326,12 @@ const Dashboard: React.FC = () => {
               style={{ width: 150, marginBottom: 16 }}
             />
             <AreaChart
-              series={[{
-                name: "Số lượng người tham gia",
-                data: Object.values(state.timeJoiningWebsiteOfEnterprise)
-              }]}
+              series={[
+                {
+                  name: "Số lượng người tham gia",
+                  data: Object.values(state.timeJoiningWebsiteOfEnterprise),
+                },
+              ]}
               categories={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
               title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
             />

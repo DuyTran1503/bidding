@@ -1,20 +1,19 @@
-import FormUploadImage from "@/components/form/FormUpload/FormUploadImage";
 import React from "react";
+import FormUploadImage from "@/components/form/FormUpload/FormUploadImage";
 import FormSingleFile from "./FormSingleFile";
 
 interface IProps {
   value?: File | File[] | string;
   onChange: (value: File | File[] | null) => void;
   isMultiple?: boolean;
+  key?: string; // Thêm key để đảm bảo component được render lại
 }
-const MemoizedFormUploadImage = React.memo(FormUploadImage);
-const MemoizedFormSingleFile = React.memo(FormSingleFile);
 
-const FormUploadFile = ({ value, onChange, isMultiple }: IProps) => {
+const FormUploadFile = ({ value, onChange, isMultiple, key }: IProps) => {
   return isMultiple ? (
-    <MemoizedFormUploadImage onChange={onChange} value={value} />
+    <FormUploadImage key={key} onChange={onChange} value={value} />
   ) : (
-    <MemoizedFormSingleFile value={value as File} onChange={onChange} />
+    <FormSingleFile key={key} value={value as File} onChange={onChange} />
   );
 };
 

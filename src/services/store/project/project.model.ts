@@ -32,6 +32,7 @@ export interface IProject {
   status: STATUS_PROJECT;
   submission_method?: SUBMIT_METHOD;
   files?: File[];
+  fileChildren?: File[];
   decision_number_issued: string;
   upload_time?: string;
   industries?: number[];
