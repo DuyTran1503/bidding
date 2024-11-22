@@ -59,7 +59,8 @@ const GenericChart: React.FC<GenericChartProps> = ({
   valueType = "quantity",
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
-  const computedRotate = name && name.length > 5 ? 45 : 0;
+  const computedRotate = name && name.length > 4 ? 45 : 0;
+  const computedGrid = name && name.length > 4 ? 130 : 80;
   const computedBarWidth = name && name.length < 15 ? 45 : 0;
 
   // Hàm định dạng số với dấu phẩy và đơn vị, làm tròn theo đơn vị khi hiển thị trên biểu đồ
@@ -133,7 +134,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
                 rotate: computedRotate,
                 verticalAlign: "top",
                 overflow: "truncate",
-                formatter: (value: string) => (name && name.length > 4 && value.length > 20 ? value.substring(0, 20) + "..." : value),
+                formatter: (value: string) => (name && name.length > 2 && value.length > 10 ? value.substring(0, 15) + "..." : value),
               },
             }
           : undefined,
@@ -147,7 +148,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
             }
           : undefined,
       grid: {
-        bottom: grid,
+        bottom: computedGrid,
       },
       series:
         chartType === "area" && Array.isArray(series)

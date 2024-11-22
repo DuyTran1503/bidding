@@ -12,7 +12,7 @@ import FormSelect from "@/components/form/FormSelect";
 import { convertDataOptions } from "@/pages/Project/helper";
 import { Form, Formik } from "formik";
 import FormGroup from "@/components/form/FormGroup";
-import { Col, Row } from "antd";
+import { Col, Row, Select } from "antd";
 import {
   averageDifficultyLevelTasksByEmployee,
   averageDifficultyLevelTasksByEnterprise,
@@ -26,13 +26,14 @@ import {
 import EnterpriseDetail from "./EnterpriseTable";
 import GenericChart from "@/components/chart/GenericChart";
 import AbleBarChart from "@/components/chart/Axis";
+import ChartLabel from "@/components/chart/ChartLable";
 
 interface IProp {
   ids: string[] | number[];
   year: string[] | number[];
 }
 
-const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
+const yearOptions = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i).map(String);
 
 const StatisticalEnterprise: React.FC = () => {
   const { id } = useParams();
@@ -58,7 +59,7 @@ const StatisticalEnterprise: React.FC = () => {
     if (ids.length && id) {
       const enterpriseIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
       setSelectedEnterpriseIds(enterpriseIds);
-
+      const selectedYear = year.length ? year : [new Date().getFullYear()];
       if (enterpriseIds.length > 1) {
         if (selectedTabKey === "1") {
           dispatchChartEnterprise(detailEnterpriseByIds({ body: { ids: enterpriseIds } }));
@@ -73,9 +74,9 @@ const StatisticalEnterprise: React.FC = () => {
         } else if (selectedTabKey === "6") {
           dispatchChartEnterprise(averageFeedbackByEmployee({ body: enterpriseIds }));
         } else if (selectedTabKey === "7") {
-          dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: year } }));
+          dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
         } else if (selectedTabKey === "8") {
-          dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: year } }));
+          dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
         }
       }
     }
@@ -84,6 +85,7 @@ const StatisticalEnterprise: React.FC = () => {
     if (selectedTabKey) {
       const enterpriseIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
       setSelectedEnterpriseIds(enterpriseIds);
+      const selectedYear = year.length ? year : [new Date().getFullYear()];
 
       if (selectedTabKey === "1") {
         dispatchChartEnterprise(detailEnterpriseByIds({ body: { ids: enterpriseIds } }));
@@ -98,27 +100,38 @@ const StatisticalEnterprise: React.FC = () => {
       } else if (selectedTabKey === "6") {
         dispatchChartEnterprise(averageFeedbackByEmployee({ body: enterpriseIds }));
       } else if (selectedTabKey === "7") {
-        dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: year } }));
+        dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
       } else if (selectedTabKey === "8") {
-        dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: year } }));
+        dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
       }
     }
   }, [selectedTabKey]);
+  const xAxisData = stateChartEnterprise.projectCompletedByEnterprise.flatMap((enterprise) =>
+    enterprise.monthly_data.map((data) => `Tháng ${data.month}`)
+  );
 
-  // const nameMapping: Record<string, string> = {
-  //   after_university: "Sau đại học",
-  //   university: "Đại học",
-  //   college: "Cao đẳng",
-  //   high_school: "Trung học phổ thông",
-  //   secondary_school: "Trung học cơ sở",
-  //   primary_school: "Tiểu học",
-  // };
+  // Lọc các tháng có dữ liệu (loại bỏ các tháng không có dữ liệu)
+  const filteredXAxisData = [...new Set(xAxisData)].sort((a, b) => {
+    const monthA = parseInt(a.split(' ')[1]);
+    const monthB = parseInt(b.split(' ')[1]);
+    return monthA - monthB;  // Sắp xếp tháng từ nhỏ đến lớn
+  });
+
+  // Dữ liệu cho biểu đồ
+  const data = stateChartEnterprise.projectCompletedByEnterprise.map((enterprise) => ({
+    name: enterprise.enterprise_name,
+    values: filteredXAxisData.map((monthLabel) => {
+      const month = parseInt(monthLabel.split(' ')[1]);
+      const monthData = enterprise.monthly_data.find((data) => data.month === month);
+      return monthData ? monthData.completed_projects : null;  // Trả về null nếu không có dữ liệu cho tháng
+    })
+  }));
 
   const enterpriseId = stateEnterprise.enterprise?.id;
   const tabItems = [
     {
       key: "1",
-      label: "Biểu đồ thống kê số lượng dự án của doanh nghiệp",
+      label: "Thống kê chung",
       content: (
         <EnterpriseDetail detailEnterpriseByIds={stateChartEnterprise.detailEnterpriseByIds} enterpriseId={enterpriseId} />
       ),
@@ -154,60 +167,69 @@ const StatisticalEnterprise: React.FC = () => {
       key: "4",
       label: "Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà doanh nghiệp thực hiện",
       content: (
-        <GenericChart
-          chartType="bar"
-          grid={120}
-          title="Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà doanh nghiệp thực hiện"
-          name={stateChartEnterprise.averageDifficultyLevelTasksByEnterprise.map(({ enterprise_name }) => enterprise_name)}
-          value={stateChartEnterprise.averageDifficultyLevelTasksByEnterprise.map((item) => item.average_difficulty)}
-          seriesName="Mức độ khó khăn trung bình"
-        />
-
+        <>
+          <GenericChart
+            chartType="bar"
+            grid={120}
+            title="Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà doanh nghiệp thực hiện"
+            name={stateChartEnterprise.averageDifficultyLevelTasksByEnterprise.map(({ enterprise_name }) => enterprise_name)}
+            value={stateChartEnterprise.averageDifficultyLevelTasksByEnterprise.map((item) => item.average_difficulty)}
+            seriesName="Mức độ khó khăn trung bình"
+          />
+          <ChartLabel value={["Chưa có nhiệm vụ", "Dễ", "Trung bình", "Khó", "Rất khó"]} />
+        </>
       ),
     },
-    {
-      key: "5",
-      label: "Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà nhân viên thực hiện",
-      content: (
-        <GenericChart
-          chartType="bar"
-          grid={120}
-          title="Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà nhân viên thực hiện"
-          name={stateChartEnterprise.averageDifficultyLevelTasksByEmployee.map(({ employee_name }) => employee_name)}
-          value={stateChartEnterprise.averageDifficultyLevelTasksByEmployee.map((item) => item.average_difficulty)}
-          seriesName="Mức độ khó khăn trung bình"
-        />
+    // {
+    //   key: "5",
+    //   label: "Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà nhân viên thực hiện",
+    //   content: (
+    //     <>
+    //       <GenericChart
+    //         chartType="bar"
+    //         grid={120}
+    //         title="Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà nhân viên thực hiện"
+    //         name={stateChartEnterprise.averageDifficultyLevelTasksByEmployee.map(({ employee_name }) => employee_name)}
+    //         value={stateChartEnterprise.averageDifficultyLevelTasksByEmployee.map((item) => item.average_difficulty)}
+    //         seriesName="Mức độ khó khăn trung bình"
+    //       />
+    //       <ChartLabel value={["Chưa có nhiệm vụ", "Dễ", "Trung bình", "Khó", "Rất khó"]} />
+    //     </>
 
-      ),
-    },
-    {
-      key: "6",
-      label: "Biểu đồ thống kê đánh giá trung bình của nhân viên",
-      content: (
-        <GenericChart
-          chartType="bar"
-          grid={120}
-          title="Biểu đồ thống kê đánh giá trung bình của nhân viên"
-          name={stateChartEnterprise.averageFeedbackByEmployee.map(({ employee_name }) => employee_name)}
-          value={stateChartEnterprise.averageFeedbackByEmployee.map((item) => item.average_feedback)}
-          seriesName="Mức độ khó khăn trung bình"
-        />
+    //   ),
+    // },
+    // {
+    //   key: "6",
+    //   label: "Biểu đồ thống kê đánh giá trung bình của nhân viên",
+    //   content: (
+    //     <>
+    //       <GenericChart
+    //         chartType="bar"
+    //         grid={120}
+    //         title="Biểu đồ thống kê đánh giá trung bình của nhân viên"
+    //         name={stateChartEnterprise.averageFeedbackByEmployee.map(({ employee_name }) => employee_name)}
+    //         value={stateChartEnterprise.averageFeedbackByEmployee.map((item) => item.average_feedback)}
+    //         seriesName="Mức độ khó khăn trung bình"
+    //       />
+    //       <ChartLabel value={["Chưa có nhiệm vụ", "Dễ", "Trung bình", "Khó", "Rất khó"]} />
+    //     </>
 
-      ),
-    },
+    //   ),
+    // },
     {
       key: "7",
       label: "Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm",
       content: (
         <AbleBarChart
           title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
-          xAxisData={Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`)}
+          xAxisData={filteredXAxisData}
           data={stateChartEnterprise.projectCompletedByEnterprise.map((enterprise) => ({
             name: enterprise.enterprise_name,
             values: enterprise.monthly_data.map((item) => item.completed_projects || 0),
           }))}
 
         />
+
       ),
     },
     {
@@ -216,7 +238,7 @@ const StatisticalEnterprise: React.FC = () => {
       content: (
         <AbleBarChart
           title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
-          xAxisData={Array.from({ length: 12 }, (_, i) => `Tháng ${i + 1}`)}
+          xAxisData={filteredXAxisData}
           data={stateChartEnterprise.projectWonByEnterprise.map((enterprise) => ({
             name: enterprise.enterprise_name,
             values: enterprise.monthly_data.map((item) => item.won_projects || 0),
@@ -229,7 +251,7 @@ const StatisticalEnterprise: React.FC = () => {
   ];
   const initialValues: IProp = {
     ids: ids || [],
-    year: year || [],
+    year: year || new Date().getFullYear(),
   };
   const handleTabChange = (key: string) => {
     setSelectedTabKey(key);
@@ -277,9 +299,9 @@ const StatisticalEnterprise: React.FC = () => {
                           setFieldValue("ids", e);
                           setIds(e as any);
                         }} />
-                      <FormSelect
-                        showLabel={false}
-                        className="w-80"
+                      <Select
+                        // showLabel={false}
+                        className="w-72"
                         placeholder="Chọn năm..."
                         options={yearOptions.map((year) => ({ label: year, value: year }))}
                         value={values.year}
