@@ -19,6 +19,7 @@ import FormCkEditor from "@/components/form/FormCkEditor";
 import { IEvaluationCriteria } from "@/services/store/evaluation/evaluation.model";
 import { IEvaluationCriteriaInitialState } from "@/services/store/evaluation/evaluation.slice";
 import { createEvaluation, updateEvaluation } from "@/services/store/evaluation/evaluation.thunk";
+import { number, object, string } from "yup";
 
 interface IEvaluationCriteriaFormProps {
   type?: EButtonTypes;
@@ -41,6 +42,15 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
     weight: item?.weight || "",
     description: item?.description || "",
   };
+
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
+  const Schema = object().shape({
+    project_id: string().trim().required("Vui lòng chọn dự án"),
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên tiêu chí đánh giá"),
+    weight: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập trọng số đánh giá"),
+    description: string().trim().required("Vui lòng nhập mô tả"),
+  })
+
   const handleSubmit = (data: IEvaluationCriteria) => {
     const body = {
       ...lodash.omit(data, "key", "index", "id"),
@@ -93,7 +103,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
         {({ values, errors, handleBlur, setFieldValue }) => {
           return (
             <Form className="mt-3">
@@ -123,7 +133,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
                 </Col>
                 <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                   <FormInput
-                    type="text"
+                    type="number"
                     isDisabled={type === "view"}
                     label="Trọng số đánh giá"
                     value={values.weight}

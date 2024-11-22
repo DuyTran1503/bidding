@@ -18,6 +18,7 @@ import FormSelect from "@/components/form/FormSelect";
 import { RootStateType } from "@/services/reducers";
 import { useSelector } from "react-redux";
 import { EPageTypes } from "@/shared/enums/page";
+import { object, string } from "yup";
 
 interface IPostFormProps {
     formikRef?: FormikRefType<IPostFormInitialValues>;
@@ -52,6 +53,11 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
         status: post?.status || POST.SHOW,
     };
 
+    const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
+    const Schema = object().shape({
+        name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
+    })
+
     const statusOptions: IOption[] = statusEnumArray.map((key) => ({
         value: key.toString(),
         label: mappingPost[key],
@@ -59,6 +65,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
 
     return (
         <Formik
+            validationSchema={Schema}
             innerRef={formikRef}
             initialValues={initialValues}
             enableReinitialize={true}
@@ -114,7 +121,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                             </Col>
 
                             <Col xs={24} sm={24} md={12} xl={12}>
-                                <FormGroup title="Danh mục bài viết">
+                                <FormGroup title="Danh mục bài viết" required>
                                     <FormSelect
                                         isMultiple={true}
                                         // isDisabled={type === "view"}
@@ -133,7 +140,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                             </Col>
 
                             <Col xs={24} sm={24} md={12} xl={12}>
-                                <FormGroup title="Tiêu đề">
+                                <FormGroup title="Tiêu đề" required>
                                     <FormInput
                                         type="text"
                                         isDisabled={type === "view"}
@@ -148,7 +155,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                             </Col>
 
                             <Col xs={24} sm={24} md={12} xl={12}>
-                                <FormGroup title="Tiêu đề ngắn">
+                                <FormGroup title="Tiêu đề ngắn" required>
                                     <FormInput
                                         type="text"
                                         isDisabled={type === "view"}
@@ -173,7 +180,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                             </Col>
 
                             <Col xs={24} sm={24} md={24} xl={24}>
-                                <FormGroup title="Nội dung">
+                                <FormGroup title="Nội dung" required>
                                     <FormCkEditor
                                         id="content"
                                         direction="vertical"

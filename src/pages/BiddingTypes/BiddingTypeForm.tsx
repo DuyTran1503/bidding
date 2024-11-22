@@ -10,6 +10,7 @@ import FormSwitch from "@/components/form/FormSwitch";
 import { createBiddingType, updateBiddingType } from "@/services/store/biddingType/biddingType.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import FormCkEditor from "@/components/form/FormCkEditor";
+import { object, string } from "yup";
 
 interface IBiddingTypeFormProps {
   formikRef?: any;
@@ -32,8 +33,13 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
     is_active: biddingType?.is_active ? "1" : "0",
   };
 
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
+  const Schema = object().shape({
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên loại hình đấu thầu"),
+  })
   return (
     <Formik
+      validationSchema={Schema}
       innerRef={formikRef}
       initialValues={initialValues}
       enableReinitialize={true}

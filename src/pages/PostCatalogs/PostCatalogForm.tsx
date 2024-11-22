@@ -15,6 +15,7 @@ import { useViewport } from "@/hooks/useViewport";
 import { IPostCatalog } from "@/services/store/postCatalog/postCatalog.model";
 import { createPostCatalog, updatePostCatalog } from "@/services/store/postCatalog/postCatalog.thunk";
 import { IPostCatalogInitialState } from "@/services/store/postCatalog/postCatalog.slice";
+import { object, string } from "yup";
 
 interface IPostCatalogFormProps {
   type?: EButtonTypes;
@@ -33,6 +34,11 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
     description: item?.description || "",
     is_active: item?.is_active ? "1" : "0",
   };
+
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
+    const Schema = object().shape({
+        name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
+    })
   const handleSubmit = (data: IPostCatalog, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index"),
@@ -85,7 +91,7 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>

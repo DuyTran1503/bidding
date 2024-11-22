@@ -18,6 +18,7 @@ import { IOption } from "@/shared/utils/shared-interfaces";
 import { convertDataOptions } from "../Project/helper";
 import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
 import { getListEmployee } from "@/services/store/employee/employee.thunk";
+import { object, string } from "yup";
 
 interface ITaskFormProps {
   type?: EButtonTypes;
@@ -39,6 +40,14 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
     difficulty_level: item?.difficulty_level || undefined,
     code: item?.code || "",
   };
+
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
+  const Schema = object().shape({
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
+    code: string().trim().required("Vui lòng nhập mã công việc"),
+    document: string().trim().required("Vui lòng chọn 1 hoặc nhiều công ty"),
+    difficulty_level: string().trim().required("Vui lòng chọn mức độ làm việc"),
+  })
 
   const handleSubmit = (data: ITask) => {
     const body = {
@@ -90,7 +99,7 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik validationSchema={Schema} innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>

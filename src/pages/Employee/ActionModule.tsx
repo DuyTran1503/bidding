@@ -72,6 +72,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
       .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Vui lòng nhập lại! định dạng email chưa đúng")
       .max(255, "Số ký tự tối đa là 255 ký tự"),
     phone: string().trim().required("Vui lòng nhập số điện thoại").matches(phoneRegex, "Số điện thoại không hợp lệ"),
+
   });
   const genderOptions: IOption[] = statusEnumArray.map((key) => ({
     value: key,
@@ -113,10 +114,9 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
           <Form>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Tên nhân viên">
+                <FormGroup title="Tên nhân viên" required>
                   <FormInput
                     type="text"
-                    label="Tên nhân viên"
                     isDisabled={type === "view"}
                     value={values.name ?? ""}
                     name="name"
@@ -132,7 +132,6 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Mã nhân viên">
                   <FormInput
-                    label="Mã nhân viên"
                     type="text"
                     isDisabled={type === "view"}
                     value={values.code ?? ""}
@@ -147,9 +146,8 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title=" Công ty làm việc">
+                <FormGroup title=" Công ty làm việc" >
                   <FormSelect
-                    label="Công ty làm việc"
                     placeholder="Chọn công ty..."
                     id="enterprise_id"
                     value={values.enterprise_id || undefined}
@@ -159,9 +157,8 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Email">
+                <FormGroup title="Email" required>
                   <FormInput
-                    label="Email"
                     type="text"
                     isDisabled={type === "view"}
                     value={values.email ?? ""}
@@ -176,9 +173,8 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Số điện thoại">
+                <FormGroup title="Số điện thoại" required>
                   <FormInput
-                    label="Số điện thoại"
                     type="text"
                     isDisabled={type === "view"}
                     value={values.phone ?? ""}
@@ -193,9 +189,8 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Mã số thuế">
+                <FormGroup title="Mã số thuế" required>
                   <FormInput
-                    label="Mã số thuế"
                     type="number"
                     isDisabled={type === "view"}
                     value={values.taxcode ?? ""}
@@ -212,7 +207,6 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Mức lương">
                   <FormInput
-                    label="Mức lương"
                     type="number"
                     isDisabled={type === "view"}
                     value={values.salary ?? ""}
@@ -230,7 +224,6 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Ngày sinh">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày sinh"
                     value={values.birthday ? dayjs(values.birthday) : null}
                     onChange={(date) => setFieldValue("birthday", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -239,7 +232,6 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Địa chỉ">
                   <FormInput
-                    label="Địa chỉ"
                     type="text"
                     isDisabled={type === "view"}
                     value={values.address ?? ""}
@@ -257,7 +249,6 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Ngày bắt đầu ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày bắt đầu "
                     value={values.start_date ? dayjs(values.start_date) : null}
                     onChange={(date) => setFieldValue("start_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -267,7 +258,6 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Ngày kết thúc ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày kết thúc "
                     minDate={values.start_date ? dayjs(values.start_date) : undefined}
                     value={values.end_date ? dayjs(values.end_date) : null}
                     onChange={(date) => setFieldValue("end_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
@@ -276,10 +266,9 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
               </Col>
 
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Trình độ học vấn">
+                <FormGroup title="Trình độ học vấn" >
                   <FormSelect
                     isDisabled={type === "view"}
-                    label="Trình độ học vấn"
                     value={values.education_level}
                     options={optionEducation}
                     id="education_level"
@@ -289,9 +278,8 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Giới tính" className="gap-[6px]">
+                <FormGroup title="Giới tính" className="gap-[6px]" required>
                   <FormRadio
-                    title="Giới tính"
                     options={genderOptions}
                     value={values.gender && (genderOptions.find((item) => +item.value === +values.gender)?.value as string)}
                     onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
@@ -302,7 +290,6 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Trạng thái làm việc">
                   <FormSelect
                     isDisabled={type === "view"}
-                    label="Trạng thái làm việc"
                     value={values.status}
                     options={optionStatus}
                     id="status"
