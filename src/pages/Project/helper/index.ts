@@ -17,7 +17,7 @@ type InputFileData = {
   name: string; // Tên file
 };
 
-export const convertToFileObject = (input: InputFileData | InputFileData[] | File | File[]): File | File[] => {
+export const convertToFileObject = (input: InputFileData | InputFileData[] | File | File[]): File | File[] | any => {
   if (Array.isArray(input)) {
     if (input.every((item) => item instanceof File)) {
       return input;

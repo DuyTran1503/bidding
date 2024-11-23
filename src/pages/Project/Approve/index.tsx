@@ -21,7 +21,7 @@ import FormSelect from "@/components/form/FormSelect";
 import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormInput from "@/components/form/FormInput";
-import { mixed, object, string } from "yup";
+import { mixed, object } from "yup";
 
 interface IApprove {
   status?: STATUS_PROJECT;

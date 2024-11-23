@@ -14,7 +14,7 @@ interface ProjectCardProps {
   isRemove?: boolean;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ children, formikRef, onEdit, isRemove }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit, isRemove }) => {
   const handleRemove = (index: number) => {
     confirm({
       title: "Xóa gói thầu",
@@ -24,6 +24,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ children, formikRef, onEdit, 
       okButtonProps: { className: "bg-red-500 hover:bg-red-600" },
       onOk: () => {
         if (isRemove) {
+          console.log(index);
         }
       },
     });
@@ -48,10 +49,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ children, formikRef, onEdit, 
                 </Tooltip>
 
                 <Tooltip title="Xóa">
-                  <button
-                    className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100"
-                    // onClick={() => handleRemove(index)}
-                  >
+                  <button className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100" onClick={() => handleRemove(index)}>
                     <IoTrashBinOutline className="text-xl text-red-500" />
                   </button>
                 </Tooltip>

@@ -2,7 +2,6 @@ import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus } from "@/services/store/employee/employee.slice";
-import { IWorkProgress } from "@/services/store/workProgresses/workProgresses.model";
 import { IWorkProgressInitialState } from "@/services/store/workProgresses/workProgresses.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPageTypes } from "@/shared/enums/page";
@@ -11,11 +10,11 @@ import { useRef } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import WorkProgressForm from "../ActionModule";
+import WorkProgressForm, { IWorkProgressInitialValues } from "../ActionModule";
 
 const CreateWorkProgress = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IWorkProgress>>(null);
+  const formikRef = useRef<FormikProps<IWorkProgressInitialValues>>(null);
   const { state } = useArchive<IWorkProgressInitialState>("work_progress");
   useFetchStatus({
     module: "work_progress",
@@ -57,7 +56,7 @@ const CreateWorkProgress = () => {
           },
         ]}
       />
-       <WorkProgressForm type={EPageTypes.CREATE} formikRef={formikRef}/>
+      <WorkProgressForm type={EPageTypes.CREATE} formikRef={formikRef} />
     </>
   );
 };

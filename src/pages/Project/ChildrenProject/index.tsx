@@ -1,6 +1,4 @@
 import Dialog from "@/components/dialog/Dialog";
-import { useRef } from "react";
-import ActionModule from "../ActionModule";
 import { INewProject } from "@/services/store/project/project.model";
 import { EPageTypes } from "@/shared/enums/page";
 import { useViewport } from "@/hooks/useViewport";
@@ -20,7 +18,7 @@ interface IChildrenProjectProps {
 }
 
 const ChildrenProject: React.FC<IChildrenProjectProps> = (props) => {
-  const { title, visible, setVisible, footerContent, children, className, project, onSave, type, formikRef } = props;
+  const { title, visible, setVisible, footerContent, children, className, onSave, formikRef } = props;
 
   const { screenSize } = useViewport();
 

@@ -44,28 +44,28 @@ const WorkProgresses = () => {
       className: "w-[200px]",
     },
     {
-        dataIndex: "task",
-        title: "Nhiệm vụ",
-        className: "w-[200px]",
-        render: (_, record) => {
-          return record.task && Array.isArray(record.task) && record.task.length > 0
-            ? (
-              <ul className="list-disc pl-4">
-                {record.task.map((task, index) => (
-                  <li key={index}>{task.name}</li>
-                ))}
-              </ul>
-            )
-            : "Không có";
-        },
+      dataIndex: "task",
+      title: "Nhiệm vụ",
+      className: "w-[200px]",
+      render: (_, record) => {
+        return record.task && Array.isArray(record.task) && record.task.length > 0 ? (
+          <ul className="list-disc pl-4">
+            {record.task.map((task: any, index: number) => (
+              <li key={index}>{task.name}</li>
+            ))}
+          </ul>
+        ) : (
+          "Không có"
+        );
       },
-      
+    },
+
     {
       dataIndex: "feedback",
       title: "Nhận xét",
       className: "w-[200px]",
     },
-    { 
+    {
       dataIndex: "expense",
       title: "Chi phí",
       className: "w-[200px]",
@@ -80,7 +80,6 @@ const WorkProgresses = () => {
       title: "Ngày kết thúc",
       className: "w-[200px]",
     },
-
   ];
   const buttons: IGridButton[] = [
     {
@@ -112,7 +111,6 @@ const WorkProgresses = () => {
       title: "Tên nhân viên",
       type: "text",
     },
-
   ];
 
   const data: ITableData[] = useMemo(

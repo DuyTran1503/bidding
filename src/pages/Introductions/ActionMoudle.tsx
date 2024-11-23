@@ -55,7 +55,7 @@ const IntroductionForm = ({ formikRef, type, introduction }: IIntroductionFormPr
         }
       }}
     >
-      {({ values, errors, touched, handleBlur, setFieldValue }) => {
+      {({ values, errors, touched, setFieldValue }) => {
         return (
           <>
             {/* <Row gutter={[24, 24]}>
