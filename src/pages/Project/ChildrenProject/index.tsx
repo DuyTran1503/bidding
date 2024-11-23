@@ -16,18 +16,21 @@ interface IChildrenProjectProps {
   className?: string;
   project?: INewProject;
   type?: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW | EPageTypes.APPROVE;
+  formikRef: React.RefObject<FormikProps<INewProject>>; // Add formikRef to props
 }
 
 const ChildrenProject: React.FC<IChildrenProjectProps> = (props) => {
-  const { title, visible, setVisible, footerContent, children, className, project, onSave, type } = props;
+  const { title, visible, setVisible, footerContent, children, className, project, onSave, type, formikRef } = props;
+
   const { screenSize } = useViewport();
-  const formikRef = useRef<FormikProps<INewProject>>(null);
+
   const handleSubmit = () => {
     if (formikRef.current) {
       const values = formikRef.current.values;
       onSave(values);
     }
   };
+
   return (
     <Dialog
       title={title}
@@ -38,7 +41,7 @@ const ChildrenProject: React.FC<IChildrenProjectProps> = (props) => {
       screenSize={screenSize}
       className={className}
     >
-      {children ? children : <ActionModule formikRef={formikRef} project={project} type={type!} />}
+      {children}
     </Dialog>
   );
 };

@@ -11,9 +11,9 @@ import { ISelectionMethodInitialState } from "@/services/store/selectionMethod/s
 import { getListSelectionMethods } from "@/services/store/selectionMethod/selectionMethod.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import { FormikRefType } from "@/shared/utils/shared-types";
-import { Col, Row } from "antd";
+import { Card, Col, Row } from "antd";
 import { Form, Formik } from "formik";
-import { useEffect, useMemo, useState } from "react";
+import { SetStateAction, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { array, date, number, object, string } from "yup";
 import dayjs from "dayjs";
 import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
@@ -33,6 +33,9 @@ import { IProcurementInitialState } from "@/services/store/procurement/procureme
 import { getListProcurement } from "@/services/store/procurement/procurement.thunk";
 import { DOMESTIC, domesticEnumArray, mappingDOMESTIC } from "@/shared/enums/domestic";
 import lodash from "lodash";
+import ChildrenProject from "./ChildrenProject";
+import { clearChildrenState, loadChildrenState, saveChildrenState } from "@/shared/utils/localStorage";
+import ProjectCard from "./ChildrenProject/ProjectCard";
 interface IPropProject {
   formikRef?: FormikRefType<INewProject>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW | EPageTypes.APPROVE;
@@ -52,7 +55,14 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
 
-  const [children, setChildren] = useState(project?.children || []);
+  const [children, setChildren] = useState(() => {
+    if (project?.children && project.children.length > 0) {
+      return project.children;
+    }
+
+    const loadedChildren = loadChildrenState();
+    return loadedChildren || [];
+  });
   const initialValues: INewProject = useMemo(
     () => ({
       id: project ? project.id : 0,
@@ -67,8 +77,8 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
       staff_id: project?.staff || undefined,
       industry_id: project?.industries || [],
       is_domestic: project?.is_domestic || DOMESTIC.INSIDE,
-      amount: project?.amount || 0,
-      total_amount: project?.total_amount || 0,
+      amount: project?.amount || undefined,
+      total_amount: project?.total_amount || undefined,
       receiving_place: project?.receiving_place || "",
       bid_submission_start: project?.bid_submission_start || "",
       bid_submission_end: project?.bid_submission_end || "",
@@ -83,11 +93,12 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
       submission_method: project?.submission_method || SUBMIT_METHOD.online,
       files: project?.attachments || [],
       decision_number_issued: project?.decision_number_issued || "",
-      fileChildren: [],
+      fileChildren: undefined,
     }),
     [project, children],
   );
   const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
+  const numberRegex = /^[0-9]+$/;
   const Schema = object().shape({
     parent_id: number().nullable(),
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
@@ -100,6 +111,21 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
     start_time: date().required("Vui lòng không để trống trường này"),
     end_time: date().required("Vui lòng không để trống trường này"),
     status: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
+    total_amount: string()
+      .matches(numberRegex, "Trường này chỉ cho phép là số")
+      .required("Vui lòng không để trống trường này")
+      .test("is-positive", "Phải lớn hơn 0", (value) => {
+        const num = Number(value);
+        return num > 0;
+      }),
+
+    amount: string()
+      .matches(numberRegex, "Trường này chỉ cho phép là số")
+      .required("Vui lòng không để trống trường này")
+      .test("is-positive", "Phải lớn hơn 0", (value) => {
+        const num = Number(value);
+        return num > 0;
+      }),
   });
 
   useEffect(() => {
@@ -120,7 +146,34 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
     const newFiles = dataFiles.filter((file) => !projectFiles.some((pFile) => pFile.path === file.path));
     return [...filteredProjectFiles, ...newFiles];
   };
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [selectedChild, setSelectedChild] = useState<INewProject | null>(null);
 
+  const handleEditChild = (child: INewProject) => {
+    setSelectedChild(child);
+    setIsEditModalVisible(true);
+  };
+  const handleSaveChild = (values: INewProject) => {
+    const newChild = {
+      ...values,
+      parent_id: project?.id || null,
+      children: [],
+      files: values.fileChildren,
+    };
+
+    setChildren((prevChildren: any) => {
+      const updatedChildren = [...prevChildren, newChild];
+      formikRef?.current?.setFieldValue("children", updatedChildren);
+
+      saveChildrenState(updatedChildren);
+      return updatedChildren;
+    });
+  };
+  useEffect(() => {
+    return () => {
+      clearChildrenState();
+    };
+  }, []);
   return (
     <Formik
       validationSchema={Schema}
@@ -128,25 +181,10 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
       initialValues={initialValues}
       onSubmit={(values) => {
         const data = {
-          ...lodash.omit(values, "id", "children"),
+          ...lodash.omit(values, "id", "children", "fileChildren"),
         };
         if (isChildren) {
-          const newChild = {
-            ...lodash.omit(values, ["id", "children", "files"]), // Loại bỏ trường không cần thiết
-            parent_id: project?.id || null,
-            children: [], // Đảm bảo không lồng nhau quá mức
-            files: [], // Không sao chép `files` từ parent
-          };
-
-          setChildren((prevChildren: any) => {
-            if (!lodash.isEqual(prevChildren, [...prevChildren, newChild])) {
-              const updatedChildren = [...prevChildren, newChild];
-              formikRef?.current?.setFieldValue("children", updatedChildren); // Cập nhật khi có thay đổi
-              return updatedChildren;
-            }
-            return prevChildren; // Không thay đổi nếu dữ liệu giống nhau
-          });
-
+          handleSaveChild(values); // Sử dụng lại `handleSaveChild`
           return;
         }
 
@@ -167,11 +205,21 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(values.files);
-
         return (
           <Form>
-            <Row gutter={[24, 12]}>
+            {children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
+
+            {/* Edit Modal */}
+            <ChildrenProject
+              formikRef={formikRef!}
+              title="Cập nhật gói thầu"
+              visible={isEditModalVisible}
+              setVisible={setIsEditModalVisible}
+              project={selectedChild!}
+              type={EPageTypes.UPDATE}
+              onSave={() => {}}
+            />
+            <Row gutter={[16, 0]}>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tên Dự Án">
                   <FormInput
@@ -316,7 +364,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Quốc Tế">
+                <FormGroup title="Dự án hiện tại">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập thông tin..."
@@ -447,22 +495,10 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
                 <FormGroup title="Tài liệu đính kèm">
                   <FormUploadFile
                     isMultiple
-                    value={values.files}
+                    name={isChildren ? "fileChildren" : "files"} // Sử dụng điều kiện để đổi name
+                    value={isChildren ? values.fileChildren : values.files} // Điều kiện chọn giá trị
                     onChange={(e) => {
-                      // In ra console để kiểm tra giá trị
-                      console.log("Files changed:", e);
-                      // Đảm bảo setFieldValue được gọi cho files
-                      setFieldValue("files", e);
-                    }}
-                  />
-                  <FormUploadFile
-                    isMultiple
-                    value={values.fileChildren}
-                    onChange={(e) => {
-                      // In ra console để kiểm tra giá trị
-                      console.log("FileChildren changed:", e);
-                      // Đảm bảo setFieldValue được gọi cho fileChildren
-                      setFieldValue("fileChildren", e);
+                      setFieldValue(isChildren ? "fileChildren" : "files", e); // Cập nhật field tương ứng
                     }}
                   />
                 </FormGroup>

@@ -38,9 +38,7 @@ const FormSelect = ({
 
   return (
     <>
-      {showLabel && label && (
-        <div className="text-m-medium mb-1 w-full text-black-300">{label}</div>
-      )}
+      {showLabel && label && <div className="text-m-medium mb-1 w-full text-black-300">{label}</div>}
       <ConfigProvider
         theme={{
           components: {
@@ -55,14 +53,10 @@ const FormSelect = ({
           allowClear
           maxTagCount={"responsive"}
           disabled={isDisabled}
-          className={clsx(
-            `text-m-medium w-full ${className}`,
-            isDisabled && "opacity-65",
-            {
-              "border-red-500": !!error,
-              "select-none !bg-gray-50 !text-black-300": error,
-            }
-          )}
+          className={clsx(`text-m-medium !h-[35px] w-full ${className}`, isDisabled && "opacity-65", {
+            "border-red-500": !!error,
+            "select-none !bg-gray-50 !text-black-300": error,
+          })}
           mode={isMultiple ? "multiple" : undefined}
           defaultValue={defaultValue}
           value={value}
@@ -70,19 +64,11 @@ const FormSelect = ({
           showSearch
           placeholder={placeholder ?? "Chọn..."}
           optionFilterProp="label"
-          filterSort={(optionA, optionB) =>
-            (optionA?.label ?? "")
-              .toLowerCase()
-              .localeCompare((optionB?.label ?? "").toLowerCase())
-          }
+          filterSort={(optionA, optionB) => (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())}
           options={options}
         />
         {!!error && (
-          <div
-            className={clsx(
-              "placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white"
-            )}
-          >
+          <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[6px] font-normal text-red-500 outline-none focus:bg-white")}>
             {error}
           </div>
         )}

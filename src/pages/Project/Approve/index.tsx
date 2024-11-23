@@ -72,7 +72,7 @@ const ApproveProject = () => {
   });
   const initialValues: IApprove = {
     status: data?.status || undefined,
-    decision_number_approve: state.project.decision_number_issued || "",
+    decision_number_approve: state?.project?.decision_number_issued || "",
     notes: "",
     initialStatus: (data?.status as any) || "",
   };

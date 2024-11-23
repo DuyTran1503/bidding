@@ -73,6 +73,7 @@ const projectSlice = createSlice({
           procurement_categories: payload?.data?.procurement_categories?.map((item: any) => item.id),
           funding_source: payload?.data?.funding_source?.id,
           investor: payload?.data?.investor.id,
+          investorName: payload?.data?.investor.name,
           tenderer: payload?.data?.tenderer.id,
           selection_method: payload?.data?.selection_method.id,
           staff: payload?.data?.staff?.id,

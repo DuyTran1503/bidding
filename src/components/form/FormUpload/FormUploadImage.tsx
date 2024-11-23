@@ -13,7 +13,7 @@ interface IProps {
   onChange: (value: File | File[] | null) => void;
   id?: string;
 }
-const FormUploadImage: React.FC<IProps> = ({ onChange, value }) => {
+const FormUploadImage: React.FC<IProps> = ({ onChange, value, id }) => {
   const [fileList, setFileList] = useState<File[] | any>(value ? value : []);
 
   const [error, setError] = useState<string | null>(null);
@@ -42,9 +42,10 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value }) => {
       onChange(fileList.length > 0 ? fileList : null);
     }
   }, [fileList]);
-  const validImageExtensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "webp", "svg"];
   const renderFileIcon = (file: File) => {
-    if (file.type.startsWith("image/") && (file.type || validImageExtensions.includes(file.type))) {
+    const validImageExtensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "webp", "svg"];
+
+    if (file.type.startsWith("image/") || validImageExtensions.some((ext) => file.name.endsWith(ext))) {
       return (
         <img
           src={URL.createObjectURL(file)}
@@ -55,20 +56,18 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value }) => {
           }}
         />
       );
-    } else if (file.type && file.type.startsWith("application/")) {
-      let icon;
+    } else if (file.type.startsWith("application/")) {
       if (file.type.startsWith("application/msword")) {
-        return (icon = WORD);
+        return <img src={WORD} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
       }
       if (file.type.startsWith("application/vnd.ms-excel")) {
-        return (icon = EXCEL);
+        return <img src={EXCEL} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
       }
       if (file.type.startsWith("application/pdf")) {
-        return (icon = PDF);
+        return <img src={PDF} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
       } else {
-        icon = imageFile;
+        return <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
       }
-      return <img src={icon} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
     } else {
       return <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
     }
@@ -92,12 +91,12 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value }) => {
         {fileList.length === 0 && <div className="mt-3 text-center font-normal text-gray-400">Kéo hoặc thả file vào đây</div>}
         <div className="mt-4 flex justify-center">
           <label
-            htmlFor="file-upload"
+            htmlFor={`file-upload-${id}`}
             className="text-m-medium inline-block cursor-pointer rounded bg-primary-50 px-[14px] py-[10px] text-primary-500"
           >
             Tải file lên
           </label>
-          <input id="file-upload" type="file" onChange={handleFileChange} multiple className="hidden" />
+          <input id={`file-upload-${id}`} type="file" onChange={handleFileChange} multiple className="hidden" />
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ export interface IProject {
   name: string;
   is_domestic: DOMESTIC;
   location: string;
-  amount: number;
+  amount?: number;
   total_amount?: number;
   description?: string;
   receiving_place: string;
@@ -41,6 +41,7 @@ export interface IProject {
   procurement_categories?: number[];
   selection_method?: string;
   attachments?: File[];
+  investorName?: string;
 }
 export interface INewProject extends IProject {
   tenderer_id: number | null;

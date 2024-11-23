@@ -1,4 +1,4 @@
 export enum SUBMIT_METHOD {
-  online = "online",
+  online = "Online",
   in_person = "Trực tiếp",
 }
