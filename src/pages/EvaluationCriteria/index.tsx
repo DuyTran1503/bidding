@@ -14,7 +14,6 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
-import { useNavigate } from "react-router-dom";
 import ActionModule from "./ActionModule";
 import { IEvaluationCriteriaInitialState, resetStatus, setFilter } from "@/services/store/evaluation/evaluation.slice";
 import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/services/store/evaluation/evaluation.thunk";
@@ -28,9 +27,9 @@ const EvaluationCriteria = () => {
 
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const projectName = (value: number) => {
-    if (stateProject?.listProjects!.length > 0 && !!value) return stateProject?.listProjects!.find((item) => item.id === value)?.name;
-  };
+  // const projectName = (value: number) => {
+  //   if (stateProject?.listProjects!.length > 0 && !!value) return stateProject?.listProjects!.find((item) => item.id === value)?.name;
+  // };
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -60,9 +59,12 @@ const EvaluationCriteria = () => {
       title: "STT",
     },
     {
-      dataIndex: "project_name",
+      dataIndex: "project",
       title: "Dự án",
       className: "w-[250px]",
+      render: (_, record) => {
+        return <span>{record.project?.name || "Không có tên dự án"}</span>;
+      },
     },
     {
       dataIndex: "name",
@@ -106,17 +108,17 @@ const EvaluationCriteria = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.evaluations && state.evaluations.length > 0
-        ? state.evaluations.map(({ id, project_id, project_name, name, weight, description, is_active }, index) => ({
-            index: index + 1,
-            key: id,
-            id,
-            project_id,
-            project_name: projectName(+project_id!),
-            name,
-            weight,
-            description,
-            is_active,
-          }))
+        ? state.evaluations.map(({ id, project_id, project, name, weight, description, is_active }, index) => ({
+          index: index + 1,
+          key: id,
+          id,
+          project_id,
+          project,
+          name,
+          weight,
+          description,
+          is_active,
+        }))
         : [],
     [JSON.stringify(state.evaluations), JSON.stringify(stateProject.listProjects)],
   );
@@ -152,9 +154,9 @@ const EvaluationCriteria = () => {
   const projectOptions: IOption[] =
     stateProject?.listProjects && stateProject.listProjects.length > 0
       ? stateProject.listProjects.map((e) => ({
-          value: e.id,
-          label: e.name,
-        }))
+        value: e.id,
+        label: e.name,
+      }))
       : [];
   const search: ISearchTypeTable[] = [
     {
