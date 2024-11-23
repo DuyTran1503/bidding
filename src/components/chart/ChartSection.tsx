@@ -57,7 +57,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
     return (
         <>
             <h3 className="text-lg font-semibold mb-4">{title}</h3>
-            <div className={`flex flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)] ${className}`}>
+            <div className={`flex flex-col rounded-xl bg-white my-2 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)] ${className}`}>
 
                 <div className="flex gap-4 items-center">
                     {selectOptions && onSelectChange && (
