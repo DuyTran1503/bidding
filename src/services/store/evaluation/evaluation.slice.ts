@@ -13,7 +13,6 @@ import {
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
 import { IEvaluationCriteria } from "./evaluation.model";
-import { data } from "../../../components/table/SecondaryTable";
 
 export interface IEvaluationCriteriaInitialState extends IInitialState {
   evaluations: IEvaluationCriteria[];
