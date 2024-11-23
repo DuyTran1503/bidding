@@ -22,6 +22,8 @@ import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
+import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
 
 const ProjectPage = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
@@ -34,45 +36,46 @@ const ProjectPage = () => {
     {
       dataIndex: "index",
       title: "STT",
-      className: "w-[65px]",
+      className: "w-[40px]",
     },
     {
       dataIndex: "name",
       title: "Tên dự án",
-      className: "w-[250px]",
+      className: "w-[150px]",
     },
     {
       dataIndex: "investor",
       title: "Chủ đầu tư",
-      className: "w-[250px]",
+      className: "w-[150px]",
     },
     {
       dataIndex: "total_amount",
       title: "Tổng giá gói thầu",
-      className: "w-[250px]",
-      // render(_, record, index) {
-      //   const organization_type = bidingFieldOptions.find((e) => +e.value === +record?.organization_type)?.label;
-      //   return <Fragment key={index}>{organization_type}</Fragment>;
-      // },
+      className: "w-[150px]",
+      render(_, record, index) {
+        return convertMoney(record?.total_amount);
+      },
     },
     {
       dataIndex: "upload_time",
       title: "Ngày đăng tải",
-      className: "w-[250px]",
-    },
-
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      className: "w-[65px]",
-      render(_, record, index) {
-        return (
-          <div key={index} className="flex flex-col gap-2">
-            <CommonSwitch onChange={() => handleChangeStatus(record)} checked={+record.status === STATUS_PROJECT.AWAITING} title={""} />
-          </div>
-        );
+      className: "w-[100px]",
+      render(_, record) {
+        return convertTimestamp(record?.upload_time);
       },
     },
+    // {
+    //   title: "Trạng thái",
+    //   dataIndex: "status",
+    //   className: "w-[65px]",
+    //   render(_, record, index) {
+    //     return (
+    //       <div key={index} className="flex flex-col gap-2">
+    //         <CommonSwitch onChange={() => handleChangeStatus(record)} checked={+record.status === STATUS_PROJECT.AWAITING} title={""} />
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 
   const additionalTabs = [
@@ -238,7 +241,7 @@ const ProjectPage = () => {
         }}
         setFilter={setFilter}
         filter={stateProject.filter}
-        scroll={{ x: 2200 }}
+        scroll={{ x: 1500 }}
         tabLabel="Danh sách dữ liệu"
         additionalTabs={additionalTabs}
       />
