@@ -80,26 +80,25 @@ const DetailProject = () => {
           <Descriptions.Item className="!py-[10px] px-6" label="Địa Điểm" span={2}>
             {data && data.location}
           </Descriptions.Item>
-          <Descriptions.Item className="!py-[10px] px-6" label="Địa Điểm" span={2}>
-            {/* {data && data.files} */}
-          </Descriptions.Item>
+          {/* <Descriptions.Item className="!py-[10px] px-6" label="Địa Điểm" span={2}>
+          </Descriptions.Item> */}
           <Descriptions.Item className="!py-[10px] px-6" label="Nguồn Vốn" span={2}>
-            {data && data.funding_source}
+            {data && data.funding_sourceName}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Ngành Nghề" span={2}>
             {data && data.industries?.map((industry) => industry.toString()).join(", ")}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Số Tiền" span={2}>
-            {data && data.amount.toLocaleString()}
+            {data && data.amount !== undefined && convertMoney(data.amount.toString())}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Hình thức lựa chọn nhà thầu" span={2}>
-            {data && data.selection_method}
+            {data && data.selection_methodName}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Bên Mời Thầu" span={2}>
             {data && data.tenderer}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Người phê duyệt" span={2}>
-            {data && data.staff}
+            {data && data.staffName}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Số quyết định ban hành" span={2}>
             {data && data.decision_number_issued}

@@ -72,11 +72,14 @@ const projectSlice = createSlice({
           industries: payload?.data?.industries?.map((item: any) => item.id),
           procurement_categories: payload?.data?.procurement_categories?.map((item: any) => item.id),
           funding_source: payload?.data?.funding_source?.id,
+          funding_sourceName: payload?.data?.funding_source?.name,
           investor: payload?.data?.investor.id,
           investorName: payload?.data?.investor.name,
           tenderer: payload?.data?.tenderer.id,
           selection_method: payload?.data?.selection_method.id,
+          selection_methodName: payload?.data?.selection_method.method_name,
           staff: payload?.data?.staff?.id,
+          staffName: payload?.data?.staff?.name,
           attachments: payload?.data?.attachments,
         };
         state.loading = false;
