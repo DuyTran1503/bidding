@@ -9,7 +9,6 @@ export const saveChildrenState = (children: any[]) => {
       timestamp: new Date().getTime(),
     };
     localStorage.setItem(StorageKeys.CHILDREN_STATE, JSON.stringify(stateToSave));
-    console.log("Saved children to localStorage:", stateToSave);
   } catch (error) {
     console.error("Error saving children state:", error);
   }

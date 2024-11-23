@@ -16,8 +16,6 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ children, formikRef, onEdit, isRemove }) => {
   const handleRemove = (index: number) => {
-    console.log("gf");
-
     confirm({
       title: "Xóa gói thầu",
       content: "Bạn chắc chắn muốn xóa gói thầu này không?",
@@ -26,7 +24,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ children, formikRef, onEdit, 
       okButtonProps: { className: "bg-red-500 hover:bg-red-600" },
       onOk: () => {
         if (isRemove) {
-          console.log("FDG", index);
         }
       },
     });
