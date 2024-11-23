@@ -63,7 +63,7 @@ const BiddingFields = () => {
     },
   ];
 
-  const columns: ColumnsType<ITableData> = [
+  const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",
@@ -81,7 +81,7 @@ const BiddingFields = () => {
       dataIndex: "is_active",
       render: (_, record) => (
         <CommonSwitch
-          onChange={() => handleChangeStatus(record)}
+          onChange={() => handleChangeStatus(record as ITableData)}
           checked={!!record.is_active}
           title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} lĩnh vực này?`}
         />

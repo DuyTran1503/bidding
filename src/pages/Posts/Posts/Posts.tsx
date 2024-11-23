@@ -62,9 +62,11 @@ const Posts = () => {
       title: "Thể loại",
       render: (_, record) => {
         return <div>
-          {Array.isArray(record.post_catalog_name) && record.post_catalog_name.map((item: number, index: string) => (
-            <div key={index}>{item}</div>
-          ))}
+         {Array.isArray(record.post_catalog_name) &&
+  record.post_catalog_name.map((item: number, index: number) => (
+    <div key={index}>{item}</div>
+  ))}
+
         </div>;
       },
     },
