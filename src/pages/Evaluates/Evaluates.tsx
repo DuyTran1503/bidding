@@ -36,7 +36,7 @@ const Evaluates = () => {
         },
     ];
 
-    const columns: ColumnsType<ITableData> = [
+    const columns: ColumnsType= [
         {
             dataIndex: "index",
             title: "STT",
