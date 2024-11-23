@@ -24,7 +24,6 @@ import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
 import GenericChart from "@/components/chart/GenericChart";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
-import AbleBarChart from "@/components/chart/Axis";
 import {
   industryHasTheMostEnterprise,
   projectsStatusPreMonth,
@@ -35,6 +34,7 @@ import { message, Select } from "antd";
 import SelectChart from "@/components/chart/SelectChart";
 import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
 import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
+import AreaChart from "@/components/chart/AreaChart";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Enterprise = () => {
@@ -272,13 +272,13 @@ const Enterprise = () => {
             options={yearOptions.map((year) => ({ label: year, value: year }))}
             style={{ width: 150, marginBottom: 16 }}
           />
-          <AbleBarChart
-            xAxisData={names}
+          <AreaChart
+            categories={names}
             title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
-            data={[
-              { name: "Hoàn thành", values: completedValues },
-              { name: "Phê duyệt", values: approvedValues },
-              { name: "Mở thầu", values: openedBiddingValues },
+            series={[
+              { name: "Hoàn thành", data: completedValues },
+              { name: "Phê duyệt", data: approvedValues },
+              { name: "Mở thầu", data: openedBiddingValues },
             ]}
           />
         </div>

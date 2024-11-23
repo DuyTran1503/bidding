@@ -82,7 +82,7 @@ const Statistical: React.FC = () => {
     const updatedProjectIds = Array.from(new Set([projectId, ...treeSelectIdsRef.current]));
 
     if (updatedProjectIds.length > 20) {
-      message.warning("Bạn chỉ có thể so sánh tối đa 5 dự án cùng lúc.");
+      message.warning("Bạn chỉ có thể so sánh tối đa 20 dự án cùng lúc.");
       return;
     }
 
@@ -333,6 +333,7 @@ const Statistical: React.FC = () => {
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
+        // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>
