@@ -32,7 +32,7 @@ export interface IFeedbackComplaintValues {
 
 const ActionModule = ({ visible, type, setVisible, item }: IFeedbackComplaintsFormProps) => {
   const formikRef = useRef<FormikProps<IFeedbackComplaint>>(null);
-  const { state, dispatch } = useArchive<IFeedbackComplaintInitialState>("feedback_complaint");
+  const { dispatch } = useArchive<IFeedbackComplaintInitialState>("feedback_complaint");
 
   const { screenSize } = useViewport();
   const initialValues: IFeedbackComplaint = {

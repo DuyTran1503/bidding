@@ -40,7 +40,7 @@ const CreateProject = () => {
   const handleAddChild = (newChild: INewProject) => {
     if (formikRef.current) {
       const currentValues = formikRef.current.values;
-      formikRef.current.setFieldValue("children", [...currentValues.children, newChild]);
+      formikRef.current.setFieldValue("children", [...(currentValues.children as any), newChild]);
     }
   };
   const onSaveChildren = () => {
