@@ -15,6 +15,8 @@ import {
   IoHeadsetOutline,
   IoClose,
   IoMenu,
+  IoFileTrayFull,
+  IoNewspaper
 } from "react-icons/io5";
 
 // Images
@@ -69,12 +71,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "2.2",
-          label: "Loại hình kinh doanh",
-          path: "business-activity",
-          permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
-        },
-        {
-          id: "2.2",
           label: "Lĩnh vực đấu thầu",
           path: "bidding-fields",
           permissions: EPermissions.LIST_BIDDING_FIELD,
@@ -85,31 +81,47 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "bidding-types",
           permissions: EPermissions.LIST_BIDDING_TYPE,
         },
+      ],
+    },
+    {
+      id: "12",
+      label: "Ngành nghề",
+      icon: { component: IoFileTrayFull },
+      items: [
+        {
+          id: "2.2",
+          label: "Loại hình kinh doanh",
+          path: "business-activity",
+          permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
+        },
         {
           id: "2.4",
           label: "Ngành kinh doanh",
           path: "industry",
           permissions: EPermissions.LIST_INDUSTRY,
         },
-        {
-          id: "2.5",
-          label: "Nguồn tài trợ",
-          path: "funding-sources",
-          permissions: EPermissions.LIST_FUNDING_SOURCE,
-        },
-        {
-          id: "2.6",
-          label: "Nhật ký hoạt động",
-          path: "activity-logs",
-          permissions: EPermissions.LIST_ACTIVITYLOG,
-        },
-        {
-          id: "2.7",
-          label: "Hình thức lựa chọn Nhà thầu",
-          path: "selection-methods",
-          permissions: EPermissions.LIST_SELECTION_METHOD,
-        },
-      ],
+
+      ]
+    },
+    {
+      id: "2.7",
+      icon: { component: IoNewspaper },
+      label: "Hình thức lựa chọn Nhà thầu",
+      path: "selection-methods",
+      permissions: EPermissions.LIST_SELECTION_METHOD,
+    },
+    {
+      id: "4.4",
+      icon: { component: IoNewspaper },
+      label: "Loại hình mua sắm công",
+      path: "procurement-categories",
+      permissions: EPermissions.LIST_PROCUREMENT_CATEGORIE,
+    },
+    {
+      id: "2.6",
+      label: "Nhật ký hoạt động",
+      path: "activity-logs",
+      permissions: EPermissions.LIST_ACTIVITYLOG,
     },
 
     {
@@ -139,19 +151,25 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "3.4",
           label: "Bảo lãnh dự thầu",
           path: "bid-bond",
-          // permissions: EPermissions.LIST_BID_BOND,
+          permissions: EPermissions.LIST_BID_BOND,
         },
         {
           id: "3.5",
           label: "Tiêu chí đánh giá",
           path: "evaluation_criteria",
-          // permissions: EPermissions.LIST_EVALUATION,
+          permissions: EPermissions.LIST_EVALUATION,
+        },
+        {
+          id: "2.5",
+          label: "Nguồn tài trợ",
+          path: "funding-sources",
+          permissions: EPermissions.LIST_FUNDING_SOURCE,
         },
         {
           id: "3.6",
           label: "Tiến độ dự án",
           path: "work-progresses",
-          // permissions: EPermissions.LIST_EVALUATION,
+          permissions: EPermissions.LIST_EVALUATION,
         },
       ],
     },
@@ -165,19 +183,19 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "4.1",
           label: "Công việc",
           path: "task",
-          // permissions: EPermissions.LIST_TASK,
+          permissions: EPermissions.LIST_TASK,
         },
         {
           id: "4.2",
           label: "Nhân viên",
           path: "employees",
-          // permissions: EPermissions.LIST_EMPLOYEE,
+          permissions: EPermissions.LIST_EMPLOYEE,
         },
         {
           id: "4.4",
           label: "Bảo lãnh dự thầu",
           path: "bid-bond",
-          // permissions: EPermissions.LIST_BID_BOND,
+          permissions: EPermissions.LIST_BID_BOND,
         },
         {
           id: "4.5",
@@ -185,11 +203,25 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "evaluation-criteria",
           permissions: EPermissions.LIST_EVALUATION,
         },
+      ],
+    },
+
+    {
+      id: "23",
+      label: "Lịch sử đấu thầu",
+      icon: { component: MdOutlineFactory },
+      items: [
         {
-          id: "4.4",
-          label: "Loại hình mua sắm công",
-          path: "procurement-categories",
-          permissions: EPermissions.LIST_PROCUREMENT_CATEGORIE,
+          id: "5.7",
+          label: "Kết quả đấu thầu",
+          path: "bidding-results",
+          permissions: EPermissions.LIST_BIDDING_TYPE,
+        },
+        {
+          id: "5.11",
+          label: "Đánh giá",
+          path: "evaluates",
+          permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
         },
       ],
     },
@@ -222,18 +254,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "statistical_reports",
           permissions: EPermissions.LIST_STATISTICAL_REPORT,
         },
-        {
-          id: "5.5",
-          label: "Lịch sử đấu thầu",
-          path: "bidding-historys",
-          permissions: EPermissions.LIST_BIDDING_TYPE,
-        },
-        {
-          id: "5.7",
-          label: "Kết quả đấu thầu",
-          path: "bidding-results",
-          permissions: EPermissions.LIST_BIDDING_TYPE,
-        },
+        // {
+        //   id: "5.5",
+        //   label: "Lịch sử đấu thầu",
+        //   path: "bidding-historys",
+        //   permissions: EPermissions.LIST_BIDDING_TYPE,
+        // },
         {
           id: "5.8",
           label: "Banner",
@@ -244,19 +270,13 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "5.9",
           label: "Câu hỏi/ Câu trả lời",
           path: "questions-answers",
-          // permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
+          permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
         },
         {
           id: "5.10",
           label: "Phản hồi và Khiếu nại",
           path: "feedback-complaint",
-          // permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
-        },
-        {
-          id: "5.11",
-          label: "Đánh giá",
-          path: "evaluates",
-          // permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
+          permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
         },
       ],
     },
@@ -269,13 +289,13 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "6.1",
           label: "Danh mục bài viết",
           path: "post-catalogs",
-          // permissions: EPermissions.LIST_POST_CATALOG,
+          permissions: EPermissions.LIST_POST_CATALOG,
         },
         {
           id: "6.2",
           label: "Bài viết",
           path: "posts",
-          // permissions: EPermissions.LIST_POST,
+          permissions: EPermissions.LIST_POST,
         },
       ],
     },
