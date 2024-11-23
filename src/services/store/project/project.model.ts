@@ -42,9 +42,12 @@ export interface IProject {
   selection_method?: string;
   attachments?: File[];
   investorName?: string;
+  funding_sourceName?: string;
+  staffName?: string;
 }
 export interface INewProject extends IProject {
   tenderer_id: number | null;
   investor_id: number | null;
   children?: INewProject[];
+  selection_methodName?: string;
 }
