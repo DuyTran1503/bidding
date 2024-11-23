@@ -217,7 +217,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
   }, [option]);
 
   return <div className="mt-4 flex w-full items-center justify-center">
-    <div ref={chartRef} style={{ height: "400px", width: "100%" }} />
+    <div ref={chartRef} style={{ height: "500px", width: "100%" }} />
   </div>
 };
 

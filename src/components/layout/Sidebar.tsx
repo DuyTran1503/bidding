@@ -111,25 +111,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
       ],
     },
-    {
-      id: "9",
-      label: "Tin tức",
-      icon: { component: IoNewspaperOutline },
-      items: [
-        {
-          id: "9.1",
-          label: "Danh mục bài viết",
-          path: "post-catalogs",
-          // permissions: EPermissions.LIST_POST_CATALOG,
-        },
-        {
-          id: "9.2",
-          label: "Bài viết",
-          path: "posts",
-          // permissions: EPermissions.LIST_POST,
-        },
-      ],
-    },
 
     {
       id: "3",
@@ -138,21 +119,21 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       items: [
         {
           id: "3.1",
+          label: "Dự án",
+          path: "project",
+          permissions: EPermissions.LIST_PROJECT,
+        },
+        {
+          id: "3.2",
           label: "Tài liệu đính kèm",
           path: "attachment",
           permissions: EPermissions.LIST_ATTACHMENT,
         },
         {
-          id: "3.2",
+          id: "3.3",
           label: "Hồ sơ mời thầu",
           path: "bid-document",
           permissions: EPermissions.LIST_BID_DOCUMENT,
-        },
-        {
-          id: "3.3",
-          label: "Dự án",
-          path: "project",
-          permissions: EPermissions.LIST_PROJECT,
         },
         {
           id: "3.4",
@@ -171,7 +152,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Tiến độ dự án",
           path: "work-progresses",
           // permissions: EPermissions.LIST_EVALUATION,
-        },    
+        },
       ],
     },
 
@@ -281,24 +262,43 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     },
     {
       id: "6",
+      label: "Tin tức",
+      icon: { component: IoNewspaperOutline },
+      items: [
+        {
+          id: "6.1",
+          label: "Danh mục bài viết",
+          path: "post-catalogs",
+          // permissions: EPermissions.LIST_POST_CATALOG,
+        },
+        {
+          id: "6.2",
+          label: "Bài viết",
+          path: "posts",
+          // permissions: EPermissions.LIST_POST,
+        },
+      ],
+    },
+    {
+      id: "7",
       label: "Giới thiệu",
       icon: { component: IoInformationCircleOutline },
       path: "introductions",
     },
     {
-      id: "7",
+      id: "8",
       label: "Hướng dẫn",
       icon: { component: IoNewspaperOutline },
       path: "instructs",
     },
     {
-      id: "8",
+      id: "9",
       label: "Hỗ trợ",
       icon: { component: IoHeadsetOutline },
       path: "supports",
     },
     {
-      id: "8",
+      id: "10",
       label: "Components",
       path: "components",
       icon: { component: RxComponent1 },

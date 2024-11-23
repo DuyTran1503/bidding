@@ -13,7 +13,7 @@ interface AreaChartProps {
 const AreaChart: React.FC<AreaChartProps> = ({
   series,
   categories,
-  height = 350,
+  height = 500,
   colors = ["#4154f1", "#2eca6a", "#ff771d"],
   title
 }) => {

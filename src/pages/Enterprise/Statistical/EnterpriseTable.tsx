@@ -19,13 +19,13 @@ interface RowType {
 const EnterpriseDetail: React.FC<EnterpriseDetailProps> = ({ detailEnterpriseByIds, enterpriseId }) => {
     // Tạo dữ liệu dạng hàng cho bảng với kiểu `RowType`
     const rows: RowType[] = [
-        { key: 'id', title: 'ID Doanh nghiệp', dataIndex: 'id' }, // Renamed to "Doanh nghiệp"
+        // { key: 'id', title: 'ID Doanh nghiệp', dataIndex: 'id' }, // Renamed to "Doanh nghiệp"
         { key: 'name', title: 'Tên doanh nghiệp', dataIndex: 'name' }, // Renamed to "Doanh nghiệp"
         { key: 'email', title: 'Địa chỉ email', dataIndex: 'email' },
         { key: 'phone', title: 'Số điện thoại', dataIndex: 'phone' },
         { key: 'website', title: 'Website', dataIndex: 'website' },
         { key: 'address', title: 'Địa chỉ', dataIndex: 'address' },
-        { key: 'taxcode', title: 'Mã số thuế', dataIndex: 'taxcode'},
+        { key: 'taxcode', title: 'Mã số thuế', dataIndex: 'taxcode' },
         { key: 'industry_id', title: 'Ngành', dataIndex: 'industry_id', render: (item) => item?.industry_id || 'Không có' },
         { key: 'is_active', title: 'Trạng thái', dataIndex: 'is_active', render: (item) => item?.is_active || 'Không có' }, // Renamed to "Doanh nghiệp"
         { key: 'organization_type', title: 'Loại hình tổ chức', dataIndex: 'organization_type', render: (item) => item?.organization_type || 'Không có' },
