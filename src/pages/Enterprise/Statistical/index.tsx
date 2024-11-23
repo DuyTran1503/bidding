@@ -118,14 +118,14 @@ const StatisticalEnterprise: React.FC = () => {
   });
 
   // Dữ liệu cho biểu đồ
-  const data = stateChartEnterprise.projectCompletedByEnterprise.map((enterprise) => ({
-    name: enterprise.enterprise_name,
-    values: filteredXAxisData.map((monthLabel) => {
-      const month = parseInt(monthLabel.split(' ')[1]);
-      const monthData = enterprise.monthly_data.find((data) => data.month === month);
-      return monthData ? monthData.completed_projects : null;  // Trả về null nếu không có dữ liệu cho tháng
-    })
-  }));
+  // const data = stateChartEnterprise.projectCompletedByEnterprise.map((enterprise) => ({
+  //   name: enterprise.enterprise_name,
+  //   values: filteredXAxisData.map((monthLabel) => {
+  //     const month = parseInt(monthLabel.split(' ')[1]);
+  //     const monthData = enterprise.monthly_data.find((data) => data.month === month);
+  //     return monthData ? monthData.completed_projects : null;  // Trả về null nếu không có dữ liệu cho tháng
+  //   })
+  // }));
 
   const enterpriseId = stateEnterprise.enterprise?.id;
   const tabItems = [

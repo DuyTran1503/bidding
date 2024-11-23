@@ -55,7 +55,7 @@ const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
         }
       }}
     >
-      {({ values, errors, touched, handleBlur, setFieldValue }) => {
+      {({ values, errors, touched, setFieldValue }) => {
         return (
           <>
             {/* <Row gutter={[24, 24]}>

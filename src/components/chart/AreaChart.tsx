@@ -10,12 +10,12 @@ interface AreaChartProps {
   title?: string; // Tiêu đề biểu đồ, tùy chọn
 }
 
-const AreaChart: React.FC<AreaChartProps> = ({ 
-  series, 
-  categories, 
-  height = 350, 
-  colors = ["#4154f1", "#2eca6a", "#ff771d"], 
-  title 
+const AreaChart: React.FC<AreaChartProps> = ({
+  series,
+  categories,
+  height = 350,
+  colors = ["#4154f1", "#2eca6a", "#ff771d"],
+  title
 }) => {
   const options: ApexOptions = {
     chart: {

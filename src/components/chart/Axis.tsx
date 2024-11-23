@@ -150,7 +150,7 @@ const AbleBarChart: React.FC<AbleBarChartProps> = ({
             >
                 {showControls ? "Close Controls" : "Open Controls"}
             </button>
-            <div className="w-full h-[80vh]" ref={chartRef}></div>
+            <div className="w-full h-[400px]" ref={chartRef}></div>
 
             {showControls && (
                 <div
