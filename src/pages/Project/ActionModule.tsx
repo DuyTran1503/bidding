@@ -101,12 +101,12 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
   const numberRegex = /^[0-9]+$/;
   const Schema = object().shape({
     parent_id: number().nullable(),
-    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    staff_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    industry_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    selection_method_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    location: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    funding_source_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
+    staff_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống ô này"),
+    industry_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống ô này"),
+    selection_method_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống ô này"),
+    location: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
+    funding_source_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
     attached_documents: array().min(1, "Vui lòng chọn ít nhất một tài liệu đính kèm"),
     start_time: date().required("Vui lòng không để trống trường này"),
     end_time: date().required("Vui lòng không để trống trường này"),
@@ -118,7 +118,6 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
         const num = Number(value);
         return num > 0;
       }),
-
     amount: string()
       .matches(numberRegex, "Trường này chỉ cho phép là số")
       .required("Vui lòng không để trống trường này")

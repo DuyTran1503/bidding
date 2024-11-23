@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import { Form, Formik } from "formik";
 import lodash from "lodash";
 import { useEffect } from "react";
-import { object, string } from "yup";
+import { date, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
 import { IWorkProgressInitialState } from "@/services/store/workProgresses/workProgresses.slice";
 import { createWorkProgress, updateWorkProgress } from "@/services/store/workProgresses/workProgresses.thunk";
@@ -59,16 +59,18 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
     project_id: workProgress?.project_id ?? undefined,
     task_ids: workProgress?.task_ids ?? [] ,
   };
+
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const Schema = object().shape({
-    name: string().trim().required("Vui lòng không để trống trường này"),
-    expense: string().trim().required("Vui lòng không để trống trường này"),
-    progress: string().trim().required("Vui lòng không để trống trường này"),
-    start_date: string().trim().required("Vui lòng không để trống trường này"),
-    feedback: string().trim().required("Vui lòng không để trống trường này"),
-    end_date: string().trim().required("Vui lòng không để trống trường này"),
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên tiến độ"),
+    expense: string().trim().required("Vui lòng nhập chi phí"),
+    progress: string().trim().required("Vui lòng nhập tiến độ "),
+    start_date: date().required("Vui lòng chọn ngày bắt đầu"),
+    feedback: string().trim().required("Vui lòng chọn nhận xét"),
+    end_date: date().required("Vui lòng chọn ngày kết thúc"),
     description: string().trim().required("Vui lòng không để trống trường này"),
-    project_id: string().trim().required("Vui lòng không để trống trường này"),
-    // task_ids: string().trim().required("Vui lòng không để trống trường này"),
+    project_id: string().trim().required("Vui lòng chọn dự án"),
+    // task_ids: string().required("Vui lòng không để trống trường này"),
   });
 
   const tasks = Array.isArray(stateTask?.listTasks) ? stateTask.listTasks : [];
@@ -102,7 +104,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
           <Form>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tên tiến độ">
+                <FormGroup title="Tên tiến độ" required>
                   <FormInput
                     placeholder="Nhập..."
                     name="name"
@@ -114,7 +116,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Dự án">
+                <FormGroup title="Dự án" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn dự án..."
@@ -130,7 +132,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
 
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tiến độ">
+                <FormGroup title="Tiến độ" required>
                   <FormInput
                     placeholder="Nhập..."
                     name="progress"
@@ -142,7 +144,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                 </FormGroup>
               </Col>
                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Nhiệm vụ">
+                <FormGroup title="Nhiệm vụ" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn nhiệm vụ..."
@@ -159,7 +161,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
             </Row>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Chi phí">
+                <FormGroup title="Chi phí" required>
                   <FormInput
                     placeholder="Nhập..."
                     name="expense"
@@ -171,9 +173,8 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Nhận xét">
+                <FormGroup title="Nhận xét" required>
                   <FormSelect
-                    label="Loại nguồn tài trợ"
                     placeholder="Chọn loại nguồn tài trợ..."
                     isDisabled={type === EPageTypes.VIEW}
                     id="feedback"
@@ -188,7 +189,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
 
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Ngày bắt đâu">
+                <FormGroup title="Ngày bắt đâu" required>
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     value={values.start_date ? dayjs(values.start_date) : null}
@@ -197,7 +198,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Ngày kết thúc">
+                <FormGroup title="Ngày kết thúc" required>
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     value={values.end_date ? dayjs(values.end_date) : null}

@@ -49,11 +49,11 @@ export enum EPermissions {
   DESTROY_SELECTION_METHOD = "destroy_selection_method",
 
   // ? ProcurementCategorie
-  LIST_PROCUREMENT_CATEGORIE = "list_procurement_categorie",
-  DETAIL_PROCUREMENT_CATEGORIE = "detail_procurement_categorie",
-  CREATE_PROCUREMENT_CATEGORIE = "create_procurement_categorie",
-  UPDATE_PROCUREMENT_CATEGORIE = "update_procurement_categorie",
-  DESTROY_PROCUREMENT_CATEGORIE = "destroy_procurement_categorie",
+  LIST_PROCUREMENT_CATEGORIE = "list_procurement_category",
+  DETAIL_PROCUREMENT_CATEGORIE = "detail_procurement_category",
+  CREATE_PROCUREMENT_CATEGORIE = "create_procurement_category",
+  UPDATE_PROCUREMENT_CATEGORIE = "update_procurement_category",
+  DESTROY_PROCUREMENT_CATEGORIE = "destroy_procurement_category",
 
   // staff
   LIST_STAFF = "list_staff",
@@ -77,11 +77,11 @@ export enum EPermissions {
   DESTROY_INDUSTRY = "destroy_industry",
 
   // Doanh nghiệp
-  LIST_ENTERPRISE = "list_enterpise",
-  DETAIL_ENTERPRISE = "detail_enterpise",
-  CREATE_ENTERPRISE = "create_enterpise",
-  UPDATE_ENTERPRISE = "update_enterpise",
-  DESTROY_ENTERPRISE = "destroy_enterpise",
+  LIST_ENTERPRISE = "list_enterprise",
+  DETAIL_ENTERPRISE = "detail_enterprise",
+  CREATE_ENTERPRISE = "create_enterprise",
+  UPDATE_ENTERPRISE = "update_enterprise",
+  DESTROY_ENTERPRISE = "destroy_enterprise",
 
   // Báo cáo thống kê
   LIST_STATISTICAL_REPORT = "list_statistical_report",

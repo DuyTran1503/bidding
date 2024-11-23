@@ -13,6 +13,7 @@ import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
 import FormInputArea from "@/components/form/FormInputArea";
 import { EPageTypes } from "@/shared/enums/page";
+import { number, object, string } from "yup";
 
 interface IActiveBiddingField extends Omit<IBiddingField, "parent"> {
   parent: string[];
@@ -53,6 +54,14 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
     parent_id: biddingField?.parent_id || "",
   };
 
+  // validation
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
+  const Schema = object().shape({
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng tên lĩnh vực đấu thầu "),
+    code: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập mã cho lĩnh vực đấu thầu"),
+
+  })
+
   useEffect(() => {
     dispatch(getBiddingFieldAllIds())
       .then(unwrapResult)
@@ -65,6 +74,7 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
 
   return (
     <Formik
+      validationSchema={Schema}
       innerRef={formikRef}
       initialValues={initialValues}
       enableReinitialize={true}
@@ -95,7 +105,7 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
           <FormGroup title="Thông tin chung">
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormInput
+                <FormInput 
                   type="text"
                   isDisabled={type === EPageTypes.VIEW}
                   label="Tên của lĩnh vực đấu thầu"
