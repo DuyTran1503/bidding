@@ -368,7 +368,7 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <BiddingResults />,
-              }
+              },
             ],
           },
           {
@@ -411,8 +411,8 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "permissions",
-            middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
+            path: "attachment",
+            // middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
             pages: [
               {
                 path: "/",

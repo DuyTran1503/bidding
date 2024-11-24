@@ -44,6 +44,7 @@ export interface IProject {
   investorName?: string;
   funding_sourceName?: string;
   staffName?: string;
+  tendererName?: string;
 }
 export interface INewProject extends IProject {
   tenderer_id: number | null;
