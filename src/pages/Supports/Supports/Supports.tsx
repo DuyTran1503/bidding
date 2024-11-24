@@ -96,7 +96,7 @@ const Supports = () => {
         return (
           <div className="flex items-center space-x-2">
             <button
-              onClick={() => handleOpenModal(record)}
+              onClick={() => handleOpenModal(record as ITableData)}
             >
               {statusMap[record.status as string] || "Không xác định"}
             </button>

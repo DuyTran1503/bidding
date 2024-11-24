@@ -176,7 +176,7 @@ const Enterprise = () => {
         return (
           <div key={index} className="flex flex-col gap-2">
             <CommonSwitch
-              onChange={() => handleChangeStatus(record)}
+              onChange={() => handleChangeStatus(record as ITableData)}
               checked={+record.is_active === STATUS.ACTIVE}
               title={`Bạn có chắc chắn muốn ${record.is_active === STATUS.ACTIVE ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
             />
