@@ -166,7 +166,13 @@ const ProjectPage = () => {
     {
       id: "name",
       placeholder: "Nhập tên...",
-      label: "Tên doanh nghiệp ",
+      label: "Tên dự án ",
+      type: "text",
+    },
+    {
+      id: "investor",
+      placeholder: "Chọn chủ đầu tư...",
+      label: "Chủ đầu tư ",
       type: "text",
     },
     {
@@ -182,16 +188,16 @@ const ProjectPage = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(stateProject.projects)
       ? stateProject.projects.map(({ id, name, investor, total_amount, upload_time, bid_submission_start, bid_opening_date, status }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        investor,
-        total_amount,
-        upload_time,
-        bid_submission_start,
-        bid_opening_date,
-        status,
-      }))
+          index: index + 1,
+          key: id,
+          name,
+          investor,
+          total_amount,
+          upload_time,
+          bid_submission_start,
+          bid_opening_date,
+          status,
+        }))
       : [];
   }, [JSON.stringify(stateProject.projects)]);
 
@@ -250,7 +256,7 @@ const ProjectPage = () => {
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
         visible={isModal}
         setVisible={setIsModal}
-      // onConfirm={onConfirmStatus}
+        // onConfirm={onConfirmStatus}
       />
       <ManagementGrid
         columns={columns}

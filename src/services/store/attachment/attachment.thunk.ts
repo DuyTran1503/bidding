@@ -4,7 +4,7 @@ import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IError } from "@/shared/interface/error";
 import { IAttachment } from "./attachment.model";
 
-const prefix = "/api/admin/attachment";
+const prefix = "/api/admin/attachments";
 
 export const getAllAttachment = createAsyncThunk("staff/get-all-attachment", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {

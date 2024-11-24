@@ -65,37 +65,37 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
   });
   const initialValues: INewProject = useMemo(
     () => ({
-      id: project ? project.id : 0,
-      parent_id: project ? project.parent_id : null,
-      children: children,
-      name: project ? project.name : "",
-      selection_method_id: project ? project.selection_method : undefined,
-      location: project ? project.location : "",
-      tenderer_id: +project?.tenderer! || null,
-      investor_id: +project?.investor! || null,
-      funding_source_id: project?.funding_source || undefined,
-      staff_id: project?.staff || undefined,
-      industry_id: project?.industries || [],
-      is_domestic: project?.is_domestic || DOMESTIC.INSIDE,
-      amount: project?.amount || undefined,
-      total_amount: project?.total_amount || undefined,
-      receiving_place: project?.receiving_place || "",
-      bid_submission_start: project?.bid_submission_start || "",
-      bid_submission_end: project?.bid_submission_end || "",
-      bid_opening_date: project?.bid_opening_date || "",
-      start_time: project?.start_time || "",
-      end_time: project?.end_time || "",
-      approve_at: project?.approve_at || "",
-      decision_number_approve: project?.decision_number_approve || "",
-      description: project?.description || "",
-      status: project?.status || STATUS_PROJECT.AWAITING,
-      procurement_id: project?.procurement_categories || [],
-      submission_method: project?.submission_method || SUBMIT_METHOD.online,
-      files: project?.attachments || [],
-      decision_number_issued: project?.decision_number_issued || "",
+      id: isChildren ? 0 : project?.id ?? 0,
+      parent_id: isChildren ? null : project?.parent_id ?? null,
+      children: children ?? [],
+      name: isChildren ? "" : project?.name ?? "",
+      selection_method_id: isChildren ? undefined : project?.selection_method ?? undefined,
+      location: isChildren ? "" : project?.location ?? "",
+      tenderer_id: isChildren ? null : +project?.tenderer! || null,
+      investor_id: isChildren ? null : +project?.investor! || null,
+      funding_source_id: isChildren ? undefined : project?.funding_source ?? undefined,
+      staff_id: isChildren ? undefined : project?.staff ?? undefined,
+      industry_id: isChildren ? [] : project?.industries ?? [],
+      is_domestic: isChildren ? DOMESTIC.INSIDE : project?.is_domestic ?? DOMESTIC.INSIDE,
+      amount: isChildren ? undefined : project?.amount ?? undefined,
+      total_amount: isChildren ? undefined : project?.total_amount ?? undefined,
+      receiving_place: isChildren ? "" : project?.receiving_place ?? "",
+      bid_submission_start: isChildren ? "" : project?.bid_submission_start ?? "",
+      bid_submission_end: isChildren ? "" : project?.bid_submission_end ?? "",
+      bid_opening_date: isChildren ? "" : project?.bid_opening_date ?? "",
+      start_time: isChildren ? "" : project?.start_time ?? "",
+      end_time: isChildren ? "" : project?.end_time ?? "",
+      approve_at: isChildren ? "" : project?.approve_at ?? "",
+      decision_number_approve: isChildren ? "" : project?.decision_number_approve ?? "",
+      description: isChildren ? "" : project?.description ?? "",
+      status: project?.status ?? STATUS_PROJECT.AWAITING,
+      procurement_id: isChildren ? [] : project?.procurement_categories ?? [],
+      submission_method: project?.submission_method ?? SUBMIT_METHOD.online,
+      files: isChildren ? [] : project?.attachments ?? [],
+      decision_number_issued: isChildren ? "" : project?.decision_number_issued ?? "",
       fileChildren: undefined,
     }),
-    [project, children],
+    [project],
   );
   const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const numberRegex = /^[0-9]+$/;
@@ -153,29 +153,24 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
     setIsEditModalVisible(true);
   };
   const handleSaveChild = (values: INewProject) => {
+    const data = {
+      ...lodash.omit(values, "id", "children", "fileChildren"),
+    };
+    const sanitizedProject = {
+      ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
+    };
     const newChild = {
-      ...values,
-      parent_id: project?.id || null,
-      children: [],
-      files: values.fileChildren,
+      ...sanitizedProject,
+
+      // parent_id: project?.id || null,
+      children: [data as Omit<INewProject, "id">],
     };
-
-    setChildren((prevChildren: any) => {
-      const updatedChildren = [...prevChildren, newChild];
-      formikRef?.current?.setFieldValue("children", updatedChildren);
-
-      saveChildrenState(updatedChildren);
-      return updatedChildren;
-    });
+    dispatchEnterprise(updateProject({ body: newChild, param: String(project?.id) }));
   };
-  useEffect(() => {
-    return () => {
-      clearChildrenState();
-    };
-  }, []);
+
   return (
     <Formik
-      validationSchema={Schema}
+      // validationSchema={Schema}
       enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => {
@@ -184,6 +179,8 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
         };
         if (isChildren) {
           handleSaveChild(values); // Sử dụng lại `handleSaveChild`
+          setChildren(values);
+
           return;
         }
 
@@ -196,7 +193,6 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
         if (type === EPageTypes.UPDATE && project?.id) {
           const updatedFiles =
             initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
-
           const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ files, ...rest }) => rest)(data);
           dispatchEnterprise(updateProject({ body: newData, param: String(project.id) }));
         }
@@ -205,7 +201,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
-          <Form>
+          <Form className="mt-4">
             {children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
 
             {/* Edit Modal */}

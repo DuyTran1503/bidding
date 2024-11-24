@@ -20,12 +20,16 @@ export interface IProjectInitialState extends IInitialState {
   projects: IProject[];
   project?: IProject | any;
   listProjects?: IProject[];
+  id_project?: string;
+  dataCreateProject?: INewProject;
 }
 const initialState: IProjectInitialState = {
   status: EFetchStatus.IDLE,
   projects: [],
   listProjects: [],
+  id_project: "",
   project: undefined,
+  dataCreateProject: undefined,
   message: "",
   error: undefined,
   filter: {
@@ -80,6 +84,7 @@ const projectSlice = createSlice({
           selection_methodName: payload?.data?.selection_method.method_name,
           staff: payload?.data?.staff?.id,
           staffName: payload?.data?.staff?.name,
+          tendererName: payload?.data?.tenderer?.name,
           attachments: payload?.data?.attachments,
         };
         state.loading = false;
@@ -92,8 +97,20 @@ const projectSlice = createSlice({
       .addCase(createProject.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(createProject.fulfilled, (state) => {
+      .addCase(createProject.fulfilled, (state, { payload }: PayloadAction<INewProject> | any) => {
+        console.log(payload);
+
         state.status = EFetchStatus.FULFILLED;
+        state.dataCreateProject = {
+          ...payload.data,
+          files: payload.data.attachments,
+          funding_source_id: payload?.data?.funding_source.id,
+          industry_id: payload?.data?.industries?.map((item: any) => item.id),
+          investor_id: payload?.data?.investor.id,
+          procurement_id: payload?.data?.procurement_categories?.map((item: any) => item.id),
+          tenderer_id: payload?.data?.investor.id,
+        };
+
         state.message = "Tạo mới thành công ";
       })
       .addCase(createProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
