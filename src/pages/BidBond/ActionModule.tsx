@@ -24,6 +24,7 @@ import lodash from "lodash";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { number, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
+import BidBondForm from "./components/BidBondForm";
 
 interface IBidBondFormProps {
   type?: EButtonTypes;
@@ -39,7 +40,7 @@ export interface IBidBondValues {
   is_active: string;
 }
 
-const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) => {
+const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormProps) => {
   const formikRef = useRef<FormikProps<IBidBond>>(null);
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
@@ -99,7 +100,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
   }, [visible]);
   return (
     <Dialog
-     screenSize={screenSize}
+      screenSize={screenSize}
       handleSubmit={() => {
         formikRef.current && formikRef.current.handleSubmit();
       }}
@@ -128,6 +129,14 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
         </div>
       }
     >
+      {/* <BidBondForm   
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        type={type!}
+        optionType={optionType}
+        projectOptions={convertDataOptions(stateProject.listProjects || [])}
+        enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
+       /> */}
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
         {({ values, handleBlur, errors, touched, setFieldValue }) => {
           return (
@@ -257,4 +266,4 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
   );
 };
 
-export default ActionModule;
+export default ActionModuleBidBod;

@@ -16,6 +16,19 @@ import Button from "@/components/common/Button";
 import toast from "react-hot-toast";
 import { clearChildrenState } from "@/shared/utils/localStorage";
 import { Tabs } from "antd";
+import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
+import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { ISelectionMethodInitialState } from "@/services/store/selectionMethod/selectionMethod.slice";
+import { IAccountInitialState } from "@/services/store/account/account.slice";
+import { IProcurementInitialState } from "@/services/store/procurement/procurement.slice";
+import { getListSelectionMethods } from "@/services/store/selectionMethod/selectionMethod.thunk";
+import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { getIndustries } from "@/services/store/industry/industry.thunk";
+import { getListStaff } from "@/services/store/account/account.thunk";
+import { getListProcurement } from "@/services/store/procurement/procurement.thunk";
+import CreateBidDocument from "@/pages/BidDocument/Create";
 
 const { TabPane } = Tabs;
 
@@ -23,6 +36,13 @@ const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
   const { state } = useArchive<IProjectInitialState>("project");
+  const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
+  const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
+  const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
+  const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
+
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -37,11 +57,13 @@ const CreateProject = () => {
     },
   });
   useEffect(() => {
-    return () => {
-      clearChildrenState();
-    };
+    dispatchMethod(getListSelectionMethods());
+    dispatchFundingSource(getListFundingSource());
+    dispatchEnterprise(getListEnterprise());
+    dispatchIndustry(getIndustries());
+    dispatchStaff(getListStaff());
+    dispatchProcurement(getListProcurement());
   }, []);
-  console.log(state.dataCreateProject);
 
   const tabItems = [
     {
@@ -73,7 +95,16 @@ const CreateProject = () => {
               },
             ]}
           />
-          <ActionModule type={EPageTypes.CREATE} formikRef={formikRef} />
+          <ActionModule
+            type={EPageTypes.CREATE}
+            formikRef={formikRef}
+            listIndustry={stateIndustry.listIndustry}
+            listSelectionMethods={stateMethod.listSelectionMethods}
+            listFundingSources={stateFundingSource.listFundingSources}
+            getListStaff={stateStaff.getListStaff}
+            listEnterprise={stateEnterprise.listEnterprise!}
+            listProcurement={stateProcurement.listProcurement}
+          />
         </div>
       ),
     },
@@ -107,7 +138,18 @@ const CreateProject = () => {
               },
             ]}
           />
-          <ActionModule type={EPageTypes.UPDATE} project={state.dataCreateProject} isChildren formikRef={formikRef} />
+          <ActionModule
+            type={EPageTypes.CREATE}
+            project={state.dataCreateProject}
+            isChildren
+            formikRef={formikRef}
+            listIndustry={stateIndustry.listIndustry}
+            listSelectionMethods={stateMethod.listSelectionMethods}
+            listFundingSources={stateFundingSource.listFundingSources}
+            getListStaff={stateStaff.getListStaff}
+            listEnterprise={stateEnterprise.listEnterprise!}
+            listProcurement={stateProcurement.listProcurement}
+          />
         </div>
       ),
     },
@@ -115,7 +157,7 @@ const CreateProject = () => {
       key: "3",
       label: "Hồ sơ đấu thầu",
       disabled: !state.dataCreateProject?.id,
-      children: <div>Hồ sơ đấu thầu</div>,
+      children: <CreateBidDocument />,
     },
     {
       key: "4",

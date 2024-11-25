@@ -122,13 +122,6 @@ export enum EPermissions {
   LIST_BIDDING_RESULT = "list_bidding_result",
   DETAIL_BIDDING_RESULT = "detail_bidding_result",
 
-  //Bảo lãnh dự thầu
-  LIST_BIDBOND = "list_bidbond",
-  DETAIL_BIDBOND = "detail_bidbond",
-  CREATE_BIDBOND = "create_bidbond",
-  UPDATE_BIDBOND = "update_bidbond",
-  DESTROY_BIDBOND = "destroy_bidbond",
-
   // Nhật ký hoạt động
   LIST_ACTIVITY_LOG = "list_activity_log",
   DETAIL_ACTIVITY_LOG = "detail_activity_log",
@@ -170,11 +163,11 @@ export enum EPermissions {
   DESTROY_SUPPORT = "destroy_support",
 
   // Bảo lãnh dự thầu
-  LIST_BID_BOND = "list_bidbond",
-  DETAIL_BID_BOND = "detail_bidbond",
-  CREATE_BID_BOND = "create_bidbond",
-  UPDATE_BID_BOND = "update_bidbond",
-  DESTROY_BID_BOND = "destroy_bidbond",
+  LIST_BID_BOND = "list_bid_bond",
+  DETAIL_BID_BOND = "detail_bid_bond",
+  CREATE_BID_BOND = "create_bid_bond",
+  UPDATE_BID_BOND = "update_bid_bond",
+  DESTROY_BID_BOND = "destroy_bid_bond",
 
   // Tiêu chí đánh giá
   LIST_EVALUATION = "list_evaluation_criteria",
@@ -209,7 +202,7 @@ export enum EPermissions {
   UPDATE_FEEDBACK_COMPLAINT = "update_feedback_complaint",
   DESTROY_FEEDBACK_COMPLAINT = "destroy_feedback_complaint",
 
-  //Giới thiệu 
+  //Giới thiệu
   LIST_INTRODUCTION = "list_introduction",
   CREATE_INTRODUCT = "create_introduction",
   DETAIL_INTRODUCTION = "detail_introduction",
@@ -229,4 +222,11 @@ export enum EPermissions {
   DETAIL_WORK_PROGRESS = "detail_work_progress",
   UPDATE_WORK_PROGRESS = "update_work_progress",
   DESTROY_WORK_PROGRESS = "destroy_work_progress",
+
+  // Tiêu chí đánh giá
+  LIST_EVALUATE = "list_evaluate",
+  DETAIL_EVALUATE = "detail_evaluate",
+  CREATE_EVALUATE = "create_evaluate",
+  UPDATE_EVALUATE = "update_evaluate",
+  DESTROY_EVALUATE = "destroy_evaluate",
 }
