@@ -333,7 +333,7 @@ const Statistical: React.FC = () => {
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
-        // isDisabled={selectedIds.length > 20}
+          // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>

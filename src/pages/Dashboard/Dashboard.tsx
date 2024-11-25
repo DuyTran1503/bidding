@@ -129,20 +129,9 @@ const Dashboard: React.FC = () => {
         <h2 className="mb-4 text-xl font-semibold">2. Phân tích chi tiết</h2>
         <Row gutter={[24, 24]}>
           <Col xs={24} sm={24} md={24} xl={24}>
-            <ChartSection
-              title="2.1 Dự án theo nguồn tài trợ"
-              chartTitle="Dự án nguồn tài trợ"
-              data={state.fundingData}
-              chartType="bar"
-              description={[
-                "Thể hiện các dự án được tài trợ bởi các nguồn nào (ví dụ: chính phủ, tư nhân, tổ chức quốc tế)",
-                "Giúp doanh nghiệp nhận diện và đánh giá sự đa dạng của các nguồn tài trợ, từ đó đưa ra chiến lược tiếp cận hoặc tìm kiếm thêm nguồn tài trợ phù hợp.",
-              ]}
-            />
-          </Col>
           <Col xs={24} sm={24} md={24} xl={24}>
             <ChartSection
-              title="2.2 Dự án theo ngành"
+              title="2.1 Dự án theo ngành"
               chartTitle="Dự án theo ngành"
               data={state.industryData}
               chartType="bar"
@@ -151,6 +140,17 @@ const Dashboard: React.FC = () => {
               description={[
                 "Biểu đồ này phân tích số lượng và tỷ lệ dự án trong từng ngành khác nhau.",
                 "Giúp doanh nghiệp và nhà quản lý lập kế hoạch, ưu tiên ngành phù hợp, điều chỉnh nguồn lực và đầu tư vào các ngành đang phát triển mạnh hoặc tiềm năng.",
+              ]}
+            />
+          </Col>
+            <ChartSection
+              title="2.2 Dự án theo nguồn tài trợ"
+              chartTitle="Dự án nguồn tài trợ"
+              data={state.fundingData}
+              chartType="bar"
+              description={[
+                "Thể hiện các dự án được tài trợ bởi các nguồn nào (ví dụ: chính phủ, tư nhân, tổ chức quốc tế)",
+                "Giúp doanh nghiệp nhận diện và đánh giá sự đa dạng của các nguồn tài trợ, từ đó đưa ra chiến lược tiếp cận hoặc tìm kiếm thêm nguồn tài trợ phù hợp.",
               ]}
             />
           </Col>

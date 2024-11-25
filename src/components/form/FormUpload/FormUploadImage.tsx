@@ -44,8 +44,10 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id }) => {
   }, [fileList]);
   const renderFileIcon = (file: File) => {
     const validImageExtensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "webp", "svg"];
+    const fileName = file.name.toLowerCase();
 
-    if (file.type.startsWith("image/") || validImageExtensions.some((ext) => file.name.endsWith(ext))) {
+    // Kiểm tra file hình ảnh
+    if (file.type.startsWith("image/") || validImageExtensions.some((ext) => fileName.endsWith(ext))) {
       return (
         <img
           src={URL.createObjectURL(file)}
@@ -56,21 +58,30 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id }) => {
           }}
         />
       );
-    } else if (file.type.startsWith("application/")) {
-      if (file.type.startsWith("application/msword")) {
-        return <img src={WORD} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
-      }
-      if (file.type.startsWith("application/vnd.ms-excel")) {
-        return <img src={EXCEL} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
-      }
-      if (file.type.startsWith("application/pdf")) {
-        return <img src={PDF} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
-      } else {
-        return <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
-      }
-    } else {
-      return <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
     }
+
+    // Kiểm tra file PDF
+    if (file.type === "application/pdf" || fileName.endsWith("pdf")) {
+      return <img src={PDF} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
+    }
+
+    // Kiểm tra file Word
+    if (file.type === "application/msword" || fileName.endsWith("doc") || fileName.endsWith("docx")) {
+      return <img src={WORD} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
+    }
+
+    // Kiểm tra file Excel
+    if (
+      file.type === "application/vnd.ms-excel" ||
+      file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+      fileName.endsWith("xls") ||
+      fileName.endsWith("xlsx")
+    ) {
+      return <img src={EXCEL} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
+    }
+
+    // Mặc định cho file không rõ loại
+    return <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
   };
   useEffect(() => {
     value && value.length && setFileList(value);

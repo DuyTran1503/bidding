@@ -15,97 +15,159 @@ import ChildrenProject from "../ChildrenProject";
 import Button from "@/components/common/Button";
 import toast from "react-hot-toast";
 import { clearChildrenState } from "@/shared/utils/localStorage";
-const Children = ActionModule;
+import { Tabs } from "antd";
+import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
+import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { ISelectionMethodInitialState } from "@/services/store/selectionMethod/selectionMethod.slice";
+import { IAccountInitialState } from "@/services/store/account/account.slice";
+import { IProcurementInitialState } from "@/services/store/procurement/procurement.slice";
+import { getListSelectionMethods } from "@/services/store/selectionMethod/selectionMethod.thunk";
+import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { getIndustries } from "@/services/store/industry/industry.thunk";
+import { getListStaff } from "@/services/store/account/account.thunk";
+import { getListProcurement } from "@/services/store/procurement/procurement.thunk";
+import CreateBidDocument from "@/pages/BidDocument/Create";
+
+const { TabPane } = Tabs;
+
 const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
   const { state } = useArchive<IProjectInitialState>("project");
-  const [isCreatePackageVisible, setCreatePackageVisible] = useState(false);
+  const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
+  const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
+  const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
+  const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
+
   useFetchStatus({
     module: "project",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/project",
+        // navigate: "/project",
       },
       error: {
         message: state.message,
       },
     },
   });
-  const handleCreatePackage = () => {
-    setCreatePackageVisible(true);
-  };
-  const handleAddChild = (newChild: INewProject) => {
-    if (formikRef.current) {
-      const currentValues = formikRef.current.values;
-      formikRef.current.setFieldValue("children", [...(currentValues.children as any), newChild]);
-    }
-  };
-  const onSaveChildren = () => {
-    if (formikRef.current) {
-      formikRef.current.handleSubmit();
-      toast.success("Tạo mới gói thầu của dự án thành công");
-      setCreatePackageVisible(false);
-    }
-  };
   useEffect(() => {
-    return () => {
-      clearChildrenState();
-    };
+    dispatchMethod(getListSelectionMethods());
+    dispatchFundingSource(getListFundingSource());
+    dispatchEnterprise(getListEnterprise());
+    dispatchIndustry(getIndustries());
+    dispatchStaff(getListStaff());
+    dispatchProcurement(getListProcurement());
   }, []);
-  return (
-    <>
-      <Heading
-        title="Tạo mới "
-        hasBreadcrumb
-        buttons={[
-          {
-            type: "secondary",
-            text: "Hủy",
-            icon: <IoClose className="text-[18px]" />,
-            onClick: () => {
-              navigate("/project");
-            },
-          },
-          {
-            type: "primary",
-            text: "Tạo gói thầu",
-            icon: <FaPlus className="text-[18px]" />,
-            onClick: handleCreatePackage,
-          },
-          {
-            isLoading: state.status === EFetchStatus.PENDING,
-            text: "Tạo mới",
-            icon: <FaPlus className="text-[18px]" />,
-            onClick: () => {
-              if (formikRef.current) {
-                formikRef.current.handleSubmit();
-              }
-            },
-          },
-        ]}
-      />
-      <ActionModule type={EPageTypes.CREATE} formikRef={formikRef} />
-      <ChildrenProject
-        formikRef={formikRef} // Pass formikRef as prop
-        onSave={handleAddChild}
-        title="Tạo gói thầu cho dự án"
-        visible={isCreatePackageVisible}
-        setVisible={setCreatePackageVisible}
-        footerContent={
-          <div className="flex items-center justify-center gap-2">
-            <Button key="cancel" text="Hủy" type="secondary" onClick={() => setCreatePackageVisible(false)} />
-            <Button key="submit" kind="submit" text="Lưu" onClick={onSaveChildren} />
-          </div>
-        }
-        type={EPageTypes.CREATE}
-      >
-        <Children formikRef={formikRef} isChildren type={EPageTypes.CREATE} />
-      </ChildrenProject>
-    </>
-  );
+
+  const tabItems = [
+    {
+      key: "1",
+      label: "Tạo mới dự án",
+      children: (
+        <div>
+          <Heading
+            title="Tạo mới "
+            hasBreadcrumb
+            buttons={[
+              {
+                type: "secondary",
+                text: "Hủy",
+                icon: <IoClose className="text-[18px]" />,
+                onClick: () => {
+                  navigate("/project");
+                },
+              },
+              {
+                isLoading: state.status === EFetchStatus.PENDING,
+                text: "Tạo mới",
+                icon: <FaPlus className="text-[18px]" />,
+                onClick: () => {
+                  if (formikRef.current) {
+                    formikRef.current.handleSubmit();
+                  }
+                },
+              },
+            ]}
+          />
+          <ActionModule
+            type={EPageTypes.CREATE}
+            formikRef={formikRef}
+            listIndustry={stateIndustry.listIndustry}
+            listSelectionMethods={stateMethod.listSelectionMethods}
+            listFundingSources={stateFundingSource.listFundingSources}
+            getListStaff={stateStaff.getListStaff}
+            listEnterprise={stateEnterprise.listEnterprise!}
+            listProcurement={stateProcurement.listProcurement}
+          />
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: "Tạo gói thầu cho dự án",
+      disabled: !state.dataCreateProject?.id,
+      children: (
+        <div>
+          <Heading
+            title="Tạo mới thầu cho dự án"
+            hasBreadcrumb
+            buttons={[
+              {
+                type: "secondary",
+                text: "Hủy",
+                icon: <IoClose className="text-[18px]" />,
+                onClick: () => {
+                  navigate("/project");
+                },
+              },
+              {
+                isLoading: state.status === EFetchStatus.PENDING,
+                text: "Tạo mới",
+                icon: <FaPlus className="text-[18px]" />,
+                onClick: () => {
+                  if (formikRef.current) {
+                    formikRef.current.handleSubmit();
+                  }
+                },
+              },
+            ]}
+          />
+          <ActionModule
+            type={EPageTypes.CREATE}
+            project={state.dataCreateProject}
+            isChildren
+            formikRef={formikRef}
+            listIndustry={stateIndustry.listIndustry}
+            listSelectionMethods={stateMethod.listSelectionMethods}
+            listFundingSources={stateFundingSource.listFundingSources}
+            getListStaff={stateStaff.getListStaff}
+            listEnterprise={stateEnterprise.listEnterprise!}
+            listProcurement={stateProcurement.listProcurement}
+          />
+        </div>
+      ),
+    },
+    {
+      key: "3",
+      label: "Hồ sơ đấu thầu",
+      disabled: !state.dataCreateProject?.id,
+      children: <CreateBidDocument />,
+    },
+    {
+      key: "4",
+      label: "Bão lãnh dự thầu",
+      disabled: !state.dataCreateProject?.id,
+      children: <div>Outgoing email settings content goes here</div>,
+    },
+  ];
+
+  return <Tabs items={tabItems} />;
 };
 
 export default CreateProject;

@@ -20,12 +20,16 @@ export interface IProjectInitialState extends IInitialState {
   projects: IProject[];
   project?: IProject | any;
   listProjects?: IProject[];
+  id_project?: string;
+  dataCreateProject?: INewProject;
 }
 const initialState: IProjectInitialState = {
   status: EFetchStatus.IDLE,
   projects: [],
   listProjects: [],
+  id_project: "",
   project: undefined,
+  dataCreateProject: undefined,
   message: "",
   error: undefined,
   filter: {
@@ -70,7 +74,9 @@ const projectSlice = createSlice({
         state.project = {
           ...payload.data,
           industries: payload?.data?.industries?.map((item: any) => item.id),
+          arrayIndustry: payload?.data?.industries?.map((item: any) => item.name),
           procurement_categories: payload?.data?.procurement_categories?.map((item: any) => item.id),
+          procurement_category_name: payload?.data?.procurement_categories?.map((item: any) => item.name),
           funding_source: payload?.data?.funding_source?.id,
           funding_sourceName: payload?.data?.funding_source?.name,
           investor: payload?.data?.investor.id,
@@ -80,6 +86,7 @@ const projectSlice = createSlice({
           selection_methodName: payload?.data?.selection_method.method_name,
           staff: payload?.data?.staff?.id,
           staffName: payload?.data?.staff?.name,
+          tendererName: payload?.data?.tenderer?.name,
           attachments: payload?.data?.attachments,
         };
         state.loading = false;
@@ -92,13 +99,25 @@ const projectSlice = createSlice({
       .addCase(createProject.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })
-      .addCase(createProject.fulfilled, (state) => {
+      .addCase(createProject.fulfilled, (state, { payload }: PayloadAction<INewProject> | any) => {
+        console.log(payload);
+
         state.status = EFetchStatus.FULFILLED;
+        state.dataCreateProject = {
+          ...payload.data,
+          files: payload.data.attachments,
+          funding_source_id: payload?.data?.funding_source.id,
+          industry_id: payload?.data?.industries?.map((item: any) => item.id),
+          investor_id: payload?.data?.investor.id,
+          procurement_id: payload?.data?.procurement_categories?.map((item: any) => item.id),
+          tenderer_id: payload?.data?.investor.id,
+        };
+
         state.message = "Tạo mới thành công ";
       })
       .addCase(createProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
 
     builder
@@ -111,7 +130,7 @@ const projectSlice = createSlice({
       })
       .addCase(updateProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
     builder
       .addCase(approveProject.pending, (state) => {
@@ -123,7 +142,7 @@ const projectSlice = createSlice({
       })
       .addCase(approveProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
     builder
       .addCase(changeStatusProject.pending, (state) => {
@@ -135,7 +154,7 @@ const projectSlice = createSlice({
       })
       .addCase(changeStatusProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
     // ? Delete tag
     builder
@@ -153,12 +172,12 @@ const projectSlice = createSlice({
 
     builder
       .addCase(getListProject.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
-        if (payload.data.data) {
-          state.listProjects = payload.data.data;
+        if (payload) {
+          state.listProjects = payload.data;
         }
       })
       .addCase(getListProject.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
   },
 });

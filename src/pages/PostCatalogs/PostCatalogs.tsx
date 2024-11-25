@@ -16,6 +16,7 @@ import { GoDownload } from "react-icons/go";
 import { IPostCatalogInitialState, resetStatus, setFilter } from "@/services/store/postCatalog/postCatalog.slice";
 import { changeStatusPostCatalog, deletePostCatalog, getAllPostCatalogs } from "@/services/store/postCatalog/postCatalog.thunk";
 import PostCatalogForm from "./PostCatalogForm";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const PostCatalogs = () => {
     const { state, dispatch } = useArchive<IPostCatalogInitialState>("post_catalog");
@@ -25,18 +26,18 @@ const PostCatalogs = () => {
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
-            //   permission: EPermissions.DETAIL_POST_CATALOG,
+              permission: EPermissions.DETAIL_CATALOG,
         },
         {
             type: EButtonTypes.UPDATE,
-            // permission: EPermissions.UPDATE_POST_CATALOG,
+            permission: EPermissions.UPDATE_CATALOG,
         },
         {
             type: EButtonTypes.DESTROY,
             onClick(record) {
                 dispatch(deletePostCatalog(record?.key));
             },
-            // permission: EPermissions.DESTROY_POST_CATALOG,
+            permission: EPermissions.DESTROY_CATALOG,
         },
     ];
 
@@ -140,7 +141,7 @@ const PostCatalogs = () => {
                     },
                     {
                         icon: <FaPlus className="text-[18px]" />,
-                        // permission: EPermissions.CREATE_POST_CATALOG,
+                        permission: EPermissions.CREATE_CATALOG,
                         text: "Thêm mới",
                     },
                 ]}

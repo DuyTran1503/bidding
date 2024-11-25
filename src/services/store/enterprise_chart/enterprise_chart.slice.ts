@@ -13,7 +13,9 @@ import {
   averageDifficultyLevelTasksByEmployee,
   averageFeedbackByEmployee,
   projectCompletedByEnterprise,
-  projectWonByEnterprise
+  projectWonByEnterprise,
+  evaluationsStatisticsByEnterprise, 
+  reputationsStatisticsByEnterprise
 } from "./enterprise_chart.thunk";
 
 export interface IChartEnterpriseInitialState extends IInitialState {
@@ -29,6 +31,8 @@ export interface IChartEnterpriseInitialState extends IInitialState {
   averageFeedbackByEmployee: IChartEnterprise[];
   projectCompletedByEnterprise: IChartEnterprise[];
   projectWonByEnterprise: IChartEnterprise[];
+  evaluationsStatisticsByEnterprise: IChartEnterprise[];
+  reputationsStatisticsByEnterprise: IChartEnterprise[];
 }
 
 const initialState: IChartEnterpriseInitialState = {
@@ -46,6 +50,8 @@ const initialState: IChartEnterpriseInitialState = {
   averageFeedbackByEmployee: [],
   projectCompletedByEnterprise: [],
   projectWonByEnterprise: [],
+  evaluationsStatisticsByEnterprise: [],
+  reputationsStatisticsByEnterprise: [],
   totalRecords: 0,
   filter: {
     size: 10,
@@ -137,6 +143,24 @@ const chartEnterpriseSlice = createSlice({
       state.status = EFetchStatus.FULFILLED;
     })
     .addCase(projectWonByEnterprise.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = (action.payload as string) || "Có lỗi xảy ra khi tải dữ liệu";
+    })
+    // evaluations-statistics-by-enterprise
+    .addCase(evaluationsStatisticsByEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IChartEnterprise[]> | any>) => {
+      state.evaluationsStatisticsByEnterprise = payload.data;
+      state.status = EFetchStatus.FULFILLED;
+    })
+    .addCase(evaluationsStatisticsByEnterprise.rejected, (state, action) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = (action.payload as string) || "Có lỗi xảy ra khi tải dữ liệu";
+    })
+    // reputations-statistics-by-enterprise
+    .addCase(reputationsStatisticsByEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IChartEnterprise[]> | any>) => {
+      state.reputationsStatisticsByEnterprise = payload.data;
+      state.status = EFetchStatus.FULFILLED;
+    })
+    .addCase(reputationsStatisticsByEnterprise.rejected, (state, action) => {
       state.status = EFetchStatus.REJECTED;
       state.message = (action.payload as string) || "Có lỗi xảy ra khi tải dữ liệu";
     })

@@ -9,14 +9,19 @@ import MenuItem from "./MenuItem";
 import {
   IoBusinessOutline,
   IoNewspaperOutline,
-  IoPieChartOutline,
+  IoHome,
   IoSettingsOutline,
   IoInformationCircleOutline,
   IoHeadsetOutline,
   IoClose,
   IoMenu,
-  IoFileTrayFull,
-  IoNewspaper
+  IoPodiumOutline,
+  IoChatbubblesOutline,
+  IoReceiptOutline,
+  IoTimerOutline,
+  IoBookmarkOutline,
+  IoFileTrayFullOutline,
+  IoBriefcaseOutline,
 } from "react-icons/io5";
 
 // Images
@@ -26,7 +31,6 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { checkPermission } from "@/helpers/checkPermission";
-import { MdOutlineFactory } from "react-icons/md";
 
 export interface IMenuItem {
   id: string;
@@ -54,9 +58,9 @@ const Sidebar = ({ children }: PropsWithChildren) => {
   const menuItems: IMenuItem[] = [
     {
       id: "1",
-      label: "Bảng điều khiển",
+      label: "Trang chủ",
       path: "dashboard",
-      icon: { component: IoPieChartOutline },
+      icon: { component: IoHome },
     },
     {
       id: "2",
@@ -69,65 +73,36 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "enterprise",
           permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
         },
+        // {
+        //   id: "2.2",
+        //   label: "Lĩnh vực đấu thầu",
+        //   path: "bidding-fields",
+        //   permissions: EPermissions.LIST_BIDDING_FIELD,
+        // },
+        // {
+        //   id: "2.3",
+        //   label: "Loại hình đấu thầu",
+        //   path: "bidding-types",
+        //   permissions: EPermissions.LIST_BIDDING_TYPE,
+        // },
         {
-          id: "2.2",
-          label: "Lĩnh vực đấu thầu",
-          path: "bidding-fields",
-          permissions: EPermissions.LIST_BIDDING_FIELD,
+          id: "4.2",
+          label: "Nhân viên",
+          path: "employees",
+          permissions: EPermissions.LIST_EMPLOYEE,
         },
         {
-          id: "2.3",
-          label: "Loại hình đấu thầu",
-          path: "bidding-types",
-          permissions: EPermissions.LIST_BIDDING_TYPE,
+          id: "4.1",
+          label: "Công việc",
+          path: "task",
+          permissions: EPermissions.LIST_TASK,
         },
       ],
     },
     {
-      id: "12",
-      label: "Ngành nghề",
-      icon: { component: IoFileTrayFull },
-      items: [
-        {
-          id: "2.2",
-          label: "Loại hình kinh doanh",
-          path: "business-activity",
-          permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
-        },
-        {
-          id: "2.4",
-          label: "Ngành kinh doanh",
-          path: "industry",
-          permissions: EPermissions.LIST_INDUSTRY,
-        },
-
-      ]
-    },
-    {
-      id: "2.7",
-      icon: { component: IoNewspaper },
-      label: "Hình thức lựa chọn Nhà thầu",
-      path: "selection-methods",
-      permissions: EPermissions.LIST_SELECTION_METHOD,
-    },
-    {
-      id: "4.4",
-      icon: { component: IoNewspaper },
-      label: "Loại hình mua sắm công",
-      path: "procurement-categories",
-      permissions: EPermissions.LIST_PROCUREMENT_CATEGORIE,
-    },
-    {
-      id: "2.6",
-      label: "Nhật ký hoạt động",
-      path: "activity-logs",
-      permissions: EPermissions.LIST_ACTIVITYLOG,
-    },
-
-    {
       id: "3",
       label: "Dự án",
-      icon: { component: MdOutlineFactory },
+      icon: { component: IoFileTrayFullOutline },
       items: [
         {
           id: "3.1",
@@ -160,139 +135,142 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           permissions: EPermissions.LIST_EVALUATION,
         },
         {
-          id: "2.5",
+          id: "3.6",
           label: "Nguồn tài trợ",
           path: "funding-sources",
           permissions: EPermissions.LIST_FUNDING_SOURCE,
         },
         {
-          id: "3.6",
+          id: "3.7",
           label: "Tiến độ dự án",
           path: "work-progresses",
           permissions: EPermissions.LIST_EVALUATION,
         },
       ],
     },
-
     {
       id: "4",
-      label: "Nhân viên",
-      icon: { component: MdOutlineFactory },
+      label: "Ngành nghề",
+      icon: { component: IoPodiumOutline },
       items: [
         {
           id: "4.1",
-          label: "Công việc",
-          path: "task",
-          permissions: EPermissions.LIST_TASK,
+          label: "Loại hình kinh doanh",
+          path: "business-activity",
+          permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
         },
         {
           id: "4.2",
-          label: "Nhân viên",
-          path: "employees",
-          permissions: EPermissions.LIST_EMPLOYEE,
-        },
-        {
-          id: "4.4",
-          label: "Bảo lãnh dự thầu",
-          path: "bid-bond",
-          permissions: EPermissions.LIST_BID_BOND,
-        },
-        {
-          id: "4.5",
-          label: "Tiêu chí đánh giá",
-          path: "evaluation-criteria",
-          permissions: EPermissions.LIST_EVALUATION,
-        },
-      ],
-    },
-
-    {
-      id: "23",
-      label: "Lịch sử đấu thầu",
-      icon: { component: MdOutlineFactory },
-      items: [
-        {
-          id: "5.7",
-          label: "Kết quả đấu thầu",
-          path: "bidding-results",
-          permissions: EPermissions.LIST_BIDDING_TYPE,
-        },
-        {
-          id: "5.11",
-          label: "Đánh giá",
-          path: "evaluates",
-          permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
+          label: "Ngành kinh doanh",
+          path: "industry",
+          permissions: EPermissions.LIST_INDUSTRY,
         },
       ],
     },
     {
       id: "5",
+      icon: { component: IoBookmarkOutline },
+      label: "Hình thức lựa chọn Nhà thầu",
+      path: "selection-methods",
+      permissions: EPermissions.LIST_SELECTION_METHOD,
+    },
+    {
+      id: "6",
+      icon: { component: IoBriefcaseOutline },
+      label: "Loại hình mua sắm công",
+      path: "procurement-categories",
+      permissions: EPermissions.LIST_PROCUREMENT_CATEGORIE,
+    },
+
+    // {
+    //   id: "4",
+    //   label: "Nhân viên",
+    //   icon: { component: IoPeopleOutline },
+    //   items: [
+    //   ],
+    // },
+
+    {
+      id: "7",
+      label: "Lịch sử đấu thầu",
+      icon: { component: IoTimerOutline },
+      items: [
+        {
+          id: "7.1",
+          label: "Kết quả đấu thầu",
+          path: "bidding-results",
+          permissions: EPermissions.LIST_BIDDING_TYPE,
+        },
+        {
+          id: "7.2",
+          label: "Đánh giá kết quả dự án",
+          path: "evaluates",
+          permissions: EPermissions.LIST_EVALUATE,
+        },
+      ],
+    },
+    {
+      id: "8",
       label: "Hệ thống",
       icon: { component: IoSettingsOutline },
       items: [
         {
-          id: "5.1",
+          id: "8.1",
           label: "Vai trò",
           path: "roles",
           permissions: EPermissions.LIST_ROLE,
         },
         {
-          id: "5.2",
+          id: "8.2",
           label: "Nhân viên",
           path: "staffs",
           permissions: EPermissions.LIST_STAFF,
         },
         {
-          id: "5.3",
+          id: "8.3",
           label: "Tags",
           path: "tags",
           permissions: EPermissions.LIST_TAG,
         },
         {
-          id: "5.4",
+          id: "8.4",
           label: "Báo cáo thống kê",
           path: "statistical_reports",
           permissions: EPermissions.LIST_STATISTICAL_REPORT,
         },
-        // {
-        //   id: "5.5",
-        //   label: "Lịch sử đấu thầu",
-        //   path: "bidding-historys",
-        //   permissions: EPermissions.LIST_BIDDING_TYPE,
-        // },
         {
-          id: "5.8",
+          id: "8.5",
+          label: "Nhật ký hoạt động",
+          path: "activity-logs",
+          permissions: EPermissions.LIST_ACTIVITY_LOG,
+        },
+        {
+          id: "8.6",
           label: "Banner",
           path: "banners",
           permissions: EPermissions.LIST_BANNER,
         },
         {
-          id: "5.9",
+          id: "8.7",
           label: "Câu hỏi/ Câu trả lời",
           path: "questions-answers",
           permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
         },
-        {
-          id: "5.10",
-          label: "Phản hồi và Khiếu nại",
-          path: "feedback-complaint",
-          permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
-        },
       ],
     },
     {
-      id: "6",
+      id: "9",
       label: "Tin tức",
-      icon: { component: IoNewspaperOutline },
+      icon: { component: IoReceiptOutline },
       items: [
         {
-          id: "6.1",
+          id: "9.1",
           label: "Danh mục bài viết",
           path: "post-catalogs",
-          permissions: EPermissions.LIST_POST_CATALOG,
+          permissions: EPermissions.LIST_CATALOG,
         },
         {
-          id: "6.2",
+          id: "9.2",
           label: "Bài viết",
           path: "posts",
           permissions: EPermissions.LIST_POST,
@@ -300,25 +278,35 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       ],
     },
     {
-      id: "7",
-      label: "Giới thiệu",
-      icon: { component: IoInformationCircleOutline },
-      path: "introductions",
+      id: "10",
+      label: "Phản hồi và Khiếu nại",
+      icon: { component: IoChatbubblesOutline },
+      path: "feedback-complaint",
+      permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
     },
     {
-      id: "8",
-      label: "Hướng dẫn",
-      icon: { component: IoNewspaperOutline },
-      path: "instructs",
-    },
-    {
-      id: "9",
+      id: "11",
       label: "Hỗ trợ",
       icon: { component: IoHeadsetOutline },
       path: "supports",
+      permissions: EPermissions.LIST_SUPPORT,
     },
     {
-      id: "10",
+      id: "12",
+      label: "Giới thiệu",
+      icon: { component: IoInformationCircleOutline },
+      path: "introductions",
+      permissions: EPermissions.LIST_INTRODUCTION,
+    },
+    {
+      id: "13",
+      label: "Hướng dẫn",
+      icon: { component: IoNewspaperOutline },
+      path: "instructs",
+      permissions: EPermissions.LIST_INDUSTRY,
+    },
+    {
+      id: "14",
       label: "Components",
       path: "components",
       icon: { component: RxComponent1 },
@@ -329,7 +317,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     <>
       {/* Button to toggle sidebar on small screens */}
       <button
-        className="fixed top-7 left-6 z-50 block md:hidden bg-cyan-200 hover:bg-cyan-600 text-white p-2 rounded"
+        className="fixed left-6 top-7 z-50 block rounded bg-blue-200 p-2 text-white hover:bg-blue-500 md:hidden"
         onClick={() => setSidebarVisible(!isSidebarVisible)}
       >
         {isSidebarVisible ? <IoClose size={24} /> : <IoMenu size={24} />}
@@ -337,11 +325,13 @@ const Sidebar = ({ children }: PropsWithChildren) => {
 
       <div className="flex h-dvh select-none bg-gray-25">
         {/* Sidebar */}
-        <div className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 
-        ${isSidebarVisible ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div
+          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 
+            ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"}`}
+        >
           {/* Logo */}
-          <div className="flex cursor-pointer items-center gap-3 px-5 py-6" onClick={() => navigate("/")}>
-            <img src={logo} alt="" className="h-[34px] w-[34px]" />
+          <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4" onClick={() => navigate("/")}>
+            <img src={logo} alt="" className="w-20" />
             <div className="display-m-semibold">Septenary Solution</div>
           </div>
 
@@ -381,9 +371,8 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         </div>
 
         {/* Main content */}
-        <main className="ml-0 md:ml-[264px] flex grow flex-col gap-6 overflow-y-scroll p-6">
-          {children}
-        </main></div>
+        <main className="ml-0 flex grow flex-col gap-6 overflow-y-scroll p-6 md:ml-[264px]">{children}</main>
+      </div>
     </>
   );
 };

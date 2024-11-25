@@ -7,6 +7,11 @@ export interface IChartEnterprise {
   numberProjectWinning: number;
   averageWinningAmount: number;
   totalWinningAmount: number;
+  average_score: number;
+  prestige_score: number;
+  blacklist_count: number;
+  ban_count: number;
+  total_evaluations: number;
   tendererProjectCount: number;
   investorProjectCount: number;
   difficulty_label: string;
