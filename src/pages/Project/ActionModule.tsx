@@ -153,19 +153,24 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
     setIsEditModalVisible(true);
   };
   const handleSaveChild = (values: INewProject) => {
-    const data = {
-      ...lodash.omit(values, "id", "children", "fileChildren"),
-    };
-    const sanitizedProject = {
-      ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
-    };
-    const newChild = {
-      ...sanitizedProject,
+    console.log(values);
 
-      // parent_id: project?.id || null,
-      children: [data as Omit<INewProject, "id">],
+    const data = {
+      ...lodash.omit(values, "id", "children"),
+      files: values.fileChildren,
+      parent_id: project?.id,
     };
-    dispatchEnterprise(updateProject({ body: newChild, param: String(project?.id) }));
+    // const sanitizedProject = {
+    //   ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
+    // };
+    // const newChild = {
+    //   ...sanitizedProject,
+
+    //   // parent_id: project?.id || null,
+    //   children: [data as Omit<INewProject, "id">],
+    // };
+    console.log(data);
+    return dispatchProject(createProject(data as Omit<INewProject, "id">));
   };
 
   return (
@@ -174,6 +179,8 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
       enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => {
+        console.log(values);
+
         const data = {
           ...lodash.omit(values, "id", "children", "fileChildren"),
         };
