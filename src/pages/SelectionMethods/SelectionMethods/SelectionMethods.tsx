@@ -53,6 +53,7 @@ const SelectionMethods = () => {
     },
     {
       dataIndex: "description",
+      title: "Mô tả",
       render(_, record) {
         return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }} className="text-compact-3"></div>;
       },
