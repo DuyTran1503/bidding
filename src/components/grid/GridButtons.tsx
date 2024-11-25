@@ -12,7 +12,7 @@ import { PiDotsThreeVerticalBold } from "react-icons/pi"; // Thêm import cho bi
 
 interface IGridButtonsProps {
   buttons: IGridButton[];
-  record: { key: string; [key: string]: any };
+  record: { key: string;[key: string]: any };
   onClick?: (item: any, type: EButtonTypes) => void;
   isManyAction?: boolean;
 }
@@ -74,6 +74,8 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record, onClick, is
                 confirm({
                   title: "Xóa",
                   content: "Bạn chắc chắn muốn xóa không?",
+                  okText: "Xác nhận",
+                  cancelText: "Hủy",
                   onOk: () => button.onClick && button.onClick(record),
                 });
               }}

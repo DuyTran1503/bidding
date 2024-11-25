@@ -123,9 +123,9 @@ export enum EPermissions {
   DETAIL_BIDDING_RESULT = "detail_bidding_result",
 
   // Nhật ký hoạt động
-  LIST_ACTIVITYLOG = "list_activitylog",
-  DETAIL_ACTIVITYLOG = "detail_activitylog",
-  CREATE_ACTIVITYLOG = "create_activitylog",
+  LIST_ACTIVITY_LOG = "list_activity_log",
+  DETAIL_ACTIVITY_LOG = "detail_activity_log",
+  CREATE_ACTIVITY_LOG = "create_activity_log",
 
   // Dự án
   LIST_PROJECT = "list_project",
@@ -148,12 +148,12 @@ export enum EPermissions {
   UPDATE_POST = "update_post",
   DESTROY_POST = "destroy_post",
 
-  // ? Post_catalog
-  LIST_POST_CATALOG = "list_post_catalog",
-  DETAIL_POST_CATALOG = "detail_post_catalog",
-  CREATE_POST_CATALOG = "create_post_catalog",
-  UPDATE_POST_CATALOG = "update_post_catalog",
-  DESTROY_POST_CATALOG = "destroy_post_catalog",
+  // ? catalog
+  LIST_CATALOG = "list_catalog",
+  DETAIL_CATALOG = "detail_catalog",
+  CREATE_CATALOG = "create_catalog",
+  UPDATE_CATALOG = "update_catalog",
+  DESTROY_CATALOG = "destroy_catalog",
 
   // ? Support
   LIST_SUPPORT = "list_support",

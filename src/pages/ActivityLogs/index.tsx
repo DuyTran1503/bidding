@@ -15,6 +15,7 @@ import { ReactNode, useEffect, useMemo, useState } from "react";
 import FormModal from "@/components/form/FormModal";
 import { convertEnum } from "@/shared/utils/common/convertEnum";
 import Detail from "./Detail";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const ActivityLogs = () => {
   const { state, dispatch } = useArchive<IActivityLogInitialState>("activity_log");
@@ -58,7 +59,7 @@ const ActivityLogs = () => {
         setModalContent(<Detail record={record} />);
         setIsModalOpen(true);
       },
-      // permission: EPermissions.CREATE_ACTIVITYLOG,
+      permission: EPermissions.CREATE_ACTIVITY_LOG,
     },
   ];
 
