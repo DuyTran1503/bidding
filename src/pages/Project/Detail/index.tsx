@@ -7,11 +7,15 @@ import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProjectById } from "@/services/store/project/project.thunk";
-import { Card, Descriptions, Typography } from "antd";
+import { Card, Descriptions, Tooltip, Typography } from "antd";
 import { SUBMIT_METHOD } from "@/shared/enums/submissionMethod";
 import { DOMESTIC, mappingDOMESTIC } from "@/shared/enums/domestic";
 import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
+import { STATUS_PROJECT, STATUS_PROJECT_LABELS } from "@/shared/enums/statusProject";
+import PDF from "@/assets/images/pdf.png";
+import EXCEL from "@/assets/images/excel.png";
+import WORD from "@/assets/images/word.jpg";
 const { Title, Paragraph } = Typography;
 const DetailProject = () => {
   const navigate = useNavigate();
@@ -51,12 +55,26 @@ const DetailProject = () => {
     }
     return "Không xác định";
   };
-  const handleFileClick = (path: any) => {
-    console.log(path);
+  const getStatusLabel = (status?: string): string => {
+    if (!status) return "Không xác định";
 
-    navigate(`${path.file}`);
+    const statusNumber = parseInt(status, 10);
+    return STATUS_PROJECT_LABELS[statusNumber as STATUS_PROJECT] || "Không xác định";
   };
-
+  const getFileIcon = (fileType: string) => {
+    switch (fileType.toLowerCase()) {
+      case "pdf":
+        return PDF;
+      case "xlsx":
+      case "xls":
+        return EXCEL;
+      case "doc":
+      case "docx":
+        return WORD;
+      default:
+        return "📁";
+    }
+  };
   return (
     <>
       <Heading
@@ -87,7 +105,7 @@ const DetailProject = () => {
             {data && data.funding_sourceName}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Ngành Nghề" span={3}>
-            {data && data.industries?.map((industry) => industry.toString()).join(", ")}
+            {data && data.arrayIndustry?.map((industry: any) => industry).join(", ")}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Số Tiền" span={3}>
             {data && data.amount !== undefined && convertMoney(data.amount.toString())}
@@ -114,7 +132,7 @@ const DetailProject = () => {
             {data && data.investorName}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Dịch vụ mua sắm đấu thầu công" span={3}>
-            {(data && data.procurement_categories?.map((category) => category.toString()).join(", ")) || "Chưa có dịch vụ mua sắm đấu thầu công"}
+            {(data && data.procurement_category_name?.map((category: any) => category.name).join(", ")) || "Chưa có dịch vụ mua sắm đấu thầu công"}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Dự án hiện tại" span={3}>
             {data && getDomesticLabel(data.is_domestic)}
@@ -138,20 +156,28 @@ const DetailProject = () => {
             {data && convertTimestamp(data.end_time)}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="Trạng Thái Dự Án" span={3}>
-            {data && data.status}
+            {data && getStatusLabel(String(data.status))}
           </Descriptions.Item>
           <Descriptions.Item className="!py-[10px] px-6" label="File đính kèm" span={3}>
-            {data && data.attachments!.length > 0 ? (
-              data.attachments!.map((file: any, index) => (
-                <div key={index} className="file-item">
-                  <a href={file.path} target="_blank" rel="noopener noreferrer" className="file-link text-green-700">
-                    {file.name}
-                  </a>
-                </div>
-              ))
-            ) : (
-              <span>Không có tệp đính kèm</span>
-            )}
+            <div className="flex flex-wrap items-center gap-4">
+              {data && data.attachments!.length > 0 ? (
+                data.attachments!.map((file: any, index) => (
+                  <Tooltip title={file.name} color={"#108ee9"} key={index}>
+                    <a
+                      key={index}
+                      href={file.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 transition-opacity hover:opacity-80"
+                    >
+                      {file.type && getFileIcon(file.type) && <img src={getFileIcon(file.type)} alt={file.type} className="h-6 w-6 object-contain" />}
+                    </a>
+                  </Tooltip>
+                ))
+              ) : (
+                <span>Không có tệp đính kèm</span>
+              )}
+            </div>
           </Descriptions.Item>
         </Descriptions>
         <Typography className="mt-6">
