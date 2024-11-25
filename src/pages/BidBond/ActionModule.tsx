@@ -24,6 +24,7 @@ import lodash from "lodash";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { number, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
+import BidBondForm from "./components/BidBondForm";
 
 interface IBidBondFormProps {
   type?: EButtonTypes;
@@ -128,6 +129,14 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
         </div>
       }
     >
+      {/* <BidBondForm   
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        type={type!}
+        optionType={optionType}
+        projectOptions={convertDataOptions(stateProject.listProjects || [])}
+        enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
+       /> */}
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
         {({ values, handleBlur, errors, touched, setFieldValue }) => {
           return (
