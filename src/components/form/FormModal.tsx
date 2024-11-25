@@ -3,7 +3,7 @@ import { Modal, Button } from "antd";
 
 interface IFormModalProps {
   title?: string;
-  open: boolean;
+  open?: boolean;
   onConfirm?: () => void;
   onCancel?: () => void;
   cancelText?: string;

@@ -131,6 +131,32 @@ export const projectWonByEnterprise = createAsyncThunk(
   },
 );
 
+// evaluations-statistics-by-enterprise
+export const evaluationsStatisticsByEnterprise = createAsyncThunk(
+  "enterprises/evaluations-statistics-by-enterprise",
+  async (payload: IThunkPayload, { rejectWithValue }) => {
+    try {
+      const { response, data } = await client.post(prefix + "evaluations-statistics-by-enterprise", payload);
+      return response.status >= 400 ? rejectWithValue(data) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
+// reputations-statistics-by-enterprise
+export const reputationsStatisticsByEnterprise = createAsyncThunk(
+  "enterprises/reputations-statistics-by-enterprise",
+  async (payload: IThunkPayload, { rejectWithValue }) => {
+    try {
+      const { response, data } = await client.post(prefix + "reputations-statistics-by-enterprise", payload);
+      return response.status >= 400 ? rejectWithValue(data) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
+
 // detail-enterprise-by-ids
 export const detailEnterpriseByIds = createAsyncThunk(
   "detail-enterprise-by-ids",
