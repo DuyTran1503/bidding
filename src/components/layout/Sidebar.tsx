@@ -329,7 +329,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     <>
       {/* Button to toggle sidebar on small screens */}
       <button
-        className="fixed top-7 left-6 z-50 block md:hidden bg-blue-200 hover:bg-blue-500 text-white p-2 rounded"
+        className="fixed top-7 left-6 z-50 block md:hidden bg-cyan-200 hover:bg-cyan-600 text-white p-2 rounded"
         onClick={() => setSidebarVisible(!isSidebarVisible)}
       >
         {isSidebarVisible ? <IoClose size={24} /> : <IoMenu size={24} />}

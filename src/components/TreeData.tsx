@@ -22,9 +22,9 @@ const TreeData = ({ treeData, expanded = [], isDisable, checkedKeys, onCheck }: 
       theme={{
         components: {
           Tree: {
-            colorPrimary: "#883DCF",
+            colorPrimary: "#0891b2",
             nodeSelectedBg: "#F4ECFB",
-            colorPrimaryHover: "#883DCF",
+            colorPrimaryHover: "#0891b2",
           },
         },
       }}

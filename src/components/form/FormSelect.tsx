@@ -44,7 +44,7 @@ const FormSelect = ({
           components: {
             Select: {
               optionSelectedBg: "#f4ecfb",
-              colorPrimary: "#883dcf",
+              colorPrimary: "#0891b2",
             },
           },
         }}
