@@ -39,7 +39,7 @@ export interface IBidBondValues {
   is_active: string;
 }
 
-const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) => {
+const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormProps) => {
   const formikRef = useRef<FormikProps<IBidBond>>(null);
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
@@ -99,7 +99,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
   }, [visible]);
   return (
     <Dialog
-     screenSize={screenSize}
+      screenSize={screenSize}
       handleSubmit={() => {
         formikRef.current && formikRef.current.handleSubmit();
       }}
@@ -257,4 +257,4 @@ const ActionModule = ({ visible, type, setVisible, item }: IBidBondFormProps) =>
   );
 };
 
-export default ActionModule;
+export default ActionModuleBidBod;

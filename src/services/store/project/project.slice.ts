@@ -117,7 +117,7 @@ const projectSlice = createSlice({
       })
       .addCase(createProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
 
     builder
@@ -130,7 +130,7 @@ const projectSlice = createSlice({
       })
       .addCase(updateProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
     builder
       .addCase(approveProject.pending, (state) => {
@@ -142,7 +142,7 @@ const projectSlice = createSlice({
       })
       .addCase(approveProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
     builder
       .addCase(changeStatusProject.pending, (state) => {
@@ -154,7 +154,7 @@ const projectSlice = createSlice({
       })
       .addCase(changeStatusProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
     // ? Delete tag
     builder
@@ -172,12 +172,12 @@ const projectSlice = createSlice({
 
     builder
       .addCase(getListProject.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
-        if (payload.data.data) {
-          state.listProjects = payload.data.data;
+        if (payload) {
+          state.listProjects = payload.data;
         }
       })
       .addCase(getListProject.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
   },
 });
