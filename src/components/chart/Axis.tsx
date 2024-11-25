@@ -82,6 +82,7 @@ const AbleBarChart: React.FC<AbleBarChartProps> = ({
                 textStyle: {
                     fontSize: 16,
                     fontWeight: "bold",
+                    fontFamily: "Arial, Helvetica, sans-serif",
                 },
             },
             legend: {
