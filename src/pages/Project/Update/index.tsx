@@ -73,8 +73,6 @@ const UpdateProject = () => {
     dispatchStaff(getListStaff());
     dispatchProcurement(getListProcurement());
   }, []);
-  console.log(state.project?.id);
-
   const tabItems = [
     {
       key: "1",
@@ -172,7 +170,7 @@ const UpdateProject = () => {
       key: "3",
       label: "Hồ sơ đấu thầu",
       disabled: !state.project?.id,
-      children: <CreateBidDocument />,
+      children: <CreateBidDocument project_id={state.project?.id} />,
     },
     {
       key: "4",

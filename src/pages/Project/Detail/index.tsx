@@ -161,7 +161,7 @@ const DetailProject = () => {
           <Descriptions.Item className="!py-[10px] px-6" label="File đính kèm" span={3}>
             <div className="flex flex-wrap items-center gap-4">
               {data && data.attachments!.length > 0 ? (
-                data.attachments!.map((file: any, index) => (
+                data.attachments!.map((file: any, index: number) => (
                   <Tooltip title={file.name} color={"#108ee9"} key={index}>
                     <a
                       key={index}

@@ -39,6 +39,10 @@ const bidBondSlice = createSlice({
     resetMessageError(state) {
       state.message = "";
     },
+    resetStatus(state) {
+      state.status = EFetchStatus.IDLE;
+      state.message = "";
+    },
   },
 
   extraReducers(builder) {
@@ -74,7 +78,7 @@ const bidBondSlice = createSlice({
       })
       .addCase(createBidBond.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
     builder
       .addCase(updateBidBond.pending, (state) => {
@@ -86,7 +90,7 @@ const bidBondSlice = createSlice({
       })
       .addCase(updateBidBond.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
     // change
     builder
@@ -99,7 +103,7 @@ const bidBondSlice = createSlice({
       })
       .addCase(changeStatusBidBond.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
     // ? Delete tag
     builder
@@ -111,13 +115,14 @@ const bidBondSlice = createSlice({
         state.message = "Xóa thành công";
         state.businessActivities = state.bidBonds.filter((item) => String(item.id) !== payload);
       })
-      .addCase(deleteBidBond.rejected, (state) => {
+      .addCase(deleteBidBond.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
     builder
       .addCase(getListBidBond.fulfilled, (state, { payload }: PayloadAction<IResponse<IBidBond[]> | any>) => {
         if (payload.data) {
-          state.listBusinessActivities = payload.data;
+          state.listBidBonds = payload.data;
         }
       })
       .addCase(getListBidBond.rejected, (state, { payload }: PayloadAction<IResponse<IBidBond[]> | any>) => {
@@ -125,5 +130,5 @@ const bidBondSlice = createSlice({
       });
   },
 });
-
+export const { setFilter, resetStatus } = bidBondSlice.actions;
 export { bidBondSlice };

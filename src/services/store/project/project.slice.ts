@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
@@ -92,7 +93,7 @@ const projectSlice = createSlice({
         state.loading = false;
       })
       .addCase(getProjectById.rejected, (state, { payload }: PayloadAction<IProject> | any) => {
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
         state.loading = true;
       });
     builder
@@ -166,8 +167,9 @@ const projectSlice = createSlice({
         state.message = "Xóa thành công";
         state.projects = state.projects.filter((item) => String(item.id) !== payload);
       })
-      .addCase(deleteProject.rejected, (state) => {
+      .addCase(deleteProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
 
     builder
