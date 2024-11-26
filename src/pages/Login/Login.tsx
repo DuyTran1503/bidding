@@ -95,7 +95,7 @@ const Login = () => {
                     <Button text="Login" isLoading={state.status === EFetchStatus.PENDING} className="mt-3" />
                     <Link
                       to="/forgot-password"
-                      className="cursor-pointer text-end font-normal text-blue-500 transition-colors hover:text-blue-500"
+                      className="cursor-pointer text-end font-normal text-cyan-600 transition-colors hover:text-cyan-500"
                     >
                       Forgot password?
                     </Link>
