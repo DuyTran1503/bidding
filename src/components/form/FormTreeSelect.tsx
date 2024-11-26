@@ -41,7 +41,7 @@ const FormTreeSelect = ({
         theme={{
           components: {
             TreeSelect: {
-              colorPrimary: "#883dcf",
+              colorPrimary: "#0891b2",
             },
           },
         }}

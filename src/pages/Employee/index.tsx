@@ -48,6 +48,7 @@ const Employee = () => {
     {
       dataIndex: "index",
       title: "STT",
+      className: "w-[30px]",
     },
     {
       dataIndex: "name",

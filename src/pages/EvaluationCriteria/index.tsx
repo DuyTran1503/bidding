@@ -57,6 +57,7 @@ const EvaluationCriteria = () => {
     {
       dataIndex: "index",
       title: "STT",
+      className: "w-[50px]",
     },
     {
       dataIndex: "project",
@@ -87,6 +88,7 @@ const EvaluationCriteria = () => {
 
     {
       title: "Trạng thái",
+      className: "w-[50px]",
       dataIndex: "is_active",
       render(_, record) {
         return (

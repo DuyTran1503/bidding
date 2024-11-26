@@ -28,15 +28,15 @@ const Button = ({
   kind,
 }: IButtonProps) => {
   const typeClass = {
-    primary: "text-primary-600 border border-primary-500 hover:bg-primary-600 hover:text-white",
-    ghost: "text-primary-500 bg-primary-50",
-    secondary: "text-[#ff460b] border border-[#ff460b] hover:bg-[#f33d07]",
+    primary: "text-cyan-600 border border-cyan-600 hover:bg-cyan-600 hover:text-white",
+    ghost: "text-cyan-600 bg-cyan-50 hover:bg-cyan-600 hover:text-white" ,
+    secondary: "text-[#dc2626] border border-[#dc2626] hover:bg-[#dc2626]",
     third: "text-[#d19b3d] border border-[#d19b3d] hover:bg-[#a87722]",
   };
 
   const typeLoading = {
-    primary: "border-black border-t-primary-500 ",
-    ghost: "border-primary-500 border-t-primary-50",
+    primary: "border-black border-t-cyan-600 ",
+    ghost: "border-cyan-600 border-t-cyan-50",
     secondary: "border-gray-400 border-t-black",
     third: "border-black border-[#d19b3d] ",
   };

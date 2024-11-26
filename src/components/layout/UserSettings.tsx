@@ -67,7 +67,7 @@ const UserSettings = () => {
       <div className="flex h-full cursor-pointer items-center gap-3">
         {/* Avatar */}
         <div className="relative h-8 w-8 shrink-0 rounded-circle bg-gray-100">
-          <div className="absolute bottom-0 right-0 h-[10px] w-[10px] rounded-circle border-2 border-white bg-green-500"></div>
+          <div className="absolute bottom-0 right-0 h-[10px] w-[10px] rounded-circle border-2 border-white bg-green-600"></div>
         </div>
         {/* Info */}
         <div className="shrink-0">

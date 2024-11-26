@@ -21,10 +21,10 @@ const FormCheck = ({ label, onChange, isDefaultChecked, name, isDisable }: FormC
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#883DCF",
+          colorPrimary: "#0891b2",
           colorTextDisabled: "#fff",
           colorBgContainerDisabled: "#fff",
-          colorBorder: "#883DCF",
+          colorBorder: "#0891b2",
         },
       }}
     >
@@ -37,7 +37,7 @@ const FormCheck = ({ label, onChange, isDefaultChecked, name, isDisable }: FormC
           onChange={(e) => !isDisable && handleChange(e)}
           className="rounded-md"
         />
-        {label && <label className="font-semibold text-primary-500">{label}</label>}
+        {label && <label className="font-semibold text-cyan-600">{label}</label>}
       </div>
     </ConfigProvider>
   );

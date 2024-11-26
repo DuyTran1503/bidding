@@ -89,7 +89,7 @@ const Dashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="flex h-lvh items-center justify-center">
-        <Spin tip="Loading..." size="large" spinning={true} />
+        <Spin tip="Loading..." size="large" spinning={true} style={{ color: "#0891b2" }} />
       </div>
     );
   }
