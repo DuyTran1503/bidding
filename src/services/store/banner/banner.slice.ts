@@ -12,6 +12,7 @@ import {
   changeStatusBanner 
 } from "./banner.thunk";
 import { IError } from '@/shared/interface/error';
+import { transformPayloadErrors } from '@/shared/utils/common/function';
 
 export interface IBannerInitialState extends IInitialState {
   banners: IBanner[];
@@ -75,7 +76,7 @@ const bannerSlice = createSlice({
       })
       .addCase(createBanner.rejected, (state, {payload}: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = payload.message;
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Update Banner
     builder
@@ -89,7 +90,7 @@ const bannerSlice = createSlice({
       })
       .addCase(updateBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = payload.message;
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Delete Banner
     builder
@@ -103,7 +104,7 @@ const bannerSlice = createSlice({
       })
       .addCase(deleteBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = payload.message;
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
       builder
       .addCase(changeStatusBanner.pending, (state) => {
@@ -115,7 +116,7 @@ const bannerSlice = createSlice({
       })
       .addCase(changeStatusBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = payload.message;
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
   },
 });

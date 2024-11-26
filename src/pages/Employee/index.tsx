@@ -60,7 +60,7 @@ const Employee = () => {
       render(_, record) {
         return <CustomerAvatar src={!!record.avatar && record.avatar} alt={"Ảnh đại diện"} />;
       },
-      className: "w-[150px]",
+      className: "!h-auto"
     },
     {
       dataIndex: "email",

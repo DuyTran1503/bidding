@@ -50,7 +50,7 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id }) => {
         <img
           src={URL.createObjectURL(file)}
           alt={file.name}
-          className="h-[100px] w-[100px] rounded-lg object-cover"
+          className="h-[100px] rounded-lg object-cover"
           onError={(e) => {
             e.currentTarget.src = imageError;
           }}
@@ -58,18 +58,18 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id }) => {
       );
     } else if (file.type.startsWith("application/")) {
       if (file.type.startsWith("application/msword")) {
-        return <img src={WORD} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
+        return <img src={WORD} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
       }
       if (file.type.startsWith("application/vnd.ms-excel")) {
-        return <img src={EXCEL} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
+        return <img src={EXCEL} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
       }
       if (file.type.startsWith("application/pdf")) {
-        return <img src={PDF} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
+        return <img src={PDF} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
       } else {
-        return <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
+        return <img src={imageFile} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
       }
     } else {
-      return <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />;
+      return <img src={imageFile} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
     }
   };
   useEffect(() => {
