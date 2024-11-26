@@ -8,14 +8,18 @@ interface Props {
   disabled?: boolean;
   toolTipPosition?: "top" | "bottom" | "left" | "right";
   loading?: boolean;
+  color?: string;
 }
 
 const CommonSwitch = (props: Props) => {
-  const { title, checked, onChange, disabled = false, toolTipPosition = "top", loading } = props;
+  const { title, checked, onChange, disabled = false, toolTipPosition = "top", loading, color = "#0891b2"} = props;
 
   const SwitchComponent = useMemo(
-    () => <AntSwitch checked={checked} disabled={disabled} onChange={onChange} loading={loading} />,
-    [checked, disabled, onChange, loading],
+    () => <AntSwitch checked={checked} disabled={disabled} onChange={onChange} loading={loading}  style={{
+      backgroundColor: checked ? color : undefined, // Màu khi bật
+      borderColor: color, // Viền của toggle
+    }}/>,
+    [checked, disabled, onChange, loading, color],
   );
 
   const TooltipComponent = title ? (
