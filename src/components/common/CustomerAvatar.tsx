@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import imageError from "@/assets/images/default-featured-image.png";
+import React, { useState } from "react";
 import clsx from "clsx";
+import imageError from "@/assets/images/default-featured-image.png";
 import imgFbDefault from "@/assets/images/customerDefaultAvatar.png";
 
 interface CustomerAvatarProps {
@@ -10,29 +10,30 @@ interface CustomerAvatarProps {
   size?: "large" | "medium";
 }
 
-const CustomerAvatar: React.FC<CustomerAvatarProps> = ({ size = "medium", src, alt, className }) => {
-  const path = import.meta.env.VITE_API_URL;
+const CustomerAvatar: React.FC<CustomerAvatarProps> = ({ src, alt, className, size = "medium" }) => {
+  const [imageSrc, setImageSrc] = useState<string>(
+    src && src.trim() !== "" ? src : imgFbDefault
+  );
 
-  const [imageSrc, setImageSrc] = useState<string>(src);
-  useEffect(() => {
-    if (!imageSrc || imageSrc.trim() === "") {
-      setImageSrc(imgFbDefault);
-    } else {
-      setImageSrc(imageSrc);
-    }
-  }, [imageSrc]);
+  const handleImageError = () => {
+    setImageSrc(imageError);
+  };
+
+  // Tạo URL đầy đủ nếu cần thiết
+  const fullImageSrc =
+    imageSrc.startsWith("http://") || imageSrc.startsWith("https://")
+      ? imageSrc
+      : `${import.meta.env.VITE_API_URL}/${imageSrc}`;
 
   return (
     <img
-      src={src.startsWith(path) ? src : `${import.meta.env.VITE_API_URL}/${src}` || imageSrc}
+      src={fullImageSrc}
       alt={alt}
-      className={clsx("rounded-circle object-cover", className, {
-        "h-[80px] w-[80px]": size === "large",
-        "h-[40px] w-[40px]": size === "medium",
+      className={clsx("object-cover", className, {
+        "h-auto w-auto": size === "medium",
+        "h-16 w-16": size === "large", // Ví dụ: bạn có thể điều chỉnh theo kích thước
       })}
-      onError={() => {
-        setImageSrc(imageError);
-      }}
+      onError={handleImageError}
     />
   );
 };

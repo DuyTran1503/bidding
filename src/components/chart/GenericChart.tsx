@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useMemo } from "react";
 import * as echarts from "echarts";
+import { Spin } from "antd";
 
 interface GenericChartProps {
   name?: string[]; // Mảng tên hoặc nhãn cho mỗi điểm dữ liệu trên biểu đồ.
@@ -215,6 +216,11 @@ const GenericChart: React.FC<GenericChartProps> = ({
 
     window.addEventListener("resize", handleResize);
   }, [option]);
+
+  // Kiểm tra nếu không có dữ liệu, không hiển thị biểu đồ
+  if (!name || !value || name.length === 0 || value.length === 0) {
+    return <div className="h-[500px] w-full flex justify-center items-center"><Spin tip="Loading..." size="large"/></div>; // Hoặc có thể để trống
+  }
 
   return <div className="mt-4 flex w-full items-center justify-center">
     <div ref={chartRef} style={{ height: "500px", width: "100%" }} />
