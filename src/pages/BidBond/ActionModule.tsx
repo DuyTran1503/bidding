@@ -50,7 +50,7 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
     id: item?.id || "",
     project_id: item?.project_id || undefined,
     enterprise_id: item?.enterprise_id ?? undefined,
-    bond_amount: item?.bond_amount ?? 0,
+    bond_amount: item?.bond_amount ?? undefined,
     bond_type: item?.bond_type ?? undefined,
     bond_number: item?.bond_number ?? "",
     issue_date: item?.issue_date ?? "",
@@ -73,6 +73,8 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
   });
 
   const handleSubmit = (data: IBidBond) => {
+    console.log(data);
+
     const body = {
       ...lodash.omit(data, "id"),
     };
@@ -129,139 +131,15 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
         </div>
       }
     >
-      {/* <BidBondForm   
+      <BidBondForm
         initialValues={initialValues}
         onSubmit={handleSubmit}
         type={type!}
+        formik={formikRef}
         optionType={optionType}
         projectOptions={convertDataOptions(stateProject.listProjects || [])}
         enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
-       /> */}
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
-        {({ values, handleBlur, errors, touched, setFieldValue }) => {
-          return (
-            <Form className="mt-3">
-              <Row gutter={[16, 16]}>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormInput
-                    type="text"
-                    isDisabled={type === "view"}
-                    label="Mã bảo lãnh"
-                    value={values.bond_number}
-                    name="bond_number"
-                    error={touched.bond_number ? errors.bond_number : ""}
-                    placeholder="Nhập mã bảo lãnh..."
-                    onChange={(value) => setFieldValue("bond_number", value)}
-                    onBlur={handleBlur}
-                  />
-                </Col>
-
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormSelect
-                    options={convertDataOptions(stateEnterprise.listEnterprise || [])}
-                    isDisabled={type === "view"}
-                    label="Người hoặc tổ chức bảo lãnh"
-                    value={values.enterprise_id}
-                    id="enterprise_id"
-                    error={touched.enterprise_id ? errors.enterprise_id : ""}
-                    placeholder="Chọn người hoặc tổ chức bảo lãnh"
-                    onChange={(value) => setFieldValue("enterprise_id", value)}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    label="Tên dự án"
-                    value={values.project_id}
-                    id="project_id"
-                    placeholder="Tên dự án..."
-                    error={touched.project_id ? errors.project_id : ""}
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(stateProject.listProjects || [])}
-                  />
-                </Col>
-
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    label="Loại bảo lãnh"
-                    value={values.bond_type}
-                    error={touched.bond_type ? errors.bond_type : ""}
-                    id="bond_type"
-                    options={optionType}
-                    placeholder="Nhập loại bảo lãnh..."
-                    onChange={(value) => setFieldValue("bond_type", value)}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormInput
-                    type="text"
-                    isDisabled={type === "view"}
-                    label="Số tiền bảo lãnh"
-                    value={values.bond_amount}
-                    error={touched.bond_amount ? errors.bond_amount : ""}
-                    name="bond_amount"
-                    placeholder="Nhập số tiền bảo lãnh..."
-                    onChange={(value) => setFieldValue("bond_amount", value)}
-                    onBlur={handleBlur}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormInput
-                    type="text"
-                    isDisabled={type === "view"}
-                    label="Số tiền bảo bằng chữ"
-                    value={values.bond_amount_in_words}
-                    error={touched.bond_amount_in_words ? errors.bond_amount_in_words : ""}
-                    name="bond_amount_in_words"
-                    placeholder="Nhập số tiền bảo lãnh bằng chữ..."
-                    onChange={(value) => setFieldValue("bond_amount_in_words", value)}
-                    onBlur={handleBlur}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormDate
-                    disabled={type === "view"}
-                    label="Ngày phát hành"
-                    value={values.issue_date ? dayjs(values.issue_date) : null}
-                    onChange={(date) => setFieldValue("issue_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormDate
-                    disabled={type === "view"}
-                    label="Ngày hết hạn"
-                    minDate={values.issue_date ? dayjs(values.issue_date).add(1, "day") : undefined}
-                    value={values.expiry_date ? dayjs(values.expiry_date) : null}
-                    onChange={(date) => setFieldValue("expiry_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                  <FormCkEditor
-                    id="description"
-                    direction="vertical"
-                    value={String(values?.description)}
-                    setFieldValue={setFieldValue}
-                    disabled={type === EButtonTypes.VIEW}
-                  />
-                </Col>
-              </Row>
-
-              {/* <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormSwitch
-                  label="Trạng thái"
-                  checked={values.is_active === "1"}
-                  onChange={(value) => {
-                    setFieldValue("is_active", value ? "1" : "0");
-                  }}
-                />
-              </Col>
-            </Row> */}
-            </Form>
-          );
-        }}
-      </Formik>
+      />
     </Dialog>
   );
 };
