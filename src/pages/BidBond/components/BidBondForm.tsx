@@ -17,11 +17,12 @@ interface IBidBondFormProps {
   optionType: IOption[];
   projectOptions: IOption[];
   enterpriseOptions: IOption[];
+  formik?: FormikProps<IBidBond>;
 }
 
 const stringRegex = /^[\p{L}0-9\s._`-]*$/u;
 
-const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions }: IBidBondFormProps) => {
+const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik }: IBidBondFormProps) => {
   const Schema = object().shape({
     project_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn tên dự án"),
     enterprise_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn người hoặc tổ chức bảo lãnh"),
@@ -32,7 +33,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
   });
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={Schema}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={Schema} innerRef={formik}>
       {({ values, handleBlur, errors, touched, setFieldValue }: FormikProps<IBidBond>) => (
         <Form className="mt-3">
           <Row gutter={[16, 16]}>
@@ -62,7 +63,6 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                 onChange={(value) => setFieldValue("enterprise_id", value)}
               />
             </Col>
-
             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
               <FormSelect
                 isDisabled={type === "view"}
@@ -77,6 +77,49 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
             </Col>
 
             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <FormInput
+                type="text"
+                isDisabled={type === "view"}
+                label="Số tiền bảo lãnh"
+                value={values.bond_amount}
+                error={touched.bond_amount ? errors.bond_amount : ""}
+                name="bond_amount"
+                placeholder="Nhập số tiền bảo lãnh..."
+                onChange={(value) => setFieldValue("bond_amount", value)}
+                onBlur={handleBlur}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <FormInput
+                type="text"
+                isDisabled={type === "view"}
+                label="Số tiền bảo bằng chữ"
+                value={values.bond_amount_in_words}
+                error={touched.bond_amount_in_words ? errors.bond_amount_in_words : ""}
+                name="bond_amount_in_words"
+                placeholder="Nhập số tiền bảo lãnh bằng chữ..."
+                onChange={(value) => setFieldValue("bond_amount_in_words", value)}
+                onBlur={handleBlur}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <FormDate
+                disabled={type === "view"}
+                label="Ngày phát hành"
+                value={values.issue_date ? dayjs(values.issue_date) : null}
+                onChange={(date) => setFieldValue("issue_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <FormDate
+                disabled={type === "view"}
+                label="Ngày hết hạn"
+                minDate={values.issue_date ? dayjs(values.issue_date).add(1, "day") : undefined}
+                value={values.expiry_date ? dayjs(values.expiry_date) : null}
+                onChange={(date) => setFieldValue("expiry_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
               <FormSelect
                 isDisabled={type === "view"}
                 label="Loại bảo lãnh"
@@ -88,7 +131,6 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                 onChange={(value) => setFieldValue("bond_type", value)}
               />
             </Col>
-
             <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
               <FormCkEditor
                 id="description"

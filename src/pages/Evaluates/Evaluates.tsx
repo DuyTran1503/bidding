@@ -122,7 +122,7 @@ const Evaluates = () => {
           },
           {
             icon: <FaPlus className="text-[18px]" />,
-            // permission: EPermissions.CREATE_EVALUATE,
+            permission: EPermissions.CREATE_EVALUATE,
             text: "Thêm mới",
           },
         ]}
