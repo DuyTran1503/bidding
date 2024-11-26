@@ -33,7 +33,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
   });
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={Schema} innerRef={formik}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={Schema} innerRef={formik as any}>
       {({ values, handleBlur, errors, touched, setFieldValue }: FormikProps<IBidBond>) => (
         <Form className="mt-3">
           <Row gutter={[16, 16]}>
