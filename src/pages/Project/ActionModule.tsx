@@ -36,63 +36,212 @@ import lodash from "lodash";
 import ChildrenProject from "./ChildrenProject";
 import { clearChildrenState, loadChildrenState, saveChildrenState } from "@/shared/utils/localStorage";
 import ProjectCard from "./ChildrenProject/ProjectCard";
+import { IIndustry } from "@/services/store/industry/industry.model";
+import { ISelectionMethod } from "@/services/store/selectionMethod/selectionMethod.model";
+import { IFundingSource } from "@/services/store/funding_source/funding_source.model";
+import { IStaff } from "@/services/store/account/account.model";
+import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
+import { IProcurement } from "@/services/store/procurement/procurement.model";
 interface IPropProject {
   formikRef?: FormikRefType<INewProject>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW | EPageTypes.APPROVE;
   project?: INewProject;
   isChildren?: boolean;
+  setActiveTabKey?: (key: string) => void;
+  onChildSelect?: (child: INewProject) => void;
+  listIndustry: IIndustry[];
+  listSelectionMethods: ISelectionMethod[];
+  listFundingSources: IFundingSource[];
+  getListStaff: IStaff[];
+  listEnterprise: IEnterprise[];
+  listProcurement: IProcurement[];
+  item?: INewProject;
+  parent_id?: number;
 }
 type FileObject = {
   path: string;
   [key: string]: any; // Chấp nhận các thuộc tính khác
 };
-const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) => {
+const ActionModule = ({
+  formikRef,
+  type,
+  project,
+  item,
+  isChildren,
+  setActiveTabKey,
+  onChildSelect,
+  listIndustry,
+  listSelectionMethods,
+  listFundingSources,
+  getListStaff,
+  listEnterprise,
+  listProcurement,
+  parent_id,
+}: IPropProject) => {
   const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
-  const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
-  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
-  const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
-  const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
-  const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
 
-  const [children, setChildren] = useState(() => {
-    if (project?.children && project.children.length > 0) {
-      return project.children;
-    }
-
-    const loadedChildren = loadChildrenState();
-    return loadedChildren || [];
-  });
+  const [children, setChildren] = useState<INewProject[]>([]);
   const initialValues: INewProject = useMemo(
     () => ({
-      id: isChildren ? 0 : project?.id ?? 0,
-      parent_id: isChildren ? null : project?.parent_id ?? null,
+      id: isChildren && type === EPageTypes.CREATE ? 0 : item && isChildren && type === EPageTypes.UPDATE ? item.id : project?.id ?? 0,
+
+      parent_id:
+        isChildren && type === EPageTypes.CREATE
+          ? null
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.parent_id
+            : project?.parent_id ?? null,
+
       children: children ?? [],
-      name: isChildren ? "" : project?.name ?? "",
-      selection_method_id: isChildren ? undefined : project?.selection_method ?? undefined,
-      location: isChildren ? "" : project?.location ?? "",
-      tenderer_id: isChildren ? null : +project?.tenderer! || null,
-      investor_id: isChildren ? null : +project?.investor! || null,
-      funding_source_id: isChildren ? undefined : project?.funding_source ?? undefined,
-      staff_id: isChildren ? undefined : project?.staff ?? undefined,
-      industry_id: isChildren ? [] : project?.industries ?? [],
-      is_domestic: isChildren ? DOMESTIC.INSIDE : project?.is_domestic ?? DOMESTIC.INSIDE,
-      amount: isChildren ? undefined : project?.amount ?? undefined,
-      total_amount: isChildren ? undefined : project?.total_amount ?? undefined,
-      receiving_place: isChildren ? "" : project?.receiving_place ?? "",
-      bid_submission_start: isChildren ? "" : project?.bid_submission_start ?? "",
-      bid_submission_end: isChildren ? "" : project?.bid_submission_end ?? "",
-      bid_opening_date: isChildren ? "" : project?.bid_opening_date ?? "",
-      start_time: isChildren ? "" : project?.start_time ?? "",
-      end_time: isChildren ? "" : project?.end_time ?? "",
-      approve_at: isChildren ? "" : project?.approve_at ?? "",
-      decision_number_approve: isChildren ? "" : project?.decision_number_approve ?? "",
-      description: isChildren ? "" : project?.description ?? "",
+
+      name: isChildren && type === EPageTypes.CREATE ? "" : item && isChildren && type === EPageTypes.UPDATE ? item.name : project?.name ?? "",
+
+      selection_method_id:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.selection_method_id
+            : project?.selection_method ?? undefined,
+
+      location:
+        isChildren && type === EPageTypes.CREATE ? "" : item && isChildren && type === EPageTypes.UPDATE ? item.location : project?.location ?? "",
+
+      tenderer_id:
+        isChildren && type === EPageTypes.CREATE
+          ? null
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? +item.tenderer_id! || null
+            : +project?.tenderer! || null,
+
+      investor_id:
+        isChildren && type === EPageTypes.CREATE
+          ? null
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? +item.investor_id! || null
+            : +project?.investor! || null,
+
+      funding_source_id:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.funding_source_id
+            : project?.funding_source ?? undefined,
+
+      staff_id:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.staff_id
+            : project?.staff ?? undefined,
+
+      industry_id:
+        isChildren && type === EPageTypes.CREATE
+          ? []
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.industry_id
+            : project?.industries ?? [],
+
+      is_domestic:
+        isChildren && type === EPageTypes.CREATE
+          ? DOMESTIC.INSIDE
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.is_domestic
+            : project?.is_domestic ?? DOMESTIC.INSIDE,
+
+      amount:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.amount
+            : project?.amount ?? undefined,
+
+      total_amount:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.total_amount
+            : project?.total_amount ?? undefined,
+
+      receiving_place:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.receiving_place
+            : project?.receiving_place ?? "",
+
+      bid_submission_start:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.bid_submission_start
+            : project?.bid_submission_start ?? "",
+
+      bid_submission_end:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.bid_submission_end
+            : project?.bid_submission_end ?? "",
+
+      bid_opening_date:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.bid_opening_date
+            : project?.bid_opening_date ?? "",
+
+      start_time:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.start_time
+            : project?.start_time ?? "",
+
+      end_time:
+        isChildren && type === EPageTypes.CREATE ? "" : item && isChildren && type === EPageTypes.UPDATE ? item.end_time : project?.end_time ?? "",
+
+      approve_at:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.approve_at
+            : project?.approve_at ?? "",
+
+      decision_number_approve:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.decision_number_approve
+            : project?.decision_number_approve ?? "",
+
+      description:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.description
+            : project?.description ?? "",
+
       status: project?.status ?? STATUS_PROJECT.AWAITING,
-      procurement_id: isChildren ? [] : project?.procurement_categories ?? [],
+
+      procurement_id:
+        isChildren && type === EPageTypes.CREATE
+          ? []
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.procurement_id
+            : project?.procurement_categories ?? [],
+
       submission_method: project?.submission_method ?? SUBMIT_METHOD.online,
-      files: isChildren ? [] : project?.attachments ?? [],
-      decision_number_issued: isChildren ? "" : project?.decision_number_issued ?? "",
+
+      files:
+        isChildren && type === EPageTypes.CREATE ? [] : item && isChildren && type === EPageTypes.UPDATE ? item.files : project?.attachments ?? [],
+
+      decision_number_issued:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.decision_number_issued
+            : project?.decision_number_issued ?? "",
+
       fileChildren: undefined,
     }),
     [project],
@@ -126,15 +275,6 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
         return num > 0;
       }),
   });
-
-  useEffect(() => {
-    dispatchMethod(getListSelectionMethods());
-    dispatchFundingSource(getListFundingSource());
-    dispatchEnterprise(getListEnterprise());
-    dispatchIndustry(getIndustries());
-    dispatchStaff(getListStaff());
-    dispatchProcurement(getListProcurement());
-  }, []);
   const optionDomestic = domesticEnumArray.map((item) => ({
     value: item,
     label: mappingDOMESTIC[item],
@@ -145,49 +285,45 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
     const newFiles = dataFiles.filter((file) => !projectFiles.some((pFile) => pFile.path === file.path));
     return [...filteredProjectFiles, ...newFiles];
   };
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [selectedChild, setSelectedChild] = useState<INewProject | null>(null);
 
   const handleEditChild = (child: INewProject) => {
-    setSelectedChild(child);
-    setIsEditModalVisible(true);
+    onChildSelect && onChildSelect(child);
+    setActiveTabKey && setActiveTabKey("2");
   };
   const handleSaveChild = (values: INewProject) => {
-    console.log(values);
-
     const data = {
-      ...lodash.omit(values, "id", "children"),
+      ...lodash.omit(values, "children"),
       files: values.fileChildren,
-      parent_id: project?.id,
+      parent_id: item && type === EPageTypes.UPDATE ? parent_id : project?.id,
     };
     // const sanitizedProject = {
     //   ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
     // };
     // const newChild = {
     //   ...sanitizedProject,
-
     //   // parent_id: project?.id || null,
     //   children: [data as Omit<INewProject, "id">],
     // };
-    console.log(data);
-    return dispatchProject(createProject(data as Omit<INewProject, "id">));
-  };
 
+    return dispatchProject(createProject(data as Omit<INewProject, "id">));
+    // return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
+  };
+  useEffect(() => {
+    if (project?.children) {
+      setChildren(project.children);
+    }
+  }, [project?.children]);
   return (
     <Formik
-      // validationSchema={Schema}
+      validationSchema={Schema}
       enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => {
-        console.log(values);
-
         const data = {
           ...lodash.omit(values, "id", "children", "fileChildren"),
         };
         if (isChildren) {
           handleSaveChild(values); // Sử dụng lại `handleSaveChild`
-          setChildren(values);
-
           return;
         }
 
@@ -201,26 +337,20 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
           const updatedFiles =
             initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
           const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ files, ...rest }) => rest)(data);
-          dispatchEnterprise(updateProject({ body: newData, param: String(project.id) }));
+          console.log(updatedFiles);
+          console.log(newData);
+
+          dispatchProject(updateProject({ body: newData, param: String(project.id) }));
         }
       }}
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
+        console.log(errors);
+
         return (
           <Form className="mt-4">
             {children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
-
-            {/* Edit Modal */}
-            <ChildrenProject
-              formikRef={formikRef!}
-              title="Cập nhật gói thầu"
-              visible={isEditModalVisible}
-              setVisible={setIsEditModalVisible}
-              project={selectedChild!}
-              type={EPageTypes.UPDATE}
-              onSave={() => {}}
-            />
             <Row gutter={[16, 0]}>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tên Dự Án">
@@ -244,7 +374,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
                     value={values.selection_method_id as string}
                     error={touched.selection_method_id ? errors.selection_method_id : ""}
                     onChange={(e) => setFieldValue("selection_method_id", e)}
-                    options={convertDataOptions((stateMethod?.listSelectionMethods as any) || [])}
+                    options={convertDataOptions((listSelectionMethods as any) || [])}
                   />
                 </FormGroup>
               </Col>
@@ -282,7 +412,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
                     id="tenderer_id"
                     value={values.tenderer_id!}
                     onChange={(e) => setFieldValue("tenderer_id", e)}
-                    options={convertDataOptions(stateEnterprise.listEnterprise || [])}
+                    options={convertDataOptions(listEnterprise || [])}
                   />
                 </FormGroup>
               </Col>
@@ -294,7 +424,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
                     placeholder="Nhập chủ đầu tư..."
                     id="investor_id"
                     value={values.investor_id!}
-                    options={convertDataOptions(stateEnterprise.listEnterprise || [])}
+                    options={convertDataOptions(listEnterprise || [])}
                     onChange={(e) => setFieldValue("investor_id", e)}
                   />
                 </FormGroup>
@@ -308,7 +438,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
                     value={values.funding_source_id as string}
                     error={touched.funding_source_id ? errors.funding_source_id : ""}
                     onChange={(e) => setFieldValue("funding_source_id", e)}
-                    options={convertDataOptions(stateFundingSource.listFundingSources || [])}
+                    options={convertDataOptions(listFundingSources || [])}
                   />
                 </FormGroup>
               </Col>
@@ -321,7 +451,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
                     id="staff_id"
                     value={values.staff_id as string}
                     error={touched.staff_id ? errors.staff_id : ""}
-                    options={convertDataOptions(stateStaff?.getListStaff)}
+                    options={convertDataOptions(getListStaff!)}
                     onChange={(e) => setFieldValue("staff_id", e)}
                   />
                 </FormGroup>
@@ -335,7 +465,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
                     id="procurement_id"
                     value={values.procurement_id}
                     onChange={(e) => setFieldValue("procurement_id", e)}
-                    options={convertDataOptions(stateProcurement?.listProcurement || [])}
+                    options={convertDataOptions(listProcurement || [])}
                   />
                 </FormGroup>
               </Col>
@@ -348,7 +478,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
                     id="industry_id"
                     value={values.industry_id}
                     onChange={(e) => setFieldValue("industry_id", e)}
-                    options={convertDataOptions(stateIndustry?.listIndustry || [])}
+                    options={convertDataOptions(listIndustry || [])}
                   />
                 </FormGroup>
               </Col>
@@ -484,7 +614,7 @@ const ActionModule = ({ formikRef, type, project, isChildren }: IPropProject) =>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Trạng thái dự án">
                   <FormSelect
-                    isDisabled={type === EPageTypes.VIEW}
+                    isDisabled
                     options={STATUS_PROJECT_ARRAY}
                     id="status"
                     value={values.status && STATUS_PROJECT_ARRAY.find((item) => +item.value === +values.status)?.label}

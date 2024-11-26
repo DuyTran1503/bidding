@@ -70,16 +70,16 @@ const WorkProgresses = () => {
       title: "Chi phí",
       className: "w-[200px]",
     },
-    {
-      dataIndex: "start_date",
-      title: "Ngày bắt đầu",
-      className: "w-[200px]",
-    },
-    {
-      dataIndex: "end_date",
-      title: "Ngày kết thúc",
-      className: "w-[200px]",
-    },
+    // {
+    //   dataIndex: "start_date",
+    //   title: "Ngày bắt đầu",
+    //   className: "w-[200px]",
+    // },
+    // {
+    //   dataIndex: "end_date",
+    //   title: "Ngày kết thúc",
+    //   className: "w-[200px]",
+    // },
   ];
   const buttons: IGridButton[] = [
     {

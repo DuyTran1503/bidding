@@ -57,6 +57,9 @@ export const getFileExtension = (url: string): ETYPEFILE => {
   return ETYPEFILE.unknown;
 };
 export const transformPayloadErrors = (arr: PayloadErrors): string => {
+  if (typeof arr === "string") {
+    return arr; // Trả về chuỗi nếu arr là một chuỗi
+  }
   for (const key in arr) {
     if (arr.hasOwnProperty(key) && arr[key].length > 0) {
       return arr[key][0]; // Trả về giá trị đầu tiên từ mảng của key đầu tiên

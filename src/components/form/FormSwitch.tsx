@@ -16,8 +16,8 @@ const FormSwitch = ({ checkedText, uncheckedText, isDisabled, label, onChange, c
       theme={{
         components: {
           Switch: {
-            colorPrimary: "#883DCF",
-            colorPrimaryHover: "#883DCF",
+            colorPrimary: "#0891b2",
+            colorPrimaryHover: "#0891b2",
           },
         },
       }}

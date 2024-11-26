@@ -21,7 +21,7 @@ import {
   IoTimerOutline,
   IoBookmarkOutline,
   IoFileTrayFullOutline,
-  IoBriefcaseOutline
+  IoBriefcaseOutline,
 } from "react-icons/io5";
 
 // Images
@@ -165,8 +165,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "industry",
           permissions: EPermissions.LIST_INDUSTRY,
         },
-
-      ]
+      ],
     },
     {
       id: "5",
@@ -204,9 +203,9 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "7.2",
-          label: "Đánh giá",
+          label: "Đánh giá kết quả dự án",
           path: "evaluates",
-          permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
+          permissions: EPermissions.LIST_EVALUATE,
         },
       ],
     },
@@ -318,7 +317,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     <>
       {/* Button to toggle sidebar on small screens */}
       <button
-        className="fixed top-7 left-6 z-50 block md:hidden bg-blue-200 hover:bg-blue-500 text-white p-2 rounded"
+        className="fixed left-6 top-7 z-50 block rounded bg-blue-200 p-2 text-white hover:bg-blue-500 md:hidden"
         onClick={() => setSidebarVisible(!isSidebarVisible)}
       >
         {isSidebarVisible ? <IoClose size={24} /> : <IoMenu size={24} />}
@@ -326,8 +325,10 @@ const Sidebar = ({ children }: PropsWithChildren) => {
 
       <div className="flex h-dvh select-none bg-gray-25">
         {/* Sidebar */}
-        <div className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 
-        ${isSidebarVisible ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div
+          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 
+            ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"}`}
+        >
           {/* Logo */}
           <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4" onClick={() => navigate("/dashboard")}>
             <img src={logo} alt="" className="w-20" />
@@ -370,9 +371,8 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         </div>
 
         {/* Main content */}
-        <main className="ml-0 md:ml-[264px] flex grow flex-col gap-6 overflow-y-scroll p-6">
-          {children}
-        </main></div>
+        <main className="ml-0 flex grow flex-col gap-6 overflow-y-scroll p-6 md:ml-[264px]">{children}</main>
+      </div>
     </>
   );
 };

@@ -20,7 +20,7 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
-import ActionModule from "./ActionModule";
+import ActionModuleBidBod from "./ActionModule";
 
 const BidBonds = () => {
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
@@ -192,7 +192,7 @@ const BidBonds = () => {
     <>
       <Heading
         title="Bão lãnh dự thầu"
-        ModalContent={(props) => <ActionModule {...(props as any)} />}
+        ModalContent={(props) => <ActionModuleBidBod {...(props as any)} />}
         hasBreadcrumb
         buttons={[
           {
@@ -220,7 +220,7 @@ const BidBonds = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => <ActionModule {...(props as any)} />}
+        ModalContent={(props) => <ActionModuleBidBod {...(props as any)} />}
       />
     </>
   );

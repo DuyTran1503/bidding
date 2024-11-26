@@ -30,7 +30,7 @@ interface IBidDocumentFormProps {
 export interface IBidDocumentInitialValues {
   id?: number | string;
   project_id?: string;
-  enterprise_id: number | string;
+  enterprise_id?: number | string;
   bid_bond_id: number | string;
   submission_date?: string;
   bid_price: string;
@@ -52,7 +52,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
   const initialValues: IBidDocumentInitialValues = {
     id: bidDocument?.id ?? "",
     project_id: bidDocument?.project_id ?? undefined,
-    enterprise_id: bidDocument?.enterprise_id ?? "",
+    enterprise_id: bidDocument?.enterprise_id ?? undefined,
     bid_bond_id: bidDocument?.bid_bond_id ?? "",
     submission_date: bidDocument?.submission_date ?? "",
     bid_price: bidDocument?.bid_price ?? "",
@@ -96,7 +96,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
                 <FormGroup title="Dự án">
                   <FormSelect
                     isDisabled={type === "view"}
-                    label="Tên dự án"
                     value={values.project_id}
                     id="project_id"
                     placeholder="Nhập tên dự án..."
@@ -110,7 +109,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
                   <FormSelect
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}
                     isDisabled={type === "view"}
-                    label="Doanh nghiệp"
                     placeholder="Doanh nghiệp..."
                     value={values.enterprise_id as string}
                     id="enterprise_id"
@@ -124,7 +122,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Bảo lãnh đấu thầu">
                   <FormInput
-                    label="Bảo lãnh đấu thầu"
                     placeholder="Nhập bảo lãnh đấu thầu..."
                     name="bid_bond_id"
                     value={values.bid_bond_id}
@@ -138,7 +135,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
                 <FormGroup title="Ngày nộp">
                   <FormDate
                     disabled={type === "view"}
-                    label="Ngày nộp"
                     value={values.submission_date ? dayjs(values.submission_date) : null}
                     onChange={(date) => setFieldValue("submission_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -150,7 +146,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Giá trị đề nghị">
                   <FormInput
-                    label="Giá trị đề nghị"
                     placeholder="Nhập giá trị đề nghị..."
                     name="bid_price"
                     value={values.bid_price}
@@ -164,7 +159,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
                 <FormGroup title="Thời gian thực hiện">
                   <FormDate
                     disabled={type === "view"}
-                    label="Thời gian thực hiện"
                     value={values.implementation_time ? dayjs(values.implementation_time) : null}
                     onChange={(date) => setFieldValue("implementation_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -177,7 +171,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
                 <FormGroup title="Thời hạn hiệu lực">
                   <FormDate
                     disabled={type === "view"}
-                    label="Thời hạn hiệu lực"
                     value={values.validity_period ? dayjs(values.validity_period) : null}
                     onChange={(date) => setFieldValue("validity_period", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -186,7 +179,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Điểm kỹ thuật">
                   <FormInput
-                    label="Điểm kỹ thuật"
                     placeholder="Nhập điểm kỹ thuật..."
                     name="technical_score"
                     value={values.technical_score}
@@ -202,7 +194,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Điểm tài chính">
                   <FormInput
-                    label="Điểm tài chính"
                     placeholder="Nhập điểm tài chính..."
                     name="financial_score"
                     value={values.financial_score}
@@ -215,7 +206,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tổng điểm">
                   <FormInput
-                    label="Tổng điểm"
                     placeholder="Nhập tổng điểm..."
                     name="totalScore"
                     value={values.totalScore}
@@ -231,7 +221,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Xếp hạng">
                   <FormInput
-                    label="Xếp hạng"
                     placeholder="Nhập xếp hạng..."
                     name="ranking"
                     value={values.ranking}

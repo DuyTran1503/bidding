@@ -22,9 +22,9 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ label, onChange, defa
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#883DCF",
-          colorPrimaryHover: "#883DCF",
-          colorPrimaryActive: "#883DCF",
+          colorPrimary: "#0891b2",
+          colorPrimaryHover: "#0891b2",
+          colorPrimaryActive: "#0891b2",
         },
       }}
     >
