@@ -21,7 +21,7 @@ const FilterTableStatus: React.FC<IFilterTableStatusProps> = ({ options }) => {
           <div
             key={index}
             className={`text-m-medium h-full px-3 py-[6px] ${
-              selectedOption.value === option.value ? "rounded-md bg-primary-50 font-semibold text-primary-500" : "text-gray-500"
+              selectedOption.value === option.value ? "rounded-md bg-cyan-50 font-semibold text-cyan-600" : "text-gray-500"
             } outline-none`}
             onClick={() => setSelectedOption(option)}
           >
