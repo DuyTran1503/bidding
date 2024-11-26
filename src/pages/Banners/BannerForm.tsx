@@ -40,14 +40,19 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
     path: item?.path ?? undefined,
     is_active: item?.is_active ? "1" : "0",
   };
-  const handleSubmit = (data: IBanner) => {
+  const handleSubmit = (data: IBanner, {setErrors}: any) => {
     const body = {
       ...lodash.omit(data, "key", "index"),
     };
     if (type === EButtonTypes.CREATE) {
-      dispatch(createBanner(body as Omit<IBanner, "id">));
-    } else if (type === EButtonTypes.UPDATE && item?.id) {
-      const newData = item.path === body.path ? (({ ...rest }) => rest)(body) : body;
+      dispatch(createBanner(body as Omit<IBanner, "id">))
+      .unwrap()
+      .catch((error) => {
+        const apiErrors = error?.errors || {};
+        setErrors(apiErrors);
+      });
+    } else if (type === EButtonTypes.UPDATE) {
+      const newData = item?.path === body.path ? (({ path,...rest }) => rest)(body) : body;
       dispatch(updateBanner({ body: newData, param: item?.id }));
     }
   };
@@ -82,7 +87,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
       }
     >
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
-        {({ values, handleBlur, setFieldValue }) => (
+        {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
@@ -92,6 +97,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
                   label="Tên Banner"
                   value={values.name}
                   name="name"
+                  error={touched.name ? errors.name : ""}
                   placeholder="Nhập tên Banner..."
                   onChange={(value) => setFieldValue("name", value)}
                   onBlur={handleBlur}

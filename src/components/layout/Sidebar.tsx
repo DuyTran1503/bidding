@@ -330,7 +330,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
             ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"}`}
         >
           {/* Logo */}
-          <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4" onClick={() => navigate("/")}>
+          <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4" onClick={() => navigate("/dashboard")}>
             <img src={logo} alt="" className="w-20" />
             <div className="display-m-semibold">Septenary Solution</div>
           </div>
