@@ -39,7 +39,10 @@ export interface IBidBondValues {
   path?: File;
   is_active: string;
 }
-
+export const optionType: IOption[] = bidBondEnumArray.map((e) => ({
+  label: mappingBidBond[e],
+  value: e,
+}));
 const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormProps) => {
   const formikRef = useRef<FormikProps<IBidBond>>(null);
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
@@ -76,10 +79,6 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
     }
   }, [state.status]);
 
-  const optionType: IOption[] = bidBondEnumArray.map((e) => ({
-    label: mappingBidBond[e],
-    value: e,
-  }));
   useEffect(() => {
     if (!!visible) {
       dispatchEnterprise(getListEnterprise());
