@@ -1,6 +1,5 @@
 import GenericChart from "@/components/chart/GenericChart";
 import ConfirmModal from "@/components/common/CommonModal";
-import CommonSwitch from "@/components/common/CommonSwitch";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
@@ -9,76 +8,88 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
-import { projectByIndustry } from "@/services/store/chart/chart.thunk";
-import { IProjectInitialState, resetMessageError, setFilter } from "@/services/store/project/project.slice";
-import { changeStatusProject, deleteProject, getAllProject } from "@/services/store/project/project.thunk";
+import { projectByIndustry, projectsStatusPreMonth } from "@/services/store/chart/chart.thunk";
+import { IProjectInitialState, resetStatus, setFilter } from "@/services/store/project/project.slice";
+import { deleteProject, getAllProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
+import { STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
+import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
+import { message, Select } from "antd";
+import AreaChart from "@/components/chart/AreaChart";
+
+const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 
 const ProjectPage = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IChartInitialState>("chart");
   const navigate = useNavigate();
-  const [confirmItem, setConfirmItem] = useState<ITableData | null>();
   const [isModal, setIsModal] = useState(false);
+  const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
 
   const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",
-      className: "w-[65px]",
+      className: "w-[40px]",
     },
     {
       dataIndex: "name",
       title: "Tên dự án",
-      className: "w-[250px]",
+      className: "w-[150px]",
     },
     {
       dataIndex: "investor",
       title: "Chủ đầu tư",
-      className: "w-[250px]",
+      className: "w-[150px]",
     },
     {
       dataIndex: "total_amount",
       title: "Tổng giá gói thầu",
-      className: "w-[250px]",
-      // render(_, record, index) {
-      //   const organization_type = bidingFieldOptions.find((e) => +e.value === +record?.organization_type)?.label;
-      //   return <Fragment key={index}>{organization_type}</Fragment>;
-      // },
+      className: "w-[150px]",
+      render(_, record) {
+        return convertMoney(record?.total_amount);
+      },
     },
     {
       dataIndex: "upload_time",
       title: "Ngày đăng tải",
-      className: "w-[250px]",
-    },
-
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      className: "w-[65px]",
-      render(_, record, index) {
-        return (
-          <div key={index} className="flex flex-col gap-2">
-            <CommonSwitch onChange={() => handleChangeStatus(record)} checked={+record.status === STATUS_PROJECT.AWAITING} title={""} />
-          </div>
-        );
+      className: "w-[100px]",
+      render(_, record) {
+        return convertTimestamp(record?.upload_time);
       },
     },
+    // {
+    //   title: "Trạng thái",
+    //   dataIndex: "status",
+    //   className: "w-[65px]",
+    //   render(_, record, index) {
+    //     return (
+    //       <div key={index} className="flex flex-col gap-2">
+    //         <CommonSwitch onChange={() => handleChangeStatus(record)} checked={+record.status === STATUS_PROJECT.AWAITING} title={""} />
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
+
+  const names = stateIndustry.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
+  const completedValues = stateIndustry.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
+  const approvedValues = stateIndustry.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
+  const openedBiddingValues = stateIndustry.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
 
   const additionalTabs = [
     {
-      key: "extraTab1",
-      label: "Thông tin thêm",
+      key: "2",
+      label: "Dự án theo ngành",
       content: (
         <GenericChart
           chartType="bar"
@@ -90,16 +101,35 @@ const ProjectPage = () => {
       ),
     },
     {
-      key: "extraTab2",
-      label: "Thống kê chi tiết",
-      content: <div>Nội dung cho tab bổ sung 2</div>,
+      key: "3",
+      label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
+      content: (
+        <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
+          <Select
+            placeholder="Chọn năm..."
+            value={selectedYearProjectStatus}
+            onChange={setSelectedYearProjectStatus}
+            options={yearOptions.map((year) => ({ label: year, value: year }))}
+            style={{ width: 150, marginBottom: 16 }}
+          />
+          <AreaChart
+            categories={names}
+            title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+            series={[
+              { name: "Hoàn thành", data: completedValues },
+              { name: "Phê duyệt", data: approvedValues },
+              { name: "Mở thầu", data: openedBiddingValues },
+            ]}
+          />
+        </div>
+      ),
     },
   ];
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`detail/${record?.key}`);
+        navigate(`/project/detail/${record?.key}`);
       },
       permission: EPermissions.DETAIL_PROJECT,
     },
@@ -107,6 +137,13 @@ const ProjectPage = () => {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/project/update/${record?.key}`);
+      },
+      permission: EPermissions.UPDATE_PROJECT,
+    },
+    {
+      type: EButtonTypes.APPROVE,
+      onClick(record) {
+        navigate(`/project/approve/${record?.key}`);
       },
       permission: EPermissions.UPDATE_PROJECT,
     },
@@ -129,7 +166,13 @@ const ProjectPage = () => {
     {
       id: "name",
       placeholder: "Nhập tên...",
-      label: "Tên doanh nghiệp ",
+      label: "Tên dự án ",
+      type: "text",
+    },
+    {
+      id: "investor",
+      placeholder: "Chọn chủ đầu tư...",
+      label: "Chủ đầu tư ",
       type: "text",
     },
     {
@@ -158,15 +201,12 @@ const ProjectPage = () => {
       : [];
   }, [JSON.stringify(stateProject.projects)]);
 
-  const handleChangeStatus = (item: ITableData) => {
-    setIsModal(true);
-    setConfirmItem(item);
-  };
-  const onConfirmStatus = () => {
-    if (confirmItem && confirmItem.key) {
-      dispatchProject(changeStatusProject(String(confirmItem.key)));
+  useEffect(() => {
+    if (selectedYearProjectStatus) {
+      dispatchIndustry(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
     }
-  };
+    message.loading("Đang tải dữ liệu");
+  }, [selectedYearProjectStatus, dispatchIndustry]);
 
   useEffect(() => {
     dispatchProject(getAllProject({ query: stateProject.filter }));
@@ -185,7 +225,7 @@ const ProjectPage = () => {
   }, []);
   useFetchStatus({
     module: "project",
-    reset: resetMessageError,
+    reset: resetStatus,
     actions: {
       success: { message: stateProject.message },
       error: { message: stateProject.message },
@@ -216,7 +256,7 @@ const ProjectPage = () => {
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
         visible={isModal}
         setVisible={setIsModal}
-        onConfirm={onConfirmStatus}
+        // onConfirm={onConfirmStatus}
       />
       <ManagementGrid
         columns={columns}
@@ -231,7 +271,7 @@ const ProjectPage = () => {
         }}
         setFilter={setFilter}
         filter={stateProject.filter}
-        scroll={{ x: 2200 }}
+        scroll={{ x: 1500 }}
         tabLabel="Danh sách dữ liệu"
         additionalTabs={additionalTabs}
       />

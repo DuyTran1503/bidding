@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useMemo } from "react";
 import * as echarts from "echarts";
+import { Spin } from "antd";
 
 interface GenericChartProps {
   name?: string[]; // Mảng tên hoặc nhãn cho mỗi điểm dữ liệu trên biểu đồ.
@@ -56,11 +57,12 @@ const GenericChart: React.FC<GenericChartProps> = ({
   titleFontSize = 16,
   barWidth,
   grid = 80,
-  valueType = "quantity", // Mặc định là số lượng
+  valueType = "quantity",
 }) => {
   const chartRef = useRef<HTMLDivElement>(null);
-  const computedRotate = name && name.length > 5 ? 45 : 0;
-  const computedBarWidth = name && name.length < 15 ? 45 : 0;
+  const computedRotate = name && name.length > 4 ? 45 : 0;
+  const computedGrid = name && name.length > 4 ? 130 : 80;
+  const computedBarWidth = name && name.length < 10 ? 45 : 0;
 
   // Hàm định dạng số với dấu phẩy và đơn vị, làm tròn theo đơn vị khi hiển thị trên biểu đồ
   const formatNumber = (num: number) => {
@@ -113,78 +115,78 @@ const GenericChart: React.FC<GenericChartProps> = ({
       },
       legend: legendPosition
         ? {
-            [legendPosition]: "0%",
-            itemGap: 10,
-            textStyle: {
-              fontSize: 10, // Thay đổi kích thước của legend tại đây
-            },
-            type: "scroll",
-            orient: "horizontal", // Đặt hướng ngang để legend nằm ở phía dưới
-            left: "center",
-          }
+          [legendPosition]: "0%",
+          itemGap: 10,
+          textStyle: {
+            fontSize: 10, // Thay đổi kích thước của legend tại đây
+          },
+          type: "scroll",
+          orient: "horizontal", // Đặt hướng ngang để legend nằm ở phía dưới
+          left: "center",
+        }
         : undefined,
       xAxis:
         chartType !== "pie"
           ? {
-              type: "category",
-              data: name,
-              axisLabel: {
-                interval: 0,
-                rotate: computedRotate,
-                verticalAlign: "top",
-                overflow: "truncate",
-                formatter: (value: string) => (name && name.length > 4 && value.length > 20 ? value.substring(0, 20) + "..." : value),
-              },
-            }
+            type: "category",
+            data: name,
+            axisLabel: {
+              interval: 0,
+              rotate: computedRotate,
+              verticalAlign: "top",
+              overflow: "truncate",
+              formatter: (value: string) => (name && name.length > 2 && value.length > 10 ? value.substring(0, 15) + "..." : value),
+            },
+          }
           : undefined,
       yAxis:
         chartType !== "pie"
           ? {
-              type: "value",
-              axisLabel: {
-                formatter: (value: number) => formatValue(value),
-              },
-            }
+            type: "value",
+            axisLabel: {
+              formatter: (value: number) => formatValue(value),
+            },
+          }
           : undefined,
       grid: {
-        bottom: grid,
+        bottom: computedGrid,
       },
       series:
         chartType === "area" && Array.isArray(series)
           ? series.map((s, index) => ({
-              name: s.name,
-              type: "line",
-              data: s.data,
-              smooth: true,
-              areaStyle: {},
-              itemStyle: { color: s.color || colors[index % colors.length] },
-            }))
+            name: s.name,
+            type: "line",
+            data: s.data,
+            smooth: true,
+            areaStyle: {},
+            itemStyle: { color: s.color || colors[index % colors.length] },
+          }))
           : [
-              {
-                colors: chartType === "pie" ? colors : undefined,
-                name: seriesName,
-                type: chartType,
-                data: seriesData,
-                barWidth: computedBarWidth,
-                smooth: chartType === "line",
-                label: {
-                  show: true,
-                  fontSize: labelFontSize,
-                  grid: {
-                    bottom: grid,
-                  },
-                  formatter: (params: any) => {
-                    if (chartType === "pie") {
-                      return `${params.name}: ${params.percent}%`;
-                    }
-                    return formatValue(params.value);
-                  },
-                  position: chartType === "pie" ? "outside" : "top",
+            {
+              colors: chartType === "pie" ? colors : undefined,
+              name: seriesName,
+              type: chartType,
+              data: seriesData,
+              barWidth: computedBarWidth,
+              smooth: chartType === "line",
+              label: {
+                show: true,
+                fontSize: labelFontSize,
+                grid: {
+                  bottom: grid,
                 },
-                areaStyle: chartType === "area" ? {} : undefined,
-                animationDuration,
+                formatter: (params: any) => {
+                  if (chartType === "pie") {
+                    return `${params.name}: ${params.percent}%`;
+                  }
+                  return formatValue(params.value);
+                },
+                position: chartType === "pie" ? "outside" : "top",
               },
-            ],
+              areaStyle: chartType === "area" ? {} : undefined,
+              animationDuration,
+            },
+          ],
     };
   }, [
     name,
@@ -215,7 +217,14 @@ const GenericChart: React.FC<GenericChartProps> = ({
     window.addEventListener("resize", handleResize);
   }, [option]);
 
-  return <div className="mt-4 flex h-[60vh] w-full items-center justify-center" ref={chartRef}></div>;
+  // Kiểm tra nếu không có dữ liệu, không hiển thị biểu đồ
+  if (!name || !value || name.length === 0 || value.length === 0) {
+    return <div className="h-[500px] w-full flex justify-center items-center"><Spin tip="Loading..." size="large"/></div>; // Hoặc có thể để trống
+  }
+
+  return <div className="mt-4 flex w-full items-center justify-center">
+    <div ref={chartRef} style={{ height: "500px", width: "100%" }} />
+  </div>
 };
 
 export default GenericChart;

@@ -1,24 +1,25 @@
-import { useArchive } from "@/hooks/useArchive";
+import Button from "@/components/common/Button";
+import Dialog from "@/components/dialog/Dialog";
+import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import { Form, Formik, FormikProps } from "formik";
-import lodash from "lodash";
-import { Col, Row } from "antd";
-import FormSwitch from "@/components/form/FormSwitch";
-import Dialog from "@/components/dialog/Dialog";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { EButtonTypes } from "@/shared/enums/button";
-import Button from "@/components/common/Button";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { useViewport } from "@/hooks/useViewport";
 import FormSelect from "@/components/form/FormSelect";
-import { convertDataOptions } from "../Project/helper";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { getListProject } from "@/services/store/project/project.thunk";
-import FormCkEditor from "@/components/form/FormCkEditor";
+import FormSwitch from "@/components/form/FormSwitch";
+import { useArchive } from "@/hooks/useArchive";
+import { useViewport } from "@/hooks/useViewport";
 import { IEvaluationCriteria } from "@/services/store/evaluation/evaluation.model";
 import { IEvaluationCriteriaInitialState } from "@/services/store/evaluation/evaluation.slice";
 import { createEvaluation, updateEvaluation } from "@/services/store/evaluation/evaluation.thunk";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { Col, Row } from "antd";
+import { Form, Formik, FormikProps } from "formik";
+import lodash from "lodash";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { number, object, string } from "yup";
+import { convertDataOptions } from "../Project/helper";
 
 interface IEvaluationCriteriaFormProps {
   type?: EButtonTypes;
@@ -41,6 +42,15 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
     weight: item?.weight || "",
     description: item?.description || "",
   };
+
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
+  const Schema = object().shape({
+    project_id: string().trim().required("Vui lòng chọn dự án"),
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên tiêu chí đánh giá"),
+    weight: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập trọng số đánh giá"),
+    description: string().trim().required("Vui lòng nhập mô tả"),
+  })
+
   const handleSubmit = (data: IEvaluationCriteria) => {
     const body = {
       ...lodash.omit(data, "key", "index", "id"),
@@ -93,8 +103,8 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
-        {({ values, errors, handleBlur, setFieldValue }) => {
+      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
+        {({ values, handleBlur, setFieldValue }) => {
           return (
             <Form className="mt-3">
               <Row gutter={[24, 24]}>
@@ -123,7 +133,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
                 </Col>
                 <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                   <FormInput
-                    type="text"
+                    type="number"
                     isDisabled={type === "view"}
                     label="Trọng số đánh giá"
                     value={values.weight}

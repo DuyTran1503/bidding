@@ -1,5 +1,3 @@
-import ConfirmModal from "@/components/common/CommonModal";
-import CommonSwitch from "@/components/common/CommonSwitch";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
@@ -54,7 +52,7 @@ const Tasks = () => {
       }))) ||
     [];
 
-  const columns: ColumnsType<ITableData> = [
+  const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",

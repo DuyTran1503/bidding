@@ -14,14 +14,12 @@ import { changeStatusQuestionAnswer, deleteQuestionAnswer, getAllQuestionsAnswer
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
+import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ActionModule from "./ActionModule";
 
 const QuestionsAnswers = () => {
-  const navigate = useNavigate();
   const { state, dispatch } = useArchive<IQuestionsAnswersInitialState>("questions_answers");
   const { state: stateProject } = useArchive<IProjectInitialState>("project");
   const [isModal, setIsModal] = useState(false);
@@ -98,7 +96,7 @@ const QuestionsAnswers = () => {
       render(_, record) {
         return (
           <CommonSwitch
-            onChange={() => handleChangeStatus(record)}
+            onChange={() => handleChangeStatus(record as ITableData)}
             checked={!!+record.is_active}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
@@ -155,13 +153,6 @@ const QuestionsAnswers = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
-  const projectOptions: IOption[] =
-    stateProject?.listProjects && stateProject.listProjects.length > 0
-      ? stateProject.listProjects.map((e) => ({
-          value: e.id,
-          label: e.name,
-        }))
-      : [];
   const search: ISearchTypeTable[] = [];
 
   return (

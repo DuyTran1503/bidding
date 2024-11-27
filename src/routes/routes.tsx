@@ -48,8 +48,6 @@ import DetailEnterprise from "@/pages/Enterprise/Detail";
 import BiddingHistorys from "@/pages/BiddingHistory/BiddingHistory/BiddingHistory";
 import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/CreateBiddingHistory";
 import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
-import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
-import { EPermissions } from "@/shared/enums/permissions";
 import ActivityLogs from "@/pages/ActivityLogs";
 import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/SelectionMethods";
 import ProjectPage from "@/pages/Project";
@@ -72,22 +70,22 @@ import Posts from "@/pages/Posts/Posts/Posts";
 import CreatePost from "@/pages/Posts/CreatePost/CreatePost";
 import UpdatePost from "@/pages/Posts/UpdatePost/UpdatePost";
 import DetailPost from "@/pages/Posts/DetailPost/DetailPost";
-import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult/DetailBiddingResult";
 import Supports from "@/pages/Supports/Supports/Supports";
-import CreateSupport from "@/pages/Supports/CreateSupport/CreateSupport";
-import DetailSupport from "@/pages/Supports/DetailSupport/DetailSupport";
 import BidBonds from "@/pages/BidBond";
 import EvaluationCriteria from "@/pages/EvaluationCriteria";
 import Statistical from "@/pages/Project/Statistical/index";
 import Introductions from "@/pages/Introductions";
 import Instructs from "@/pages/Instructs";
 import StatisticalEnterprise from "@/pages/Enterprise/Statistical";
-import CreateIntroduction from "@/pages/Introductions/Create";
-import CreateInstruct from "@/pages/Instructs/Create";
-import UpdateInstruct from "@/pages/Instructs/Update";
-import DetailInstruct from "@/pages/Instructs/Detail";
-import UpdateIntroduction from "@/pages/Introductions/Update";
-import DetailIntroduction from "@/pages/Introductions/Detail";
+import Evaluates from "@/pages/Evaluates/Evaluates";
+import WorkProgresses from "@/pages/WorkProgresses";
+import CreateWorkProgress from "@/pages/WorkProgresses/Create";
+import UpdateWorkProgress from "@/pages/WorkProgresses/Update";
+import DetailWorkProgress from "@/pages/WorkProgresses/Detail";
+import ClinetLayout from "@/layouts/Client";
+import Home from "@/Client/Home";
+import Introduce from "@/Client/Introduce";
+import NotFound from "@/pages/Errors/NotFound";
 
 export interface IRoute {
   path: string;
@@ -103,7 +101,21 @@ export const routes: IRoute[] = [
     middleware: () => <GlobalMiddleware />,
     pages: [
       {
-        path: "/",
+        path: "",
+        layout: () => <ClinetLayout />,
+        pages: [
+          {
+            path: "/",
+            element: () => <Home />,
+          },
+          {
+            path: "introduce",
+            element: () => <Introduce />,
+          },
+        ],
+      },
+      {
+        path: "",
         middleware: () => <AuthMiddleware />,
         layout: () => <DefaultLayout />,
         pages: [
@@ -198,6 +210,15 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <PostCatalogs />,
+              },
+            ],
+          },
+          {
+            path: "evaluates",
+            pages: [
+              {
+                path: "/",
+                element: () => <Evaluates />,
               },
             ],
           },
@@ -364,10 +385,6 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <BiddingResults />,
               },
-              {
-                path: "/detail/:id",
-                element: () => <DetailBiddingResult />,
-              },
             ],
           },
           {
@@ -407,19 +424,11 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <Supports />,
               },
-              {
-                path: "/create",
-                element: () => <CreateSupport />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailSupport />,
-              },
             ],
           },
           {
-            path: "permissions",
-            middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
+            path: "attachment",
+            // middleware: () => <PermissionMiddleware requiredPermissions={[EPermissions.LIST_PERMISSION]} />,
             pages: [
               {
                 path: "/",
@@ -553,18 +562,18 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <Introductions />,
               },
-              {
-                path: "/create",
-                element: () => <CreateIntroduction />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateIntroduction />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailIntroduction />,
-              },
+              // {
+              //   path: "/create",
+              //   element: () => <CreateEmployee />,
+              // },
+              // {
+              //   path: "/update/:id",
+              //   element: () => <UpdateEmployee />,
+              // },
+              // {
+              //   path: "/detail/:id",
+              //   element: () => <DetailEmployee />,
+              // },
             ],
           },
           {
@@ -574,18 +583,18 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <Instructs />,
               },
-              {
-                path: "/create",
-                element: () => <CreateInstruct />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateInstruct />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailInstruct />,
-              },
+              // {
+              //   path: "/create",
+              //   element: () => <CreateEmployee />,
+              // },
+              // {
+              //   path: "/update/:id",
+              //   element: () => <UpdateEmployee />,
+              // },
+              // {
+              //   path: "/detail/:id",
+              //   element: () => <DetailEmployee />,
+              // },
             ],
           },
           {
@@ -598,11 +607,23 @@ export const routes: IRoute[] = [
             ],
           },
           {
-            path: "work_progresses",
+            path: "work-progresses",
             pages: [
               {
                 path: "/",
-                // element: () => <FeedbackComplaints />,
+                element: () => <WorkProgresses />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateWorkProgress />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateWorkProgress />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailWorkProgress />,
               },
             ],
           },
@@ -620,4 +641,8 @@ export const routes: IRoute[] = [
       },
     ],
   },
+  {
+    path: "*",
+    element: () => <NotFound />,
+  }
 ];

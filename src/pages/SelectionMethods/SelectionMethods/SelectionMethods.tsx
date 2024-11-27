@@ -41,7 +41,7 @@ const SelectionMethods = () => {
     },
   ];
 
-  const columns: ColumnsType<ITableData> = [
+  const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",
@@ -53,6 +53,7 @@ const SelectionMethods = () => {
     },
     {
       dataIndex: "description",
+      title: "Mô tả",
       render(_, record) {
         return <div dangerouslySetInnerHTML={{ __html: record?.description || "" }} className="text-compact-3"></div>;
       },
@@ -63,7 +64,7 @@ const SelectionMethods = () => {
       render(_, record) {
         return (
           <CommonSwitch
-            onChange={() => handleChangeStatus(record)}
+            onChange={() => handleChangeStatus(record as ITableData)}
             checked={!!record.is_active}
             title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ hoạt động" : "khóa hoạt động"} ?`}
           />
@@ -129,7 +130,7 @@ const SelectionMethods = () => {
   return (
     <>
       <Heading
-        title="Hình thức lựa chọn Nhà thầu"
+        title="Hình thức lựa chọn đấu thầu"
         hasBreadcrumb
         ModalContent={(props) => <SelectionMethodForm {...(props as any)} />}
         buttons={[

@@ -2,18 +2,13 @@ import FormDate from "@/components/form/FormDate";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import { useArchive } from "@/hooks/useArchive";
-import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
-import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
-import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
 import { INewProject } from "@/services/store/project/project.model";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { ISelectionMethodInitialState } from "@/services/store/selectionMethod/selectionMethod.slice";
-import { getListSelectionMethods } from "@/services/store/selectionMethod/selectionMethod.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, Row } from "antd";
 import { Form, Formik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { array, date, number, object, string } from "yup";
 import dayjs from "dayjs";
 import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
@@ -21,126 +16,342 @@ import FormSelect from "@/components/form/FormSelect";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import { SUBMIT_METHOD } from "@/shared/enums/submissionMethod";
 import { convertEnum } from "@/shared/utils/common/convertEnum";
-import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
-import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { convertDataOptions } from "./helper";
-import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
-import { createProject } from "@/services/store/project/project.thunk";
-import { IAccountInitialState } from "@/services/store/account/account.slice";
-import { getListStaff } from "@/services/store/account/account.thunk";
-import { IProcurementInitialState } from "@/services/store/procurement/procurement.slice";
-import { getListProcurement } from "@/services/store/procurement/procurement.thunk";
+import { createProject, updateProject } from "@/services/store/project/project.thunk";
 import { DOMESTIC, domesticEnumArray, mappingDOMESTIC } from "@/shared/enums/domestic";
 import lodash from "lodash";
+import ProjectCard from "./ChildrenProject/ProjectCard";
+import { IIndustry } from "@/services/store/industry/industry.model";
+import { ISelectionMethod } from "@/services/store/selectionMethod/selectionMethod.model";
+import { IFundingSource } from "@/services/store/funding_source/funding_source.model";
+import { IStaff } from "@/services/store/account/account.model";
+import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
+import { IProcurement } from "@/services/store/procurement/procurement.model";
 interface IPropProject {
   formikRef?: FormikRefType<INewProject>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW | EPageTypes.APPROVE;
   project?: INewProject;
+  isChildren?: boolean;
+  setActiveTabKey?: (key: string) => void;
+  onChildSelect?: (child: INewProject) => void;
+  listIndustry: IIndustry[];
+  listSelectionMethods: ISelectionMethod[];
+  listFundingSources: IFundingSource[];
+  getListStaff: IStaff[];
+  listEnterprise: IEnterprise[];
+  listProcurement: IProcurement[];
+  item?: INewProject;
+  parent_id?: number;
 }
-
-const ActionModule = ({ formikRef, type, project }: IPropProject) => {
+type FileObject = {
+  path: string;
+  [key: string]: any; // Chấp nhận các thuộc tính khác
+};
+const ActionModule = ({
+  formikRef,
+  type,
+  project,
+  item,
+  isChildren,
+  setActiveTabKey,
+  onChildSelect,
+  listIndustry,
+  listSelectionMethods,
+  listFundingSources,
+  getListStaff,
+  listEnterprise,
+  listProcurement,
+  parent_id,
+}: IPropProject) => {
   const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
-  const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
-  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
-  const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
-  const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
-  const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
-  const initialValues: INewProject = {
-    id: project ? project.id : 0,
-    parent_id: project ? project.parent_id : null,
-    children: project ? project.children : [],
-    name: project ? project.name : "",
-    selection_method_id: project ? project.selection_method_id : undefined,
-    location: project ? project.location : "",
-    tenderer_id: project?.tenderer_id || [],
-    investor_id: project?.investor_id || [],
-    funding_source_id: project?.funding_source_id || undefined,
-    staff_id: project?.staff_id || undefined,
-    industry_id: project?.industry_id || [],
-    is_domestic: project?.is_domestic || DOMESTIC.INSIDE,
-    amount: project?.amount || 0,
-    total_amount: project?.total_amount || 0,
-    receiving_place: project?.receiving_place || "",
-    bid_submission_start: project?.bid_submission_start || "",
-    bid_submission_end: project?.bid_submission_end || "",
-    bid_opening_date: project?.bid_opening_date || "",
-    start_time: project?.start_time || "",
-    end_time: project?.end_time || "",
-    approve_at: project?.approve_at || "",
-    decision_number_approve: project?.decision_number_approve || "",
-    description: project?.description || "",
-    status: project?.status || STATUS_PROJECT.AWAITING,
-    procurement_id: project?.procurement_id || [],
-    submission_method: project?.submission_method || SUBMIT_METHOD.online,
-    files: project?.files || [],
-    decision_number_issued: project?.decision_number_issued || "",
-  };
-  const stringRegex = /^[\p{L}0-9\s._`-]*$/u;
+
+  const [children, setChildren] = useState<INewProject[]>([]);
+  const initialValues: INewProject = useMemo(
+    () => ({
+      id: isChildren && type === EPageTypes.CREATE ? 0 : item && isChildren && type === EPageTypes.UPDATE ? item.id : project?.id ?? 0,
+
+      parent_id:
+        isChildren && type === EPageTypes.CREATE
+          ? null
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.parent_id
+            : project?.parent_id ?? null,
+
+      children: children ?? [],
+
+      name: isChildren && type === EPageTypes.CREATE ? "" : item && isChildren && type === EPageTypes.UPDATE ? item.name : project?.name ?? "",
+
+      selection_method_id:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item?.selection_method?.id
+            : project?.selection_method ?? undefined,
+
+      location:
+        isChildren && type === EPageTypes.CREATE ? "" : item && isChildren && type === EPageTypes.UPDATE ? item.location : project?.location ?? "",
+
+      tenderer_id:
+        isChildren && type === EPageTypes.CREATE
+          ? null
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? +item.tenderer.id! || null
+            : +project?.tenderer! || null,
+
+      investor_id:
+        isChildren && type === EPageTypes.CREATE
+          ? null
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? +item.investor.id! || null
+            : +project?.investor! || null,
+
+      funding_source_id:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.funding_source.id
+            : project?.funding_source ?? undefined,
+
+      staff_id:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.staff.id
+            : project?.staff ?? undefined,
+
+      industry_id:
+        isChildren && type === EPageTypes.CREATE
+          ? []
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.industries?.map((item: any) => item.id)
+            : project?.industries ?? [],
+
+      is_domestic:
+        isChildren && type === EPageTypes.CREATE
+          ? DOMESTIC.INSIDE
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.is_domestic
+            : project?.is_domestic ?? DOMESTIC.INSIDE,
+
+      amount:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.amount
+            : project?.amount ?? undefined,
+
+      total_amount:
+        isChildren && type === EPageTypes.CREATE
+          ? undefined
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.total_amount
+            : project?.total_amount ?? undefined,
+
+      receiving_place:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.receiving_place
+            : project?.receiving_place ?? "",
+
+      bid_submission_start:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.bid_submission_start
+            : project?.bid_submission_start ?? "",
+
+      bid_submission_end:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.bid_submission_end
+            : project?.bid_submission_end ?? "",
+
+      bid_opening_date:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.bid_opening_date
+            : project?.bid_opening_date ?? "",
+
+      start_time:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.start_time
+            : project?.start_time ?? "",
+
+      end_time:
+        isChildren && type === EPageTypes.CREATE ? "" : item && isChildren && type === EPageTypes.UPDATE ? item.end_time : project?.end_time ?? "",
+
+      approve_at:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.approve_at
+            : project?.approve_at ?? "",
+
+      decision_number_approve:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.decision_number_approve
+            : project?.decision_number_approve ?? "",
+
+      description:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.description
+            : project?.description ?? "",
+
+      status: project?.status ?? STATUS_PROJECT.AWAITING,
+
+      procurement_id:
+        isChildren && type === EPageTypes.CREATE
+          ? []
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.procurement_categories?.map((item: any) => item.id)
+            : project?.procurement_categories ?? [],
+
+      submission_method: project?.submission_method ?? SUBMIT_METHOD.online,
+
+      files:
+        isChildren && type === EPageTypes.CREATE
+          ? []
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.attachments
+            : project?.attachments ?? [],
+
+      decision_number_issued:
+        isChildren && type === EPageTypes.CREATE
+          ? ""
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.decision_number_issued
+            : project?.decision_number_issued ?? "",
+
+      fileChildren: undefined,
+    }),
+    [project],
+  );
+
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
+  const numberRegex = /^[0-9]+$/;
   const Schema = object().shape({
     parent_id: number().nullable(),
-    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    bidding_field_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    staff_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    selection_method_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    release_date: date().required("Vui lòng không để trống trường này"),
-    decision_issuance: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    owner_representative: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    tenderer_representative: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    location: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    funding_source_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    tender_package_price: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    submission_deadline: date().required("Vui lòng không để trống trường này"),
-    invest_total: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống trường này"),
-    tender_date: date().required("Vui lòng không để trống trường này"),
-    enterprise_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    technical_requirements: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
+    staff_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống ô này"),
+    industry_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống ô này"),
+    selection_method_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống ô này"),
+    location: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
+    funding_source_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
     attached_documents: array().min(1, "Vui lòng chọn ít nhất một tài liệu đính kèm"),
-    start_bidding: date().required("Vui lòng không để trống trường này"),
-    location_bidding: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
     start_time: date().required("Vui lòng không để trống trường này"),
     end_time: date().required("Vui lòng không để trống trường này"),
     status: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
+    total_amount: string()
+      .matches(numberRegex, "Trường này chỉ cho phép là số")
+      .required("Vui lòng không để trống trường này")
+      .test("is-positive", "Phải lớn hơn 0", (value) => {
+        const num = Number(value);
+        return num > 0;
+      }),
+    amount: string()
+      .matches(numberRegex, "Trường này chỉ cho phép là số")
+      .required("Vui lòng không để trống trường này")
+      .test("is-positive", "Phải lớn hơn 0", (value) => {
+        const num = Number(value);
+        return num > 0;
+      }),
   });
-
-  useEffect(() => {
-    dispatchMethod(getListSelectionMethods());
-    dispatchFundingSource(getListFundingSource());
-    dispatchEnterprise(getListEnterprise());
-    dispatchIndustry(getIndustries());
-    dispatchStaff(getListStaff());
-    dispatchProcurement(getListProcurement());
-  }, []);
   const optionDomestic = domesticEnumArray.map((item) => ({
     value: item,
     label: mappingDOMESTIC[item],
   }));
+  const mergeFiles = (projectFiles: FileObject[], dataFiles: FileObject[]): FileObject[] => {
+    const dataPaths = new Set(dataFiles.map((file) => file.path));
+    const filteredProjectFiles = projectFiles.filter((file) => !dataPaths.has(file.path));
+    const newFiles = dataFiles.filter((file) => !projectFiles.some((pFile) => pFile.path === file.path));
+    return [...filteredProjectFiles, ...newFiles];
+  };
 
+  const handleEditChild = (child: INewProject) => {
+    onChildSelect && onChildSelect(child);
+    setActiveTabKey && setActiveTabKey("2");
+  };
+  const handleSaveChild = (values: INewProject) => {
+    const data = {
+      ...lodash.omit(values, "children"),
+      files: values.fileChildren,
+      parent_id: item && type === EPageTypes.UPDATE ? parent_id : project?.id,
+    };
+    const sanitizedProject = {
+      ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
+      funding_source_id: project?.funding_source || undefined,
+      industry_id: project?.industries || [],
+      procurement_id: project?.procurement_categories || [],
+      investor_id: project?.investor || undefined,
+      tenderer_id: project?.tenderer || undefined,
+    };
+    const updatedFiles = initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
+    const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ files, ...rest }) => rest)(data);
+    const newChild = {
+      ...sanitizedProject,
+      children: [newData],
+    };
+    console.log(newChild);
+
+    if (type === EPageTypes.UPDATE && item) {
+      return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
+    } else {
+      return dispatchProject(createProject(data as Omit<INewProject, "id">));
+    }
+  };
+  useEffect(() => {
+    if (project?.children) {
+      setChildren(project.children);
+    }
+  }, [project?.children]);
   return (
     <Formik
+      validationSchema={Schema}
+      enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => {
         const data = {
-          ...lodash.omit(values, "id", "children"),
+          ...lodash.omit(values, "id", "children", "fileChildren"),
         };
+        if (isChildren) {
+          handleSaveChild(values); // Sử dụng lại `handleSaveChild`
+          return;
+        }
+
         if (type === EPageTypes.CREATE) {
           return dispatchProject(createProject(data as Omit<INewProject, "id">));
         }
         if (type === EPageTypes.APPROVE) {
+          return;
+        }
+        if (type === EPageTypes.UPDATE && project?.id) {
+          const updatedFiles =
+            initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
+          const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ files, ...rest }) => rest)(data);
+          dispatchProject(updateProject({ body: newData, param: String(project.id) }));
         }
       }}
-      enableReinitialize
-      validationSchema={Schema}
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
-          <Form>
-            <Row gutter={[24, 12]}>
+          <Form className="mt-4">
+            {!isChildren && children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
+            <Row gutter={[16, 0]}>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tên Dự Án">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập tên dự án..."
                     name="name"
                     value={values.name}
@@ -153,30 +364,33 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Hình thức lựa chọn nhà thầu">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn phương thức..."
                     id="selection_method_id"
                     value={values.selection_method_id as string}
                     error={touched.selection_method_id ? errors.selection_method_id : ""}
                     onChange={(e) => setFieldValue("selection_method_id", e)}
-                    options={convertDataOptions((stateMethod?.listSelectionMethods as any) || [])}
+                    options={convertDataOptions((listSelectionMethods as any) || [])}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Hình thức tham gia đấu thầu">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn hình thức..."
                     id="submission_method"
                     value={values.submission_method as string}
                     error={touched.submission_method ? errors.submission_method : ""}
                     onChange={(e) => setFieldValue("submission_method", e)}
-                    options={convertEnum(SUBMIT_METHOD)}
+                    options={convertEnum(SUBMIT_METHOD, true)}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Địa Điểm">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập địa điểm..."
                     name="location"
                     value={values.location}
@@ -189,11 +403,12 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Bên Mời Thầu">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập  bên mời thầu..."
                     id="tenderer_id"
-                    value={values.tenderer_id}
+                    value={values.tenderer_id!}
                     onChange={(e) => setFieldValue("tenderer_id", e)}
-                    options={convertDataOptions(stateEnterprise.listEnterprise || [])}
+                    options={convertDataOptions(listEnterprise || [])}
                   />
                 </FormGroup>
               </Col>
@@ -201,10 +416,11 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Chủ đầu tư">
                   <FormSelect
-                    placeholder="Nhập  chủ đầu tư..."
+                    isDisabled={type === EPageTypes.VIEW}
+                    placeholder="Nhập chủ đầu tư..."
                     id="investor_id"
-                    value={values.investor_id}
-                    options={convertDataOptions(stateEnterprise.listEnterprise || [])}
+                    value={values.investor_id!}
+                    options={convertDataOptions(listEnterprise || [])}
                     onChange={(e) => setFieldValue("investor_id", e)}
                   />
                 </FormGroup>
@@ -212,12 +428,13 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Nguồn Vốn">
                   <FormSelect
-                    placeholder="Nhập nguồn vốn..."
+                    isDisabled={type === EPageTypes.VIEW}
+                    placeholder="Chọn nguồn vốn..."
                     id="funding_source_id"
                     value={values.funding_source_id as string}
                     error={touched.funding_source_id ? errors.funding_source_id : ""}
                     onChange={(e) => setFieldValue("funding_source_id", e)}
-                    options={convertDataOptions(stateFundingSource.listFundingSources || [])}
+                    options={convertDataOptions(listFundingSources || [])}
                   />
                 </FormGroup>
               </Col>
@@ -225,45 +442,51 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Người phê duyệt">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn người phê duyệt..."
                     id="staff_id"
                     value={values.staff_id as string}
                     error={touched.staff_id ? errors.staff_id : ""}
-                    options={convertDataOptions(stateStaff?.getListStaff)}
+                    options={convertDataOptions(getListStaff!)}
                     onChange={(e) => setFieldValue("staff_id", e)}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Dịch vụ mua sắm đấu thầu công">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     isMultiple
                     placeholder="Chọn..."
                     id="procurement_id"
                     value={values.procurement_id}
                     onChange={(e) => setFieldValue("procurement_id", e)}
-                    options={convertDataOptions(stateProcurement?.listProcurement || [])}
+                    options={convertDataOptions(listProcurement || [])}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title=" Ngành Nghề">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     isMultiple
-                    placeholder="Nhập ngành nghề..."
+                    placeholder="Chọn ngành nghề..."
                     id="industry_id"
                     value={values.industry_id}
-                    onChange={(e) => setFieldValue("industry_id", e)}
-                    options={convertDataOptions(stateIndustry?.listIndustry || [])}
+                    onChange={(e) => {
+                      setFieldValue("industry_id", e);
+                    }}
+                    options={convertDataOptions(listIndustry || [])}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Số quyết định ban hành">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW || type === EPageTypes.APPROVE}
                     placeholder="Nhập số quyết định ban hành..."
                     name="decision_number_issued"
-                    value={values.decision_number_issued}
+                    value={values.decision_number_issued || ""}
                     error={touched.decision_number_issued ? errors.decision_number_issued : ""}
                     onChange={(e) => setFieldValue("decision_number_issued", e)}
                     onBlur={handleBlur}
@@ -271,8 +494,9 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Quốc Tế">
+                <FormGroup title="Dự án hiện tại">
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập thông tin..."
                     id="is_domestic"
                     value={values.is_domestic as unknown as string}
@@ -285,6 +509,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Số Tiền">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập số tiền..."
                     name="amount"
                     value={values.amount}
@@ -297,6 +522,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tổng đầu tư">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập số tiền..."
                     name="total_amount"
                     value={values.total_amount}
@@ -310,6 +536,7 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Địa Điểm Nhận Hồ Sơ">
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập địa điểm nhận hồ sơ..."
                     name="receiving_place"
                     value={values.receiving_place}
@@ -385,9 +612,9 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Trạng thái dự án">
                   <FormSelect
+                    isDisabled
                     options={STATUS_PROJECT_ARRAY}
                     id="status"
-                    isDisabled
                     value={values.status && STATUS_PROJECT_ARRAY.find((item) => +item.value === +values.status)?.label}
                     error={touched.status ? errors.status : ""}
                     onChange={(e) => setFieldValue("status", e)}
@@ -396,12 +623,24 @@ const ActionModule = ({ formikRef, type, project }: IPropProject) => {
               </Col>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Tài liệu đính kèm">
-                  <FormUploadFile isMultiple value={values.files} onChange={(e) => setFieldValue("files", e)} />
+                  <FormUploadFile
+                    isMultiple
+                    name={"files"} // Sử dụng điều kiện để đổi name
+                    value={values.files} // Điều kiện chọn giá trị
+                    onChange={(e) => {
+                      setFieldValue("files", e); // Cập nhật field tương ứng
+                    }}
+                  />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Mô Tả">
-                  <FormCkEditor id="description" value={values.description ?? ""} onChange={(e) => setFieldValue("description", e)} />
+                  <FormCkEditor
+                    disabled={type === EPageTypes.VIEW}
+                    id="description"
+                    value={values.description ?? ""}
+                    onChange={(e) => setFieldValue("description", e)}
+                  />
                 </FormGroup>
               </Col>
             </Row>

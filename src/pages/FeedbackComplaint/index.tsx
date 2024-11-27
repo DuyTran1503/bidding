@@ -18,11 +18,9 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ActionModule from "./ActionModule";
 
 const FeedbackComplaints = () => {
-  const navigate = useNavigate();
   const { state, dispatch } = useArchive<IFeedbackComplaintInitialState>("feedback_complaint");
   const { state: stateProject } = useArchive<IProjectInitialState>("project");
   const [isModal, setIsModal] = useState(false);
@@ -91,7 +89,7 @@ const FeedbackComplaints = () => {
       render(_, record) {
         return (
           <CommonSwitch
-            onChange={() => handleChangeStatus(record)}
+            onChange={() => handleChangeStatus(record as ITableData)}
             checked={!!+record.is_active}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />

@@ -5,7 +5,15 @@ import { commonStaticReducers } from "@/services/shared";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IInstruct } from "./instruct.mode";
-import { changeStatusInstruct, createInstruct, deleteInstruct, getAllInstructs, getInstructById, getListInstruct, updateInstruct } from "./instruct.thunk";
+import {
+  changeStatusInstruct,
+  createInstruct,
+  deleteInstruct,
+  getAllInstructs,
+  getInstructById,
+  getListInstruct,
+  updateInstruct,
+} from "./instruct.thunk";
 
 export interface IInstructInitialState extends IInitialState {
   instructs: IInstruct[];
@@ -76,7 +84,6 @@ const insTructSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = payload.message;
         // console.log(payload.message);
-        
       });
     builder
       .addCase(updateInstruct.pending, (state) => {
@@ -101,9 +108,7 @@ const insTructSlice = createSlice({
       })
       .addCase(changeStatusInstruct.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message =payload.message;
-        
-        
+        state.message = payload.message;
       });
     // ? Delete tag
     builder

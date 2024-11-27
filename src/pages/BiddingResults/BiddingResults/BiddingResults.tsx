@@ -8,24 +8,25 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IBiddingResultInitialState, resetStatus, setFilter } from "@/services/store/biddingResult/biddingResult.slice";
 import { getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
 // import { EPermissions } from "@/shared/enums/permissions";
 import { GoDownload } from "react-icons/go";
+import DetailBiddingResult from "../DetailBiddingResult/DetailBiddingResult";
 
 const BiddingResults = () => {
-    const navigate = useNavigate();
     const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
 
     const buttons: IGridButton[] = [
         {
             type: EButtonTypes.VIEW,
-            onClick(record) {
-                navigate(`detail/${record?.key}`);
-            },
-            // permission: EPermissions.DETAIL_BIDDING_RESULT,
+        },
+        {
+            type: EButtonTypes.CREATE,
+        },
+        {
+            type: EButtonTypes.UPDATE,
         },
     ];
 
@@ -73,11 +74,13 @@ const BiddingResults = () => {
     const data: ITableData[] = useMemo(
         () =>
             state.biddingResults && state.biddingResults.length > 0
-                ? state.biddingResults.map(({ id, project, enterprise, decision_number, decision_date, is_active }, index) => ({
+                ? state.biddingResults.map(({ id, project, enterprise, bid_document, win_amount, decision_number, decision_date, is_active }, index) => ({
                     index: index + 1,
                     key: id,
                     project,
                     enterprise,
+                    bid_document,
+                    win_amount,
                     decision_number,
                     decision_date,
                     is_active,
@@ -110,6 +113,7 @@ const BiddingResults = () => {
             <Heading
                 title="Kết quả đấu thầu"
                 hasBreadcrumb
+                ModalContent={(props) => <DetailBiddingResult {...(props as any)} />}
                 buttons={[
                     {
                         text: "Export",
@@ -130,6 +134,7 @@ const BiddingResults = () => {
                 }}
                 setFilter={setFilter}
                 filter={state.filter}
+                ModalContent={(props) => <DetailBiddingResult {...(props as any)} />}
             />
         </>
     );

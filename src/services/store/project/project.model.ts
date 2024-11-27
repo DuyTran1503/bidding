@@ -6,8 +6,8 @@ export interface IProject {
   id: number;
   children?: IProject[];
   funding_source_id?: number | string;
-  tenderer?: string;
-  investor?: string;
+  tenderer?: string | any;
+  investor?: string | any;
   staff_id?: number | string;
   industry_id?: number[];
   procurement_id?: number[];
@@ -17,7 +17,7 @@ export interface IProject {
   name: string;
   is_domestic: DOMESTIC;
   location: string;
-  amount: number;
+  amount?: number;
   total_amount?: number;
   description?: string;
   receiving_place: string;
@@ -32,10 +32,25 @@ export interface IProject {
   status: STATUS_PROJECT;
   submission_method?: SUBMIT_METHOD;
   files?: File[];
+  fileChildren?: File[];
   decision_number_issued: string;
   upload_time?: string;
+  industries?: number[] | any;
+  funding_source?: string | any;
+  staff?: string | any;
+  procurement_categories?: number[] | any;
+  selection_method?: string | any;
+  attachments?: File[] | any;
+  investorName?: string;
+  funding_sourceName?: string;
+  staffName?: string;
+  tendererName?: string;
+  arrayIndustry?: string[];
+  procurement_category_name?: string[];
 }
 export interface INewProject extends IProject {
-  tenderer_id: number[];
-  investor_id: number[];
+  tenderer_id: number | null;
+  investor_id: number | null;
+  children?: INewProject[];
+  selection_methodName?: string;
 }

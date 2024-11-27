@@ -11,8 +11,8 @@ import {
   getBannerById, 
   changeStatusBanner 
 } from "./banner.thunk";
-import { transformPayloadErrors } from '@/shared/utils/common/function';
 import { IError } from '@/shared/interface/error';
+import { transformPayloadErrors } from '@/shared/utils/common/function';
 
 export interface IBannerInitialState extends IInitialState {
   banners: IBanner[];
@@ -57,7 +57,7 @@ const bannerSlice = createSlice({
       getBannerById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBanner> | any>) => {
         if (payload.data) {
           state.activeBanner = payload.data;
-          state.message = transformPayloadErrors(payload?.errors);
+          state.message = payload.message;
         }
       }
     );
@@ -76,7 +76,7 @@ const bannerSlice = createSlice({
       })
       .addCase(createBanner.rejected, (state, {payload}: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Update Banner
     builder
@@ -90,7 +90,7 @@ const bannerSlice = createSlice({
       })
       .addCase(updateBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // ? Delete Banner
     builder
@@ -104,7 +104,7 @@ const bannerSlice = createSlice({
       })
       .addCase(deleteBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
       builder
       .addCase(changeStatusBanner.pending, (state) => {
@@ -116,7 +116,7 @@ const bannerSlice = createSlice({
       })
       .addCase(changeStatusBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
   },
 });

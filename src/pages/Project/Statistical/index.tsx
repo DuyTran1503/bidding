@@ -82,12 +82,11 @@ const Statistical: React.FC = () => {
     const updatedProjectIds = Array.from(new Set([projectId, ...treeSelectIdsRef.current]));
 
     if (updatedProjectIds.length > 20) {
-      message.warning("Bạn chỉ có thể so sánh tối đa 5 dự án cùng lúc.");
+      message.warning("Bạn chỉ có thể so sánh tối đa 20 dự án cùng lúc.");
       return;
     }
 
     localStorage.setItem("selectedProjectIds", JSON.stringify(updatedProjectIds));
-    // console.log("hahaa");
     message.loading("Đang so sánh...");
     fetchAllTabData(updatedProjectIds)
       .then(() => {
@@ -106,13 +105,11 @@ const Statistical: React.FC = () => {
       setSelectedIds(projectIds);
 
       if (previousIdRef.current != id) {
-        // console.log("hehe", projectIds);
         message.loading("Đang tải lại dữ liệu so sánh...");
         fetchAllTabData(projectIds);
       }
     } else if (id && previousIdRef.current !== id) {
       const updatedProjectIds = Array.from(new Set([id, ...treeSelectIdsRef.current]));
-      // console.log("huhu");
       message.loading("Đang tải dữ liệu");
       fetchAllTabData(updatedProjectIds);
     }
@@ -145,8 +142,6 @@ const Statistical: React.FC = () => {
         })),
       }));
   }, [stateCompare.comparePieChartTotalAmount]);
-
-  // console.log(stateCompare.detailProjectByIds);
 
   const projectId = stateProject.project?.id;
   const tabItems = useMemo(
@@ -338,6 +333,7 @@ const Statistical: React.FC = () => {
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
+          // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>

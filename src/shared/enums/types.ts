@@ -25,3 +25,14 @@ export const mappingEmployee: { [key in TypeEmployee]: string } = {
   [TypeEmployee.PAUSE]: "Tạm dừng",
   [TypeEmployee.LEAVE]: "Rời công ty",
 };
+
+export type TypeStatust = 0 | "true" | 1 | "false";
+
+export const mappingStatust: { [key in TypeStatust]: string } = {
+  0: "Đang hoạt động",
+  "true": "Đang hoạt động",
+  1: "Tạm dừng",
+  "false": "Tạm dừng",
+};
+
+export const statustEnumArray = Array.from(new Set(Object.values(mappingStatust)));

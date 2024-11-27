@@ -7,10 +7,13 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
+import { deleteFundingSources } from "@/services/store/funding_source/funding_source.thunk";
 import { IInstructInitialState } from "@/services/store/instruct/instruct.slice";
-import { changeStatusInstruct, deleteInstruct, getAllInstructs } from "@/services/store/instruct/instruct.thunk";
+import { getAllInstructs } from "@/services/store/instruct/instruct.thunk";
+import { changeStatusIntroduction } from "@/services/store/introduction/introduction.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { EPermissions } from "@/shared/enums/permissions";
 import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
@@ -29,9 +32,9 @@ const Instructs = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/instructs/detail/${record?.key}`);
+        navigate(`/funding-sources/detail/${record?.key}`);
       },
-      // permission: EPermissions.DETAIL_INSTRUCT,
+      permission: EPermissions.DETAIL_INSTRUCT,
     },
     {
       type: EButtonTypes.UPDATE,

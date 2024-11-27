@@ -75,7 +75,7 @@ const Introductions = () => {
       render(_, record) {
         return (
           <CommonSwitch
-            onChange={() => handleChangeStatus(record)}
+            onChange={() => handleChangeStatus(record as ITableData)}
             checked={!!record.is_use}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />

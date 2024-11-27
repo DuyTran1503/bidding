@@ -40,6 +40,7 @@ export interface IGridProps<T extends ISearchParams> {
   ModalContent?: (props: IModalProps<T>) => ReactNode;
   tabLabel?: string;
   additionalTabs?: IAdditionalTab[];
+  isManyAction?: boolean;
 }
 
 const ManagementGrid = <T extends ISearchParams>({
@@ -55,6 +56,7 @@ const ManagementGrid = <T extends ISearchParams>({
   ModalContent,
   tabLabel,
   additionalTabs = [],
+  isManyAction,
 }: IGridProps<T>) => {
   const [modalUpdate, setModalUpdate] = useState(false);
   const [isDetail, setIsDetail] = useState(false);
@@ -82,7 +84,14 @@ const ManagementGrid = <T extends ISearchParams>({
             fixed: "right",
             align: "center",
             render(_, record) {
-              return <GridButtons buttons={buttons} record={record as any} onClick={(record, type) => handleButtonClick(record as any, type)} />;
+              return (
+                <GridButtons
+                  buttons={buttons}
+                  record={record as any}
+                  isManyAction={isManyAction}
+                  onClick={(record, type) => handleButtonClick(record as any, type)}
+                />
+              );
             },
           },
         ] as TableColumnsType)

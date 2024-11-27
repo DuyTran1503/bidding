@@ -48,6 +48,7 @@ const Employee = () => {
     {
       dataIndex: "index",
       title: "STT",
+      className: "w-[30px]",
     },
     {
       dataIndex: "name",
@@ -60,7 +61,7 @@ const Employee = () => {
       render(_, record) {
         return <CustomerAvatar src={!!record.avatar && record.avatar} alt={"Ảnh đại diện"} />;
       },
-      className: "w-[150px]",
+      className: "!h-auto"
     },
     {
       dataIndex: "email",
@@ -179,7 +180,7 @@ const Employee = () => {
   useEffect(() => {
     dispatch(getAllEmployee({ query: state.filter }));
     dispatchEnterprise(getListEnterprise());
-  }, [JSON.stringify(state.filter), JSON.stringify(state.status)]);
+  }, [JSON.stringify(state.filter)]);
   return (
     <>
       <Heading

@@ -22,18 +22,85 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
+import GenericChart from "@/components/chart/GenericChart";
+import { IChartInitialState } from "@/services/store/chart/chart.slice";
+import {
+  industryHasTheMostEnterprise,
+  projectsStatusPreMonth,
+  topEnterprisesHaveCompletedProjectsByFundingSource,
+  topEnterprisesHaveCompletedProjectsByIndustry
+} from "@/services/store/chart/chart.thunk";
+import { message, Select } from "antd";
+import SelectChart from "@/components/chart/SelectChart";
+import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
+import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
+import AreaChart from "@/components/chart/AreaChart";
 
+const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Enterprise = () => {
+  const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
   const navigate = useNavigate();
   const { state: enterpriseState, dispatch: enterpriseDispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: industryState, dispatch: industryDispatch } = useArchive<IIndustryInitialState>("industry");
+  const { state, dispatch } = useArchive<IChartInitialState>("chart");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+  const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
+  const [selectedIndustry, setSelectedIndustry] = useState<string>();
+  const [selectedFundingSource, setSelectedFundingSource] = useState<string>();
+
   const industry = (value: number[]) => {
     if (industryState?.listIndustry!.length > 0 && value.length) {
       return industryState.listIndustry!.filter((item) => value.includes(+item.id)).map((item) => item.name);
     }
   };
+
+  useEffect(() => {
+    if (stateFundingSource.listFundingSources.length > 0 && !selectedFundingSource) {
+      setSelectedFundingSource(String(stateFundingSource.listFundingSources[0].id));
+    }
+  }, [stateFundingSource, selectedFundingSource]);
+
+  useEffect(() => {
+    if (industryState.listIndustry.length > 0 && !selectedIndustry) {
+      setSelectedIndustry(String(industryState.listIndustry[0].id));
+    }
+  }, [industryState, selectedIndustry]);
+
+  useEffect(() => {
+    if (selectedFundingSource) {
+      dispatch(
+        topEnterprisesHaveCompletedProjectsByFundingSource({
+          body: { id: +selectedFundingSource },
+        }),
+      );
+    }
+  }, [selectedFundingSource, dispatch]);
+
+  useEffect(() => {
+    if (selectedIndustry) {
+      dispatch(
+        topEnterprisesHaveCompletedProjectsByIndustry({
+          body: { id: +selectedIndustry },
+        }),
+      );
+    }
+  }, [selectedIndustry, dispatch]);
+
+  const handleFundingSourceChange = (value: string) => {
+    message.loading("Đang tải dữ liệu");
+    setSelectedFundingSource(value);
+  }
+  const handleIndustryChange = (value: string) => {
+    message.loading("Đang tải dữ liệu");
+    setSelectedIndustry(value);
+  }
+  useEffect(() => {
+    if (selectedYearProjectStatus) {
+      dispatch(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
+    }
+    message.loading("Đang tải dữ liệu");
+  }, [selectedYearProjectStatus, dispatch]);
 
   const typeOptions: IOption[] = typeEnterpriseEnumArray.map((e) => ({
     value: e,
@@ -46,9 +113,9 @@ const Enterprise = () => {
   // Hoặc sử dụng toán tử nullish coalescing
   const industryOptions: IOption[] = industryState?.listIndustry?.length
     ? industryState.listIndustry.map((item) => ({
-        value: item.id,
-        label: item.name,
-      }))
+      value: item.id,
+      label: item.name,
+    }))
     : [];
   const columns: ColumnsType = [
     {
@@ -109,7 +176,7 @@ const Enterprise = () => {
         return (
           <div key={index} className="flex flex-col gap-2">
             <CommonSwitch
-              onChange={() => handleChangeStatus(record)}
+              onChange={() => handleChangeStatus(record as ITableData)}
               checked={+record.is_active === STATUS.ACTIVE}
               title={`Bạn có chắc chắn muốn ${record.is_active === STATUS.ACTIVE ? "bỏ khóa hoạt động" : "khóa hoạt động"} doanh nghiệp này?`}
             />
@@ -148,26 +215,74 @@ const Enterprise = () => {
       permission: EPermissions.DESTROY_ENTERPRISE,
     },
   ];
+  const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
+  const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
+  const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
+  const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
   const additionalTabs = [
     {
-      key: "1",
-      label: "Doanh nghiệp theo ngành nghề",
-      content: <div>Nội dung cho tab bổ sung 2</div>,
-    },
-    {
       key: "2",
-      label: "Biểu đồ trạng thái hoạt động",
-      content: <div>Nội dung cho tab bổ sung 2</div>,
+      label: "Doanh nghiệp theo ngành nghề",
+      content: (
+        <GenericChart
+          name={state.industryHasTheMostEnterprise.map(({ industry }) => industry)}
+          value={state.industryHasTheMostEnterprise.map(({ total_enterprise }) => total_enterprise)}
+          chartType="bar"
+          title="Biểu đồ số lượng dự án phân bổ theo ngành nghề"
+        />
+      ),
     },
     {
       key: "3",
-      label: "Biểu đồ thời gian gia nhập theo năm",
-      content: <div>Nội dung cho tab bổ sung 2</div>,
+      label: "Dự án theo ngành",
+      content: (
+        <SelectChart
+          title="Top 10 doanh nghiệp đã hoàn thành dự án theo ngành"
+          data={state.topEnterprisesHaveCompletedProjectsByIndustry}
+          selectedValue={selectedIndustry}
+          options={industryState.listIndustry.map((ind: any) => ({ label: ind.name, value: String(ind.id) }))}
+          onChange={handleIndustryChange}
+          placeholder="Chọn ngành..."
+        />
+      ),
     },
     {
       key: "4",
-      label: "Biểu đồ doanh nghiệp blacklist",
-      content: <div>Nội dung cho tab bổ sung 2</div>,
+      label: "Dự án theo nguồn tài trợ",
+      content: (
+        <SelectChart
+          title="Top 10 doanh nghiệp đã hoàn thành dự án theo nguồn tài trợ"
+          data={state.topEnterprisesHaveCompletedProjectsByFundingSource}
+          selectedValue={selectedFundingSource}
+          options={stateFundingSource.listFundingSources.map((fs: any) => ({ label: fs.name, value: String(fs.id) }))}
+          onChange={handleFundingSourceChange}
+          placeholder="Chọn nguồn tài trợ..."
+        />
+      ),
+    },
+    {
+      key: "5",
+      label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
+      content: (
+        <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
+          <Select
+            placeholder="Chọn năm..."
+            value={selectedYearProjectStatus}
+            onChange={setSelectedYearProjectStatus}
+            options={yearOptions.map((year) => ({ label: year, value: year }))}
+            style={{ width: 150, marginBottom: 16 }}
+          />
+          <AreaChart
+            categories={names}
+            title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+            series={[
+              { name: "Hoàn thành", data: completedValues },
+              { name: "Phê duyệt", data: approvedValues },
+              { name: "Mở thầu", data: openedBiddingValues },
+            ]}
+          />
+        </div>
+      ),
     },
   ];
   const search: ISearchTypeTable[] = [
@@ -204,21 +319,21 @@ const Enterprise = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(enterpriseState.enterprises)
       ? enterpriseState.enterprises.map(
-          ({ id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at }, index) => ({
-            index: index + 1,
-            key: id,
-            name,
-            representative,
-            enterprises: (industry_id?.length && industry(industry_id)) || [],
-            organization_type,
-            phone,
-            email,
-            address,
-            is_active,
-            is_blacklist,
-            account_ban_at,
-          }),
-        )
+        ({ id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at }, index) => ({
+          index: index + 1,
+          key: id,
+          name,
+          representative,
+          enterprises: (industry_id?.length && industry(industry_id)) || [],
+          organization_type,
+          phone,
+          email,
+          address,
+          is_active,
+          is_blacklist,
+          account_ban_at,
+        }),
+      )
       : [];
   }, [JSON.stringify(enterpriseState.enterprises)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -232,7 +347,9 @@ const Enterprise = () => {
   };
   useEffect(() => {
     enterpriseDispatch(getAllEnterprise({ query: enterpriseState.filter }));
+    dispatchFundingSource(getListFundingSource());
     industryDispatch(getIndustries());
+    dispatch(industryHasTheMostEnterprise({}))
   }, [JSON.stringify(enterpriseState.filter)]);
   useEffect(() => {
     if (enterpriseState.status === EFetchStatus.FULFILLED) {

@@ -6,15 +6,25 @@ interface IProps {
   value?: File | File[] | string;
   onChange: (value: File | File[] | null) => void;
   isMultiple?: boolean;
+  name?: string; // Thêm prop name để phân biệt các instance
 }
+
 const MemoizedFormUploadImage = React.memo(FormUploadImage);
 const MemoizedFormSingleFile = React.memo(FormSingleFile);
 
-const FormUploadFile = ({ value, onChange, isMultiple }: IProps) => {
+const FormUploadFile = ({ value, onChange, isMultiple, name }: IProps) => {
   return isMultiple ? (
-    <MemoizedFormUploadImage onChange={onChange} value={value} />
+    <MemoizedFormUploadImage
+      onChange={onChange}
+      value={value}
+      id={name} // Truyền name như là id
+    />
   ) : (
-    <MemoizedFormSingleFile value={value as File} onChange={onChange} />
+    <MemoizedFormSingleFile
+      value={value as File}
+      onChange={onChange}
+      id={name} // Truyền name như là id
+    />
   );
 };
 

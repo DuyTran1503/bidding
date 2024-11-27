@@ -7,39 +7,55 @@ interface IFormSelect {
   placeholder?: string;
   options: IOption[];
   defaultValue?: number[] | string[] | string | number;
-  value?: string | string[] | number[];
+  value?: string | string[] | number[] | number;
   isMultiple?: boolean;
-  error?: string;
+  error?: string | string[];
   isDisabled?: boolean;
-  onChange?: (value: string | string[]) => void;
+  onChange?: (value: string | string[] | number | number[]) => void;
   id?: string;
+  className?: string;
+  showLabel?: boolean; // Thêm prop showLabel
+  maxTagCount?: number | "responsive";
 }
 
-const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isMultiple, onChange, value, error }: IFormSelect) => {
-  const handleChange = (value: string | string[]) => {
+const FormSelect = ({
+  label,
+  className,
+  isDisabled,
+  placeholder,
+  options,
+  defaultValue,
+  isMultiple,
+  onChange,
+  value,
+  error,
+  showLabel = true, // Mặc định là true nếu không truyền vào
+  maxTagCount,
+}: IFormSelect) => {
+  const handleChange = (value: string | string[] | number | number[]) => {
     if (onChange) {
       onChange(value);
     }
   };
 
   return (
-    <div>
-      <div className="text-m-medium mb-1 w-full text-black-300">{label}</div>
+    <>
+      {showLabel && label && <div className="text-m-medium mb-1 w-full text-black-300">{label}</div>}
       <ConfigProvider
         theme={{
           components: {
             Select: {
               optionSelectedBg: "#f4ecfb",
-              colorPrimary: "#883dcf",
+              colorPrimary: "#0891b2",
             },
           },
         }}
       >
         <Select
           allowClear
-          maxTagCount={"responsive"}
+          maxTagCount={maxTagCount ? maxTagCount : 1}
           disabled={isDisabled}
-          className={clsx("text-m-medium w-full", isDisabled && "opacity-65", {
+          className={clsx(`text-m-medium !h-[35px] w-full ${className}`, isDisabled && "opacity-65", {
             "border-red-500": !!error,
             "select-none !bg-gray-50 !text-black-300": error,
           })}
@@ -54,14 +70,12 @@ const FormSelect = ({ label, isDisabled, placeholder, options, defaultValue, isM
           options={options}
         />
         {!!error && (
-          <div
-            className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white")}
-          >
+          <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[6px] font-normal text-red-500 outline-none focus:bg-white")}>
             {error}
           </div>
         )}
       </ConfigProvider>
-    </div>
+    </>
   );
 };
 

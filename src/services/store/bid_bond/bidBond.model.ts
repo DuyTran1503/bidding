@@ -2,7 +2,7 @@ export interface IBidBond {
   id: string; // Khóa chính, tự động tăng
   project_id?: string;
   enterprise_id?: string;
-  bond_amount: number; // Số tiền bảo lãnh
+  bond_amount?: number; // Số tiền bảo lãnh
   bond_type?: string; // Loại bảo lãnh (ví dụ: bảo lãnh ngân hàng, tiền mặt)
   bond_number: string; // Số bảo lãnh duy nhất
   bond_amount_in_words?: string;
@@ -13,4 +13,5 @@ export interface IBidBond {
   notes?: string; // Ghi chú bổ sung
   status?: string; // Trạng thái hiện tại của bảo lãnh (default 'active')
   description?: string;
+  bid_bond_id?: number | string;
 }

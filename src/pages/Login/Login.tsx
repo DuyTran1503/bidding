@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { object, string } from "yup";
 import { login } from "@/services/store/auth/auth.thunk";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import Logo from "@/components/common/Logo";
 
 interface ILoginFormData {
   email: string;
@@ -49,8 +50,8 @@ const Login = () => {
   return (
     <section className="bg-gray-50">
       <div className="mx-auto flex h-screen flex-col items-center justify-center px-6 py-8 lg:py-0">
-        <a href="#" className="text-gray-900 display-m-semibold mb-6 flex items-center text-2xl">
-          <img className="mr-2 h-8 w-8" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo" />
+        <a href="#" className="text-gray-900 display-m-semibold mb-6 gap-4 flex items-center text-2xl">
+          <Logo />
           Septenary Solution
         </a>
         <div className="w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0">
@@ -95,7 +96,7 @@ const Login = () => {
                     <Button text="Login" isLoading={state.status === EFetchStatus.PENDING} className="mt-3" />
                     <Link
                       to="/forgot-password"
-                      className="cursor-pointer text-end font-normal text-primary-700 transition-colors hover:text-primary-500"
+                      className="cursor-pointer text-end font-normal text-blue-500 transition-colors hover:text-blue-500"
                     >
                       Forgot password?
                     </Link>

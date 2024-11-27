@@ -64,7 +64,7 @@ const FormInput = ({
     <div>
       {label && <label className="text-m-medium mb-1 block text-black-300">{label}</label>}
       <div
-        className={clsx("flex shrink-0 items-center gap-1 overflow-hidden rounded-[8px] border border-gray-100 bg-gray-25", isFocused && "bg-white")}
+        className={clsx("flex shrink-0 items-center gap-1 overflow-hidden rounded-[4px] border border-gray-100 bg-gray-25", isFocused && "bg-white")}
       >
         {Icon && (
           <Icon
@@ -87,7 +87,7 @@ const FormInput = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
           ref={inputRef}
-          className={clsx("placeholder:text-m-medium flex-1 grow bg-gray-25 py-[10px] font-normal text-black-500 outline-none focus:bg-white", {
+          className={clsx("placeholder:text-m-medium flex-1 grow bg-gray-25 py-[6px] font-normal text-black-500 outline-none focus:bg-white", {
             "px-3": !Icon,
             "pl-0": Icon,
             "border-red-500": !!error,

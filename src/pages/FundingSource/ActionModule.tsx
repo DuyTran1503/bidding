@@ -43,11 +43,11 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
     is_active: fundingSource?.is_active ?? "",
   };
 
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const tagSchema = object().shape({
-    name: string().trim().required("Vui lòng không để trống trường này"),
-    type: string().trim().required("Vui lòng không để trống trường này"),
-    code: string().trim().required("Vui lòng không để trống trường này"),
-    description: string().trim().required("Vui lòng không để trống trường này"),
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng tên nguồn tài trợ"),
+    type: string().trim().required("Vui lòng chọn loại nguồn tài trợ"),
+    code: string().trim().required("Vui lòng nhập mã nguồn tài trợ"),
   });
   useEffect(() => {
     return () => {
@@ -73,9 +73,8 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
           <>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tên nguồn tài trợ">
+                <FormGroup title="Tên nguồn tài trợ" required={true}>
                   <FormInput
-                    label="Tên nguồn tài trợ"
                     placeholder="Tên nguồn tài trợ..."
                     name="name"
                     value={values.name}
@@ -86,9 +85,8 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Loại nguồn tài trợ">
+                <FormGroup title="Loại nguồn tài trợ" required>
                   <FormSelect
-                    label="Loại nguồn tài trợ"
                     placeholder="Chọn loại nguồn tài trợ..."
                     isDisabled={type === EPageTypes.VIEW}
                     id="type"
@@ -100,9 +98,8 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Mã nguồn tài trợ">
+                <FormGroup title="Mã nguồn tài trợ" required>
                   <FormInput
-                    label="Mã nguồn tài trợ"
                     placeholder="Mã nguồn tài trợ..."
                     name="code"
                     value={values.code}
@@ -127,7 +124,6 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Mô tả">
                   <FormInputArea
-                    label="Mô tả"
                     placeholder="Nhập mô tả..."
                     name="description"
                     isReadonly={type === EPageTypes.VIEW}

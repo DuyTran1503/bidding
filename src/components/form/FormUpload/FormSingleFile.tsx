@@ -56,15 +56,22 @@ const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
             }
           })()}
           alt={file.name}
-          className="h-[100px] w-[100px] rounded-lg object-cover"
+          className="h-[100px] rounded-lg object-cover"
           onError={(e) => (e.currentTarget.src = imageError)}
         />
       ) : (
-        <img src={imageFile} alt={file.name} className="h-[100px] w-[100px] rounded-lg object-cover" />
+        <img src={imageFile} alt={file.name} className="h-[100px] rounded-lg object-cover" />
       );
     } else if (typeof file === "string") {
-      return <img src={`${import.meta.env.VITE_API_URL}/${file}`} alt={file} className="h-[100px] w-[100px] rounded-lg object-cover" />;
-    } else {
+      // Kiểm tra nếu file là URL đầy đủ (bắt đầu với https://)
+      const imageUrl = file.startsWith("https://") || file.startsWith("http://")
+        ? file
+        : `${import.meta.env.VITE_API_URL}/${file}`;  // Nếu là đường dẫn tương đối, thêm VITE_API_URL
+
+      return <img src={imageUrl} alt={file} className="h-[100px] rounded-lg object-cover" />;
+    }
+
+    else {
       // Handle cases where file is neither a File nor a string
       return null;
     }
@@ -87,7 +94,7 @@ const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
         <div className="mt-4 flex items-center gap-4 sm:flex-col md:justify-center">
           <label
             htmlFor={`file-upload-${id}`}
-            className="text-m-medium inline-block cursor-pointer rounded bg-primary-50 px-[14px] py-[10px] text-primary-500"
+            className="text-m-medium inline-block cursor-pointer rounded bg-primary-50 px-[14px] py-[10px] text-cyan-600"
           >
             Tải file lên
           </label>
