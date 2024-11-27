@@ -53,7 +53,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
-  console.log(project_id);
 
   const initialValues: IBidDocumentInitialValues = {
     id: bidDocument?.id ?? "",

@@ -26,11 +26,19 @@ import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { getListStaff } from "@/services/store/account/account.thunk";
 import { getListProcurement } from "@/services/store/procurement/procurement.thunk";
 import CreateBidDocument from "@/pages/BidDocument/Create";
-import ActionModuleBidBod from "@/pages/BidBond/ActionModule";
+import ActionModuleBidBod, { optionType } from "@/pages/BidBond/ActionModule";
+import BidBondForm from "@/pages/BidBond/components/BidBondForm";
+import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
+import { createBidBond } from "@/services/store/bid_bond/bidBond.thunk";
+import lodash from "lodash";
+import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
+import { EButtonTypes } from "@/shared/enums/button";
+import { convertDataOptions } from "../helper";
 
 const UpdateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
+  const formikBidBondRef = useRef<FormikProps<IBidBond>>(null);
   const { state, dispatch } = useArchive<IProjectInitialState>("project");
   const [data, setData] = useState<INewProject>();
   const { id } = useParams();
@@ -42,6 +50,7 @@ const UpdateProject = () => {
   const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
+  const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -73,6 +82,25 @@ const UpdateProject = () => {
     dispatchStaff(getListStaff());
     dispatchProcurement(getListProcurement());
   }, []);
+
+  const initialValues: IBidBond = {
+    id: "",
+    project_id: undefined,
+    enterprise_id: undefined,
+    bond_amount: undefined,
+    bond_type: undefined,
+    bond_number: "",
+    issue_date: "",
+    expiry_date: "",
+    description: "",
+    bond_amount_in_words: "",
+  };
+  const handleSubmit = (data: IBidBond) => {
+    const body = {
+      ...lodash.omit(data, "id"),
+    };
+    dispatchBidBond(createBidBond({ body: body }));
+  };
   const tabItems = [
     {
       key: "1",
@@ -166,24 +194,28 @@ const UpdateProject = () => {
         </div>
       ),
     },
+
     {
       key: "3",
-      label: "Hồ sơ đấu thầu",
-      disabled: !state.project?.id,
-      children: <CreateBidDocument project_id={state.project?.id} />,
-    },
-    {
-      key: "4",
       label: "Bão lãnh dự thầu",
       disabled: !state.project?.id,
       children: (
-        <ActionModuleBidBod
-          visible={false}
-          setVisible={function (value: SetStateAction<boolean>): void {
-            throw new Error("Function not implemented.");
-          }}
+        <BidBondForm
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          type={EButtonTypes.CREATE}
+          formik={formikBidBondRef as any}
+          optionType={optionType}
+          projectOptions={convertDataOptions(state.listProjects || [])}
+          enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
         />
       ),
+    },
+    {
+      key: "4",
+      label: "Hồ sơ dự thầu",
+      disabled: !state.project?.id,
+      children: <CreateBidDocument project_id={state.project?.id} />,
     },
   ];
   return (
