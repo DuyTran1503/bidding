@@ -13,7 +13,6 @@ import { EPageTypes } from "@/shared/enums/page";
 import { FormikProps } from "formik";
 import { useRef } from "react";
 import IntroductionForm from "../ActionMoudle";
-import { EPermissions } from "@/shared/enums/permissions";
 
 const CreateIntroduction = () => {
   const navigate = useNavigate();
@@ -58,7 +57,7 @@ const CreateIntroduction = () => {
           },
         ]}
       />
-      <IntroductionForm formikRef={formikRef} type={EPageTypes.CREATE} />
+      <IntroductionForm  type={EPageTypes.CREATE} formikRef={formikRef}/>
     </>
   );
 };

@@ -2,7 +2,6 @@ import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus } from "@/services/store/employee/employee.slice";
-import { IInstruct } from "@/services/store/instruct/instruct.mode";
 import { IInstructInitialState } from "@/services/store/instruct/instruct.slice";
 import { getInstructById } from "@/services/store/instruct/instruct.thunk";
 import { EPageTypes } from "@/shared/enums/page";
@@ -10,9 +9,7 @@ import { FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
-import ActionModule, { IInstructInitialValues } from "../ActionModule";
-import IntroductionForm from "@/pages/Introductions/ActionMoudle";
-import InstructForm from "../ActionModule";
+import InstructForm, { IInstructInitialValues } from "../ActionModule";
 
 const DetailInstruct = () => {
   const { id } = useParams();

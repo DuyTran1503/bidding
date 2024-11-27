@@ -7,10 +7,8 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
-import { deleteFundingSources } from "@/services/store/funding_source/funding_source.thunk";
 import { IInstructInitialState } from "@/services/store/instruct/instruct.slice";
-import { getAllInstructs } from "@/services/store/instruct/instruct.thunk";
-import { changeStatusIntroduction } from "@/services/store/introduction/introduction.thunk";
+import { changeStatusInstruct, deleteInstruct, getAllInstructs } from "@/services/store/instruct/instruct.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
@@ -75,7 +73,7 @@ const Instructs = () => {
       render(_, record) {
         return (
           <CommonSwitch
-            onChange={() => handleChangeStatus(record)}
+            onChange={() => handleChangeStatus(record as ITableData)}
             checked={!!record.is_use}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />

@@ -13,7 +13,6 @@ import { IIntroductionInitialState } from "@/services/store/introduction/introdu
 import { changeStatusIntroduction, getAllIntroductions } from "@/services/store/introduction/introduction.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { EPermissions } from "@/shared/enums/permissions";
 import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
@@ -115,19 +114,18 @@ const Introductions = () => {
     },
   ];
 
-  const data: ITableData[] = useMemo(
-    () =>
-      state.introductions && state.introductions.length > 0
-        ? state.introductions.map(({ id, introduction, is_use }, index) => ({
-            index: index + 1,
-            key: id,
-            introduction,
-            is_use,
-          }))
-        : [],
-    [JSON.stringify(state.introductions)],
-  );
-
+  const data: ITableData[] = useMemo(() =>{
+    return Array.isArray(state.introductions)
+    ? state.introductions.map(
+      ({ id, introduction, is_use }, index) => ({
+      index: index + 1,
+      key: id,
+      introduction,
+      is_use,
+    })
+  ) : [];
+  }, [JSON.stringify(state.introductions)]);
+   
   useEffect(() => {
     dispatch(getAllIntroductions({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);

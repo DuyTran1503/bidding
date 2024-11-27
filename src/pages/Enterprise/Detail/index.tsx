@@ -3,11 +3,11 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { IEnterpriseInitialState, resetStatus } from "@/services/store/enterprise/enterprise.slice";
-import { getEnterpriseById } from "@/services/store/enterprise/enterprise.thunk";
-import { Card, Descriptions, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { IoClose, IoImage } from "react-icons/io5";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { getEnterpriseById } from "@/services/store/enterprise/enterprise.thunk";
+import { Card, Descriptions, Typography } from "antd";
 const { Title } = Typography;
 const DetailEnterprise = () => {
   const navigate = useNavigate();

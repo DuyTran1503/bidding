@@ -59,7 +59,7 @@ const UpdateIntroduction = () => {
           },
         ]}
       />
-      {state.introduction && <IntroductionForm type={EPageTypes.UPDATE} formikRef={formikRef} introduction={state.introduction} />}
+      <IntroductionForm formikRef={formikRef} type={EPageTypes.UPDATE} />
     </>
   );
 };

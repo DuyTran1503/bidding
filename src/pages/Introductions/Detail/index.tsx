@@ -2,7 +2,6 @@ import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus } from "@/services/store/employee/employee.slice";
-import { IIntroduction } from "@/services/store/introduction/introduction.moldel";
 import { IIntroductionInitialState } from "@/services/store/introduction/introduction.slice";
 import { getIntroductionById } from "@/services/store/introduction/introduction.thunk";
 import { EPageTypes } from "@/shared/enums/page";
@@ -51,7 +50,7 @@ const DetailIntroduction = () => {
           },
         ]}
       />
-      {state.introduction && <IntroductionForm type={EPageTypes.UPDATE} formikRef={formikRef} introduction={state.introduction} />}
+      <IntroductionForm type={EPageTypes.UPDATE} formikRef={formikRef}  />
     </>
   );
 };

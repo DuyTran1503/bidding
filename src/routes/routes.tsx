@@ -86,6 +86,12 @@ import ClinetLayout from "@/layouts/Client";
 import Home from "@/Client/Home";
 import Introduce from "@/Client/Introduce";
 import NotFound from "@/pages/Errors/NotFound";
+import CreateIntroduction from "@/pages/Introductions/Create";
+import UpdateIntroduction from "@/pages/Introductions/Update";
+import DetailIntroduction from "@/pages/Introductions/Detail";
+import CreateInstruct from "@/pages/Instructs/Create";
+import UpdateInstruct from "@/pages/Instructs/Update";
+import DetailInstruct from "@/pages/Instructs/Detail";
 
 export interface IRoute {
   path: string;
@@ -562,18 +568,18 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <Introductions />,
               },
-              // {
-              //   path: "/create",
-              //   element: () => <CreateEmployee />,
-              // },
-              // {
-              //   path: "/update/:id",
-              //   element: () => <UpdateEmployee />,
-              // },
-              // {
-              //   path: "/detail/:id",
-              //   element: () => <DetailEmployee />,
-              // },
+              {
+                path: "/create",
+                element: () => <CreateIntroduction />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateIntroduction />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailIntroduction />,
+              },
             ],
           },
           {
@@ -583,18 +589,18 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <Instructs />,
               },
-              // {
-              //   path: "/create",
-              //   element: () => <CreateEmployee />,
-              // },
-              // {
-              //   path: "/update/:id",
-              //   element: () => <UpdateEmployee />,
-              // },
-              // {
-              //   path: "/detail/:id",
-              //   element: () => <DetailEmployee />,
-              // },
+              {
+                path: "/create",
+                element: () => <CreateInstruct />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateInstruct />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailInstruct />,
+              },
             ],
           },
           {

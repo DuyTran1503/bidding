@@ -20,9 +20,9 @@ interface IIntroductionFormProps {
 }
 
 export interface IIntroductionInitialValues {
-  id?: string;
+  id?: string ;
   introduction: string;
-  is_use: string ;
+  is_use?: string ;
 }
 
 const IntroductionForm = ({ formikRef, type, introduction }: IIntroductionFormProps) => {

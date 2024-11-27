@@ -20,9 +20,9 @@ interface IInstructFormProps {
 }
 
 export interface IInstructInitialValues {
-  id?: string;
+  id?: string | number;
   instruct: string;
-  is_use: string;
+  is_use?: string;
 }
 
 const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
@@ -35,7 +35,7 @@ const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
   };
 
   const tagSchema = object().shape({
-    instruct: string().trim().required("Vui lòng không để trống trường này"),
+    instruct: string().trim().required("Vui lòng nhập hướng dẫn"),
   });
   useEffect(() => {
     return () => {
