@@ -4,7 +4,7 @@ import NewNews from "./components/NewNews"
 // import Search from "./components/Search"
 
 const Home = () => {
-  return <div className="mx-4">
+  return <div className="max-w-screen-xl mx-auto">
     <Banner />
     {/* <Search /> */}
     <NewNews />

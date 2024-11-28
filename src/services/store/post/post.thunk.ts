@@ -15,6 +15,24 @@ export const getAllPosts = createAsyncThunk("post/get-all-posts", async (payload
   }
 });
 
+export const getPosts = createAsyncThunk("post/get-posts", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IPost[]>(`/api/get-posts`, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const getPostId = createAsyncThunk("post/get-post-id", async (id: number | string, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IPost[]>(`/api/get-post/${id}`);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
 export const getPostById = createAsyncThunk("post/get-post-by-id", async (id: number | string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IPost[]>(`${prefix}/${id}`);

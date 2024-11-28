@@ -41,7 +41,7 @@ const UserSettings = () => {
       label: (
         <div className="flex items-center gap-1 text-red-500">
           <IoLogOutOutline className="text-xl" />
-          Logout
+          Đăng xuất
         </div>
       ),
       onClick() {
@@ -49,11 +49,13 @@ const UserSettings = () => {
           title: (
             <div className="flex items-center gap-2">
               <IoWarning className="text-2xl text-yellow-500" />
-              <span>Log out?</span>
+              <span>Đăng xuất?</span>
             </div>
           ),
           icon: null,
-          content: "Are you sure you want to log out?",
+          content: "Bạn có chắc chắn muốn đăng xuất không không?",
+          okText: "Xác nhận",
+          cancelText: "Hủy",
           onOk() {
             return dispatch(logout());
           },

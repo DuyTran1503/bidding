@@ -18,6 +18,7 @@ import FormModal from "@/components/form/FormModal";
 import { mappingSupport, statusEnumArray } from "@/shared/enums/support";
 import { RadioChangeEvent } from "antd";
 import SupportForm from "../SupportForm";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const Supports = () => {
   const { state, dispatch } = useArchive<ISupportInitialState>("support");
@@ -33,12 +34,14 @@ const Supports = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
+      permission: EPermissions.DETAIL_BANNER,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteSupport(record?.key));
       },
+      permission: EPermissions.DESTROY_BANNER,
     },
   ];
 
@@ -71,7 +74,8 @@ const Supports = () => {
           2: "Kỹ thuật",
           3: "Tự vấn đấu thầu",
           4: "Hỗ trợ tài khoản",
-          5: "Báo lỗi",
+          5: "Đề xuất tính năng/Đóng góp ý tưởng",
+          6: "Báo lỗi",
         };
         return (
           <div className="flex items-center space-x-2">
@@ -182,6 +186,7 @@ const Supports = () => {
           },
           {
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_BANNER,
             text: "Thêm mới",
           },
         ]}

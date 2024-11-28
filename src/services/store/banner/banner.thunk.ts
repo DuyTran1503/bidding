@@ -14,6 +14,23 @@ export const getAllBanners = createAsyncThunk("banner/get-all-banners", async (p
     return rejectWithValue(error.response.data);
   }
 });
+export const getBanners = createAsyncThunk("banner/get-banners", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IBanner[]>(`/api/get-banners`, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const listBanners = createAsyncThunk("banner/list-banners", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IBanner[]>(`/api/list-banners`, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
 
 export const getBannerById = createAsyncThunk("banner/get-banner-by-id", async (id: number | string, { rejectWithValue }) => {
   try {
@@ -23,24 +40,6 @@ export const getBannerById = createAsyncThunk("banner/get-banner-by-id", async (
     return rejectWithValue(error.response.data);
   }
 });
-
-export const getBannerAllIds = createAsyncThunk("banner/get-banner-all-ids", async (payload: IThunkPayload, { rejectWithValue }) => {
-  try {
-    const { response, data } = await client.get<IBanner[]>(`${prefix}/all-ids`, payload);
-    return response.status >= 400 ? rejectWithValue(data) : data;
-  } catch (error: any) {
-    return rejectWithValue(error.response.data);
-  }
-});
-
-// export const createBanner = createAsyncThunk("banner/create-banner", async (payload: IThunkPayload, { rejectWithValue }) => {
-//   try {
-//     const { response, data } = await client.post(prefix, payload);
-//     return response.status >= 400 ? rejectWithValue(data) : data;
-//   } catch (error: any) {
-//     return rejectWithValue(error.response.data);
-//   }
-// });
 
 export const createBanner = createAsyncThunk("banner/create-banner", async (request: Omit<IBanner, "id">, thunkAPI) => {
   try {
@@ -71,12 +70,12 @@ export const createBanner = createAsyncThunk("banner/create-banner", async (requ
 export const updateBanner = createAsyncThunk("banner/update-banner", async (payload: IThunkPayload, thunkAPI) => {
   try {
     const formData = objectToFormData(payload.body as IBanner);
-    formData.append("_method", "PUT");
+    formData.append("_method", "PATCH");
 
     const accessToken = client.tokens.accessToken();
 
     const response = await fetch(import.meta.env.VITE_API_URL + `${prefix}/${payload?.param}`, {
-      method: "POST",
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

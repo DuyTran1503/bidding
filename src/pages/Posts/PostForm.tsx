@@ -53,9 +53,11 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
         status: post?.status || POST.SHOW,
     };
 
-    const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
     const Schema = object().shape({
-        name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
+        short_title: string().trim().required("Vui lòng không để trống ô này"),
+        title: string().trim().required("Vui lòng không để trống ô này"),
+        content: string().trim().required("Vui lòng không để trống ô này"),
+        thumbnail: string().trim().required("Vui lòng không để trống ô này"),
     })
 
     const statusOptions: IOption[] = statusEnumArray.map((key) => ({
@@ -65,10 +67,10 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
 
     return (
         <Formik
-            validationSchema={Schema}
             innerRef={formikRef}
             initialValues={initialValues}
             enableReinitialize={true}
+            validationSchema={Schema}
             onSubmit={(data, { setErrors }) => {
                 const body = {
                     ...lodash.omit(data, "id"),
@@ -170,10 +172,11 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                             </Col>
 
                             <Col xs={24} sm={24} md={24} xl={24}>
-                                <FormGroup title="Hình ảnh">
+                                <FormGroup title="Hình ảnh" required>
                                     <FormUploadFile
                                         isMultiple={false}
                                         value={values.thumbnail}
+                                        error={touched.thumbnail ? errors.thumbnail : ""}
                                         onChange={(e: any) => setFieldValue("thumbnail", e)}
                                     />
                                 </FormGroup>
