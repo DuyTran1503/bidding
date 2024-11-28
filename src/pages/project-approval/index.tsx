@@ -78,19 +78,17 @@ const ProjectApproval = () => {
 
         switch (record.status) {
           case STATUS_PROJECT.AWAITING:
-            statusColor = "#2db7f5"; // Màu cho trạng thái chờ phê duyệt
+            statusColor = "#2db7f5";
             break;
           case STATUS_PROJECT.REJECT:
-            statusColor = "red"; // Màu cho trạng thái bị từ chối
+            statusColor = "red";
             break;
           case STATUS_PROJECT.APPROVED:
-            statusColor = "green"; // Màu cho trạng thái đã phê duyệt
+            statusColor = "green";
             break;
           default:
-            statusColor = "gray"; // Màu mặc định
+            statusColor = "gray";
         }
-
-        // Lấy văn bản từ STATUS_PROJECT_LABELS
         const statusText = STATUS_PROJECT_LABELS[record.status as STATUS_PROJECT] || "Không xác định";
 
         return (

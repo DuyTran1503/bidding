@@ -13,7 +13,7 @@ interface ProjectCardProps {
   isRemove?: boolean;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit, isRemove }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit }) => {
   const handleRemove = (index: number) => {
     confirm({
       title: "Xóa gói thầu",
@@ -22,6 +22,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit, isRemove })
       cancelText: "Hủy",
       okButtonProps: { className: "bg-red-500 hover:bg-red-600" },
       onOk: () => {
+        console.log(index);
       },
     });
   };
@@ -40,7 +41,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit, isRemove })
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="mb-2 text-sm text-gray-500">Gói thầu {index + 1}</div>
-                <h3 className="text-gray-900 text-lg font-medium">{child.name}</h3>
+                <h3 className="text-lg font-medium text-gray-900">{child.name}</h3>
                 <div className="space-y-2">{/* Render các trường khác trong INewProject */}</div>
               </div>
 

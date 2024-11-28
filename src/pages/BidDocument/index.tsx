@@ -15,7 +15,6 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IBidDocumentInitialState, resetStatus, setFilter } from "@/services/store/bid_document/bid_document.slice";
 import { changeStatusBidDocument, deleteBidDocument, getAllBidDocument } from "@/services/store/bid_document/bid_document.thunk";
-import CommonSwitch from "@/components/common/CommonSwitch";
 import { EPermissions } from "@/shared/enums/permissions";
 
 const BidDocument = () => {
@@ -150,10 +149,6 @@ const BidDocument = () => {
     }
     return [];
   }, [JSON.stringify(state.bidDocuments)]);
-  const handleChangeStatus = (item: ITableData) => {
-    setIsModal(true);
-    setConfirmItem(item);
-  };
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
       dispatch(changeStatusBidDocument(String(confirmItem.key)));
