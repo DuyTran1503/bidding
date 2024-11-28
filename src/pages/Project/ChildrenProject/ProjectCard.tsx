@@ -22,7 +22,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit, isRemove })
       cancelText: "Hủy",
       okButtonProps: { className: "bg-red-500 hover:bg-red-600" },
       onOk: () => {
-        console.log(children);
       },
     });
   };
