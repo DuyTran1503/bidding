@@ -301,8 +301,6 @@ const ActionModule = ({
       ...sanitizedProject,
       children: [newData],
     };
-    console.log(newChild);
-
     if (type === EPageTypes.UPDATE && item) {
       return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
     } else {

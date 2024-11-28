@@ -101,8 +101,6 @@ const projectSlice = createSlice({
         state.status = EFetchStatus.PENDING;
       })
       .addCase(createProject.fulfilled, (state, { payload }: PayloadAction<INewProject> | any) => {
-        console.log(payload);
-
         state.status = EFetchStatus.FULFILLED;
         state.dataCreateProject = {
           ...payload.data,

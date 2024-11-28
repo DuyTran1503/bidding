@@ -36,7 +36,6 @@ const ProjectApproval = () => {
             }))
             : [];
     }, [JSON.stringify(state.projectApprovals)]);
-    console.log(data);
 
     const columns: ColumnsType = [
         {
