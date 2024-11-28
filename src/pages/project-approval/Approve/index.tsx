@@ -4,12 +4,11 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { INewProject } from "@/services/store/project/project.model";
 import { IProjectInitialState, resetStatus } from "@/services/store/project/project.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { Form, Formik, FormikProps } from "formik";
-import { useEffect, useRef, useState } from "react";
+import { Form, Formik } from "formik";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
-import { EPageTypes } from "@/shared/enums/page";
 import { approveProject, getProjectById } from "@/services/store/project/project.thunk";
 import Dialog from "@/components/dialog/Dialog";
 import Button from "@/components/common/Button";
@@ -21,8 +20,6 @@ import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProje
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormInput from "@/components/form/FormInput";
 import { mixed, object } from "yup";
-import ActionModule from "@/pages/Project/ActionModule";
-import DetailProject from "@/pages/Project/Detail";
 import ProjectDetailsCard from "@/pages/Project/Detail/ProjectDetailsCard";
 
 interface IApprove {
@@ -34,7 +31,6 @@ interface IApprove {
 
 const ApproveProjectByStaff = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<INewProject>>(null);
   const { state, dispatch } = useArchive<IProjectInitialState>("project");
   const [data, setData] = useState<INewProject>();
   const { id } = useParams();
@@ -58,7 +54,6 @@ const ApproveProjectByStaff = () => {
   const validationSchema = object().shape({
     status: mixed()
       .test("is-status-changed", "Vui lòng chọn trạng thái khác", function (value) {
-        // Only apply this validation when is_approve is true
         if (!is_approve) return true;
 
         const initialStatus = this.parent.initialStatus;
@@ -107,7 +102,7 @@ const ApproveProjectByStaff = () => {
           },
         ]}
       />
-      <ProjectDetailsCard data={data} title={'Thông tin dự án'} />
+      <ProjectDetailsCard data={data} title={"Thông tin dự án"} />
       <Dialog visible={visible} setVisible={setVisible} title=" Phê duyệt dự án" footerContent={null} screenSize={screenSize}>
         <Formik
           initialValues={initialValues}

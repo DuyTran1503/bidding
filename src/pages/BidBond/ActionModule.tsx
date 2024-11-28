@@ -1,9 +1,5 @@
 import Button from "@/components/common/Button";
 import Dialog from "@/components/dialog/Dialog";
-import FormCkEditor from "@/components/form/FormCkEditor";
-import FormDate from "@/components/form/FormDate";
-import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect";
 import { useArchive } from "@/hooks/useArchive";
 import { useViewport } from "@/hooks/useViewport";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
@@ -17,12 +13,9 @@ import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { bidBondEnumArray, mappingBidBond } from "@/shared/enums/types";
 import { IOption } from "@/shared/utils/shared-interfaces";
-import { Col, Row } from "antd";
-import dayjs from "dayjs";
-import { Form, Formik, FormikProps } from "formik";
+import { FormikProps } from "formik";
 import lodash from "lodash";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { number, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
 import BidBondForm from "./components/BidBondForm";
 

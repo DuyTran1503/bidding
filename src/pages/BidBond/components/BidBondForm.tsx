@@ -24,7 +24,7 @@ interface IBidBondFormProps {
 
 const stringRegex = /^[\p{L}0-9\s._`-]*$/u;
 
-const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik, project_id }: IBidBondFormProps) => {
+const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik }: IBidBondFormProps) => {
   const Schema = object().shape({
     project_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn tên dự án"),
     enterprise_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn người hoặc tổ chức bảo lãnh"),
