@@ -9,6 +9,7 @@ import { object, string, number } from "yup";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { EButtonTypes } from "@/shared/enums/button";
 import { IOption } from "@/shared/utils/shared-interfaces";
+import FormGroup from "@/components/form/FormGroup";
 
 interface IBidBondFormProps {
   initialValues: IBidBond;
@@ -18,11 +19,12 @@ interface IBidBondFormProps {
   projectOptions: IOption[];
   enterpriseOptions: IOption[];
   formik?: FormikProps<IBidBond>;
+  project_id?: number;
 }
 
 const stringRegex = /^[\p{L}0-9\s._`-]*$/u;
 
-const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik }: IBidBondFormProps) => {
+const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik, project_id }: IBidBondFormProps) => {
   const Schema = object().shape({
     project_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn tên dự án"),
     enterprise_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn người hoặc tổ chức bảo lãnh"),
@@ -38,107 +40,118 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
         <Form className="mt-3">
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormInput
-                type="text"
-                isDisabled={type === "view"}
-                label="Mã bảo lãnh"
-                value={values.bond_number}
-                name="bond_number"
-                error={touched.bond_number ? errors.bond_number : ""}
-                placeholder="Nhập mã bảo lãnh..."
-                onChange={(value) => setFieldValue("bond_number", value)}
-                onBlur={handleBlur}
-              />
+              <FormGroup title="Mã bảo lãnh" required>
+                <FormInput
+                  type="text"
+                  isDisabled={type === "view"}
+                  value={values.bond_number}
+                  name="bond_number"
+                  error={touched.bond_number ? errors.bond_number : ""}
+                  placeholder="Nhập mã bảo lãnh..."
+                  onChange={(value) => setFieldValue("bond_number", value)}
+                  onBlur={handleBlur}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <FormGroup title="Người hoặc tổ chức bảo lãnh" required>
+                <FormSelect
+                  className="w-100"
+                  options={enterpriseOptions}
+                  isDisabled={type === "view"}
+                  value={values.enterprise_id}
+                  id="enterprise_id"
+                  error={touched.enterprise_id ? errors.enterprise_id : ""}
+                  placeholder="Chọn người hoặc tổ chức bảo lãnh"
+                  onChange={(value) => setFieldValue("enterprise_id", value)}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <FormGroup title="Tên dự án" required>
+                <FormSelect
+                  isDisabled={type === "view"}
+                  value={values.project_id}
+                  id="project_id"
+                  placeholder="Tên dự án..."
+                  error={touched.project_id ? errors.project_id : ""}
+                  onChange={(value) => setFieldValue("project_id", value)}
+                  options={projectOptions}
+                />
+              </FormGroup>
             </Col>
 
             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormSelect
-                options={enterpriseOptions}
-                isDisabled={type === "view"}
-                label="Người hoặc tổ chức bảo lãnh"
-                value={values.enterprise_id}
-                id="enterprise_id"
-                error={touched.enterprise_id ? errors.enterprise_id : ""}
-                placeholder="Chọn người hoặc tổ chức bảo lãnh"
-                onChange={(value) => setFieldValue("enterprise_id", value)}
-              />
+              <FormGroup title="Số tiền bảo lãnh" required>
+                <FormInput
+                  type="text"
+                  isDisabled={type === "view"}
+                  value={values.bond_amount}
+                  error={touched.bond_amount ? errors.bond_amount : ""}
+                  name="bond_amount"
+                  placeholder="Nhập số tiền bảo lãnh..."
+                  onChange={(value) => setFieldValue("bond_amount", value)}
+                  onBlur={handleBlur}
+                />
+              </FormGroup>
             </Col>
             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormSelect
-                isDisabled={type === "view"}
-                label="Tên dự án"
-                value={values.project_id}
-                id="project_id"
-                placeholder="Tên dự án..."
-                error={touched.project_id ? errors.project_id : ""}
-                onChange={(value) => setFieldValue("project_id", value)}
-                options={projectOptions}
-              />
+              <FormGroup title="Số tiền bảo bằng chữ" required>
+                <FormInput
+                  type="text"
+                  isDisabled={type === "view"}
+                  value={values.bond_amount_in_words}
+                  error={touched.bond_amount_in_words ? errors.bond_amount_in_words : ""}
+                  name="bond_amount_in_words"
+                  placeholder="Nhập số tiền bảo lãnh bằng chữ..."
+                  onChange={(value) => setFieldValue("bond_amount_in_words", value)}
+                  onBlur={handleBlur}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <FormGroup title="Loại bảo lãnh" required>
+                <FormSelect
+                  isDisabled={type === "view"}
+                  value={values.bond_type}
+                  error={touched.bond_type ? errors.bond_type : ""}
+                  id="bond_type"
+                  options={optionType}
+                  placeholder="Nhập loại bảo lãnh..."
+                  onChange={(value) => setFieldValue("bond_type", value)}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <FormGroup title="Ngày phát hành">
+                <FormDate
+                  disabled={type === "view"}
+                  value={values.issue_date ? dayjs(values.issue_date) : null}
+                  onChange={(date) => setFieldValue("issue_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <FormGroup title="Ngày hết hạn">
+                <FormDate
+                  disabled={type === "view"}
+                  minDate={values.issue_date ? dayjs(values.issue_date).add(1, "day") : undefined}
+                  value={values.expiry_date ? dayjs(values.expiry_date) : null}
+                  onChange={(date) => setFieldValue("expiry_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+                />
+              </FormGroup>
             </Col>
 
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormInput
-                type="text"
-                isDisabled={type === "view"}
-                label="Số tiền bảo lãnh"
-                value={values.bond_amount}
-                error={touched.bond_amount ? errors.bond_amount : ""}
-                name="bond_amount"
-                placeholder="Nhập số tiền bảo lãnh..."
-                onChange={(value) => setFieldValue("bond_amount", value)}
-                onBlur={handleBlur}
-              />
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormInput
-                type="text"
-                isDisabled={type === "view"}
-                label="Số tiền bảo bằng chữ"
-                value={values.bond_amount_in_words}
-                error={touched.bond_amount_in_words ? errors.bond_amount_in_words : ""}
-                name="bond_amount_in_words"
-                placeholder="Nhập số tiền bảo lãnh bằng chữ..."
-                onChange={(value) => setFieldValue("bond_amount_in_words", value)}
-                onBlur={handleBlur}
-              />
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormDate
-                disabled={type === "view"}
-                label="Ngày phát hành"
-                value={values.issue_date ? dayjs(values.issue_date) : null}
-                onChange={(date) => setFieldValue("issue_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
-              />
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormDate
-                disabled={type === "view"}
-                label="Ngày hết hạn"
-                minDate={values.issue_date ? dayjs(values.issue_date).add(1, "day") : undefined}
-                value={values.expiry_date ? dayjs(values.expiry_date) : null}
-                onChange={(date) => setFieldValue("expiry_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
-              />
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormSelect
-                isDisabled={type === "view"}
-                label="Loại bảo lãnh"
-                value={values.bond_type}
-                error={touched.bond_type ? errors.bond_type : ""}
-                id="bond_type"
-                options={optionType}
-                placeholder="Nhập loại bảo lãnh..."
-                onChange={(value) => setFieldValue("bond_type", value)}
-              />
-            </Col>
             <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-              <FormCkEditor
-                id="description"
-                direction="vertical"
-                value={String(values?.description)}
-                setFieldValue={setFieldValue}
-                disabled={type === EButtonTypes.VIEW}
-              />
+              <FormGroup title="Ghi chú">
+                <FormCkEditor
+                  id="description"
+                  direction="vertical"
+                  value={String(values?.description)}
+                  setFieldValue={setFieldValue}
+                  disabled={type === EButtonTypes.VIEW}
+                />
+              </FormGroup>
             </Col>
           </Row>
         </Form>

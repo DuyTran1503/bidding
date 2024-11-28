@@ -6,7 +6,7 @@ import { ColumnsType } from "antd/es/table";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
 import { useEffect, useMemo, useState } from "react";
@@ -17,6 +17,9 @@ import { IAccountInitialState, resetStatus, setFilter } from "@/services/store/a
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import CustomerAvatar from "@/components/common/CustomerAvatar";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { statusEnumArray } from "@/shared/enums/statusActive";
+import { mappingGender } from "@/shared/enums/gender";
 
 const Staffs = () => {
   const navigate = useNavigate();
@@ -36,7 +39,7 @@ const Staffs = () => {
       dataIndex: "avatar",
       title: "Ảnh đại diện",
       render(_, record) {
-        return <CustomerAvatar src={record.avatar} alt={"Ảnh đại diện"} />;
+        return <CustomerAvatar avatar={true} src={record.avatar} size="large" alt={"Ảnh đại diện"} />;
       },
     },
     {
@@ -60,7 +63,7 @@ const Staffs = () => {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record as ITableData)}
-            checked={!!record.account_ban_at}
+            checked={!record.account_ban_at}
             title={`Bạn có chắc chắn muốn ${record.account_ban_at ? "bỏ cấm" : "cấm"} tài khoản này?`}
           />
         );
@@ -91,12 +94,29 @@ const Staffs = () => {
       permission: EPermissions.DESTROY_STAFF,
     },
   ];
+  const genderOptions: IOption[] = statusEnumArray.map((key) => ({
+    value: key,
+    label: mappingGender[key],
+  }));
   const search: ISearchTypeTable[] = [
     {
       id: "name",
-      placeholder: "Nhập tên vai trò...",
-      title: "Tên vai trò",
+      placeholder: "Nhập tên nhân viên...",
+      title: "Tên nhân viên",
       type: "text",
+    },
+    {
+      id: "email",
+      placeholder: "Nhập email...",
+      title: "Tên email",
+      type: "text",
+    },
+    {
+      id: "gender",
+      placeholder: "Chọn giới tính...",
+      title: "Giới tính",
+      type: "select",
+      options: genderOptions,
     },
   ];
   const data: ITableData[] = useMemo(() => {
@@ -127,7 +147,11 @@ const Staffs = () => {
   useEffect(() => {
     dispatch(getAllStaff({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
-
+  useEffect(() => {
+    if (state.status === EFetchStatus.FULFILLED) {
+      dispatch(getAllStaff({ query: state.filter }));
+    }
+  }, [JSON.stringify(state.status)]);
   useFetchStatus({
     module: "account",
     reset: resetStatus,
@@ -179,5 +203,4 @@ const Staffs = () => {
     </>
   );
 };
-
 export default Staffs;
