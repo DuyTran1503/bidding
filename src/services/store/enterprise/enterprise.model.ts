@@ -20,4 +20,6 @@ export interface IEnterprise {
   is_active?: number;
   is_blacklist?: number;
   password?: string;
+  industries?: any[]
+  roles?:number[]
 }

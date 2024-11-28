@@ -13,4 +13,5 @@ export interface IBidBond {
   notes?: string; // Ghi chú bổ sung
   status?: string; // Trạng thái hiện tại của bảo lãnh (default 'active')
   description?: string;
+  bid_bond_id?: number | string;
 }

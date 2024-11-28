@@ -8,7 +8,7 @@ import { useArchive } from "@/hooks/useArchive";
 import { useViewport } from "@/hooks/useViewport";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
-import { createBidBond } from "@/services/store/bid_bond/bidBond.thunk";
+import { createBidBond, updateBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
@@ -39,7 +39,10 @@ export interface IBidBondValues {
   path?: File;
   is_active: string;
 }
-
+export const optionType: IOption[] = bidBondEnumArray.map((e) => ({
+  label: mappingBidBond[e],
+  value: e,
+}));
 const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormProps) => {
   const formikRef = useRef<FormikProps<IBidBond>>(null);
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
@@ -59,30 +62,15 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
     bond_amount_in_words: item?.bond_amount_in_words ?? "",
   };
 
-  const stringRegex = /^[\p{L}0-9\s._`-]*$/u;
-  const Schema = object().shape({
-    project_id: string().matches(stringRegex, "Không được chưa ký tự đặc biệt").required("Vui lòng chọn tên dự án"),
-    enterprise_id: string().matches(stringRegex, "Không được chưa ký tự đặc biệt").required("Vui lòng chọn người hoặc tổ chức bảo lãnh"),
-    bond_amount: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập số tiền"),
-    bond_type: string().matches(stringRegex, "Không được chưa ký tự đặc biệt").required("Vui lòng chọn loại bảo lãnh"),
-    bond_number: string().required("Vui lòng nhập mã dự án"),
-    bond_amount_in_words: string().required("Vui lòng không để trống ô này"),
-    // issue_date
-    // expiry_date
-    // description
-  });
-
   const handleSubmit = (data: IBidBond) => {
-    console.log(data);
-
     const body = {
       ...lodash.omit(data, "id"),
     };
     if (type === EButtonTypes.CREATE) {
       dispatch(createBidBond({ body: body }));
     } else if (type === EButtonTypes.UPDATE && item?.id) {
-      //   const newData = item.path === body.path ? (({ ...rest }) => rest)(body) : body;
-      //   dispatch(updateBidBond({ body: newData, param: item?.id }));
+      // const newData = item.path === body.path ? (({ ...rest }) => rest)(body) : body;
+      dispatch(updateBidBond({ body: body, param: item?.id }));
     }
   };
   useEffect(() => {
@@ -90,10 +78,7 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
       setVisible(false);
     }
   }, [state.status]);
-  const optionType: IOption[] = bidBondEnumArray.map((e) => ({
-    label: mappingBidBond[e],
-    value: e,
-  }));
+
   useEffect(() => {
     if (!!visible) {
       dispatchEnterprise(getListEnterprise());
@@ -135,7 +120,7 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
         initialValues={initialValues}
         onSubmit={handleSubmit}
         type={type!}
-        formik={formikRef}
+        formik={formikRef as any}
         optionType={optionType}
         projectOptions={convertDataOptions(stateProject.listProjects || [])}
         enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}

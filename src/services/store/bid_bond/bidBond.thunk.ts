@@ -61,7 +61,7 @@ export const changeStatusBidBond = createAsyncThunk("bid-bonds/change-status-bid
 });
 export const getListBidBond = createAsyncThunk("bid-bonds/get-list-bid-bonds", async (_, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get(`${prefix}/all-ids`);
+    const { response, data } = await client.get(`/api/admin/list-bid-bonds`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);

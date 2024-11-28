@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
@@ -73,7 +74,7 @@ const projectSlice = createSlice({
       .addCase(getProjectById.fulfilled, (state, { payload }: PayloadAction<INewProject> | any) => {
         state.project = {
           ...payload.data,
-          industries: payload?.data?.industries?.map((item: any) => item.id),
+          industry_id: payload?.data?.industries?.map((item: any) => item.id),
           arrayIndustry: payload?.data?.industries?.map((item: any) => item.name),
           procurement_categories: payload?.data?.procurement_categories?.map((item: any) => item.id),
           procurement_category_name: payload?.data?.procurement_categories?.map((item: any) => item.name),
@@ -92,7 +93,7 @@ const projectSlice = createSlice({
         state.loading = false;
       })
       .addCase(getProjectById.rejected, (state, { payload }: PayloadAction<IProject> | any) => {
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
         state.loading = true;
       });
     builder
@@ -100,8 +101,6 @@ const projectSlice = createSlice({
         state.status = EFetchStatus.PENDING;
       })
       .addCase(createProject.fulfilled, (state, { payload }: PayloadAction<INewProject> | any) => {
-        console.log(payload);
-
         state.status = EFetchStatus.FULFILLED;
         state.dataCreateProject = {
           ...payload.data,
@@ -166,8 +165,9 @@ const projectSlice = createSlice({
         state.message = "Xóa thành công";
         state.projects = state.projects.filter((item) => String(item.id) !== payload);
       })
-      .addCase(deleteProject.rejected, (state) => {
+      .addCase(deleteProject.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
 
     builder

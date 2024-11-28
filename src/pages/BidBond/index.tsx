@@ -4,7 +4,7 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { resetStatus, setFilter } from "@/services/store/account/account.slice";
+import { resetStatus, setFilter } from "@/services/store/bid_bond/bidBond.slice";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { deleteBidBond, getAllBidBonds } from "@/services/store/bid_bond/bidBond.thunk";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
@@ -39,18 +39,18 @@ const BidBonds = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
-      // permission: EPermissions.DETAIL_BID_BOND,
+      permission: EPermissions.DETAIL_BID_BOND,
     },
     {
       type: EButtonTypes.UPDATE,
-      // permission: EPermissions.UPDATE_BID_BOND,
+      permission: EPermissions.UPDATE_BID_BOND,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteBidBond(record?.key));
       },
-      // permission: EPermissions.DESTROY_BID_BOND,
+      permission: EPermissions.DESTROY_BID_BOND,
     },
   ];
 
@@ -95,6 +95,7 @@ const BidBonds = () => {
             ) => ({
               index: index + 1,
               key: id,
+              id,
               project_id: projectName(+project_id!),
               bond_amount,
               bond_type,

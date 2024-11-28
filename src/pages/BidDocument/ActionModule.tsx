@@ -20,18 +20,22 @@ import FormDate from "@/components/form/FormDate";
 import FormSwitch from "@/components/form/FormSwitch";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
+import { getListBidBond } from "@/services/store/bid_bond/bidBond.thunk";
+import { IOption } from "@/shared/utils/shared-interfaces";
 
 interface IBidDocumentFormProps {
   formikRef?: FormikRefType<IBidDocumentInitialValues>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
   bidDocument?: IBidDocumentInitialValues;
+  project_id?: number;
 }
 
 export interface IBidDocumentInitialValues {
   id?: number | string;
-  project_id?: string;
+  project_id?: number;
   enterprise_id?: number | string;
-  bid_bond_id: number | string;
+  bid_bond_id?: number | string;
   submission_date?: string;
   bid_price: string;
   implementation_time?: string;
@@ -44,16 +48,17 @@ export interface IBidDocumentInitialValues {
   notes: string;
 }
 
-const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps) => {
+const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocumentFormProps) => {
   const { dispatch } = useArchive<IBidDocumentInitialState>("bid_document");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
 
   const initialValues: IBidDocumentInitialValues = {
     id: bidDocument?.id ?? "",
-    project_id: bidDocument?.project_id ?? undefined,
+    project_id: project_id ? project_id : bidDocument?.project_id ?? undefined,
     enterprise_id: bidDocument?.enterprise_id ?? undefined,
-    bid_bond_id: bidDocument?.bid_bond_id ?? "",
+    bid_bond_id: bidDocument?.bid_bond_id || undefined,
     submission_date: bidDocument?.submission_date ?? "",
     bid_price: bidDocument?.bid_price ?? "",
     implementation_time: bidDocument?.implementation_time ?? "",
@@ -65,16 +70,24 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
     status: bidDocument?.status ?? "",
     notes: bidDocument?.notes ?? "",
   };
+
   const Schema = object().shape({});
   useEffect(() => {
     dispatchProject(getListProject());
     dispatchEnterprise(getListEnterprise());
+    dispatchBidBond(getListBidBond());
   }, []);
   useEffect(() => {
     return () => {
       dispatch(resetMessageError());
     };
   }, []);
+  const formattedData: IOption[] =
+    stateBidBond?.listBidBonds?.map((bidBond) => ({
+      value: bidBond.id,
+      label: bidBond.issuer || "",
+    })) || [];
+
   return (
     <Formik
       innerRef={formikRef}
@@ -121,13 +134,14 @@ const BidDocumentForm = ({ formikRef, type, bidDocument }: IBidDocumentFormProps
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Bảo lãnh đấu thầu">
-                  <FormInput
-                    placeholder="Nhập bảo lãnh đấu thầu..."
-                    name="bid_bond_id"
+                  <FormSelect
+                    options={formattedData}
+                    isDisabled={type === "view"}
+                    placeholder="Chọn bảo lãnh đấu thầu..."
                     value={values.bid_bond_id}
                     error={touched.bid_bond_id ? errors.bid_bond_id : ""}
+                    id="bid_bond_id"
                     onChange={(e) => setFieldValue("bid_bond_id", e)}
-                    onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>

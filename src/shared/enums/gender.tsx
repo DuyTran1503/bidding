@@ -1,11 +1,13 @@
 export enum GENDER {
+  FEMALE = 0,
   MALE = 1,
-  FEMALE = 2,
+  OHTHER = 2,
 }
 
-export const statusEnumArray: GENDER[] = [GENDER.MALE, GENDER.FEMALE];
+export const statusEnumArray: GENDER[] = [GENDER.MALE, GENDER.FEMALE, GENDER.OHTHER];
 
 export const mappingGender: { [key in GENDER]: string } = {
-  [GENDER.MALE]: "Nam",
   [GENDER.FEMALE]: "Nữ",
+  [GENDER.MALE]: "Nam",
+  [GENDER.OHTHER]: "Khác",
 };
