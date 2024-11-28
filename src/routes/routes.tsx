@@ -86,6 +86,8 @@ import ClinetLayout from "@/layouts/Client";
 import Home from "@/Client/Home";
 import Introduce from "@/Client/Introduce";
 import NotFound from "@/pages/Errors/NotFound";
+import ProjectApproval from "@/pages/project-approval";
+import ApproveProjectByStaff from "@/pages/project-approval/Approve";
 
 export interface IRoute {
   path: string;
@@ -624,6 +626,19 @@ export const routes: IRoute[] = [
               {
                 path: "/detail/:id",
                 element: () => <DetailWorkProgress />,
+              },
+            ],
+          },
+          {
+            path: "project-approval",
+            pages: [
+              {
+                path: "/",
+                element: () => <ProjectApproval />,
+              },
+              {
+                path: "/approve/:id",
+                element: () => <ApproveProjectByStaff />,
               },
             ],
           },

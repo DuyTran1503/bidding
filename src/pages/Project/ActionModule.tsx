@@ -35,12 +35,12 @@ interface IPropProject {
   isChildren?: boolean;
   setActiveTabKey?: (key: string) => void;
   onChildSelect?: (child: INewProject) => void;
-  listIndustry: IIndustry[];
-  listSelectionMethods: ISelectionMethod[];
-  listFundingSources: IFundingSource[];
-  getListStaff: IStaff[];
-  listEnterprise: IEnterprise[];
-  listProcurement: IProcurement[];
+  listIndustry?: IIndustry[];
+  listSelectionMethods?: ISelectionMethod[];
+  listFundingSources?: IFundingSource[];
+  getListStaff?: IStaff[];
+  listEnterprise?: IEnterprise[];
+  listProcurement?: IProcurement[];
   item?: INewProject;
   parent_id?: number;
 }
@@ -124,8 +124,8 @@ const ActionModule = ({
         isChildren && type === EPageTypes.CREATE
           ? []
           : item && isChildren && type === EPageTypes.UPDATE
-            ? item.industries?.map((item: any) => item.id)
-            : project?.industries ?? [],
+            ? item.industry_id?.map((item: any) => item.id)
+            : project?.industry_id ?? [],
 
       is_domestic:
         isChildren && type === EPageTypes.CREATE
@@ -290,7 +290,7 @@ const ActionModule = ({
     const sanitizedProject = {
       ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
       funding_source_id: project?.funding_source || undefined,
-      industry_id: project?.industries || [],
+      industry_id: project?.industry_id || [],
       procurement_id: project?.procurement_categories || [],
       investor_id: project?.investor || undefined,
       tenderer_id: project?.tenderer || undefined,

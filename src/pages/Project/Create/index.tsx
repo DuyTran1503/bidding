@@ -1,3 +1,4 @@
+
 import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
@@ -29,12 +30,20 @@ import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { getListStaff } from "@/services/store/account/account.thunk";
 import { getListProcurement } from "@/services/store/procurement/procurement.thunk";
 import CreateBidDocument from "@/pages/BidDocument/Create";
-
+import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
+import BidBondForm from "@/pages/BidBond/components/BidBondForm";
+import { EButtonTypes } from "@/shared/enums/button";
+import { convertDataOptions } from "../helper";
+import { optionType } from "@/pages/BidBond/ActionModule";
+import lodash from "lodash";
+import { createBidBond } from "@/services/store/bid_bond/bidBond.thunk";
+import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 const { TabPane } = Tabs;
 
 const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
+  const formikBidBondRef = useRef<FormikProps<IBidBond>>(null);
   const { state } = useArchive<IProjectInitialState>("project");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
   const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
@@ -42,7 +51,9 @@ const CreateProject = () => {
   const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
-
+  const [selectedChild, setSelectedChild] = useState<INewProject | null>(null);
+  const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  const [activeTabKey, setActiveTabKey] = useState<string>("1");
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -64,6 +75,24 @@ const CreateProject = () => {
     dispatchStaff(getListStaff());
     dispatchProcurement(getListProcurement());
   }, []);
+  const initialValues: IBidBond = {
+    id: "",
+    project_id: state.project?.id||undefined,
+    enterprise_id: undefined,
+    bond_amount: undefined,
+    bond_type: undefined,
+    bond_number: "",
+    issue_date: "",
+    expiry_date: "",
+    description: "",
+    bond_amount_in_words: "",
+  };
+  const handleSubmit = (data: IBidBond) => {
+    const body = {
+      ...lodash.omit(data, "id"),
+    };
+    dispatchBidBond(createBidBond({ body: body }));
+  };
 
   const tabItems = [
     {
@@ -98,6 +127,8 @@ const CreateProject = () => {
           <ActionModule
             type={EPageTypes.CREATE}
             formikRef={formikRef}
+            setActiveTabKey={setActiveTabKey}
+            onChildSelect={setSelectedChild}
             listIndustry={stateIndustry.listIndustry}
             listSelectionMethods={stateMethod.listSelectionMethods}
             listFundingSources={stateFundingSource.listFundingSources}
@@ -111,7 +142,7 @@ const CreateProject = () => {
     {
       key: "2",
       label: "Tạo gói thầu cho dự án",
-      disabled: !state.dataCreateProject?.id,
+      // disabled: !state.dataCreateProject?.id,
       children: (
         <div>
           <Heading
@@ -139,10 +170,12 @@ const CreateProject = () => {
             ]}
           />
           <ActionModule
-            type={EPageTypes.CREATE}
-            project={state.dataCreateProject}
+            type={EPageTypes.UPDATE}
             isChildren
+            item={selectedChild!}
+            project={state.project}
             formikRef={formikRef}
+            parent_id={state.project?.id}
             listIndustry={stateIndustry.listIndustry}
             listSelectionMethods={stateMethod.listSelectionMethods}
             listFundingSources={stateFundingSource.listFundingSources}
@@ -153,21 +186,62 @@ const CreateProject = () => {
         </div>
       ),
     },
+
     {
       key: "3",
-      label: "Hồ sơ đấu thầu",
-      disabled: !state.dataCreateProject?.id,
-      children: <CreateBidDocument />,
+      label: "Bão lãnh dự thầu",
+      // disabled: !state.project?.id,
+      children: (
+        <>
+          <Heading
+            title="Tạo mới "
+            hasBreadcrumb
+            buttons={[
+              {
+                type: "secondary",
+                text: "Hủy",
+                icon: <IoClose className="text-[18px]" />,
+                onClick: () => {
+                  navigate("/bid-document");
+                },
+              },
+              {
+                isLoading: state.status === EFetchStatus.PENDING,
+                text: "Tạo mới",
+                icon: <FaPlus className="text-[18px]" />,
+                onClick: () => {
+                  if (formikBidBondRef.current) {
+                    formikBidBondRef.current.handleSubmit();
+                  }
+                },
+              },
+            ]}
+          />
+          <BidBondForm
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            project_id={state.project?.id}
+            type={EButtonTypes.CREATE}
+            formik={formikBidBondRef as any}
+            optionType={optionType}
+            projectOptions={convertDataOptions(state.listProjects || [])}
+            enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
+          />
+        </>
+      ),
     },
     {
       key: "4",
-      label: "Bão lãnh dự thầu",
-      disabled: !state.dataCreateProject?.id,
-      children: <div>Outgoing email settings content goes here</div>,
+      label: "Hồ sơ dự thầu",
+      // disabled: !state.project?.id,
+      children: <CreateBidDocument project_id={state.project?.id} />,
     },
   ];
 
-  return <Tabs items={tabItems} />;
+  return  <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />;
 };
 
 export default CreateProject;
+ 
+
+

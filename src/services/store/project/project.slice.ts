@@ -74,7 +74,7 @@ const projectSlice = createSlice({
       .addCase(getProjectById.fulfilled, (state, { payload }: PayloadAction<INewProject> | any) => {
         state.project = {
           ...payload.data,
-          industries: payload?.data?.industries?.map((item: any) => item.id),
+          industry_id: payload?.data?.industries?.map((item: any) => item.id),
           arrayIndustry: payload?.data?.industries?.map((item: any) => item.name),
           procurement_categories: payload?.data?.procurement_categories?.map((item: any) => item.id),
           procurement_category_name: payload?.data?.procurement_categories?.map((item: any) => item.name),
