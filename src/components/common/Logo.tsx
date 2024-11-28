@@ -7,7 +7,7 @@ const Logo = () => {
             src={logo}
             preview={false}
             alt="Logo"
-            className="!w-2"
+            className="!w-20"
         />
     );
 };

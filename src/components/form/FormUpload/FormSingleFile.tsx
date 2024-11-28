@@ -4,11 +4,13 @@ import imageError from "@/assets/images/imgError-table.jpg";
 import imageFile from "@/assets/images/img-file.png";
 import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
+import clsx from "clsx";
 
 interface IProps {
   value?: File;
   onChange: (value: File | null) => void;
   id?: string;
+  error?: string;
 }
 
 const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
@@ -101,6 +103,11 @@ const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
           <input id={`file-upload-${id}`} type="file" onChange={handleFileChange} className="hidden" />
         </div>
       </div>
+      {!!error && (
+        <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white")}>
+          {error}
+        </div>
+      )}
     </div>
   );
 };

@@ -9,7 +9,9 @@ import {
   updatePost, 
   deletePost, 
   getPostById, 
-  changeStatusPost 
+  changeStatusPost, 
+  getPosts,
+  getPostId
 } from "./post.thunk";
 import { transformPayloadErrors } from '@/shared/utils/common/function';
 import { IError } from '@/shared/interface/error';
@@ -51,6 +53,27 @@ const postSlice = createSlice({
           state.currentPage = payload.data.current_page;
       }
   });
+
+  // ? Get all Posts
+    builder.addCase(getPosts.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
+      if (payload.data) {
+          state.posts = payload.data.data;
+          state.totalRecords = payload.data.total_elements;
+          state.totalPages = payload.data.total_pages;
+          state.pageSize = payload.data.page_size;
+          state.currentPage = payload.data.current_page;
+      }
+  });
+
+  // ? Get Posts by id
+    builder.addCase(
+      getPostId.fulfilled, (state, { payload }: PayloadAction<IResponse<IPost> | any>) => {
+        if (payload.data) {
+          state.activePost = payload.data;
+          state.message = payload.message || transformPayloadErrors(payload?.errors);
+        }
+      }
+    );
 
   // ? Get By ID
     builder.addCase(

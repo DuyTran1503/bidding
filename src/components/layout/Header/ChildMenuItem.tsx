@@ -14,7 +14,8 @@ const ChildMenuItem = ({ label, items, path, children, group }: IChildMenuItem) 
           "relative flex h-full cursor-pointer items-center p-2 text-black transition-colors hover:bg-gray-200 hover:text-blue-500",
           group,
         )}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           if (path) navigate(path);
         }}
       >

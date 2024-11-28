@@ -69,7 +69,7 @@ const introductionSlice = createSlice({
       })
       .addCase(getIntroductionById.rejected, (state, { payload }: PayloadAction<IIntroduction> | any) => {
         state.introduction = payload.data;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
         state.loading = true;
       });
     builder
@@ -94,7 +94,7 @@ const introductionSlice = createSlice({
       })
       .addCase(updateIntroduction.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
     // change
     builder
