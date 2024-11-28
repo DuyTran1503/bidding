@@ -25,12 +25,19 @@ import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { message, Select } from "antd";
 import AreaChart from "@/components/chart/AreaChart";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { convertDataOptions } from "./helper";
+import { IAccountInitialState } from "@/services/store/account/account.slice";
+import { getListStaff } from "@/services/store/account/account.thunk";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 
 const ProjectPage = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IChartInitialState>("chart");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const navigate = useNavigate();
   const [isModal, setIsModal] = useState(false);
   const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
@@ -170,10 +177,37 @@ const ProjectPage = () => {
       type: "text",
     },
     {
+      id: "staff",
+      placeholder: "Chọn nhân viên phê duyêt...",
+      label: "Nhân viên phê duyệt ",
+      type: "select",
+      options:convertDataOptions(stateStaff.getListStaff|| [])
+    },
+    {
       id: "investor",
       placeholder: "Chọn chủ đầu tư...",
       label: "Chủ đầu tư ",
-      type: "text",
+      type: "select",
+      options:convertDataOptions(stateEnterprise.listEnterprise|| [])
+    },
+    {
+      id: "tenderer",
+      placeholder: "Chọn bên mời thầu...",
+      label: "Bên mời thầu ",
+      type: "select",
+      options:convertDataOptions(stateEnterprise.listEnterprise|| [])
+    },
+    {
+      id: "upload_time_start",
+      placeholder: "Chọn thời gian ...",
+      title: "Thời gian bắt đầu đăng tải dự án",
+      type: "datetime",
+    },
+    {
+      id: "upload_time_end",
+      placeholder: "Chọn thời gian...",
+      title: "Thời gian bắt đầu đăng tải dự án",
+      type: "datetime",
     },
     {
       id: "is_active",
@@ -212,6 +246,8 @@ const ProjectPage = () => {
     dispatchProject(getAllProject({ query: stateProject.filter }));
     dispatchIndustry(getIndustries());
     dispatchIndustry(projectByIndustry({}));
+    dispatchEnterprise(getListEnterprise());
+    dispatchStaff(getListStaff());
   }, [JSON.stringify(stateProject.filter)]);
   useEffect(() => {
     if (stateProject.status === EFetchStatus.FULFILLED) {

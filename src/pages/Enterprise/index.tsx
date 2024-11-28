@@ -150,7 +150,7 @@ const Enterprise = () => {
     {
       dataIndex: "email",
       title: "Email",
-      className: "w-[250px]",
+      className: "w-[200px]",
     },
     {
       dataIndex: "address",
@@ -163,7 +163,13 @@ const Enterprise = () => {
       className: "w-[200px]",
       render(_, record) {
         return (
-          <div className="flex flex-col">{record?.enterprises?.map((item: string, index: number) => <div key={index}>{item ? item : ""}</div>)}</div>
+          <div className="flex flex-col">
+          {record.industry_id.length > 0 ? (
+            record.industry_id.map((item:any, index:number) => (
+              <div key={index}>{item}</div>
+            ))
+          ) : null}
+        </div>
         );
       },
     },
@@ -319,13 +325,14 @@ const Enterprise = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(enterpriseState.enterprises)
       ? enterpriseState.enterprises.map(
-        ({ id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at }, index) => ({
+        ({ id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at,industries }, index) => ({
           index: index + 1,
           key: id,
           name,
           representative,
           enterprises: (industry_id?.length && industry(industry_id)) || [],
           organization_type,
+          industry_id:industries,
           phone,
           email,
           address,
@@ -411,7 +418,7 @@ const Enterprise = () => {
         }}
         setFilter={setFilter}
         filter={enterpriseState.filter}
-        scroll={{ x: 3200 }}
+        scroll={{ x: 3000 }}
         tabLabel="Tổng quan"
         additionalTabs={additionalTabs}
       />

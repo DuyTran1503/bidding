@@ -101,7 +101,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        
         return (
           <Form>
             <Row gutter={[24, 24]}>

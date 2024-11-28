@@ -57,6 +57,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
 
   const { dispatch, state } = useArchive<IAccountInitialState>("account");
   const roles = useSelector((state: RootStateType) => state.role.roles);
+  
   const initialValues: IStaffFormInitialValues = {
     name: "",
     id_role: [],
@@ -69,7 +70,6 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
     birthday: "",
     gender: "",
   };
-
   const validationSchema = object().shape({
     name: string()
       .trim()
@@ -332,7 +332,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                     />
                   </FormGroup>
                 </Col>
-              )}  
+              )}
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Mã số thuế">
                   <FormInput

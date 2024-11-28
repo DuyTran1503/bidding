@@ -58,7 +58,10 @@ const enterpriseSlice = createSlice({
     builder
       .addCase(getAllEnterprise.fulfilled, (state, { payload }: PayloadAction<IResponse<IEnterprise[]> | any>) => {
         if (payload.data) {
-          state.enterprises = payload.data.data;
+          state.enterprises = payload.data.data.map((item: any) => ({
+            ...item,
+            industries: item.industry_id.map((value: any) => value.name),
+          }));
           state.totalRecords = payload?.data?.total_elements;
           state.number_of_elements = payload?.data?.number_of_elements;
         }

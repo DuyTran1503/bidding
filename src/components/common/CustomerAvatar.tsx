@@ -8,22 +8,24 @@ interface CustomerAvatarProps {
   alt: string;
   className?: string;
   size?: "large" | "medium";
+  avatar?: boolean; // Add avatar prop
 }
 
-const CustomerAvatar: React.FC<CustomerAvatarProps> = ({ src, alt, className, size = "medium" }) => {
-  const [imageSrc, setImageSrc] = useState<string>(
-    src && src.trim() !== "" ? src : imgFbDefault
-  );
+const CustomerAvatar: React.FC<CustomerAvatarProps> = ({
+  src,
+  alt,
+  className,
+  size = "medium",
+  avatar = false, // Default to false if not provided
+}) => {
+  const [imageSrc, setImageSrc] = useState<string>(src && src.trim() !== "" ? src : imgFbDefault);
 
   const handleImageError = () => {
     setImageSrc(imageError);
   };
 
-  // Tạo URL đầy đủ nếu cần thiết
-  const fullImageSrc =
-    imageSrc.startsWith("http://") || imageSrc.startsWith("https://")
-      ? imageSrc
-      : `${import.meta.env.VITE_API_URL}/${imageSrc}`;
+  // Create full URL if necessary
+  const fullImageSrc = imageSrc.startsWith("http://") || imageSrc.startsWith("https://") ? imageSrc : `${import.meta.env.VITE_API_URL}/${imageSrc}`;
 
   return (
     <img
@@ -31,7 +33,8 @@ const CustomerAvatar: React.FC<CustomerAvatarProps> = ({ src, alt, className, si
       alt={alt}
       className={clsx("object-cover", className, {
         "h-auto w-auto": size === "medium",
-        "h-16 w-16": size === "large", // Ví dụ: bạn có thể điều chỉnh theo kích thước
+        "h-16 w-16": size === "large",
+        "h-15 w-15 rounded-full": avatar, // Apply styles for avatar
       })}
       onError={handleImageError}
     />
