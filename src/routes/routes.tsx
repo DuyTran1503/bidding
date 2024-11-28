@@ -715,5 +715,5 @@ export const routes: IRoute[] = [
   {
     path: "*",
     element: () => <NotFound />,
-  }
+  },
 ];

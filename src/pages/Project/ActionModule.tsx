@@ -576,7 +576,7 @@ const ActionModule = ({
               </Col>
 
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Ngày bắt đầu đấu thầu">
+                <FormGroup title="Ngày bắt đầu dự án">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     minDate={values.bid_submission_end ? dayjs(values.bid_submission_end) : undefined}
@@ -586,7 +586,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Ngày kết thúc đấu thầu">
+                <FormGroup title="Ngày kết thúc dự án">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     minDate={values.start_time ? dayjs(values.bid_submission_end) : undefined}
