@@ -50,7 +50,7 @@ const Evaluates = () => {
     },
     {
       dataIndex: "project.name",
-      title: "Cái chó gì",
+      title: "Tên dự án",
       className: "w-[300px]",
     },
     {
@@ -64,7 +64,6 @@ const Evaluates = () => {
       className: "w-[300px]",
     },
   ];
-
   const search: ISearchTypeTable[] = [
     {
       id: "title",
@@ -123,7 +122,7 @@ const Evaluates = () => {
           },
           {
             icon: <FaPlus className="text-[18px]" />,
-            // permission: EPermissions.CREATE_EVALUATE,
+            permission: EPermissions.CREATE_EVALUATE,
             text: "Thêm mới",
           },
         ]}

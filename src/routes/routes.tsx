@@ -48,8 +48,6 @@ import DetailEnterprise from "@/pages/Enterprise/Detail";
 import BiddingHistorys from "@/pages/BiddingHistory/BiddingHistory/BiddingHistory";
 import CreateBiddingHistory from "@/pages/BiddingHistory/CreateBiddingHistory/CreateBiddingHistory";
 import UpdateBiddingHistory from "@/pages/BiddingHistory/UpdateBiddingHistory/UpdateBiddingHistory";
-import PermissionMiddleware from "@/middlewares/PermissionMiddleware";
-import { EPermissions } from "@/shared/enums/permissions";
 import ActivityLogs from "@/pages/ActivityLogs";
 import SelectionMethods from "@/pages/SelectionMethods/SelectionMethods/SelectionMethods";
 import ProjectPage from "@/pages/Project";
@@ -84,6 +82,12 @@ import WorkProgresses from "@/pages/WorkProgresses";
 import CreateWorkProgress from "@/pages/WorkProgresses/Create";
 import UpdateWorkProgress from "@/pages/WorkProgresses/Update";
 import DetailWorkProgress from "@/pages/WorkProgresses/Detail";
+import ClinetLayout from "@/layouts/Client";
+import Home from "@/Client/Home";
+import Introduce from "@/Client/Introduce";
+import NotFound from "@/pages/Errors/NotFound";
+import ProjectApproval from "@/pages/project-approval";
+import ApproveProjectByStaff from "@/pages/project-approval/Approve";
 
 export interface IRoute {
   path: string;
@@ -99,7 +103,21 @@ export const routes: IRoute[] = [
     middleware: () => <GlobalMiddleware />,
     pages: [
       {
-        path: "/",
+        path: "",
+        layout: () => <ClinetLayout />,
+        pages: [
+          {
+            path: "/",
+            element: () => <Home />,
+          },
+          {
+            path: "introduce",
+            element: () => <Introduce />,
+          },
+        ],
+      },
+      {
+        path: "",
         middleware: () => <AuthMiddleware />,
         layout: () => <DefaultLayout />,
         pages: [
@@ -611,6 +629,19 @@ export const routes: IRoute[] = [
               },
             ],
           },
+          {
+            path: "project-approval",
+            pages: [
+              {
+                path: "/",
+                element: () => <ProjectApproval />,
+              },
+              {
+                path: "/approve/:id",
+                element: () => <ApproveProjectByStaff />,
+              },
+            ],
+          },
         ],
       },
       {
@@ -625,4 +656,8 @@ export const routes: IRoute[] = [
       },
     ],
   },
+  {
+    path: "*",
+    element: () => <NotFound />,
+  }
 ];

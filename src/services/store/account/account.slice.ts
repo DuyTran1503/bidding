@@ -41,7 +41,6 @@ const accountSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getAllStaff.fulfilled, (state, { payload }: PayloadAction<IResponse<IStaff[]> | any>) => {
-        state.status = EFetchStatus.FULFILLED;
         if (payload.data) {
           state.staffs = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;

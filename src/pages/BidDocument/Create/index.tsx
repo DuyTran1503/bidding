@@ -10,7 +10,10 @@ import { useArchive } from "@/hooks/useArchive";
 import { EPageTypes } from "@/shared/enums/page";
 import BidDocumentForm, { IBidDocumentInitialValues } from "../ActionModule";
 import { IBidDocumentInitialState, resetStatus } from "@/services/store/bid_document/bid_document.slice";
-const CreateBidDocument = () => {
+interface IProps {
+  project_id?: number;
+}
+const CreateBidDocument: React.FC<IProps> = ({ project_id }) => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IBidDocumentInitialValues>>(null);
   const { state } = useArchive<IBidDocumentInitialState>("bid_document");
@@ -55,7 +58,7 @@ const CreateBidDocument = () => {
           },
         ]}
       />
-      <BidDocumentForm type={EPageTypes.CREATE} formikRef={formikRef} />
+      <BidDocumentForm type={EPageTypes.CREATE} formikRef={formikRef} project_id={project_id} />
     </>
   );
 };

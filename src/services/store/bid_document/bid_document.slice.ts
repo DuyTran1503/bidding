@@ -14,6 +14,7 @@ import {
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IBidDocument } from "./bid_document.model";
+import { message } from "antd";
 
 export interface IBidDocumentInitialState extends IInitialState {
   bidDocuments: IBidDocument[];
@@ -79,7 +80,7 @@ const bidDocumentSlice = createSlice({
       })
       .addCase(createBidDocument.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
     builder
       .addCase(updateBidDocument.pending, (state) => {
@@ -91,7 +92,7 @@ const bidDocumentSlice = createSlice({
       })
       .addCase(updateBidDocument.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
     builder
       .addCase(changeStatusBidDocument.pending, (state) => {
@@ -103,7 +104,7 @@ const bidDocumentSlice = createSlice({
       })
       .addCase(changeStatusBidDocument.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
     // ? Delete tag
     builder
@@ -115,8 +116,9 @@ const bidDocumentSlice = createSlice({
         state.message = "Xóa thành công";
         state.businessActivities = state.bidDocuments.filter((item) => String(item.id) !== payload);
       })
-      .addCase(deleteBidDocument.rejected, (state) => {
+      .addCase(deleteBidDocument.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
   },
 });

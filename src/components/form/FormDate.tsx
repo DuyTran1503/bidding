@@ -22,9 +22,8 @@ const FormDate: React.FC<FormDateProps> = ({ label, onChange, defaultValue, valu
       onChange(date, dateString as string);
     }
   };
-
   return (
-    <div className={clsx("flex flex-col items-start gap-2")}>
+    <div className={clsx("flex flex-col items-start ")}>
       {label && <div className="text-m-medium mb-1 text-black-300">{label}</div>}
 
       <DatePicker
@@ -34,7 +33,7 @@ const FormDate: React.FC<FormDateProps> = ({ label, onChange, defaultValue, valu
         maxDate={maxDate}
         value={value}
         disabled={disabled}
-        className="custom-datepicker w-full rounded-md bg-gray-25 py-2"
+        className="custom-datepicker w-full rounded-md bg-gray-25 !h-[35px]"
       />
     </div>
   );

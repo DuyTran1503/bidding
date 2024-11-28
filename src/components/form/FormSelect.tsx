@@ -11,10 +11,11 @@ interface IFormSelect {
   isMultiple?: boolean;
   error?: string | string[];
   isDisabled?: boolean;
-  onChange?: (value: string | string[]) => void;
+  onChange?: (value: string | string[] | number | number[]) => void;
   id?: string;
   className?: string;
   showLabel?: boolean; // Thêm prop showLabel
+  maxTagCount?: number | "responsive";
 }
 
 const FormSelect = ({
@@ -29,8 +30,9 @@ const FormSelect = ({
   value,
   error,
   showLabel = true, // Mặc định là true nếu không truyền vào
+  maxTagCount,
 }: IFormSelect) => {
-  const handleChange = (value: string | string[]) => {
+  const handleChange = (value: string | string[] | number | number[]) => {
     if (onChange) {
       onChange(value);
     }
@@ -51,7 +53,7 @@ const FormSelect = ({
       >
         <Select
           allowClear
-          maxTagCount={"responsive"}
+          maxTagCount={maxTagCount ? maxTagCount : 1}
           disabled={isDisabled}
           className={clsx(`text-m-medium !h-[35px] w-full ${className}`, isDisabled && "opacity-65", {
             "border-red-500": !!error,

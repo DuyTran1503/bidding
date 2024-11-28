@@ -2,13 +2,8 @@ import FormDate from "@/components/form/FormDate";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import { useArchive } from "@/hooks/useArchive";
-import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
-import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
-import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
 import { INewProject } from "@/services/store/project/project.model";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { ISelectionMethodInitialState } from "@/services/store/selectionMethod/selectionMethod.slice";
-import { getListSelectionMethods } from "@/services/store/selectionMethod/selectionMethod.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, Row } from "antd";
@@ -21,20 +16,11 @@ import FormSelect from "@/components/form/FormSelect";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import { SUBMIT_METHOD } from "@/shared/enums/submissionMethod";
 import { convertEnum } from "@/shared/utils/common/convertEnum";
-import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
-import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { convertDataOptions } from "./helper";
-import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import { createProject, updateProject } from "@/services/store/project/project.thunk";
-import { IAccountInitialState } from "@/services/store/account/account.slice";
-import { getListStaff } from "@/services/store/account/account.thunk";
-import { IProcurementInitialState } from "@/services/store/procurement/procurement.slice";
-import { getListProcurement } from "@/services/store/procurement/procurement.thunk";
 import { DOMESTIC, domesticEnumArray, mappingDOMESTIC } from "@/shared/enums/domestic";
 import lodash from "lodash";
-import ChildrenProject from "./ChildrenProject";
-import { clearChildrenState, loadChildrenState, saveChildrenState } from "@/shared/utils/localStorage";
 import ProjectCard from "./ChildrenProject/ProjectCard";
 import { IIndustry } from "@/services/store/industry/industry.model";
 import { ISelectionMethod } from "@/services/store/selectionMethod/selectionMethod.model";
@@ -49,12 +35,12 @@ interface IPropProject {
   isChildren?: boolean;
   setActiveTabKey?: (key: string) => void;
   onChildSelect?: (child: INewProject) => void;
-  listIndustry: IIndustry[];
-  listSelectionMethods: ISelectionMethod[];
-  listFundingSources: IFundingSource[];
-  getListStaff: IStaff[];
-  listEnterprise: IEnterprise[];
-  listProcurement: IProcurement[];
+  listIndustry?: IIndustry[];
+  listSelectionMethods?: ISelectionMethod[];
+  listFundingSources?: IFundingSource[];
+  getListStaff?: IStaff[];
+  listEnterprise?: IEnterprise[];
+  listProcurement?: IProcurement[];
   item?: INewProject;
   parent_id?: number;
 }
@@ -100,7 +86,7 @@ const ActionModule = ({
         isChildren && type === EPageTypes.CREATE
           ? undefined
           : item && isChildren && type === EPageTypes.UPDATE
-            ? item.selection_method_id
+            ? item?.selection_method?.id
             : project?.selection_method ?? undefined,
 
       location:
@@ -110,36 +96,36 @@ const ActionModule = ({
         isChildren && type === EPageTypes.CREATE
           ? null
           : item && isChildren && type === EPageTypes.UPDATE
-            ? +item.tenderer_id! || null
+            ? +item.tenderer.id! || null
             : +project?.tenderer! || null,
 
       investor_id:
         isChildren && type === EPageTypes.CREATE
           ? null
           : item && isChildren && type === EPageTypes.UPDATE
-            ? +item.investor_id! || null
+            ? +item.investor.id! || null
             : +project?.investor! || null,
 
       funding_source_id:
         isChildren && type === EPageTypes.CREATE
           ? undefined
           : item && isChildren && type === EPageTypes.UPDATE
-            ? item.funding_source_id
+            ? item.funding_source.id
             : project?.funding_source ?? undefined,
 
       staff_id:
         isChildren && type === EPageTypes.CREATE
           ? undefined
           : item && isChildren && type === EPageTypes.UPDATE
-            ? item.staff_id
+            ? item.staff.id
             : project?.staff ?? undefined,
 
       industry_id:
         isChildren && type === EPageTypes.CREATE
           ? []
           : item && isChildren && type === EPageTypes.UPDATE
-            ? item.industry_id
-            : project?.industries ?? [],
+            ? item.industry_id?.map((item: any) => item.id)
+            : project?.industry_id ?? [],
 
       is_domestic:
         isChildren && type === EPageTypes.CREATE
@@ -227,13 +213,17 @@ const ActionModule = ({
         isChildren && type === EPageTypes.CREATE
           ? []
           : item && isChildren && type === EPageTypes.UPDATE
-            ? item.procurement_id
+            ? item.procurement_categories?.map((item: any) => item.id)
             : project?.procurement_categories ?? [],
 
       submission_method: project?.submission_method ?? SUBMIT_METHOD.online,
 
       files:
-        isChildren && type === EPageTypes.CREATE ? [] : item && isChildren && type === EPageTypes.UPDATE ? item.files : project?.attachments ?? [],
+        isChildren && type === EPageTypes.CREATE
+          ? []
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.attachments
+            : project?.attachments ?? [],
 
       decision_number_issued:
         isChildren && type === EPageTypes.CREATE
@@ -246,6 +236,7 @@ const ActionModule = ({
     }),
     [project],
   );
+
   const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const numberRegex = /^[0-9]+$/;
   const Schema = object().shape({
@@ -296,17 +287,25 @@ const ActionModule = ({
       files: values.fileChildren,
       parent_id: item && type === EPageTypes.UPDATE ? parent_id : project?.id,
     };
-    // const sanitizedProject = {
-    //   ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
-    // };
-    // const newChild = {
-    //   ...sanitizedProject,
-    //   // parent_id: project?.id || null,
-    //   children: [data as Omit<INewProject, "id">],
-    // };
-
-    return dispatchProject(createProject(data as Omit<INewProject, "id">));
-    // return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
+    const sanitizedProject = {
+      ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
+      funding_source_id: project?.funding_source || undefined,
+      industry_id: project?.industry_id || [],
+      procurement_id: project?.procurement_categories || [],
+      investor_id: project?.investor || undefined,
+      tenderer_id: project?.tenderer || undefined,
+    };
+    const updatedFiles = initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
+    const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ files, ...rest }) => rest)(data);
+    const newChild = {
+      ...sanitizedProject,
+      children: [newData],
+    };
+    if (type === EPageTypes.UPDATE && item) {
+      return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
+    } else {
+      return dispatchProject(createProject(data as Omit<INewProject, "id">));
+    }
   };
   useEffect(() => {
     if (project?.children) {
@@ -337,20 +336,15 @@ const ActionModule = ({
           const updatedFiles =
             initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
           const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ files, ...rest }) => rest)(data);
-          console.log(updatedFiles);
-          console.log(newData);
-
           dispatchProject(updateProject({ body: newData, param: String(project.id) }));
         }
       }}
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(errors);
-
         return (
           <Form className="mt-4">
-            {children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
+            {!isChildren && children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
             <Row gutter={[16, 0]}>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Tên Dự Án">
@@ -433,7 +427,7 @@ const ActionModule = ({
                 <FormGroup title="Nguồn Vốn">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
-                    placeholder="Nhập nguồn vốn..."
+                    placeholder="Chọn nguồn vốn..."
                     id="funding_source_id"
                     value={values.funding_source_id as string}
                     error={touched.funding_source_id ? errors.funding_source_id : ""}
@@ -474,10 +468,12 @@ const ActionModule = ({
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     isMultiple
-                    placeholder="Nhập ngành nghề..."
+                    placeholder="Chọn ngành nghề..."
                     id="industry_id"
                     value={values.industry_id}
-                    onChange={(e) => setFieldValue("industry_id", e)}
+                    onChange={(e) => {
+                      setFieldValue("industry_id", e);
+                    }}
                     options={convertDataOptions(listIndustry || [])}
                   />
                 </FormGroup>
@@ -627,10 +623,10 @@ const ActionModule = ({
                 <FormGroup title="Tài liệu đính kèm">
                   <FormUploadFile
                     isMultiple
-                    name={isChildren ? "fileChildren" : "files"} // Sử dụng điều kiện để đổi name
-                    value={isChildren ? values.fileChildren : values.files} // Điều kiện chọn giá trị
+                    name={"files"} // Sử dụng điều kiện để đổi name
+                    value={values.files} // Điều kiện chọn giá trị
                     onChange={(e) => {
-                      setFieldValue(isChildren ? "fileChildren" : "files", e); // Cập nhật field tương ứng
+                      setFieldValue("files", e); // Cập nhật field tương ứng
                     }}
                   />
                 </FormGroup>
