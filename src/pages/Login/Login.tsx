@@ -93,12 +93,12 @@ const Login = () => {
                       }}
                       placeholder="Nhập mật khẩu..."
                     />
-                    <Button text="Login" isLoading={state.status === EFetchStatus.PENDING} className="mt-3" />
+                    <Button text="Đăng nhập" isLoading={state.status === EFetchStatus.PENDING} className="mt-3" />
                     <Link
                       to="/forgot-password"
                       className="cursor-pointer text-end font-normal text-blue-500 transition-colors hover:text-blue-500"
                     >
-                      Forgot password?
+                      Quên mật khẩu?
                     </Link>
                   </form>
                 );

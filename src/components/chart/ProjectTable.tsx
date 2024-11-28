@@ -1,14 +1,13 @@
 import React from 'react';
 import { Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import { ICompareProject } from '@/services/store/CompareProject/compareProject.model';
+import { Link } from 'react-router-dom';
 
 interface ProjectDetailProps {
     detailProjectByIds: ICompareProject[];
     projectId: string;
 }
 
-// Định nghĩa kiểu dữ liệu cho các dòng (rows)
 interface RowType {
     key: string;
     title: string;
@@ -17,16 +16,37 @@ interface RowType {
 }
 
 const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, projectId }) => {
-    // Tạo dữ liệu dạng hàng cho bảng với kiểu `RowType`
     const rows: RowType[] = [
-        // { key: 'id', title: 'ID Dự án', dataIndex: 'id' },
-        { key: 'name', title: 'Tên dự án', dataIndex: 'name' },
+        // { key: 'name', title: 'Tên dự án', dataIndex: 'name' },
         { key: 'decision_number_issued', title: 'Số quyết định', dataIndex: 'decision_number_issued' },
-        { key: 'tenderer', title: 'Nhà thầu', dataIndex: 'tenderer', render: (item) => item?.name || 'Không có' },
-        { key: 'investor', title: 'Nhà đầu tư', dataIndex: 'investor', render: (item) => item?.name || 'Không có' },
-        { key: 'staff', title: 'Người phê duyệt', dataIndex: 'staff', render: (item) => item?.name || 'Không có' },
+        { key: 'tenderer', title: 'Nhà thầu', dataIndex: 'tenderer', render: (item) => <Link to={`/enterprise/detail/` + item.id}>{item?.name || 'Không có'}</Link> },
+        {
+            key: 'procurement_categories', title: 'Lĩnh vực mua sắm công', dataIndex: 'procurement_categories',
+            render: (procurement_categories: { id: number; name: string }[]) => {
+                if (!procurement_categories || procurement_categories.length === 0) {
+                    return 'Không có';
+                }
+                return (
+                    <>
+                        {procurement_categories.map((child) => (
+                            <div key={child.id}>
+                                {child.name || 'Không có'}
+                            </div>
+                        ))}
+                    </>
+                );
+            },
+        },
+        { key: 'investor', title: 'Nhà đầu tư', dataIndex: 'investor', render: (item) => <Link to={`/enterprise/detail/` + item.id}>{item?.name || 'Không có'}</Link> },
+        { key: 'staff', title: 'Người phê duyệt', dataIndex: 'staff', render: (item) => <Link to={`/staff/detail/` + item.id}>{item?.name || 'Không có'}</Link> },
         { key: 'selection_method', title: 'Hình thức lựa chọn', dataIndex: 'selection_method', render: (item) => item?.method_name || 'Không có' },
-        { key: 'submistion_method', title: 'Phương thức nộp', dataIndex: 'submistion_method', render: (item) => item?.submistion_method || 'Không có' },
+        {
+            key: 'submission_method',
+            title: 'Phương thức nộp',
+            dataIndex: 'submission_method',
+            render: (method: string) =>
+                method === 'online' ? 'Online' : method === 'in_person' ? 'Trực tiếp' : 'Không xác định',
+        },
         { key: 'location', title: 'Địa điểm', dataIndex: 'location' },
         { key: 'receiving_place', title: 'Nơi nhận', dataIndex: 'receiving_place' },
         {
@@ -41,66 +61,157 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, proje
         },
         { key: 'start_time', title: 'Ngày bắt đầu', dataIndex: 'start_time' },
         { key: 'end_time', title: 'Ngày kết thúc', dataIndex: 'end_time' },
-        { key: 'children', title: 'Số lượng gói thầu con', dataIndex: 'children', render: (item) => item.length },
+        {
+            key: 'children', title: 'Gói thầu con', dataIndex: 'children',
+            render: (children: { id: number; name: string }[]) => {
+                if (!children || children.length === 0) {
+                    return 'Không có';
+                }
+                return (
+                    <>
+                        {children.map((child) => (
+                            <div key={child.id}>
+                                <Link to={`/project/detail/${child.id}`}>
+                                    {child.name || 'Không có'}
+                                </Link>
+                            </div>
+                        ))}
+                    </>
+                );
+            },
+        },
+        {
+            key: 'description',
+            title: 'Mô tả dự án',
+            dataIndex: 'description',
+            render: (description: string) => (
+                <div dangerouslySetInnerHTML={{ __html: description }} />
+            ),
+        },
+        {
+            key: 'attachments',
+            title: 'Tệp đính kèm',
+            dataIndex: 'attachments',
+            render: (attachments: { type: string; path: string; name: string }[]) => (
+                <div>
+                    {attachments && attachments.length > 0 ? (
+                        attachments.map((file, index) => (
+                            <a
+                                key={index}
+                                href={file.path}
+                                download={file.name}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-500 underline"
+                            >
+                                {file.name || `File ${index + 1}`}
+                            </a>
+                        ))
+                    ) : (
+                        'Không có tệp đính kèm'
+                    )}
+                </div>
+            ),
+        }
+        
     ];
 
-    // Tách dự án có `id` trùng với `projectId` và các dự án còn lại
     const mainProject = detailProjectByIds.find((project) => project.id === projectId);
-    const otherProjects = detailProjectByIds.filter(project => project.id !== projectId);
+    const otherProjects = detailProjectByIds.filter((project) => project.id !== projectId);
 
-    // Xây dựng cột động với kiểu `ColumnsType`
-    const columns = [
-        {
-            title: 'Thông tin',
-            dataIndex: 'title',
-            key: 'title',
-            fixed: 'left', // Cố định cột đầu tiên
-            width: 150,
-            className: 'font-bold text-black-500', // In đậm cột đầu tiên
-        },
-        mainProject ? {
-            title: mainProject.name || `Dự án ${mainProject.id}`,
-            dataIndex: 'mainProject',
-            key: 'mainProject',
-            fixed: 'left', // Cố định cột của dự án chính
-            width: 200,
-            render: (text: any) => text || 'Không có',
-        } : undefined,
-        ...otherProjects.map((project, index) => ({
-            title: project.name || `Dự án ${index + 1}`,
-            dataIndex: `project_${index}`,
-            key: `project_${index}`,
-            width: 200,
-            render: (text: any) => text || 'Không có',
-        })),
-    ].filter(Boolean); // Lọc bỏ phần tử `undefined` nếu `mainProject` không tồn tại
-
-    // Chuẩn bị dataSource cho bảng, mỗi dòng sẽ là một trường thông tin của dự án
-    const dataSource = rows.map(row => {
-        const rowData: Record<string, any> = {
-            key: row.key,
-            title: row.title,
-        };
+    const createColumns = () => {
+        const columns: { title: React.ReactNode; dataIndex: string; key: string; width: number; className?: string }[] = [
+            {
+                title: 'Tên Dự án',
+                dataIndex: 'title',
+                key: 'title',
+                width: 150,
+                className: 'font-bold text-black-500'
+            },
+        ];
 
         if (mainProject) {
-            rowData['mainProject'] = row.render ? row.render(mainProject[row.dataIndex]) : mainProject[row.dataIndex];
+            columns.push({
+                title: mainProject.name ? (
+                    <Link to={`/project/detail/${mainProject.id}`}>{mainProject.name}</Link>
+                ) : `Dự án ${mainProject.id}`,
+                dataIndex: 'mainProject',
+                key: 'mainProject',
+                width: 200,
+            });
         }
 
         otherProjects.forEach((project, index) => {
-            rowData[`project_${index}`] = row.render ? row.render(project[row.dataIndex]) : project[row.dataIndex];
+            columns.push({
+                title: project.name ? (
+                    <Link to={`/project/detail/${project.id}`}>{project.name}</Link>
+                ) : `Dự án ${index + 1}`,
+                dataIndex: `project_${index}` as keyof ICompareProject,
+                key: `project_${index}`,
+                width: 200,
+            });
         });
 
-        return rowData;
-    });
+        return columns;
+    };
+
+    const createDataSource = (rowKeys: RowType[]) =>
+        rowKeys.map((row) => {
+            const rowData: Record<string, any> = { key: row.key, title: row.title };
+
+            if (mainProject) {
+                rowData['mainProject'] = row.render
+                    ? row.render(mainProject[row.dataIndex])
+                    : mainProject[row.dataIndex];
+            }
+
+            otherProjects.forEach((project, index) => {
+                rowData[`project_${index}`] = row.render
+                    ? row.render(project[row.dataIndex])
+                    : project[row.dataIndex];
+            });
+
+            return rowData;
+        });
+
+    // const subTables = [
+    //     {
+    //         title: 'Danh sách Nhà thầu',
+    //         rows: [
+    //             { key: 'tenderer', title: 'Nhà thầu', dataIndex: 'tenderer' as keyof ICompareProject, render: (item: ICompareProject) => item?.name || 'Không có' },
+    //         ],
+    //     },
+    //     {
+    //         title: 'Danh sách Nhà đầu tư',
+    //         rows: [
+    //             { key: 'investor', title: 'Nhà đầu tư', dataIndex: 'investor' as keyof ICompareProject, render: (item: ICompareProject) => item?.name || 'Không có' },
+    //         ],
+    //     },
+    // ];
 
     return (
-        <Table
-            columns={columns as ColumnsType<any>} // Ép kiểu rõ ràng cho columns
-            dataSource={dataSource}
-            pagination={false} // Tắt phân trang
-            scroll={{ x: 'max-content' }} // Cho phép cuộn ngang
-            bordered // Hiển thị border cho bảng
-        />
+        <div>
+            <h2 className="font-bold text-lg mb-4">Thông tin tổng quan</h2>
+            <Table
+                columns={createColumns()}
+                dataSource={createDataSource(rows)}
+                pagination={false}
+                scroll={{ x: 'max-content' }}
+                bordered
+            />
+            {/* {subTables.map((table, index) => (
+                <div key={index}>
+                    <h2 className="font-bold text-lg mt-8 mb-4">{table.title}</h2>
+                    <Table
+                        columns={createColumns()}
+                        dataSource={createDataSource(table.rows)}
+                        pagination={false}
+                        scroll={{ x: 'max-content' }}
+                        bordered
+                    />
+                </div>
+            ))} */}
+        </div>
     );
 };
 

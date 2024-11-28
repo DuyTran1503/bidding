@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useArchive } from "@/hooks/useArchive";
-import { IChartInitialState } from "@/services/store/chart/chart.slice";
 import GenericChart from "@/components/chart/GenericChart";
 import CustomTabs from "@/components/table/CustomTabs";
 import Heading from "@/components/layout/Heading";
@@ -19,32 +18,29 @@ import {
 } from "@/services/store/CompareProject/compareProject.thunk";
 import Button from "@/components/common/Button";
 import { ICompareProjectInitialState } from "@/services/store/CompareProject/compareProject.slice";
-import { projectByFundingsource, projectByIndustry } from "@/services/store/chart/chart.thunk";
 import { Col, message, Row } from "antd";
 import TableChart from "@/components/chart/TableChart";
 import { ICompareProject } from "@/services/store/CompareProject/compareProject.model";
 import ProjectDetail from "@/components/chart/ProjectTable";
 
 const Statistical: React.FC = () => {
-  const { state: stateChart, dispatch: dispatchChart } = useArchive<IChartInitialState>("chart");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateCompare, dispatch: dispatchCompare } = useArchive<ICompareProjectInitialState>("compareproject");
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const treeSelectIdsRef = useRef<string[]>([]);
   const previousIdRef = useRef<string | undefined>(undefined);
+  const [activeTab, setActiveTab] = useState<string>("1");
 
   const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
     dispatchProject(getListProject());
-    dispatchChart(projectByIndustry({}));
-    dispatchChart(projectByFundingsource({}));
     if (id) {
       dispatchProject(getProjectById(id));
     }
-  }, [id, dispatchChart, dispatchProject]);
+  }, [id, dispatchProject]);
 
   useEffect(() => {
     if (stateProject.listProjects) {
@@ -60,19 +56,27 @@ const Statistical: React.FC = () => {
   //     }
   // }, [stateProject.project, stateChart.employeeEducationLevelStatisticByEnterprise, dispatchChart]);
 
-  const fetchAllTabData = useCallback(
-    (projectIds: string[]) => {
-      const fetchPromises = [
-        dispatchCompare(detailProjectByIds({ body: { project_ids: projectIds } })),
-        dispatchCompare(compareBarChartTotalAmount({ body: { project_ids: projectIds } })),
-        dispatchCompare(compareConstructionTime({ body: { project_ids: projectIds } })),
-        dispatchCompare(compareBidSubmissionTime({ body: { project_ids: projectIds } })),
-        dispatchCompare(comparePieChartTotalAmount({ body: { project_ids: projectIds } })),
-        dispatchCompare(compareBidderCount({ body: { project_ids: projectIds } })),
-      ];
-      return Promise.all(fetchPromises);
+  const fetchTabData = useCallback(
+    (projectIds: string[], tabKey: string) => {
+      // console.log("Fetching data for tab:", tabKey);
+      switch (tabKey) {
+        case "1":
+          return dispatchCompare(detailProjectByIds({ body: { project_ids: projectIds } }));
+        case "2":
+          return dispatchCompare(compareBarChartTotalAmount({ body: { project_ids: projectIds } }));
+        case "3":
+          return dispatchCompare(compareConstructionTime({ body: { project_ids: projectIds } }));
+        case "4":
+          return dispatchCompare(compareBidSubmissionTime({ body: { project_ids: projectIds } }));
+        case "5":
+          return dispatchCompare(comparePieChartTotalAmount({ body: { project_ids: projectIds } }));
+        case "6":
+          return dispatchCompare(compareBidderCount({ body: { project_ids: projectIds } }));
+        default:
+          return Promise.resolve();
+      }
     },
-    [dispatchCompare],
+    [dispatchCompare]
   );
 
   const handleAddToCompare = useCallback(() => {
@@ -87,15 +91,8 @@ const Statistical: React.FC = () => {
     }
 
     localStorage.setItem("selectedProjectIds", JSON.stringify(updatedProjectIds));
-    message.loading("Đang so sánh...");
-    fetchAllTabData(updatedProjectIds)
-      .then(() => {
-        message.success("So sánh thành công!");
-      })
-      .catch(() => {
-        message.error("Có lỗi xảy ra trong quá trình so sánh.");
-      });
-  }, [stateProject.project, fetchAllTabData]);
+    fetchTabData(updatedProjectIds, activeTab);
+  }, [stateProject.project, fetchTabData,activeTab]);
 
   useEffect(() => {
     const savedProjectIds = localStorage.getItem("selectedProjectIds");
@@ -105,15 +102,13 @@ const Statistical: React.FC = () => {
       setSelectedIds(projectIds);
 
       if (previousIdRef.current != id) {
-        message.loading("Đang tải lại dữ liệu so sánh...");
-        fetchAllTabData(projectIds);
+        fetchTabData(projectIds, activeTab);
       }
     } else if (id && previousIdRef.current !== id) {
       const updatedProjectIds = Array.from(new Set([id, ...treeSelectIdsRef.current]));
-      message.loading("Đang tải dữ liệu");
-      fetchAllTabData(updatedProjectIds);
+      fetchTabData(updatedProjectIds, activeTab);
     }
-  }, [fetchAllTabData, id]);
+  }, [fetchTabData, id, activeTab]);
 
   useEffect(() => {
     return () => {
@@ -143,169 +138,170 @@ const Statistical: React.FC = () => {
       }));
   }, [stateCompare.comparePieChartTotalAmount]);
 
+  const handleTabChange = (key: string) => {
+    setActiveTab(key);
+    // fetchTabData(projectId, key);
+  };
   const projectId = stateProject.project?.id;
-  const tabItems = useMemo(
-    () => [
-      {
-        key: "1",
-        label: "Thống kê dự án",
-        content: <ProjectDetail detailProjectByIds={stateCompare.detailProjectByIds} projectId={projectId} />,
-      },
-      {
-        key: "2",
-        label: "Tổng số tiền",
-        content: (
-          <>
-            <GenericChart
-              chartType="bar"
-              title="Biểu đồ so sánh tổng số tiền"
-              name={stateCompare.compareBarChartTotalAmount.map((item) => item.name)}
-              value={stateCompare.compareBarChartTotalAmount.map((item) => item.total_amount)}
-              grid={120}
-              valueType="currency"
-              rotate={45}
-              colors={stateCompare.compareBarChartTotalAmount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
-            />
-            <TableChart
-              compareData={stateCompare.compareBarChartTotalAmount.map((item) => ({
-                id: String(item.id || ""),
-                name: item.name,
-                value: item.total_amount,
-              }))}
-              projectId={projectId}
-              valueType="currency"
-            />
-          </>
-        ),
-      },
-      {
-        key: "3",
-        label: "Thời gian thực hiện dự án",
-        content: (
-          <>
-            <GenericChart
-              chartType="bar"
-              title="Biểu đồ so sánh thời gian thực hiện dự án"
-              name={stateCompare.compareConstructionTime.map((item) => item.name)}
-              value={stateCompare.compareConstructionTime.map((item) => item.duration)}
-              // seriesName="Tổng số tiền"
-              grid={120}
-              valueType="date"
-              colors={stateCompare.compareBarChartTotalAmount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
-            />
-            <TableChart
-              compareData={stateCompare.compareConstructionTime.map((item) => ({
-                id: String(item.id || ""),
-                name: item.name,
-                value: item.duration,
-              }))}
-              projectId={projectId}
-              valueType="date"
-            />
-          </>
-        ),
-      },
-      {
-        key: "4",
-        label: "Thời gian mở thầu",
-        content: (
-          <>
-            <GenericChart
-              chartType="bar"
-              title="Biểu đồ so sánh thời gian mở thầu"
-              name={stateCompare.compareBidSubmissionTime.map((item) => item.name)}
-              value={stateCompare.compareBidSubmissionTime.map((item) => item.duration)}
-              seriesName="Ngày"
-              grid={120}
-              valueType="date"
-              colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
-            />
-            <TableChart
-              compareData={stateCompare.compareBidSubmissionTime.map((item) => ({
-                id: String(item.id || ""),
-                name: item.name,
-                value: item.duration,
-              }))}
-              projectId={projectId}
-              valueType="date"
-            />
-          </>
-        ),
-      },
-      {
-        key: "5",
-        label: "Tỷ lệ vốn các project con của các dự án ",
-        content: (
-          <>
-            <GenericChart
-              chartType="bar"
-              title="Biểu đồ so sánh tỷ lệ vốn các project con của các dự án "
-              name={stateCompare.comparePieChartTotalAmount.map((item, index) => `${item.name} (${index + 1})`)}
-              value={stateCompare.comparePieChartTotalAmount.map((item) => item.value)}
-              valueType="currency"
-              legendPosition="bottom"
-              colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
-            />
-            <Row gutter={[24, 24]} className="mb-8">
-              {childChartData.length > 0 &&
-                childChartData.map((childData, index) => (
-                  <Col xs={24} sm={24} md={12} xl={12} key={`child-chart-${index}`}>
-                    <GenericChart
-                      chartType="pie"
-                      title={`${++index} - Biểu đồ chi tiết cho dự án (${childData.parentId})`}
-                      name={childData.children.map((child) => child.name)}
-                      value={childData.children.map((child) => child.value)}
-                      valueType="currency"
-                      legendPosition="bottom"
-                      rotate={100}
-                      titleFontSize={14}
-                    />
-                  </Col>
-                ))}
-            </Row>
-            <TableChart
-              compareData={stateCompare.comparePieChartTotalAmount.map((item) => ({
-                id: String(item.id || ""),
-                name: item.name,
-                value: item.value,
-              }))}
-              projectId={projectId}
-              valueType="currency"
-              chartType="pie"
-            />
-          </>
-        ),
-      },
-      {
-        key: "6",
-        label: "Số lượng nhà thầu tham gia",
-        content: (
-          <>
-            <GenericChart
-              chartType="bar"
-              title="Biểu đồ so sánh số lượng nhà thầu tham gia"
-              name={stateCompare.compareBidderCount.map((item) => item.name)}
-              value={stateCompare.compareBidderCount.map((item) => item.bidder_count)}
-              seriesName="Số lượng nhà thầu"
-              grid={120}
-              valueType="quantity"
-              colors={stateCompare.compareBidderCount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
-            />
-            <TableChart
-              compareData={stateCompare.compareBidderCount.map((item) => ({
-                id: String(item.id || ""),
-                name: item.name,
-                value: item.bidder_count,
-              }))}
-              projectId={projectId}
-              valueType="quantity"
-            />
-          </>
-        ),
-      },
-    ],
-    [stateCompare, stateChart, id],
-  );
+  const tabItems = [
+    {
+      key: "1",
+      label: "Thống kê dự án",
+      content: <ProjectDetail detailProjectByIds={stateCompare.detailProjectByIds} projectId={projectId} />,
+    },
+    {
+      key: "2",
+      label: "Tổng số tiền",
+      content: (
+        <>
+          <GenericChart
+            chartType="bar"
+            title="Biểu đồ so sánh tổng số tiền"
+            name={stateCompare.compareBarChartTotalAmount.map((item) => item.name)}
+            value={stateCompare.compareBarChartTotalAmount.map((item) => item.total_amount)}
+            grid={120}
+            valueType="currency"
+            rotate={45}
+            colors={stateCompare.compareBarChartTotalAmount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
+          />
+          <TableChart
+            compareData={stateCompare.compareBarChartTotalAmount.map((item) => ({
+              id: String(item.id || ""),
+              name: item.name,
+              value: item.total_amount,
+            }))}
+            projectId={projectId}
+            valueType="currency"
+          />
+        </>
+      ),
+    },
+    {
+      key: "3",
+      label: "Thời gian thực hiện dự án",
+      content: (
+        <>
+          <GenericChart
+            chartType="bar"
+            title="Biểu đồ so sánh thời gian thực hiện dự án"
+            name={stateCompare.compareConstructionTime.map((item) => item.name)}
+            value={stateCompare.compareConstructionTime.map((item) => item.duration)}
+            // seriesName="Tổng số tiền"
+            grid={120}
+            valueType="date"
+            colors={stateCompare.compareBarChartTotalAmount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
+          />
+          <TableChart
+            compareData={stateCompare.compareConstructionTime.map((item) => ({
+              id: String(item.id || ""),
+              name: item.name,
+              value: item.duration,
+            }))}
+            projectId={projectId}
+            valueType="date"
+          />
+        </>
+      ),
+    },
+    {
+      key: "4",
+      label: "Thời gian mở thầu",
+      content: (
+        <>
+          <GenericChart
+            chartType="bar"
+            title="Biểu đồ so sánh thời gian mở thầu"
+            name={stateCompare.compareBidSubmissionTime.map((item) => item.name)}
+            value={stateCompare.compareBidSubmissionTime.map((item) => item.duration)}
+            seriesName="Ngày"
+            grid={120}
+            valueType="date"
+            colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
+          />
+          <TableChart
+            compareData={stateCompare.compareBidSubmissionTime.map((item) => ({
+              id: String(item.id || ""),
+              name: item.name,
+              value: item.duration,
+            }))}
+            projectId={projectId}
+            valueType="date"
+          />
+        </>
+      ),
+    },
+    {
+      key: "5",
+      label: "Tỷ lệ vốn các project con của các dự án ",
+      content: (
+        <>
+          <GenericChart
+            chartType="bar"
+            title="Biểu đồ so sánh tỷ lệ vốn các project con của các dự án "
+            name={stateCompare.comparePieChartTotalAmount.map((item, index) => `${item.name} (${index + 1})`)}
+            value={stateCompare.comparePieChartTotalAmount.map((item) => item.value)}
+            valueType="currency"
+            legendPosition="bottom"
+            colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
+          />
+          <Row gutter={[24, 24]} className="mb-8">
+            {childChartData.length > 0 &&
+              childChartData.map((childData, index) => (
+                <Col xs={24} sm={24} md={12} xl={12} key={`child-chart-${index}`}>
+                  <GenericChart
+                    chartType="pie"
+                    title={`${++index} - Biểu đồ chi tiết cho dự án (${childData.parentId})`}
+                    name={childData.children.map((child) => child.name)}
+                    value={childData.children.map((child) => child.value)}
+                    valueType="currency"
+                    legendPosition="bottom"
+                    rotate={100}
+                    titleFontSize={14}
+                  />
+                </Col>
+              ))}
+          </Row>
+          <TableChart
+            compareData={stateCompare.comparePieChartTotalAmount.map((item) => ({
+              id: String(item.id || ""),
+              name: item.name,
+              value: item.value,
+            }))}
+            projectId={projectId}
+            valueType="currency"
+            chartType="pie"
+          />
+        </>
+      ),
+    },
+    {
+      key: "6",
+      label: "Số lượng nhà thầu tham gia",
+      content: (
+        <>
+          <GenericChart
+            chartType="bar"
+            title="Biểu đồ so sánh số lượng nhà thầu tham gia"
+            name={stateCompare.compareBidderCount.map((item) => item.name)}
+            value={stateCompare.compareBidderCount.map((item) => item.bidder_count)}
+            seriesName="Số lượng nhà thầu"
+            grid={120}
+            valueType="quantity"
+            colors={stateCompare.compareBidderCount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
+          />
+          <TableChart
+            compareData={stateCompare.compareBidderCount.map((item) => ({
+              id: String(item.id || ""),
+              name: item.name,
+              value: item.bidder_count,
+            }))}
+            projectId={projectId}
+            valueType="quantity"
+          />
+        </>
+      ),
+    },
+  ]
 
   return (
     <>
@@ -333,11 +329,11 @@ const Statistical: React.FC = () => {
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
-          // isDisabled={selectedIds.length > 20}
+        // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>
-      <CustomTabs items={tabItems} />
+      <CustomTabs selectedKey={activeTab} onChange={handleTabChange} items={tabItems} />
     </>
   );
 };

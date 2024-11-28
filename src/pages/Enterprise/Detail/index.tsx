@@ -7,8 +7,7 @@ import { useEffect, useState } from "react";
 import { IoClose, IoImage } from "react-icons/io5";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getEnterpriseById } from "@/services/store/enterprise/enterprise.thunk";
-import { Card, Descriptions, Typography } from "antd";
-const { Title } = Typography;
+import { Card, Descriptions } from "antd";
 const DetailEnterprise = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");

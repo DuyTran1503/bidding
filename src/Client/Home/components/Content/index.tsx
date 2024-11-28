@@ -11,7 +11,6 @@ import {
     industryHasTheMostEnterprise,
     industryHasTheMostProject,
     projectByDomestic,
-    projectByFundingsource,
     projectByIndustry,
     projectByOrganizationType,
     projectBySelectionMethod,
@@ -41,7 +40,6 @@ const Content: React.FC = () => {
     useEffect(() => {
         const dispatchActions = [
             projectByIndustry({}),
-            projectByFundingsource({}),
             averageProjectPurationByIndustry({}),
             projectByDomestic({}),
             projectByOrganizationType({}),
@@ -57,7 +55,7 @@ const Content: React.FC = () => {
 
         dispatchActions.forEach(action => dispatch(action));
     }, [dispatch]);
-    
+
     useEffect(() => {
         if (selectedYearTimeJoining) {
             dispatch(timeJoiningWebsiteOfEnterprise({ body: { year: selectedYearTimeJoining } }));
@@ -130,34 +128,23 @@ const Content: React.FC = () => {
                 <h2 className="mb-4 text-xl font-semibold">2. Phân tích chi tiết</h2>
                 <Row gutter={[24, 24]}>
                     <Col xs={24} sm={24} md={24} xl={24}>
-                        <Col xs={24} sm={24} md={24} xl={24}>
-                            <ChartSection
-                                title="2.1 Dự án theo ngành"
-                                chartTitle="Dự án theo ngành"
-                                data={state.industryData}
-                                chartType="bar"
-                                barWidth={50}
-                                valueType="quantity"
-                                description={[
-                                    "Biểu đồ này phân tích số lượng và tỷ lệ dự án trong từng ngành khác nhau.",
-                                    "Giúp doanh nghiệp và nhà quản lý lập kế hoạch, ưu tiên ngành phù hợp, điều chỉnh nguồn lực và đầu tư vào các ngành đang phát triển mạnh hoặc tiềm năng.",
-                                ]}
-                            />
-                        </Col>
                         <ChartSection
-                            title="2.2 Dự án theo nguồn tài trợ"
-                            chartTitle="Dự án nguồn tài trợ"
-                            data={state.fundingData}
+                            title="2.1 Dự án theo ngành"
+                            chartTitle="Dự án theo ngành"
+                            data={state.industryData}
                             chartType="bar"
+                            barWidth={50}
+                            valueType="quantity"
                             description={[
-                                "Thể hiện các dự án được tài trợ bởi các nguồn nào (ví dụ: chính phủ, tư nhân, tổ chức quốc tế)",
-                                "Giúp doanh nghiệp nhận diện và đánh giá sự đa dạng của các nguồn tài trợ, từ đó đưa ra chiến lược tiếp cận hoặc tìm kiếm thêm nguồn tài trợ phù hợp.",
+                                "Biểu đồ này phân tích số lượng và tỷ lệ dự án trong từng ngành khác nhau.",
+                                "Giúp doanh nghiệp và nhà quản lý lập kế hoạch, ưu tiên ngành phù hợp, điều chỉnh nguồn lực và đầu tư vào các ngành đang phát triển mạnh hoặc tiềm năng.",
                             ]}
                         />
                     </Col>
+                
                     <Col xs={24} sm={24} md={24} xl={12}>
                         <ChartSection
-                            title="2.3 Dự án theo phạm vi trong nước/quốc tế"
+                            title="2.2 Dự án theo phạm vi trong nước/quốc tế"
                             chartTitle="Dự án theo phạm vi trong nước/quốc tế"
                             data={state.domesticData}
                             chartType="pie"
@@ -169,7 +156,7 @@ const Content: React.FC = () => {
                     </Col>
                     <Col xs={24} sm={24} md={24} xl={12}>
                         <ChartSection
-                            title="2.4 Dự án theo phương pháp lựa chọn nhà thầu"
+                            title="2.3 Dự án theo phương pháp lựa chọn nhà thầu"
                             chartTitle="Dự án theo phương pháp lựa chọn nhà thầu"
                             data={state.selectionData}
                             chartType="pie"
@@ -181,7 +168,7 @@ const Content: React.FC = () => {
                     </Col>
                     <Col xs={24} sm={24} md={24} xl={12}>
                         <ChartSection
-                            title="2.5 Dự án theo phương thức nộp thầu"
+                            title="2.4 Dự án theo phương thức nộp thầu"
                             chartTitle="Dự án theo phương thức nộp thầu"
                             data={state.submissionData}
                             chartType="pie"
@@ -193,7 +180,7 @@ const Content: React.FC = () => {
                     </Col>
                     <Col xs={24} sm={24} md={24} xl={12}>
                         <ChartSection
-                            title="2.6 Dự án theo nhà thầu và nhà đầu tư"
+                            title="2.5 Dự án theo nhà thầu và nhà đầu tư"
                             chartTitle="Doanh nghiệp thuộc diện"
                             data={state.tendererData}
                             chartType="pie"
@@ -205,7 +192,7 @@ const Content: React.FC = () => {
                     </Col>
                     <Col xs={24} sm={24} md={24} xl={12}>
                         <ChartSection
-                            title="2.7 Dự án theo loại hình tổ chức"
+                            title="2.6 Dự án theo loại hình tổ chức"
                             chartTitle="Dự án theo loại hình tổ chức"
                             data={state.organizationData}
                             chartType="bar"
@@ -220,7 +207,7 @@ const Content: React.FC = () => {
 
                     <Col xs={24} sm={24} md={24} xl={12}>
                         <ChartSection
-                            title="2.8 Thời gian trung bình của dự án theo ngành"
+                            title="2.7 Thời gian trung bình của dự án theo ngành"
                             chartTitle="Thời gian trung bình của dự án theo ngành"
                             data={state.durationData}
                             chartType="pie"
@@ -309,14 +296,7 @@ const Content: React.FC = () => {
                 </Row>
             </div>
             <div className="w-full">
-                <h2 className="mb-4 text-xl font-semibold">5. Bảng xếp hạng Doanh Nghiệp theo năm</h2>
-                {/* <Select
-            placeholder="Chọn năm..."
-            value={selectedYear}
-            onChange={handleYearChange}
-            options={yearOptions.map((year) => ({ label: year, value: year }))}
-            style={{ width: 150, marginBottom: 16 }}
-          /> */}
+                <h2 className="mb-4 text-xl font-semibold">4. Bảng xếp hạng Doanh Nghiệp theo năm</h2>
                 <Row gutter={[24, 24]}>
                     <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
                         <Select
@@ -334,7 +314,7 @@ const Content: React.FC = () => {
                                 },
                             ]}
                             categories={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
-                            title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
+                            title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ thống theo tháng trong năm"
                         />
                     </div>
                     <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">

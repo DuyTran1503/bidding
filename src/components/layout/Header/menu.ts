@@ -1,18 +1,8 @@
-type BaseMenuItem = {
+export type IMenuItem = {
   label: string;
+  path?: string;
+  items?: IMenuItem[];
 };
-
-type WithPath = BaseMenuItem & {
-  path: string;
-  items?: never;
-};
-
-type WithChildren = BaseMenuItem & {
-  items: IMenuItem[];
-  path?: never;
-};
-
-export type IMenuItem = WithPath | WithChildren;
 
 export const menu: IMenuItem[] = [
   {
@@ -25,14 +15,32 @@ export const menu: IMenuItem[] = [
   },
   {
     label: "Tin tức",
-    path: "/",
+    path: "/news",
   },
   {
     label: "Hướng dẫn",
-    path: "/",
+    path: "/instruct",
   },
   {
     label: "Liên hệ & Hỗ trợ",
-    path: "/",
+    path: "/support",
+    items:[
+      {
+        label: "Yêu cầu đã gửi",
+        path: "support/status/1"
+      },
+      {
+        label: "Yêu cầu đã có phản hồi",
+        path: "support/status/2"
+      },
+      {
+        label: "Yêu cầu đã đóng",
+        path: "support/status/3"
+      },
+      {
+        label: "Tạo mới yêu cầu",
+        path: "support/create"
+      },
+    ]
   },
 ];

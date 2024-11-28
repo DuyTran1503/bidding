@@ -35,9 +35,8 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
     is_active: item?.is_active ? "1" : "0",
   };
 
-  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
     const Schema = object().shape({
-        name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
+        name: string().trim().required("Vui lòng không để trống ô này"),
     })
   const handleSubmit = (data: IPostCatalog, { setErrors }: any) => {
     const body = {

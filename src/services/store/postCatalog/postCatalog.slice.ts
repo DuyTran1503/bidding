@@ -10,6 +10,7 @@ import {
   deletePostCatalog,
   getPostCatalogById,
   changeStatusPostCatalog,
+  getPostByCatalogId,
 } from "./postCatalog.thunk";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
@@ -49,6 +50,14 @@ const postCatalogSlice = createSlice({
         state.totalPages = payload.data.total_pages;
         state.pageSize = payload.data.page_size;
         state.currentPage = payload.data.current_page;
+      }
+    });
+
+    // ? Get By ID
+    builder.addCase(getPostByCatalogId.fulfilled, (state, { payload }: PayloadAction<IResponse<IPostCatalog> | any>) => {
+      if (payload.data) {
+        state.activePostCatalog = payload.data;
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       }
     });
 

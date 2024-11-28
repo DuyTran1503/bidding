@@ -62,6 +62,32 @@ export const createSupport = createAsyncThunk("support/create-support", async (r
   }
 });
 
+export const createSupports = createAsyncThunk("support/create-supports", async (request: Omit<ISupport, "id">, thunkAPI) => {
+  try {
+    const formData = objectToFormData(request);
+
+    const accessToken = client.tokens.accessToken();
+
+    const response = await fetch(import.meta.env.VITE_API_URL + `/api/create-support`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return thunkAPI.rejectWithValue(error);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.response.data);
+  }
+});
+
 export const deleteSupport = createAsyncThunk("support/delete-support", async (id: number | string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.delete(`${prefix}/${id}`);

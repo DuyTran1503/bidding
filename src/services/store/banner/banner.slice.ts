@@ -9,7 +9,8 @@ import {
   updateBanner, 
   deleteBanner, 
   getBannerById, 
-  changeStatusBanner 
+  changeStatusBanner, 
+  getBanners
 } from "./banner.thunk";
 import { IError } from '@/shared/interface/error';
 import { transformPayloadErrors } from '@/shared/utils/common/function';
@@ -49,6 +50,11 @@ const bannerSlice = createSlice({
           state.totalPages = payload.data.total_pages;
           state.pageSize = payload.data.page_size;
           state.currentPage = payload.data.current_page;
+      }
+  });
+    builder.addCase(getBanners.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
+      if (payload.data) {
+          state.banners = payload.data;
       }
   });
 
