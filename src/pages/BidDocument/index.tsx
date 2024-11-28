@@ -28,77 +28,49 @@ const BidDocument = () => {
     {
       dataIndex: "index",
       title: "STT",
-      className: "max-w-[80px]",
+      className: "max-w-[80px] w-[80px]",
     },
     {
       dataIndex: "project_id",
       title: "Dự án",
-      className: "max-w-[250px]",
+      className: "w-[250px]",
+      render(_, record) {
+        return <div>{record?.project?.name}</div>;
+      },
     },
     {
       dataIndex: "enterprise_id",
       title: "Doanh nghiệp",
-      className: "max-w-[250px]",
-    },
-    {
-      dataIndex: "bid_bond_id",
-      title: "Bảo lãnh dự thầu",
-      className: "max-w-[250px]",
+      className: "w-[250px]",
+      render(_, record) {
+        return <div>{record?.enterprise?.name}</div>;
+      },
     },
     {
       dataIndex: "submission_date",
       title: "Ngày nộp hồ sơ",
-      className: "max-w-[250px]",
+      className: "w-[250px]",
     },
     {
       dataIndex: "bid_price",
       title: "Giá thầu",
-      className: "max-w-[250px]",
-    },
-    {
-      dataIndex: "implementation_time",
-      title: "Thời gian thực hiện",
-      className: "max-w-[250px]",
-    },
-    {
-      dataIndex: "technical_score",
-      title: "Điểm kỹ thuật",
-      className: "max-w-[250px]",
-    },
-    {
-      dataIndex: "financial_score",
-      title: "Điểm tài chính",
-      className: "max-w-[250px]",
-    },
-    {
-      dataIndex: "totalScore",
-      title: "Tổng điểm",
-      className: "max-w-[250px]",
-    },
-    {
-      dataIndex: "ranking",
-      title: "Thứ hạng",
-      className: "max-w-[250px]",
+      className: "w-[250px]",
     },
     // {
-    //   dataIndex: "status",
     //   title: "Trạng thái",
-    //   className: "w-[250px]",
+    //   dataIndex: "status",
+    //   align: "center",
+    //   className: "w-[200px]",
+    //   render(_, record) {
+    //     return (
+    //       <CommonSwitch
+    //         onChange={() => handleChangeStatus(record as ITableData)}
+    //         checked={!!record.is_active}
+    //         title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
+    //       />
+    //     );
+    //   },
     // },
-
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      render(_, record) {
-        return (
-          <CommonSwitch
-            onChange={() => handleChangeStatus(record as ITableData)}
-            checked={!!record.is_active}
-            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
-          />
-        );
-      },
-    },
   ];
   const buttons: IGridButton[] = [
     {
@@ -150,6 +122,8 @@ const BidDocument = () => {
               ranking,
               status,
               notes,
+              enterprise,
+              project,
             },
             index,
           ) => ({
@@ -168,6 +142,8 @@ const BidDocument = () => {
             ranking,
             status,
             notes,
+            enterprise,
+            project,
           }),
         )
         .filter((item) => item.key !== undefined); // Optionally filter out items with undefined keys
@@ -246,7 +222,7 @@ const BidDocument = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        scroll={{ x: 1600 }}
+        // scroll={{ x: 1400 }}
       />
     </>
   );

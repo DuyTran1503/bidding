@@ -85,7 +85,7 @@ const UpdateProject = () => {
 
   const initialValues: IBidBond = {
     id: "",
-    project_id: undefined,
+    project_id: state.project?.id,
     enterprise_id: undefined,
     bond_amount: undefined,
     bond_type: undefined,
@@ -200,15 +200,42 @@ const UpdateProject = () => {
       label: "Bão lãnh dự thầu",
       disabled: !state.project?.id,
       children: (
-        <BidBondForm
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          type={EButtonTypes.CREATE}
-          formik={formikBidBondRef as any}
-          optionType={optionType}
-          projectOptions={convertDataOptions(state.listProjects || [])}
-          enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
-        />
+        <>
+          <Heading
+            title="Tạo mới "
+            hasBreadcrumb
+            buttons={[
+              {
+                type: "secondary",
+                text: "Hủy",
+                icon: <IoClose className="text-[18px]" />,
+                onClick: () => {
+                  navigate("/bid-document");
+                },
+              },
+              {
+                isLoading: state.status === EFetchStatus.PENDING,
+                text: "Tạo mới",
+                icon: <FaPlus className="text-[18px]" />,
+                onClick: () => {
+                  if (formikBidBondRef.current) {
+                    formikBidBondRef.current.handleSubmit();
+                  }
+                },
+              },
+            ]}
+          />
+          <BidBondForm
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            project_id={state.project?.id}
+            type={EButtonTypes.CREATE}
+            formik={formikBidBondRef as any}
+            optionType={optionType}
+            projectOptions={convertDataOptions(state.listProjects || [])}
+            enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
+          />
+        </>
       ),
     },
     {

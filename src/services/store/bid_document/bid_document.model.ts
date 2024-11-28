@@ -13,4 +13,6 @@ export interface IBidDocument {
   ranking: string;
   status: string;
   notes: string;
+  enterprise?: { id: string; name: string };
+  project?: { id: string; name: string };
 }
