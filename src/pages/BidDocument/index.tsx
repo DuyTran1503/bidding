@@ -75,21 +75,21 @@ const BidDocument = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/bid-document/detail/${record?.key}`);
+        navigate(`/bid-document/detail/${record?.id}`);
       },
       permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/bid-document/update/${record?.key}`);
+        navigate(`/bid-document/update/${record?.id}`);
       },
       permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteBidDocument(record?.key));
+        dispatch(deleteBidDocument(record?.id));
       },
       permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
     },
@@ -108,6 +108,7 @@ const BidDocument = () => {
         .map(
           (
             {
+              id,
               project_id,
               enterprise_id,
               bid_bond_id,
@@ -126,6 +127,7 @@ const BidDocument = () => {
             },
             index,
           ) => ({
+            id,
             index: index + 1,
             key: project_id !== undefined ? project_id : 0, // Provide a default value
             project_id,

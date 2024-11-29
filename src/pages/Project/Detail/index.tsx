@@ -8,9 +8,12 @@ import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProjectById } from "@/services/store/project/project.thunk";
 import ProjectDetailsCard from "./ProjectDetailsCard";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 const DetailProject = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IProjectInitialState>("project");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const [data, setData] = useState<INewProject>();
   const { id } = useParams();
   useFetchStatus({
@@ -29,6 +32,7 @@ const DetailProject = () => {
   useEffect(() => {
     if (id) {
       dispatch(getProjectById(id));
+      dispatchEnterprise(getListEnterprise());
     }
   }, [id]);
   useEffect(() => {
@@ -36,6 +40,7 @@ const DetailProject = () => {
       setData(state.project);
     }
   }, [JSON.stringify(state.project)]);
+
   return (
     <>
       <Heading
@@ -52,7 +57,7 @@ const DetailProject = () => {
           },
         ]}
       />
-      <ProjectDetailsCard data={data} title={"Thông tin dự án"} />
+      <ProjectDetailsCard data={data} title={"Thông tin dự án"} listEnterprise={stateEnterprise?.listEnterprise} />
     </>
   );
 };

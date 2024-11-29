@@ -67,6 +67,9 @@ const BidBonds = () => {
       dataIndex: "enterprise_id",
       title: "Nguời/Tổ chức bảo lãnh",
       className: "w-[250px]",
+      render(_, record) {
+        return <div className="flex flex-col">{record?.enterpriseName}</div>;
+      },
     },
     {
       dataIndex: "bond_type",
@@ -78,6 +81,9 @@ const BidBonds = () => {
     {
       dataIndex: "project_id",
       title: "Dự án",
+      render(_, record) {
+        return <div className="flex flex-col">{record?.projectName}</div>;
+      },
     },
     {
       dataIndex: "bond_amount",
@@ -96,11 +102,13 @@ const BidBonds = () => {
               index: index + 1,
               key: id,
               id,
-              project_id: projectName(+project_id!),
+              project_id,
+              projectName: projectName(+project_id!),
               bond_amount,
               bond_type,
               bond_number,
-              enterprise_id: enterpriseName(+enterprise_id!),
+              enterprise_id,
+              enterpriseName: enterpriseName(+enterprise_id!),
               issue_date,
               expiry_date,
               description,
