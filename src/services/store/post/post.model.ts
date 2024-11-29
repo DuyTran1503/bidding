@@ -13,4 +13,5 @@ export interface IPost {
     content: string;
     thumbnail?: File | string;
     status: number;
+    created_at?: string;
 }
