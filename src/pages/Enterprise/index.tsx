@@ -158,14 +158,14 @@ const Enterprise = () => {
       className: "w-[250px]",
     },
     {
-      dataIndex: "industry_id",
+      dataIndex: "industries",
       title: "Lĩnh vực hoạt động",
       className: "w-[200px]",
       render(_, record) {
         return (
           <div className="flex flex-col">
-          {record.industry_id.length > 0 ? (
-            record.industry_id.map((item:any, index:number) => (
+          {record.industries.length > 0 ? (
+            record.industries.map((item:any, index:number) => (
               <div key={index}>{item}</div>
             ))
           ) : null}
@@ -332,7 +332,8 @@ const Enterprise = () => {
           representative,
           enterprises: (industry_id?.length && industry(industry_id)) || [],
           organization_type,
-          industry_id:industries,
+          industry_id,
+          industries,
           phone,
           email,
           address,

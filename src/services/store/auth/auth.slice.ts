@@ -3,6 +3,7 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
 import { getProfile, login, logout } from "./auth.thunk";
 import { ILoginResponseData, IUserProfile } from "./auth.model";
+import { transformPayloadErrors } from "@/shared/utils/common/function";
 
 export interface IAuthInitialState extends Partial<IInitialState> {
   isLogin: boolean;
@@ -41,6 +42,7 @@ const authSlice = createSlice({
       })
       .addCase(getProfile.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
+       
       });
     // ? Login
     builder
@@ -54,8 +56,11 @@ const authSlice = createSlice({
         state.status = EFetchStatus.FULFILLED;
       })
       .addCase(login.rejected, (state, { payload }: PayloadAction<any>) => {
-        state.message = payload?.message;
+        console.log(payload);
+        
+        // state.message = payload?.message;
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors||payload?.message||'Tài khoản mật khẩu không chính xác');
       });
     // ? Logout
     builder

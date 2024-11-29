@@ -120,7 +120,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "3.1",
           label: "Doanh nghiệp",
           path: "enterprise",
-          permissions: EPermissions.LIST_BUSINESS_ACTIVITY_TYPE,
+          permissions: EPermissions.LIST_ENTERPRISE,
         },
         // {
         //   id: "2.2",

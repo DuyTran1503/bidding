@@ -342,8 +342,6 @@ const ActionModule = ({
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(values.submission_method);
-
         return (
           <Form className="mt-4">
             {!isChildren && children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}

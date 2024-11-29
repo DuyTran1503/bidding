@@ -4,7 +4,7 @@ export interface IEvaluationCriteria {
   id: string;
   project_id?: string;
   project_name?: string;
-  project?: IProject[];
+  project?: IProject|IProject[];
   name: string;
   weight: string;
   description?: string;
