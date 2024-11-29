@@ -34,7 +34,7 @@ import lodash from "lodash";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { EButtonTypes } from "@/shared/enums/button";
 import { convertDataOptions } from "../helper";
-
+import { resetStatus as resetStatusBidBond, setFilter } from "@/services/store/bid_bond/bidBond.slice";
 const UpdateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
@@ -50,7 +50,7 @@ const UpdateProject = () => {
   const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
-  const { dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  const {  state: stateBidBond, dispatch:dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -64,6 +64,18 @@ const UpdateProject = () => {
       },
     },
   });
+  useFetchStatus({
+    module: "bid_bond",
+    reset: resetStatusBidBond,
+    actions: {
+      success: {
+        message: stateBidBond.message,
+      },
+      error: {
+        message: stateBidBond.message,
+      },
+    },
+  })
   useEffect(() => {
     if (id) {
       dispatch(getProjectById(id));
@@ -243,6 +255,12 @@ const UpdateProject = () => {
       label: "Hồ sơ dự thầu",
       disabled: !state.project?.id,
       children: <CreateBidDocument project_id={state.project?.id} />,
+    },
+    {
+      key: "5",
+      label: "Kết quả đấu thầu",
+      // disabled: !state.project?.id,
+      children: <>hdsfd</>,
     },
   ];
   return (

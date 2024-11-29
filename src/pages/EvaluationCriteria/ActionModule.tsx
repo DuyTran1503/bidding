@@ -32,6 +32,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
   const formikRef = useRef<FormikProps<IEvaluationCriteria>>(null);
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+console.log(item);
 
   const { screenSize } = useViewport();
   const initialValues: IEvaluationCriteria = {
@@ -112,7 +113,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
                   <FormSelect
                     isDisabled={type === "view"}
                     label="Tên dự án"
-                    value={stateProject.listProjects?.find((item) => +item.id === +values?.project_id!)?.name ?? undefined}
+                    value={values.project_id}
                     id="project_id"
                     placeholder="Nhập tên dự án..."
                     onChange={(value) => setFieldValue("project_id", value)}

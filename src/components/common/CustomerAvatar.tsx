@@ -18,7 +18,9 @@ const CustomerAvatar: React.FC<CustomerAvatarProps> = ({
   size = "medium",
   avatar = false, // Default to false if not provided
 }) => {
-  const [imageSrc, setImageSrc] = useState<string>(src && src.trim() !== "" ? src : imgFbDefault);
+  const [imageSrc, setImageSrc] = useState<string>(src && src.trim() !== "" ? src : '');
+  console.log(src);
+
 
   const handleImageError = () => {
     setImageSrc(imageError);
@@ -29,7 +31,7 @@ const CustomerAvatar: React.FC<CustomerAvatarProps> = ({
 
   return (
     <img
-      src={fullImageSrc}
+      src={!src ? imgFbDefault : fullImageSrc}
       alt={alt}
       className={clsx("object-cover", className, {
         "h-auto w-auto": size === "medium",
