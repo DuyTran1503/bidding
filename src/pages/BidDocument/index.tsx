@@ -8,21 +8,17 @@ import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
-import { useEffect, useMemo, useState } from "react";
-import ConfirmModal from "@/components/common/CommonModal";
+import { useEffect, useMemo } from "react";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IBidDocumentInitialState, resetStatus, setFilter } from "@/services/store/bid_document/bid_document.slice";
-import { changeStatusBidDocument, deleteBidDocument, getAllBidDocument } from "@/services/store/bid_document/bid_document.thunk";
+import { deleteBidDocument, getAllBidDocument } from "@/services/store/bid_document/bid_document.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
 
 const BidDocument = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBidDocumentInitialState>("bid_document");
-  const [isModal, setIsModal] = useState(false);
-  const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -151,11 +147,6 @@ const BidDocument = () => {
     }
     return [];
   }, [JSON.stringify(state.bidDocuments)]);
-  const onConfirmStatus = () => {
-    if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusBidDocument(String(confirmItem.key)));
-    }
-  };
   useEffect(() => {
     dispatch(getAllBidDocument({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
@@ -198,13 +189,6 @@ const BidDocument = () => {
           },
         ]}
       />
-      <ConfirmModal
-        title={"Xác nhận"}
-        content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
-        visible={isModal}
-        setVisible={setIsModal}
-        onConfirm={onConfirmStatus}
-      />
       <ManagementGrid
         columns={columns}
         data={data}
@@ -219,7 +203,7 @@ const BidDocument = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        // scroll={{ x: 1400 }}
+      // scroll={{ x: 1400 }}
       />
     </>
   );
