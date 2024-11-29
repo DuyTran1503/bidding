@@ -33,7 +33,7 @@ const SupportForm = ({ visible, type, setVisible, item }: ISupportFormProps) => 
         phone: item?.phone || "",
         content: item?.content || "",
         document: item?.document || undefined,
-        type: item?.type || 0,
+        type: item?.type || 1,
         status: item?.status || "sent",
     };
 

@@ -17,12 +17,11 @@ import { EButtonTypes } from "@/shared/enums/button";
 import Image from "@/components/table/Image";
 import { mappingStatust } from "@/shared/enums/types";
 import { statusEnumArray } from "@/shared/enums/statusActive";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const Posts = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IPostInitialState>("post");
-  // const [isModal, setIsModal] = useState(false);
-  // const [confirmItem] = useState<ITableData | null>();
 
   const buttons: IGridButton[] = [
     {
@@ -30,21 +29,21 @@ const Posts = () => {
       onClick(record) {
         navigate(`/posts/detail/${record?.key}`);
       },
-      // permission: EPermissions.DETAIL_POST,
+      permission: EPermissions.DETAIL_POST,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`update/${record?.key}`);
       },
-      // permission: EPermissions.UPDATE_POST,
+      permission: EPermissions.UPDATE_POST,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deletePost(record?.key));
       },
-      // permission: EPermissions.DESTROY_POST,
+      permission: EPermissions.DESTROY_POST,
     },
   ];
 
@@ -54,20 +53,23 @@ const Posts = () => {
       title: "STT",
     },
     {
-      dataIndex: "author_name",
+      dataIndex: "author",
       title: "Người đăng bài",
+      render: (_, record) => {
+        return <span>{record.author?.name}</span>;
+      }
     },
     {
-      dataIndex: "post_catalog_name",
+      dataIndex: "catalog",
       title: "Thể loại",
       render: (_, record) => {
-        return <div>
-         {Array.isArray(record.post_catalog_name) &&
-  record.post_catalog_name.map((item: number, index: number) => (
-    <div key={index}>{item}</div>
-  ))}
-
-        </div>;
+        return (
+          <div className="flex flex-col">
+            {record.catalog?.map((catalog: any) => (
+              <div key={catalog.id}>{catalog.name}</div>
+            ))}
+          </div>
+        );
       },
     },
     {
@@ -75,8 +77,11 @@ const Posts = () => {
       dataIndex: "title",
     },
     {
-      dataIndex: "short_title",
-      title: "Tiêu đề ngắn",
+      dataIndex: "thumbnail",
+      title: "Ảnh",
+      render(_, record) {
+        return <Image src={record.thumbnail as unknown as string} alt={"Ảnh đại diện"} />;
+      },
     },
     {
       title: "Trạng thái",
@@ -93,32 +98,10 @@ const Posts = () => {
         return (
           <div className="flex items-center space-x-2">
             <span>{text}</span>
-            {/* <FormSelect
-              onChange={() => handleChangeStatus(record)}
-              title={text}
-            /> */}
           </div>
         );
       },
     },
-    {
-      dataIndex: "path",
-      title: "Link",
-      render(_, record) {
-        return <Image src={record.path as unknown as string} alt={"Ảnh đại diện"} />;
-      },
-    },
-    // {
-    //   title: "Tài liệu",
-    //   dataIndex: "document"
-    // },
-    // {
-    //   dataIndex: "content",
-    //   title: "Nội dung",
-    //   render(_, record) {
-    //     return <div dangerouslySetInnerHTML={{ __html: record?.document || "" }} className="text-compact-3"></div>;
-    //   },
-    // },
   ];
   const optionStatus: IOption[] = statusEnumArray.map((e) => ({
     label: mappingStatust[e],
@@ -135,7 +118,7 @@ const Posts = () => {
     {
       id: "status",
       placeholder: "Chọn trạng thái...",
-      title: "Tên trạng thái",
+      label: "Tên trạng thái",
       type: "select",
       options: optionStatus,
     },
@@ -144,12 +127,12 @@ const Posts = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.posts && state.posts.length > 0
-        ? state.posts.map(({ id, author_name, post_catalog_name, short_title, title, thumbnail, status }, index) => ({
+        ? state.posts.map(({ id, author, catalog, short_title, title, thumbnail, status }, index) => ({
           index: index + 1,
           key: id,
           id: id,
-          author_name,
-          post_catalog_name,
+          author,
+          catalog,
           short_title,
           title,
           thumbnail,
@@ -196,7 +179,7 @@ const Posts = () => {
           },
           {
             icon: <FaPlus className="text-[18px]" />,
-            // permission: EPermissions.CREATE_POST,
+            permission: EPermissions.CREATE_POST,
             text: "Thêm mới",
             onClick: () => navigate("create"),
           },
