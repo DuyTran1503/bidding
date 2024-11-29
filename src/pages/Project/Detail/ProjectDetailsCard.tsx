@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { mappingBidBond, TypeBidBond } from "@/shared/enums/types";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
+import BiddingDocument from "./BiddingDocument";
 
 const { Title } = Typography;
 const { Panel } = Collapse;
@@ -21,7 +22,13 @@ interface ProjectDetailsCardProps {
   customDetails?: { label: string; value: any }[];
   listEnterprise?: IEnterprise[];
 }
-
+interface BiddingBondsListProps {
+  items: {
+    bidding_bond: IBidBond;
+  }[];
+  title_project?: string;
+  listEnterprise?: IEnterprise[];
+}
 const getSubmissionMethodLabel = (method?: string) => {
   return method ? SUBMIT_METHOD[method as keyof typeof SUBMIT_METHOD] || "Không xác định" : "Không xác định";
 };
@@ -55,13 +62,7 @@ const getFileIcon = (fileType: string) => {
       return "📁";
   }
 };
-interface BiddingBondsListProps {
-  items: {
-    bidding_bond: IBidBond;
-  }[];
-  title_project?: string;
-  listEnterprise?: IEnterprise[];
-}
+
 const BiddingBondsList: React.FC<BiddingBondsListProps> = ({ items, title_project, listEnterprise }) => {
   const enterpriseName = (value: number) => {
     if (listEnterprise!.length > 0 && !!value) {
@@ -156,16 +157,9 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
         <div>Chưa có bảo lãnh dự thầu</div>
       ),
     },
+
     {
-      label: "Hồ sơ đàu thầu",
-      value: data?.bidding_bond ? (
-        <BiddingBondsList items={[{ bidding_bond: data.bidding_bond }]} title_project={data?.name} listEnterprise={listEnterprise} />
-      ) : (
-        <div>Chưa có bảo lãnh dự thầu</div>
-      ),
-    },
-    {
-      label: "Kết quả đàu thầu",
+      label: "Kết quả đấu thầu",
       value: data?.bidding_bond ? (
         <BiddingBondsList items={[{ bidding_bond: data.bidding_bond }]} title_project={data?.name} listEnterprise={listEnterprise} />
       ) : (
@@ -224,8 +218,9 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
         column={24} // Set total columns to 24 for easier division
       >
         {projectDetails.map((item, index) => (
+          <>
           <Descriptions.Item
-            className="!py-[10px] px-6"
+            className="!py-[10px] px-6 font-medium"
             label={item.label}
             labelStyle={{ width: "25%" }} // Make label take up 25% of space (6/24)
             contentStyle={{ width: "75%" }} // Make content take up 75% of space (18/24)
@@ -234,8 +229,11 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
           >
             {item.value}
           </Descriptions.Item>
+         
+          </>
         ))}
       </Descriptions>
+      <BiddingDocument listBidDocument={data?.bidding_document} title={'Hồ sơ dự thầu'}/>
       <Typography className="mt-6">
         <Title level={4}>Mô tả dự án</Title>
         <div dangerouslySetInnerHTML={{ __html: data?.description || "" }}></div>

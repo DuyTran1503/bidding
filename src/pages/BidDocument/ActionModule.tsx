@@ -85,7 +85,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
   const formattedData: IOption[] =
     stateBidBond?.listBidBonds?.map((bidBond) => ({
       value: bidBond.id,
-      label: bidBond.issuer || "",
+      label: bidBond.bond_number || "",
     })) || [];
 
   return (
@@ -133,11 +133,11 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
 
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Bảo lãnh đấu thầu">
+                <FormGroup title="Mã bảo lãnh">
                   <FormSelect
                     options={formattedData}
                     isDisabled={type === "view"}
-                    placeholder="Chọn bảo lãnh đấu thầu..."
+                    placeholder="Chọn mã lãnh đấu thầu..."
                     value={values.bid_bond_id}
                     error={touched.bid_bond_id ? errors.bid_bond_id : ""}
                     id="bid_bond_id"
