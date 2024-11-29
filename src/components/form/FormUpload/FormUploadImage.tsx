@@ -92,7 +92,7 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id }) => {
         <div className="mt-4 flex justify-center">
           <label
             htmlFor={`file-upload-${id}`}
-            className="text-m-medium inline-block cursor-pointer rounded bg-primary-50 px-[14px] py-[10px] text-primary-500"
+            className="text-m-medium inline-block cursor-pointer rounded bg-cyan-50 px-[14px] py-[10px] text-cyan-600"
           >
             Tải file lên
           </label>

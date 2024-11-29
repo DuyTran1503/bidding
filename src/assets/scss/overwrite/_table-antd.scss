@@ -73,7 +73,7 @@
         cursor: pointer;
       }
       .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
-        background-color: #f4ecfb;
+        background-color: #ecfeff;
       }
     }
     .ant-pagination-jump-next .ant-pagination-item-container .ant-pagination-item-link-icon {
@@ -88,19 +88,19 @@
     }
     .ant-pagination-item-link {
       color: #0891b2;
-      background-color: #f4ecfb;
+      background-color: #ecfeff;
     }
     .ant-pagination-next:active .ant-pagination-item-link {
-      background-color: #f4ecfb;
+      background-color: #ecfeff;
     }
     .ant-pagination-prev:active .ant-pagination-item-link {
-      background-color: #f4ecfb;
+      background-color: #ecfeff;
     }
     .ant-pagination-item {
       // &:active {
-      //   background-color: #f4ecfb;
+      //   background-color: #ecfeff;
       // }
-      background-color: #f4ecfb;
+      background-color: #ecfeff;
     }
 
     .ant-pagination-item a {

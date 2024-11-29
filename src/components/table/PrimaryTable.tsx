@@ -28,6 +28,7 @@ export interface IAdditionalTab {
   key: string;
   label: string;
   content: React.ReactNode
+  color?: string
 }
 
 interface IPrimaryTableProps<T extends ISearchParams> extends ISearchProps<T> {
@@ -102,6 +103,7 @@ const PrimaryTable = <T extends ISearchParams>({
     {
       key: "table",
       label: tabLabel,
+      color: "#0891b2",
       content: (
         <Table
           onChange={newHandleTableChange}
@@ -128,7 +130,7 @@ const PrimaryTable = <T extends ISearchParams>({
         <SearchComponent search={search} setFilter={setFilter} filter={filter} />
       )}
       {additionalTabs.length > 0 ? (
-        <CustomTabs items={tabItems} />
+        <CustomTabs items={tabItems}/>
       ) : (
         <Table
           onChange={newHandleTableChange}
