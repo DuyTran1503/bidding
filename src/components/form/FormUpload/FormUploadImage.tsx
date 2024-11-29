@@ -7,11 +7,13 @@ import EXCEL from "@/assets/images/excel.png";
 import WORD from "@/assets/images/word.jpg";
 import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
+import clsx from "clsx";
 
 interface IProps {
   value?: File | File[] | string;
   onChange: (value: File | File[] | null) => void;
   id?: string;
+  error?: string;
 }
 const FormUploadImage: React.FC<IProps> = ({ onChange, value, id }) => {
   const [fileList, setFileList] = useState<File[] | any>(value ? value : []);
@@ -99,6 +101,11 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id }) => {
           <input id={`file-upload-${id}`} type="file" onChange={handleFileChange} multiple className="hidden" />
         </div>
       </div>
+      {!!error && (
+        <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white")}>
+          {error}
+        </div>
+      )}
     </div>
   );
 };

@@ -89,7 +89,7 @@ const Dashboard: React.FC = () => {
   if (loading) {
     return (
       <div className="flex h-lvh items-center justify-center">
-        <Spin tip="Loading..." size="large" spinning={true} style={{ color: "#0891b2" }} />
+        <Spin size="large" spinning={true} style={{ color: "#0891b2" }} />
       </div>
     );
   }
@@ -129,7 +129,6 @@ const Dashboard: React.FC = () => {
         <h2 className="mb-4 text-xl font-semibold">2. Phân tích chi tiết</h2>
         <Row gutter={[24, 24]}>
           <Col xs={24} sm={24} md={24} xl={24}>
-          <Col xs={24} sm={24} md={24} xl={24}>
             <ChartSection
               title="2.1 Dự án theo ngành"
               chartTitle="Dự án theo ngành"
@@ -143,6 +142,7 @@ const Dashboard: React.FC = () => {
               ]}
             />
           </Col>
+          <Col xs={24} sm={24} md={24} xl={24}>
             <ChartSection
               title="2.2 Dự án theo nguồn tài trợ"
               chartTitle="Dự án nguồn tài trợ"
@@ -308,14 +308,7 @@ const Dashboard: React.FC = () => {
         </Row>
       </div>
       <div className="w-full">
-        <h2 className="mb-4 text-xl font-semibold">5. Bảng xếp hạng Doanh Nghiệp theo năm</h2>
-        {/* <Select
-          placeholder="Chọn năm..."
-          value={selectedYear}
-          onChange={handleYearChange}
-          options={yearOptions.map((year) => ({ label: year, value: year }))}
-          style={{ width: 150, marginBottom: 16 }}
-        /> */}
+        <h2 className="mb-4 text-xl font-semibold">4. Bảng xếp hạng Doanh Nghiệp theo năm</h2>
         <Row gutter={[24, 24]}>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
             <Select
@@ -333,7 +326,7 @@ const Dashboard: React.FC = () => {
                 },
               ]}
               categories={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
-              title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ giống theo tháng trong năm"
+              title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ thống theo tháng trong năm"
             />
           </div>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">

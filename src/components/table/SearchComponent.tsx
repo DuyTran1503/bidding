@@ -111,8 +111,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         value={value}
                         onChange={(data) => {
                           setFieldValue(item.id, data);
-
-                          item.onChange && item.onChange(data);
+                          item.onChange && item.onChange(Array.isArray(data) ? data.map(String) : String(data)); //+
                         }}
                       />
                     </Col>

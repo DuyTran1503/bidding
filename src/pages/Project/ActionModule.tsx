@@ -216,7 +216,7 @@ const ActionModule = ({
             ? item.procurement_categories?.map((item: any) => item.id)
             : project?.procurement_categories ?? [],
 
-      submission_method: project?.submission_method ?? SUBMIT_METHOD.online,
+      submission_method: project?.submission_method ?? undefined,
 
       files:
         isChildren && type === EPageTypes.CREATE
@@ -424,10 +424,10 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Nguồn Vốn">
+                <FormGroup title="Nguồn tài trợ">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
-                    placeholder="Chọn nguồn vốn..."
+                    placeholder="Chọn nguồn tài trợ..."
                     id="funding_source_id"
                     value={values.funding_source_id as string}
                     error={touched.funding_source_id ? errors.funding_source_id : ""}
@@ -576,7 +576,7 @@ const ActionModule = ({
               </Col>
 
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Ngày bắt đầu đấu thầu">
+                <FormGroup title="Ngày bắt đầu dự án">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     minDate={values.bid_submission_end ? dayjs(values.bid_submission_end) : undefined}
@@ -586,7 +586,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Ngày kết thúc đấu thầu">
+                <FormGroup title="Ngày kết thúc dự án">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     minDate={values.start_time ? dayjs(values.bid_submission_end) : undefined}

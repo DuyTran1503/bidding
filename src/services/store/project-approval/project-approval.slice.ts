@@ -7,11 +7,11 @@ import { IError } from "@/shared/interface/error";
 import { IProject } from "../project/project.model";
 import { getProjectApprovalByStaff } from "./project-approval.thunk";
 
-export interface IprojectApprovalsState extends IInitialState {
-  projectApprovals:IProject[]
+export interface IProjectApprovalState extends IInitialState {
+  projectApprovals: IProject[];
 }
 
-const initialState: IprojectApprovalsState = {
+const initialState: IProjectApprovalState = {
   status: EFetchStatus.IDLE,
   message: "",
   projectApprovals: [],
@@ -30,24 +30,24 @@ const projectApprovalSlice = createSlice({
   name: "project_approval",
   initialState,
   reducers: {
-    ...commonStaticReducers<IprojectApprovalsState>(),
+    ...commonStaticReducers<IProjectApprovalState>(),
   },
   extraReducers: (builder) => {
     // ? Get all bidding types
-    builder.addCase(getProjectApprovalByStaff.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
-      if (payload.data) {
-        state.projectApprovals = payload.data.data;
-        state.totalRecords = payload.data.total_elements;
-        state.totalPages = payload.data.total_pages;
-        state.pageSize = payload.data.page_size;
-        state.currentPage = payload.data.current_page;
-      }
-    })
-    .addCase(getProjectApprovalByStaff.rejected, (state, { payload }: PayloadAction<IError | any>) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = transformPayloadErrors(payload?.errors||payload.message);
-    });
-    ;
+    builder
+      .addCase(getProjectApprovalByStaff.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
+        if (payload.data) {
+          state.projectApprovals = payload.data.data;
+          state.totalRecords = payload.data.total_elements;
+          state.totalPages = payload.data.total_pages;
+          state.pageSize = payload.data.page_size;
+          state.currentPage = payload.data.current_page;
+        }
+      })
+      .addCase(getProjectApprovalByStaff.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
+      });
   },
 });
 

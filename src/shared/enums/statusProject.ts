@@ -6,7 +6,7 @@ export enum STATUS_PROJECT {
 
 export const STATUS_PROJECT_LABELS: { [key in STATUS_PROJECT]: string } = {
   [STATUS_PROJECT.AWAITING]: "Chờ phê duyệt",
-  [STATUS_PROJECT.REJECT]: "Trả về",
+  [STATUS_PROJECT.REJECT]: "Từ chối",
   [STATUS_PROJECT.APPROVED]: "Phê duyệt",
 };
 export const STATUS_PROJECT_ARRAY = Object.keys(STATUS_PROJECT)

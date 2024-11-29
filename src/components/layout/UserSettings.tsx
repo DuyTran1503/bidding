@@ -6,6 +6,7 @@ import { IoLogOutOutline, IoWarning } from "react-icons/io5";
 import { useArchive } from "@/hooks/useArchive";
 import { logout } from "@/services/store/auth/auth.thunk";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
+import CustomerAvatar from "../common/CustomerAvatar";
 
 const { confirm } = Modal;
 
@@ -41,7 +42,7 @@ const UserSettings = () => {
       label: (
         <div className="flex items-center gap-1 text-red-500">
           <IoLogOutOutline className="text-xl" />
-          Logout
+          Đăng xuất
         </div>
       ),
       onClick() {
@@ -49,11 +50,13 @@ const UserSettings = () => {
           title: (
             <div className="flex items-center gap-2">
               <IoWarning className="text-2xl text-yellow-500" />
-              <span>Log out?</span>
+              <span>Đăng xuất?</span>
             </div>
           ),
           icon: null,
-          content: "Are you sure you want to log out?",
+          content: "Bạn có chắc chắn muốn đăng xuất không không?",
+          okText: "Xác nhận",
+          cancelText: "Hủy",
           onOk() {
             return dispatch(logout());
           },
@@ -62,11 +65,14 @@ const UserSettings = () => {
       key: "3",
     },
   ];
+  console.log(state.profile?.avatar);
+
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
       <div className="flex h-full cursor-pointer items-center gap-3">
         {/* Avatar */}
         <div className="relative h-8 w-8 shrink-0 rounded-circle bg-gray-100">
+          <CustomerAvatar src={state.profile?.avatar as string} alt={"Avatar"} className="rounded-full" />
           <div className="absolute bottom-0 right-0 h-[10px] w-[10px] rounded-circle border-2 border-white bg-green-600"></div>
         </div>
         {/* Info */}

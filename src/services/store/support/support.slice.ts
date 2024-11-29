@@ -8,7 +8,8 @@ import {
   createSupport, 
   deleteSupport, 
   getSupportById, 
-  changeStatusSupport 
+  changeStatusSupport, 
+  createSupports
 } from "./support.thunk";
 import { transformPayloadErrors } from '@/shared/utils/common/function';
 import { IError } from '@/shared/interface/error';
@@ -60,6 +61,23 @@ const supportSlice = createSlice({
         }
       }
     );
+
+    // ? Create Support
+    builder
+      .addCase(createSupports.pending, (state) => {
+        state.status = EFetchStatus.PENDING;
+      })
+      .addCase(createSupports.fulfilled, (state, { payload }: PayloadAction<IResponse<ISupport> | any>) => {
+        state.status = EFetchStatus.FULFILLED;
+        state.message = "Tạo mới thành công";
+        if (payload.data) {
+          state.supports.push(payload.data);
+        }
+      })
+      .addCase(createSupports.rejected, (state, {payload}: PayloadAction<IError | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
+      });
 
     // ? Create Support
     builder

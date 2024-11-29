@@ -14,8 +14,6 @@ import {
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IBidDocument } from "./bid_document.model";
-import { message } from "antd";
-
 export interface IBidDocumentInitialState extends IInitialState {
   bidDocuments: IBidDocument[];
   bidDocument?: IBidDocument;

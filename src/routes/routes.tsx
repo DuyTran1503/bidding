@@ -82,10 +82,14 @@ import WorkProgresses from "@/pages/WorkProgresses";
 import CreateWorkProgress from "@/pages/WorkProgresses/Create";
 import UpdateWorkProgress from "@/pages/WorkProgresses/Update";
 import DetailWorkProgress from "@/pages/WorkProgresses/Detail";
-import ClinetLayout from "@/layouts/Client";
+import ClientLayout from "@/layouts/Client";
 import Home from "@/Client/Home";
 import Introduce from "@/Client/Introduce";
 import NotFound from "@/pages/Errors/NotFound";
+import News from "@/Client/News";
+import Instruct from "@/Client/Instruct";
+import Support from "@/Client/Supports";
+import CreateSupport from "@/Client/Supports/Create";
 import ProjectApproval from "@/pages/project-approval";
 import ApproveProjectByStaff from "@/pages/project-approval/Approve";
 
@@ -100,11 +104,10 @@ export interface IRoute {
 export const routes: IRoute[] = [
   {
     path: "/",
-    middleware: () => <GlobalMiddleware />,
     pages: [
       {
         path: "",
-        layout: () => <ClinetLayout />,
+        layout: () => <ClientLayout />,
         pages: [
           {
             path: "/",
@@ -114,8 +117,61 @@ export const routes: IRoute[] = [
             path: "introduce",
             element: () => <Introduce />,
           },
+          {
+            path: "news",
+            element: () => <News />,
+          },
+          {
+            path: "instruct",
+            element: () => <Instruct />,
+          },
+          {
+            path: "support",
+            pages: [
+              {
+                path: "/",
+                element: () => <Support />,
+              },
+              {
+                path: "/create",
+                element: () => <CreateSupport />,
+              },
+            ],
+          },
         ],
       },
+    ],
+  },
+  {
+    path: "/",
+    middleware: () => <GlobalMiddleware />,
+    pages: [
+      // {
+      //   path: "",
+      //   layout: () => <ClientLayout />,
+      //   pages: [
+      //     {
+      //       path: "/",
+      //       element: () => <Home />,
+      //     },
+      //     {
+      //       path: "introduce",
+      //       element: () => <Introduce />,
+      //     },
+      //     {
+      //       path: "News",
+      //       element: () => <News />,
+      //     },
+      //     {
+      //       path: "instruct",
+      //       element: () => <Instruct />,
+      //     },
+      //     {
+      //       path: "contact",
+      //       element: () => <Contact />,
+      //     },
+      //   ],
+      // },
       {
         path: "",
         middleware: () => <AuthMiddleware />,
@@ -659,5 +715,5 @@ export const routes: IRoute[] = [
   {
     path: "*",
     element: () => <NotFound />,
-  }
+  },
 ];

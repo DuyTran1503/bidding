@@ -219,7 +219,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
 
   // Kiểm tra nếu không có dữ liệu, không hiển thị biểu đồ
   if (!name || !value || name.length === 0 || value.length === 0) {
-    return <div className="h-[500px] w-full flex justify-center items-center"><Spin tip="Loading..." size="large"/></div>; // Hoặc có thể để trống
+    return <div className="h-[500px] w-full flex justify-center items-center"><Spin size="large"/></div>; // Hoặc có thể để trống
   }
 
   return <div className="mt-4 flex w-full items-center justify-center">

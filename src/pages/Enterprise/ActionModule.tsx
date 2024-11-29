@@ -8,7 +8,7 @@ import { FormikRefType } from "@/shared/utils/shared-types";
 import { EPageTypes } from "@/shared/enums/page";
 import FormSwitch from "@/components/form/FormSwitch";
 import { Col, Row } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IEnterpriseInitialState, resetMessageError } from "@/services/store/enterprise/enterprise.slice";
 import { createEnterprise, updateEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import FormSelect from "@/components/form/FormSelect";
@@ -41,7 +41,7 @@ export interface IEnterpriseInitialValues {
   taxcode?: string;
   account_ban_at: string | null;
   website?: string;
-  industry_id?: number[];
+  industry_id?: number[] | any[];
   description?: string;
   establish_date?: string;
   organization_type?: string | number;
@@ -58,6 +58,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
   const { dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: industryState, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
   const roles = useSelector((state: RootStateType) => state.role.roles);
+  const [processedIndustryIds, setProcessedIndustryIds] = useState<string[]>([]);
   const initialValues: IEnterpriseInitialValues = {
     id: enterprise?.id ?? "",
     name: enterprise?.name ?? "",
@@ -70,10 +71,9 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     taxcode: enterprise?.taxcode ?? "",
     account_ban_at: enterprise?.account_ban_at ?? null,
     website: enterprise?.website ?? "",
-    industry_id: enterprise?.industry_id ?? [],
+    industry_id: processedIndustryIds,
     establish_date: enterprise?.establish_date ?? "",
     organization_type: enterprise?.organization_type ?? "",
-    // avg_document_rating: enterprise?.avg_document_rating ?? "",
     registration_date: enterprise?.registration_date ?? "",
     registration_number: enterprise?.registration_number ?? "",
     password: enterprise?.password ?? "",
@@ -100,11 +100,19 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     value: e.id,
     label: e.name,
   }));
+
+
+  useEffect(() => {
+    if (enterprise?.industry_id?.some((item: any) => typeof item === 'object')) {
+      const ids = enterprise.industry_id.map((item: any) => item.id || item);
+      setProcessedIndustryIds(ids);
+    }
+  }, [enterprise]);
   return (
     <Formik
       enableReinitialize
       innerRef={formikRef}
-      initialValues={initialValues}
+      initialValues={type === EPageTypes.CREATE ? initialValues : { ...initialValues }}
       validationSchema={Schema}
       onSubmit={(data) => {
         const body = {
@@ -121,6 +129,12 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
+       useEffect(() => {
+        if (values.industry_id?.some((item: any) => typeof item === 'object')) {
+          const ids = values.industry_id.map((item: any) => item.id || item);
+          setFieldValue('industry_id', ids);
+        }
+      }, [values.industry_id]);
         return (
           <Form>
             <Row gutter={[24, 24]}>
@@ -169,7 +183,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."
                     isMultiple
-                    value={values.industry_id}
+                    value={values.industry_id as number[]}
                     id="industry_id"
                     onChange={(value) => {
                       setFieldValue("industry_id", value);
@@ -249,7 +263,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 24} xl={type === EPageTypes.CREATE ? 8 : 24} className="mb-4">
+              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 8} xl={type === EPageTypes.CREATE ? 8 : 8} className="mb-4">
                 <FormGroup title="Số đăng ký kinh doanh">
                   <FormInput
                     placeholder="Nhập số đăng ký kinh doanh..."
@@ -279,7 +293,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </Col>
               )}
 
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24}  md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
                 <FormGroup title="Địa chỉ">
                   <FormInput
                     placeholder="Nhập địa chỉ..."
@@ -291,7 +305,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24}  md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
                 <FormGroup title="Website">
                   <FormInput
 
@@ -301,6 +315,37 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     error={touched.website ? errors.website : ""}
                     onChange={(e) => setFieldValue("website", e)}
                     onBlur={handleBlur}
+                  />
+                </FormGroup>
+              </Col>
+             
+              <Col xs={24} sm={24}  md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
+                <FormGroup title="Trạng thái cấm">
+                  <FormSwitch
+                    checked={!!values.account_ban_at ? true : false}
+                    onChange={(value) => {
+                      setFieldValue("account_ban_at", value);
+                    }}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24}  md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
+                <FormGroup title="Trạng thái hoạt động">
+                  <FormSwitch
+                    checked={!!values.is_active ? true : false}
+                    onChange={(value) => {
+                      setFieldValue("is_active", value);
+                    }}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24}  md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
+                <FormGroup title="Danh sách blacklist">
+                  <FormSwitch
+                    checked={!!values.is_blacklist ? true : false}
+                    onChange={(value) => {
+                      setFieldValue("is_blacklist", value);
+                    }}
                   />
                 </FormGroup>
               </Col>
@@ -318,36 +363,6 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Mô tả">
                   <FormCkEditor id={"description"} value={values.description ?? ""} onChange={(e) => setFieldValue("description", e)} />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Trạng thái cấm">
-                  <FormSwitch
-                    checked={!!values.account_ban_at ? true : false}
-                    onChange={(value) => {
-                      setFieldValue("account_ban_at", value);
-                    }}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Trạng thái hoạt động">
-                  <FormSwitch
-                    checked={!!values.is_active ? true : false}
-                    onChange={(value) => {
-                      setFieldValue("is_active", value);
-                    }}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Danh sách blacklist">
-                  <FormSwitch
-                    checked={!!values.is_blacklist ? true : false}
-                    onChange={(value) => {
-                      setFieldValue("is_blacklist", value);
-                    }}
-                  />
                 </FormGroup>
               </Col>
             </Row>

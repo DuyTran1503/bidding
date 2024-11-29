@@ -27,6 +27,17 @@ export const getPostCatalogById = createAsyncThunk(
     }
   },
 );
+export const getPostByCatalogId = createAsyncThunk(
+  "post-catalog/get-post-by-catalog-id",
+  async (id: number | string, { rejectWithValue }) => {
+    try {
+      const { response, data } = await client.get<IPostCatalog[]>(`api/get-post-by-catalog/${id}`);
+      return response.status >= 400 ? rejectWithValue(data) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);
 
 export const createPostCatalog = createAsyncThunk(
   "post-catalog/create-post-catalog",

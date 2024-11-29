@@ -1,4 +1,3 @@
-
 import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
@@ -12,11 +11,6 @@ import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import ActionModule from "../ActionModule";
 import { EPageTypes } from "@/shared/enums/page";
-import ChildrenProject from "../ChildrenProject";
-import Button from "@/components/common/Button";
-import toast from "react-hot-toast";
-import { clearChildrenState } from "@/shared/utils/localStorage";
-import { Tabs } from "antd";
 import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
 import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
@@ -38,7 +32,7 @@ import { optionType } from "@/pages/BidBond/ActionModule";
 import lodash from "lodash";
 import { createBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
-const { TabPane } = Tabs;
+import { Tabs } from "antd";
 
 const CreateProject = () => {
   const navigate = useNavigate();
@@ -52,7 +46,7 @@ const CreateProject = () => {
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
   const [selectedChild, setSelectedChild] = useState<INewProject | null>(null);
-  const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  const { dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
   const [activeTabKey, setActiveTabKey] = useState<string>("1");
   useFetchStatus({
     module: "project",
@@ -77,7 +71,7 @@ const CreateProject = () => {
   }, []);
   const initialValues: IBidBond = {
     id: "",
-    project_id: state.project?.id||undefined,
+    project_id: state.project?.id || undefined,
     enterprise_id: undefined,
     bond_amount: undefined,
     bond_type: undefined,
@@ -236,12 +230,15 @@ const CreateProject = () => {
       // disabled: !state.project?.id,
       children: <CreateBidDocument project_id={state.project?.id} />,
     },
+    {
+      key: "5",
+      label: "Kết quả đấu thầu",
+      // disabled: !state.project?.id,
+      children: <>hdsfd</>,
+    },
   ];
 
-  return  <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />;
+  return <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />;
 };
 
 export default CreateProject;
- 
-
-

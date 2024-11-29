@@ -20,6 +20,7 @@ import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/s
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
 import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
+import { IProject } from "@/services/store/project/project.model";
 
 const EvaluationCriteria = () => {
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
@@ -110,11 +111,11 @@ const EvaluationCriteria = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.evaluations && state.evaluations.length > 0
-        ? state.evaluations.map(({ id, project_id, project, name, weight, description, is_active }, index) => ({
+        ? state.evaluations.map(({ id, project, name, weight, description, is_active }, index) => ({
           index: index + 1,
           key: id,
           id,
-          project_id,
+          project_id: (project as IProject).id ,
           project,
           name,
           weight,

@@ -44,7 +44,7 @@ const DetailBidDocument = () => {
     if (data) {
       if (formikRef.current) {
         formikRef.current.setValues({
-          project_id: data?.project_id?.toString() ?? "",
+          project_id: data?.project_id ?? undefined,
           enterprise_id: data?.enterprise_id ?? 0,
           bid_bond_id: data?.bid_bond_id ?? 0,
           submission_date: data?.submission_date ?? "",

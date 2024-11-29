@@ -64,11 +64,60 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     },
     {
       id: "2",
+      label: "Dự án",
+      icon: { component: IoFileTrayFullOutline },
+      items: [
+        {
+          id: "2.1",
+          label: "Dự án",
+          path: "project",
+          permissions: EPermissions.LIST_PROJECT,
+        },
+        {
+          id: "2.2",
+          label: "Tài liệu đính kèm",
+          path: "attachment",
+          permissions: EPermissions.LIST_ATTACHMENT,
+        },
+        {
+          id: "2.3",
+          label: "Hồ sơ mời thầu",
+          path: "bid-document",
+          permissions: EPermissions.LIST_BID_DOCUMENT,
+        },
+        {
+          id: "2.4",
+          label: "Bảo lãnh dự thầu",
+          path: "bid-bond",
+          permissions: EPermissions.LIST_BID_BOND,
+        },
+        {
+          id: "2.5",
+          label: "Tiêu chí đánh giá",
+          path: "evaluation_criteria",
+          permissions: EPermissions.LIST_EVALUATION,
+        },
+        {
+          id: "2.6",
+          label: "Nguồn tài trợ",
+          path: "funding-sources",
+          permissions: EPermissions.LIST_FUNDING_SOURCE,
+        },
+        {
+          id: "2.7",
+          label: "Tiến độ dự án",
+          path: "work-progresses",
+          permissions: EPermissions.LIST_EVALUATION,
+        },
+      ],
+    },
+    {
+      id: "3",
       label: "Doanh nghiệp",
       icon: { component: IoBusinessOutline },
       items: [
         {
-          id: "2.1",
+          id: "3.1",
           label: "Doanh nghiệp",
           path: "enterprise",
           permissions: EPermissions.LIST_ENTERPRISE,
@@ -86,71 +135,16 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         //   permissions: EPermissions.LIST_BIDDING_TYPE,
         // },
         {
-          id: "4.2",
+          id: "3.2",
           label: "Nhân viên",
           path: "employees",
           permissions: EPermissions.LIST_EMPLOYEE,
         },
         {
-          id: "4.1",
+          id: "3.1",
           label: "Công việc",
           path: "task",
           permissions: EPermissions.LIST_TASK,
-        },
-      ],
-    },
-    {
-      id: "3",
-      label: "Dự án",
-      icon: { component: IoFileTrayFullOutline },
-      items: [
-        {
-          id: "3.1",
-          label: "Dự án",
-          path: "project",
-          permissions: EPermissions.LIST_PROJECT,
-        },
-        {
-          id: "3.2",
-          label: "Tài liệu đính kèm",
-          path: "attachment",
-          permissions: EPermissions.LIST_ATTACHMENT,
-        },
-        {
-          id: "3.3",
-          label: "Hồ sơ mời thầu",
-          path: "bid-document",
-          permissions: EPermissions.LIST_BID_DOCUMENT,
-        },
-        {
-          id: "3.4",
-          label: "Bảo lãnh dự thầu",
-          path: "bid-bond",
-          permissions: EPermissions.LIST_BID_BOND,
-        },
-        {
-          id: "3.5",
-          label: "Tiêu chí đánh giá",
-          path: "evaluation_criteria",
-          permissions: EPermissions.LIST_EVALUATION,
-        },
-        {
-          id: "3.6",
-          label: "Nguồn tài trợ",
-          path: "funding-sources",
-          permissions: EPermissions.LIST_FUNDING_SOURCE,
-        },
-        {
-          id: "3.7",
-          label: "Tiến độ dự án",
-          path: "work-progresses",
-          permissions: EPermissions.LIST_EVALUATION,
-        },
-        {
-          id: "3.8",
-          label: "Phê duyệt dự án",
-          path: "project-approval",
-          // permissions: EPermissions.LIST_EVALUATION,
         },
       ],
     },
@@ -218,6 +212,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Nhân viên",
           path: "staffs",
           permissions: EPermissions.LIST_STAFF,
+        },
+        {
+          id: "8.8",
+          label: "Phê duyệt dự án",
+          path: "project-approval",
+          // permissions: EPermissions.LIST_STAFF,
         },
         {
           id: "8.3",

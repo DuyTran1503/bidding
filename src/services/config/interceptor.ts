@@ -32,7 +32,7 @@ export const interceptor = async <MetaDataType>({
         if (await refreshToken(client)) {
           return await client.send(sendOptions.path, sendOptions.method, sendOptions.payload);
         } else {
-          toast.error("Your login session has expired, please log in again");
+          toast.error("Phiên đăng nhập của bạn đã hết hạn, vui lòng đăng nhập lại");
           window.location.pathname = "/auth/login";
         }
       }
