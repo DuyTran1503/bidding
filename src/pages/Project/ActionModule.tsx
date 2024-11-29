@@ -216,7 +216,7 @@ const ActionModule = ({
             ? item.procurement_categories?.map((item: any) => item.id)
             : project?.procurement_categories ?? [],
 
-      submission_method: project?.submission_method ?? SUBMIT_METHOD.online,
+      submission_method: project?.submission_method ?? undefined,
 
       files:
         isChildren && type === EPageTypes.CREATE
@@ -342,6 +342,8 @@ const ActionModule = ({
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
+        console.log(values.submission_method);
+
         return (
           <Form className="mt-4">
             {!isChildren && children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
@@ -424,10 +426,10 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Nguồn Vốn">
+                <FormGroup title="Nguồn tài trợ">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
-                    placeholder="Chọn nguồn vốn..."
+                    placeholder="Chọn nguồn tài trợ..."
                     id="funding_source_id"
                     value={values.funding_source_id as string}
                     error={touched.funding_source_id ? errors.funding_source_id : ""}

@@ -244,6 +244,12 @@ const UpdateProject = () => {
       disabled: !state.project?.id,
       children: <CreateBidDocument project_id={state.project?.id} />,
     },
+    {
+      key: "5",
+      label: "Kết quả đấu thầu",
+      // disabled: !state.project?.id,
+      children: <>hdsfd</>,
+    },
   ];
   return (
     <>

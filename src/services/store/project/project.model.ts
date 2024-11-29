@@ -1,6 +1,7 @@
 import { DOMESTIC } from "@/shared/enums/domestic";
 import { STATUS_PROJECT } from "@/shared/enums/statusProject";
 import { SUBMIT_METHOD } from "@/shared/enums/submissionMethod";
+import { IBidBond } from "../bid_bond/bidBond.model";
 
 export interface IProject {
   id: number;
@@ -47,6 +48,7 @@ export interface IProject {
   tendererName?: string;
   arrayIndustry?: string[];
   procurement_category_name?: string[];
+  bidding_bond?: IBidBond;
 }
 export interface INewProject extends IProject {
   tenderer_id: number | null;

@@ -95,7 +95,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                 />
               </FormGroup>
             </Col>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            {/* <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
               <FormGroup title="Số tiền bảo bằng chữ" required>
                 <FormInput
                   type="text"
@@ -108,7 +108,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   onBlur={handleBlur}
                 />
               </FormGroup>
-            </Col>
+            </Col> */}
             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
               <FormGroup title="Loại bảo lãnh" required>
                 <FormSelect
