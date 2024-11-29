@@ -22,19 +22,10 @@ const NewNews = () => {
         <div className="h-10 w-6 bg-red-500" style={{ clipPath: "polygon(100% 0, 100% 100%, 0% 100%, 70% 50%, 0 0)" }}></div>
       </div>
       <Carousel className="h-10 bg-gray-100 pl-[100px]" autoplay dots={false}>
-        <div className="!flex h-10 items-center cursor-pointer">
-          <Link to="/">Chính sách ưu đãi đối với đấu thầu trong nước</Link>
-        </div>
-        <div className="!flex h-10 items-center cursor-pointer">
-          <Link to="/">Lựa chọn thầu trong trường hợp khẩn cấp do thiên tai, bão lũ</Link>
-        </div>
-        <div className="!flex h-10 items-center cursor-pointer">
-          <Link to="/news">Lồn què</Link>
-        </div>
-        {state.posts.map((state, index) => (
-        <div key={index} className="!flex h-10 items-center cursor-pointer">
-          <Link to={`/news/` + state.id}>{state.short_title}</Link>
-        </div>
+        {state.posts.slice(0, 5).map((state, index) => (
+          <div key={index} className="!flex h-10 items-center cursor-pointer">
+            <Link to={`/news/` + state.id}>{state.short_title}</Link>
+          </div>
         ))}
       </Carousel>
     </section>

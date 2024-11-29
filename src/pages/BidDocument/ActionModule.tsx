@@ -255,7 +255,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Ghi chú">
                   <FormCkEditor id="description" direction="vertical" value={values.notes} setFieldValue={setFieldValue} disabled={type === "view"} />
-                </FormGroup>
+               </FormGroup>
               </Col>
             </Row>
           </Form>

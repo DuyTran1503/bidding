@@ -5,7 +5,7 @@ import lodash from "lodash";
 import { Button, Col, Row } from "antd";
 import { EButtonTypes } from "@/shared/enums/button";
 import { ISupport } from "@/services/store/support/support.model";
-import { ISupportInitialState } from "@/services/store/support/support.slice";
+import { ISupportInitialState, resetStatus } from "@/services/store/support/support.slice";
 import { createSupports } from "@/services/store/support/support.thunk";
 import FormSelect from "@/components/form/FormSelect";
 import FormGroup from "@/components/form/FormGroup";
@@ -13,6 +13,8 @@ import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import Banner from "../Home/components/Banner";
 import NewNews from "../Home/components/NewNews";
 import { AiFillCaretRight } from "react-icons/ai";
+import FormCkEditor from "@/components/form/FormCkEditor";
+import useFetchStatus from "@/hooks/useFetchStatus";
 
 interface ISupportFormProps {
     formikRef?: any;
@@ -21,7 +23,7 @@ interface ISupportFormProps {
 }
 
 const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
-    const { dispatch } = useArchive<ISupportInitialState>("support");
+    const { state, dispatch } = useArchive<ISupportInitialState>("support");
 
     const initialValues: ISupport = {
         id: item?.id || "",
@@ -30,7 +32,7 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
         phone: item?.phone || "",
         content: item?.content || "",
         document: item?.document || undefined,
-        type: item?.type || 0,
+        type: item?.type || 1,
         status: item?.status || "sent",
     };
 
@@ -47,6 +49,14 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
             })
     };
 
+    useFetchStatus({
+        module: "support",
+        reset: resetStatus,
+        actions: {
+          success: { message: state.message },
+          error: { message: state.message },
+        },
+      });
     return (
         <div className="max-w-screen-xl mx-auto">
             <Banner />
@@ -77,7 +87,7 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
                                 </FormGroup>
                             </Col>
                             <Col xs={24} sm={24} md={12} xl={12}>
-                                <FormGroup title="Số điện thoại">
+                                <FormGroup title="Số điện thoại" required>
                                     <FormInput
                                         type="text"
                                         isDisabled={type === EButtonTypes.VIEW}
@@ -122,22 +132,18 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
                                     />
                                 </FormGroup>
                             </Col>
-                            <Col xs={24} sm={24} md={24} xl={24}>
+                            <Col xs={24} sm={24} md={24} xl={12}>
                                 <FormGroup title="Nội dung hỗ trợ">
-                                    <FormInput
-                                        type="text"
-                                        isDisabled={type === EButtonTypes.VIEW}
-                                        value={values.content}
-                                        name="content"
-                                        error={touched.content ? errors.content : ""}
-                                        placeholder="Nhập nội dung hỗ trợ..."
-                                        onChange={(value) => setFieldValue("content", value)}
-                                        onBlur={handleBlur}
-                                    />
+                                    <FormCkEditor 
+                                    id="description" 
+                                    direction="vertical" 
+                                    value={values.content} 
+                                    setFieldValue={setFieldValue} 
+                                    disabled={type === "view"} />
                                 </FormGroup>
                             </Col>
-                            <Col xs={24} sm={24} md={24} xl={24}>
-                                <FormGroup title="Hình ảnh">
+                            <Col xs={24} sm={24} md={24} xl={12}>
+                                <FormGroup title="Hình ảnh hoặc file">
                                     <FormUploadFile
                                         isMultiple={false}
                                         value={values.document}
@@ -146,10 +152,9 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
                                 </FormGroup>
                             </Col>
                         </Row>
-                        <Button type="primary" htmlType="submit" className="w-24 h-10 mx-auto flex mt-5">
+                        <Button type="primary" htmlType="submit" className="w-36 h-12 mx-auto flex mt-5 bg-cyan-500 font-medium text-lg">
                             Gửi yêu cầu
                         </Button>
-
                     </Form>
                 )}
             </Formik>

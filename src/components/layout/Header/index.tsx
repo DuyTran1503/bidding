@@ -16,7 +16,6 @@ const Header: React.FC = () => {
   const firstChildRef = useRef<HTMLUListElement>(null);
   const secondChild = useRef<HTMLUListElement>(null);
   const thirdChild = useRef<HTMLUListElement>(null);
-
   useEffect(() => {
     document.body.clientWidth;
   });
@@ -47,7 +46,7 @@ const Header: React.FC = () => {
               {menuData.items && (
                 <ul
                   ref={firstChildRef}
-                  className="absolute left-0 top-full z-10 hidden w-72 bg-white py-2 shadow-lg group-hover/root:block"
+                  className="absolute left-0 top-full z-10 hidden w-72 bg-white text-black-500 py-2 shadow-lg group-hover/root:block"
                 >
                   {menuData.items?.map((menuData, index) => (
                     <ChildMenuItem key={index} {...menuData} group="group/1">

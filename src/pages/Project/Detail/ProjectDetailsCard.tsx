@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Card, Descriptions, Tooltip, Typography } from "antd";
 import { INewProject } from "@/services/store/project/project.model";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
@@ -53,7 +54,6 @@ const getFileIcon = (fileType: string) => {
 };
 
 const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, customDetails = [] }) => {
-  console.log(data?.industries);
   
   // Mặc định các trường dự án
   const defaultDetails = [
