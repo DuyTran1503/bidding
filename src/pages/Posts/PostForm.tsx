@@ -126,7 +126,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                                 <FormGroup title="Danh mục bài viết" required>
                                     <FormSelect
                                         isMultiple={true}
-                                        // isDisabled={type === "view"}
+                                        isDisabled={type === "view"}
                                         onChange={(value) => {
                                             setFieldValue("post_catalog_id", value);
                                         }}

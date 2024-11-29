@@ -1,6 +1,9 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Table, Tooltip } from 'antd';
 import { ICompareProject } from '@/services/store/CompareProject/compareProject.model';
+import PDF from "@/assets/images/pdf.png";
+import EXCEL from "@/assets/images/excel.png";
+import WORD from "@/assets/images/word.jpg";
 import { Link } from 'react-router-dom';
 
 interface ProjectDetailProps {
@@ -16,6 +19,21 @@ interface RowType {
 }
 
 const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, projectId }) => {
+    
+const getFileIcon = (fileType: string) => {
+    switch (fileType.toLowerCase()) {
+      case "pdf":
+        return PDF;
+      case "xlsx":
+      case "xls":
+        return EXCEL;
+      case "doc":
+      case "docx":
+        return WORD;
+      default:
+        return "📁";
+    }
+  };
     const rows: RowType[] = [
         // { key: 'name', title: 'Tên dự án', dataIndex: 'name' },
         { key: 'decision_number_issued', title: 'Số quyết định', dataIndex: 'decision_number_issued' },
@@ -96,16 +114,18 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, proje
                 <div>
                     {attachments && attachments.length > 0 ? (
                         attachments.map((file, index) => (
+                            <Tooltip title={file.name} color={"#108ee9"} key={index}>
                             <a
-                                key={index}
-                                href={file.path}
-                                download={file.name}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-500 underline"
+                              href={file.path}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 transition-opacity hover:opacity-80"
                             >
-                                {file.name || `File ${index + 1}`}
+                              {file.type && getFileIcon(file.type) && (
+                                <img src={getFileIcon(file.type)} alt={file.type} className="h-6 w-6 object-contain" />
+                              )}
                             </a>
+                          </Tooltip>
                         ))
                     ) : (
                         'Không có tệp đính kèm'

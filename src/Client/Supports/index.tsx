@@ -1,29 +1,24 @@
-import { Button, Input, RadioChangeEvent, Select, Table } from "antd"
+import { Button, Input, Select, Table } from "antd"
 import Banner from "../Home/components/Banner"
 import NewNews from "../Home/components/NewNews"
 import { Link } from "react-router-dom"
 import { ISupportInitialState } from "@/services/store/support/support.slice"
 import { useArchive } from "@/hooks/useArchive"
-import { ITableData } from "@/components/table/PrimaryTable"
-import { useEffect, useState } from "react"
+// import { ITableData } from "@/components/table/PrimaryTable"
+import { useEffect } from "react"
 import { ColumnsType } from "antd/es/table"
 import { EFetchStatus } from "@/shared/enums/fetchStatus"
-import { changeStatusSupport, getAllSupports } from "@/services/store/support/support.thunk"
-import FormModal from "@/components/form/FormModal"
-import FormRadio from "@/components/form/FormRadio"
-import { IOption } from "@/shared/utils/shared-interfaces"
-import { mappingSupport, statusEnumArray } from "@/shared/enums/support"
+import { getAllSupports } from "@/services/store/support/support.thunk"
+import { RootStateType } from "@/services/reducers"
+import { useSelector } from "react-redux"
 
 const Support = () => {
+    const isLoggedIn = useSelector((state: RootStateType) => state.auth.isLogin);
     const { state, dispatch } = useArchive<ISupportInitialState>("support");
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedStatus, setSelectedStatus] = useState<string>("");
-    const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
-    const statusOptions: IOption[] = statusEnumArray.map((key) => ({
-        value: key,
-        label: mappingSupport[key],
-    }));
 
+    useEffect(() => {
+        document.body.clientWidth;
+    });
     useEffect(() => {
         if (state.status === EFetchStatus.FULFILLED) {
             dispatch(getAllSupports({ query: state.filter }));
@@ -31,26 +26,12 @@ const Support = () => {
     }, [state.status]);
 
     useEffect(() => {
-        dispatch(getAllSupports({ query: state.filter }));
-    }, [state.filter]);
-
-    const handleOpenModal = (item: ITableData) => {
-        setConfirmItem(item);
-        setSelectedStatus(item.status as string); // Lưu trạng thái hiện tại
-        setIsModalVisible(true);
-    };
-    const handleConfirmStatus = () => {
-        if (confirmItem && selectedStatus) {
-            // Gửi request với id và status
-            dispatch(changeStatusSupport({ id: String(confirmItem.key), status: selectedStatus }));
-            setIsModalVisible(false);
+        if (isLoggedIn) {
+            dispatch(getAllSupports({ query: state.filter }));
         }
-    };
+    }, [state.filter, isLoggedIn]);
+
     const columns: ColumnsType = [
-        {
-            dataIndex: "index",
-            title: "STT",
-        },
         {
             dataIndex: "sender",
             title: "Người gửi",
@@ -61,6 +42,10 @@ const Support = () => {
         {
             dataIndex: "email",
             title: "Email",
+        },
+        {
+            dataIndex: "phone",
+            title: "Số điện thoại",
         },
         {
             title: "Hỗ trợ",
@@ -100,11 +85,7 @@ const Support = () => {
                 };
                 return (
                     <div className="flex items-center space-x-2">
-                        <button
-                            onClick={() => handleOpenModal(record as ITableData)}
-                        >
-                            {statusMap[record.status as string] || "Không xác định"}
-                        </button>
+                        {statusMap[record.status as string] || "Không xác định"}
                     </div>
                 );
             },
@@ -114,11 +95,11 @@ const Support = () => {
         <div className="max-w-screen-xl mx-auto">
             <Banner />
             <NewNews />
-            <FormModal
+            {/* <FormModal
                 title="Cập nhật trạng thái"
                 open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
-                onConfirm={handleConfirmStatus}
+                // onConfirm={handleConfirmStatus}
             >
                 <FormRadio
                     value={selectedStatus}
@@ -127,7 +108,7 @@ const Support = () => {
                         setSelectedStatus(e.target.value)
                     }}
                 />
-            </FormModal>
+            </FormModal> */}
             <div>
                 <h1 className="w-full my-4 text-2xl font-semibold border-b-2 border-cyan-500">Danh sách yêu cầu</h1>
                 <div className="flex items-center justify-between">
@@ -147,29 +128,29 @@ const Support = () => {
                                 { value: 6, label: "Báo lỗi" },
                             ]}
                         />
-                        <Select
-                            placeholder="Chọn loại hỗ trợ"
+                        {/* <Select
+                            placeholder="Chọn trạng thái"
                             options={[
-                                { value: 1, label: "Trạng thái xử lý" },
-                                { value: 2, label: "Đã gửi" },
-                                { value: 3, label: "Đã xử lý" },
-                                { value: 4, label: "Đang xử lý" },
-                                { value: 5, label: "Đã đóng" },
-                                { value: 6, label: "Lưu nháp" },
+                                { value: 1, label: "Đã gửi" },
+                                { value: 2, label: "Đã xử lý" },
+                                { value: 3, label: "Đang xử lý" },
                             ]}
-                        />
+                        /> */}
                         <Button type="primary" className="h-10">Tìm kiếm</Button>
                     </form>
                 </div>
-                {/* <div className="w-full p-6 bg-yellow-400 rounded-lg my-5">
-                    Bạn chưa có yêu cầu nào
-                </div> */}
-                <Table
-                    rowKey="key"
-                    columns={columns}
-                    dataSource={state.supports || []}
-                    loading={state.status === EFetchStatus.PENDING}
-                />
+                {isLoggedIn ? (
+                    <Table
+                        rowKey="key"
+                        columns={columns}
+                        dataSource={state.supports || []}
+                        loading={state.status === EFetchStatus.PENDING}
+                    />
+                ) : (
+                    <div className="w-full p-6 bg-yellow-400 rounded-lg my-5">
+                        Bạn chưa có yêu cầu nào
+                    </div>
+                )}
             </div>
         </div>
     )

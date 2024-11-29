@@ -137,6 +137,7 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
     {
       label: "Dịch vụ mua sắm đấu thầu công",
       value: (
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         <>
           {data?.procurement_category_name && data.procurement_category_name.length > 0 ? (
             data.procurement_category_name.map((item: any, index: number) => (
@@ -196,14 +197,14 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
       value:
         data?.tenderer?.length > 0
           ? data?.industries
-              .map((item: any) => (
-                <Tooltip title="Xem chi tiết" key={item.id}>
-                  <Link to={`/enterprise/detail/${item.id}`} className="text-blue-600 hover:underline">
-                    {item.name}
-                  </Link>
-                </Tooltip>
-              ))
-              .reduce((prev: any, curr: any) => [prev, ", ", curr])
+            .map((item: any) => (
+              <Tooltip title="Xem chi tiết" key={item.id}>
+                <Link to={`/enterprise/detail/${item.id}`} className="text-blue-600 hover:underline">
+                  {item.name}
+                </Link>
+              </Tooltip>
+            ))
+            .reduce((prev: any, curr: any) => [prev, ", ", curr])
           : "Chưa có doanh nghiệp tham gia",
     },
   ];
@@ -218,7 +219,6 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
         column={24} // Set total columns to 24 for easier division
       >
         {projectDetails.map((item, index) => (
-          <>
           <Descriptions.Item
             className="!py-[10px] px-6 font-medium"
             label={item.label}
@@ -229,11 +229,10 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
           >
             {item.value}
           </Descriptions.Item>
-         
-          </>
+
         ))}
       </Descriptions>
-      <BiddingDocument listBidDocument={data?.bidding_document} title={'Hồ sơ dự thầu'}/>
+      <BiddingDocument listBidDocument={data?.bidding_document} title={'Hồ sơ dự thầu'} />
       <Typography className="mt-6">
         <Title level={4}>Mô tả dự án</Title>
         <div dangerouslySetInnerHTML={{ __html: data?.description || "" }}></div>

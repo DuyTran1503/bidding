@@ -22,14 +22,14 @@ const Image: React.FC<ImageProps> = ({ src, alt, description }) => {
     const handleError = () => {
         setImgSrc(imageError);
     };
-
+    const img = src.startsWith("https://") || src.startsWith("http://") ? src : `${import.meta.env.VITE_API_URL}/${src}`
     return (
         <div className="flex items-center gap-2 p-2">
             {!imgSrc ? (
                 <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-gray-50">
                 </div>
             ) : (
-                <img src={`${import.meta.env.VITE_API_URL}/${src}` || imgSrc} alt={alt} onError={handleError} className=" h-20 w-20 rounded-lg bg-gray-50 object-cover" />
+                <img src={img || imgSrc} alt={alt} onError={handleError} className=" h-20 w-20 rounded-lg bg-gray-50 object-cover" />
             )}
             <div className="flex flex-col gap-1">
                 <div className="text-s-regular text-gray-500">{description}</div>

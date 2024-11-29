@@ -104,74 +104,48 @@ export interface IRoute {
 export const routes: IRoute[] = [
   {
     path: "/",
+    middleware: () => <GlobalMiddleware />,
     pages: [
       {
-        path: "",
-        layout: () => <ClientLayout />,
+        path: "/",
         pages: [
           {
-            path: "/",
-            element: () => <Home />,
-          },
-          {
-            path: "introduce",
-            element: () => <Introduce />,
-          },
-          {
-            path: "news",
-            element: () => <News />,
-          },
-          {
-            path: "instruct",
-            element: () => <Instruct />,
-          },
-          {
-            path: "support",
+            path: "",
+            layout: () => <ClientLayout />,
             pages: [
               {
                 path: "/",
-                element: () => <Support />,
+                element: () => <Home />,
               },
               {
-                path: "/create",
-                element: () => <CreateSupport />,
+                path: "introduce",
+                element: () => <Introduce />,
+              },
+              {
+                path: "news",
+                element: () => <News />,
+              },
+              {
+                path: "instruct",
+                element: () => <Instruct />,
+              },
+              {
+                path: "support",
+                pages: [
+                  {
+                    path: "/",
+                    element: () => <Support />,
+                  },
+                  {
+                    path: "/create",
+                    element: () => <CreateSupport />,
+                  },
+                ],
               },
             ],
           },
         ],
       },
-    ],
-  },
-  {
-    path: "/",
-    middleware: () => <GlobalMiddleware />,
-    pages: [
-      // {
-      //   path: "",
-      //   layout: () => <ClientLayout />,
-      //   pages: [
-      //     {
-      //       path: "/",
-      //       element: () => <Home />,
-      //     },
-      //     {
-      //       path: "introduce",
-      //       element: () => <Introduce />,
-      //     },
-      //     {
-      //       path: "News",
-      //       element: () => <News />,
-      //     },
-      //     {
-      //       path: "instruct",
-      //       element: () => <Instruct />,
-      //     },
-      //     {
-      //       path: "contact",
-      //       element: () => <Contact />,
-      //     },
-      //   ],
-      // },
       {
         path: "",
         middleware: () => <AuthMiddleware />,
@@ -715,5 +689,5 @@ export const routes: IRoute[] = [
   {
     path: "*",
     element: () => <NotFound />,
-  },
+  }
 ];

@@ -27,16 +27,16 @@ export const menu: IMenuItem[] = [
     items:[
       {
         label: "Yêu cầu đã gửi",
-        path: "support/status/1"
+        path: "/support"
       },
-      {
-        label: "Yêu cầu đã có phản hồi",
-        path: "support/status/2"
-      },
-      {
-        label: "Yêu cầu đã đóng",
-        path: "support/status/3"
-      },
+      // {
+      //   label: "Yêu cầu đã có phản hồi",
+      //   path: "support/status/2"
+      // },
+      // {
+      //   label: "Yêu cầu đã đóng",
+      //   path: "support/status/3"
+      // },
       {
         label: "Tạo mới yêu cầu",
         path: "support/create"
