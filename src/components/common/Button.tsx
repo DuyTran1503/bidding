@@ -29,7 +29,7 @@ const Button = ({
 }: IButtonProps) => {
   const typeClass = {
     primary: "text-cyan-600 border border-cyan-600 hover:bg-cyan-600 hover:text-white",
-    ghost: "text-cyan-600 bg-cyan-50 hover:bg-cyan-600 hover:text-white" ,
+    ghost: "text-cyan-600 bg-cyan-50 hover:bg-cyan-600 hover:text-white",
     secondary: "text-[#dc2626] border border-[#dc2626] hover:bg-[#dc2626]",
     third: "text-[#d19b3d] border border-[#d19b3d] hover:bg-[#a87722]",
   };
@@ -45,7 +45,7 @@ const Button = ({
       type={kind}
       onClick={() => (onClick && !isDisabled && !isLoading ? onClick() : handleClick && handleClick(EButtonTypes.CREATE))}
       className={clsx(
-        "flex items-center justify-center gap-1 rounded-[8px] px-[12px] py-[7px] font-semibold leading-[22px] transition-opacity",
+        "flex items-center justify-center gap-1 rounded-[8px] px-[10px] py-[5px] font-semibold leading-[22px] transition-opacity",
         typeClass[type],
         className,
         {

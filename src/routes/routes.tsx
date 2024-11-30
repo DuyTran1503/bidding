@@ -93,6 +93,10 @@ import CreateSupport from "@/Client/Supports/Create";
 import ProjectApproval from "@/pages/project-approval";
 import ApproveProjectByStaff from "@/pages/project-approval/Approve";
 import Detail from "@/Client/News/Detail";
+import CreateInstruct from "@/pages/Instructs/Create";
+import UpdateInstruct from "@/pages/Instructs/Update";
+import DetailInstruct from "@/pages/Instructs/Detail";
+import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult";
 
 export interface IRoute {
   path: string;
@@ -132,8 +136,8 @@ export const routes: IRoute[] = [
                   {
                     path: "/:id",
                     element: () => <Detail />,
-                  }
-                ]
+                  },
+                ],
               },
               {
                 path: "instruct",
@@ -427,6 +431,10 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <BiddingResults />,
               },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBiddingResult />,
+              },
             ],
           },
           {
@@ -699,5 +707,5 @@ export const routes: IRoute[] = [
   {
     path: "*",
     element: () => <NotFound />,
-  }
+  },
 ];

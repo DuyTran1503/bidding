@@ -35,7 +35,7 @@ import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { Tabs } from "antd";
 import BiddingResultForm from "@/pages/BiddingResults/BiddingResultForm";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
-
+import { resetStatus as resetStatusBidResult } from "@/services/store/biddingResult/biddingResult.slice";
 const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
@@ -95,6 +95,7 @@ const CreateProject = () => {
       dispatch(resetStatus());
     };
   }, []);
+
   const tabItems = [
     {
       key: "1",
@@ -193,7 +194,7 @@ const CreateProject = () => {
       label: "Bão lãnh dự thầu",
       // disabled: !state.project?.id,
       children: (
-        <>
+        <div>
           <Heading
             title="Tạo mới "
             hasBreadcrumb
@@ -228,14 +229,14 @@ const CreateProject = () => {
             projectOptions={convertDataOptions(state.listProjects || [])}
             enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
           />
-        </>
+        </div>
       ),
     },
     {
       key: "4",
       label: "Hồ sơ dự thầu",
       // disabled: !state.project?.id,
-      children: <CreateBidDocument project_id={state.project?.id} />,
+      children: <CreateBidDocument project_id={state.project?.id} isCreateFromProject />,
     },
     {
       key: "5",
