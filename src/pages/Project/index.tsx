@@ -104,8 +104,11 @@ const ProjectPage = () => {
           name={stateIndustry.industryData.map(({ name }) => name)}
           value={stateIndustry.industryData.map(({ value }) => value)}
           seriesName="Dữ liệu Biểu đồ"
+
         />
+
       ),
+      color: "green"
     },
     {
       key: "3",

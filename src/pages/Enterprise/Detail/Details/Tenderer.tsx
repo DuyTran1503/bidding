@@ -1,0 +1,89 @@
+import PaginatedTable from "@/components/table/PaginatedTable";
+import { useArchive } from "@/hooks/useArchive";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getAllProjectTenderer } from "@/services/store/project/project.thunk";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
+import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
+import { ColumnsType } from "antd/es/table";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+const Tenderer = () => {
+    const { state: projectState, dispatch: projectDispatch } = useArchive<IProjectInitialState>("project");
+    const { id } = useParams();
+    const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+    const handlePageChange = (page: number, pageSize: number) => {
+        projectDispatch({
+            type: "project/updateFilter",
+            payload: { page, size: pageSize },
+        });
+    };
+
+    const handleRowSelection = {
+        selectedRowKeys, // Các hàng đang được chọn
+        onChange: (keys: any) => setSelectedRowKeys(keys), // Xử lý chọn hàng
+    };
+    const columns: ColumnsType = [
+        {
+            dataIndex: "name",
+            title: "Tên dự án",
+            className: "w-[150px]",
+        },
+        {
+            dataIndex: "total_amount",
+            title: "Tổng giá gói thầu",
+            className: "w-[150px]",
+            render(_, record) {
+                return convertMoney(record?.total_amount);
+            },
+        },
+        {
+            dataIndex: "upload_time",
+            title: "Ngày đăng tải",
+            className: "w-[100px]",
+            render(_, record) {
+                return convertTimestamp(record?.upload_time);
+            },
+        },
+    ];
+
+    useEffect(() => {
+        projectDispatch(getAllProjectTenderer({
+            query: {
+                ...projectState.projects,
+                page: projectState.filter.page,
+                size: projectState.filter.size,
+                tenderer: id
+            },
+        }))
+    }, [projectDispatch, projectState.filter.page, projectState.filter.size, id]);
+    // Thêm key cho mỗi record nếu chưa có
+    const dataSourceWithKey = projectState.tendererProjects.map((item, index) => ({
+        ...item,
+         key: `key_${index}`, // Dùng id hoặc tên làm key duy nhất
+    }));
+
+    return (
+            <div className="pt-2">
+                <h2 className="my-4 text-xl font-medium">
+                    Danh sách dự án đầu tư <span className="ml-2 text-sm text-gray-500">
+                        Tổng: ({projectState.totalRecordTenderer} dự án)
+                    </span>
+                </h2>
+
+                <PaginatedTable
+                    columns={columns}
+                    dataSource={dataSourceWithKey}
+                    // loading={projectState.isLoading}
+                    currentPage={projectState.filter.page}
+                    pageSize={projectState.filter.size}
+                    totalRecords={projectState.totalRecordTenderer as number}
+                    onPageChange={handlePageChange}
+                    rowSelection={handleRowSelection} // Hỗ trợ chọn hàng
+                    bordered={true} // Hiển thị border bảng
+                />
+
+            </div>
+    );
+};
+
+export default Tenderer;

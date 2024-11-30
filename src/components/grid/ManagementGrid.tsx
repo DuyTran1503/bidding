@@ -12,6 +12,8 @@ export interface IAdditionalTab {
   key: string;
   label: string;
   content: React.ReactNode;
+  color?: string
+
 }
 export interface IModalProps<T> {
   visible: boolean;
@@ -39,6 +41,7 @@ export interface IGridProps<T extends ISearchParams> {
   scroll?: ScrollProps;
   ModalContent?: (props: IModalProps<T>) => ReactNode;
   tabLabel?: string;
+  color?: string;
   additionalTabs?: IAdditionalTab[];
   isManyAction?: boolean;
 }
@@ -123,7 +126,7 @@ const ManagementGrid = <T extends ISearchParams>({
         fetching={fetching}
         filter={filter!}
         additionalTabs={additionalTabs}
-        tabLabel={tabLabel} // Truyền tên cho các tab
+        tabLabel={tabLabel}
       />
       {Modal}
     </>

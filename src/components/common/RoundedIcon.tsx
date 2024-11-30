@@ -18,7 +18,7 @@ const RoundedIcon = ({ icon: ItemIcon, color, size, shape }: IRoundIcon) => {
       colorClasses = "bg-red-50 text-red-500";
       break;
     case "primary":
-      colorClasses = "bg-primary-50 text-primary-500";
+      colorClasses = "bg-cyan-50 text-cyan-500";
       break;
     case "green":
       colorClasses = "bg-green-50 text-green-600";

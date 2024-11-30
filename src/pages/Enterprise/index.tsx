@@ -243,7 +243,7 @@ const Enterprise = () => {
       label: "Dự án theo ngành",
       content: (
         <SelectChart
-          title="Top 10 doanh nghiệp đã hoàn thành dự án theo ngành"
+          title="Doanh nghiệp đã hoàn thành dự án theo ngành"
           data={state.topEnterprisesHaveCompletedProjectsByIndustry}
           selectedValue={selectedIndustry}
           options={industryState.listIndustry.map((ind: any) => ({ label: ind.name, value: String(ind.id) }))}

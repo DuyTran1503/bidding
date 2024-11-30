@@ -136,7 +136,7 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "2",
-      label: "Biểu đồ thống kê số lượng dự án của doanh nghiệp",
+      label: "Số lượng dự án",
       content: (
         <AbleBarChart
           data={[
@@ -149,7 +149,7 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "3",
-      label: "Thống kê số lượng gói thâu đã trúng ",
+      label: "Số lượng gói thầu đã trúng ",
       content: (
         <AbleBarChart
           data={[
@@ -163,7 +163,7 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "4",
-      label: "Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà doanh nghiệp thực hiện",
+      label: "Độ khó trung bình của nhiệm vụ",
       content: (
         <>
           <GenericChart
@@ -180,7 +180,7 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "5",
-      label: "Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm",
+      label: "Dự án đã hoàn thành",
       content: (
         <AbleBarChart
           title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
@@ -196,7 +196,7 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "6",
-      label: "Biểu đồ thống kê số lượng dự án đã trúng thầu của doanh nghiệp theo từng tháng trong năm",
+      label: "Dự án đã trúng thầu",
       content: (
         <AbleBarChart
           title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
@@ -212,7 +212,7 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "7",
-      label: "Biểu đồ thể hiện số lượng đánh giá và đánh giá trung bình doanh nghiệp nhận được",
+      label: "Đánh giá doanh nghiệp",
       content: (
         <AbleBarChart
           data={[
@@ -225,7 +225,7 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "8",
-      label: "Biểu đồ thể hiện điểm uy tín của doanh nghiệp và lịch sử bị trừ điểm uy tín của doanh nghiệp",
+      label: "Điểm uy tín",
       content: (
         <AbleBarChart
           data={[

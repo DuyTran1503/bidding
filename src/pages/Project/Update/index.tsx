@@ -34,7 +34,7 @@ import lodash from "lodash";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { EButtonTypes } from "@/shared/enums/button";
 import { convertDataOptions } from "../helper";
-import { resetStatus as resetStatusBidBond, setFilter } from "@/services/store/bid_bond/bidBond.slice";
+import { resetStatus as resetStatusBidBond } from "@/services/store/bid_bond/bidBond.slice";
 const UpdateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
@@ -269,9 +269,7 @@ const UpdateProject = () => {
     };
   }, []);
   return (
-    <>
-      <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />
-    </>
+    <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />
   );
 };
 

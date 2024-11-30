@@ -167,20 +167,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
       ],
     },
-    {
-      id: "5",
-      icon: { component: IoBookmarkOutline },
-      label: "Hình thức lựa chọn Nhà thầu",
-      path: "selection-methods",
-      permissions: EPermissions.LIST_SELECTION_METHOD,
-    },
-    {
-      id: "6",
-      icon: { component: IoBriefcaseOutline },
-      label: "Loại hình mua sắm công",
-      path: "procurement-categories",
-      permissions: EPermissions.LIST_PROCUREMENT_CATEGORIE,
-    },
+
 
     // {
     //   id: "4",
@@ -282,6 +269,20 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           permissions: EPermissions.LIST_POST,
         },
       ],
+    },
+    {
+      id: "6",
+      icon: { component: IoBriefcaseOutline },
+      label: "Loại hình mua sắm công",
+      path: "procurement-categories",
+      permissions: EPermissions.LIST_PROCUREMENT_CATEGORIE,
+    },
+    {
+      id: "5",
+      icon: { component: IoBookmarkOutline },
+      label: "Hình thức lựa chọn Nhà thầu",
+      path: "selection-methods",
+      permissions: EPermissions.LIST_SELECTION_METHOD,
     },
     {
       id: "10",

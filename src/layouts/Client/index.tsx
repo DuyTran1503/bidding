@@ -1,3 +1,5 @@
+import Banner from "@/Client/Home/components/Banner";
+import NewNews from "@/Client/Home/components/NewNews";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { Outlet } from "react-router-dom";
@@ -6,7 +8,11 @@ const ClientLayout = () => {
     return (
         <>
             <Header />
-            <Outlet />
+            <div className="max-w-screen-xl mx-auto">
+                <Banner />
+                <NewNews />
+                <Outlet />
+            </div>
             <Footer />
         </>
     );

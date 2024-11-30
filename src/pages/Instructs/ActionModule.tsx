@@ -10,7 +10,8 @@ import { Col, Row } from "antd";
 import { Formik } from "formik";
 import lodash from "lodash";
 import { useEffect } from "react";
-import { object, string } from "yup";
+import {object, string} from "yup";
+import FormSwitch from "@/components/form/FormSwitch.tsx";
 
 interface IInstructFormProps {
   formikRef?: FormikRefType<IInstructInitialValues>;
@@ -21,7 +22,7 @@ interface IInstructFormProps {
 export interface IInstructInitialValues {
   id?: string;
   instruct: string;
-  is_use: string;
+  is_use?: string;
 }
 
 const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
@@ -57,65 +58,11 @@ const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
     >
       {({ values, errors, touched, setFieldValue }) => {
         return (
-          <>
-            {/* <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tên nguồn tài trợ">
-                  <FormInput
-                    label="Tên nguồn tài trợ"
-                    placeholder="Tên nguồn tài trợ..."
-                    name="name"
-                    value={values.name}
-                    error={touched.name ? errors.name : ""}
-                    onChange={(e) => setFieldValue("name", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Loại nguồn tài trợ">
-                  <FormSelect
-                    label="Loại nguồn tài trợ"
-                    placeholder="Chọn loại nguồn tài trợ..."
-                    isDisabled={type === EPageTypes.VIEW}
-                    id="type"
-                    options={convertEnum(TypeFundingSource)}
-                    value={values.type || undefined}
-                    error={touched.type ? errors.type : ""}
-                    onChange={(e) => setFieldValue("type", e)}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Mã nguồn tài trợ">
-                  <FormInput
-                    label="Mã nguồn tài trợ"
-                    placeholder="Mã nguồn tài trợ..."
-                    name="code"
-                    value={values.code}
-                    error={touched.code ? errors.code : ""}
-                    onChange={(e) => setFieldValue("code", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Trạng thái hoạt động">
-                  <FormSwitch
-                    checked={!!values.is_active ? true : false}
-                    onChange={(value) => {
-                      setFieldValue("is_active", value);
-                    }}
-                  />
-                </FormGroup>
-              </Col>
-            </Row> */}
-            <Row gutter={[24, 24]}>
+          <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormGroup title="Giới thiệu">
+                <FormGroup title="Hướng dẫn">
                   <FormInputArea
-                    label="Giới thiệu"
-                    placeholder="Nhập bài giới thiệu..."
+                    placeholder="Nhập bài hướng dẫn..."
                     name="instruct"
                     isReadonly={type === EPageTypes.VIEW}
                     value={values.instruct}
@@ -123,9 +70,16 @@ const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
                     onChange={(e) => setFieldValue("instruct", e)}
                   />
                 </FormGroup>
+                <FormGroup title="Trạng thái">
+                  <FormSwitch
+                      checked={!!values.is_use ? true : false} // tar 0 1
+                      onChange={(value) => {
+                        setFieldValue("is_use", value);
+                      }}
+                  />
+                </FormGroup>
               </Col>
             </Row>
-          </>
         );
       }}
     </Formik>
