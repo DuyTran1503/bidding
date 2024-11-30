@@ -3,13 +3,15 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
+import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
+import { getListBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { EPermissions } from "@/shared/enums/permissions";
 import { Collapse, Table, TableProps, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import clsx from "clsx";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { IoEyeOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
@@ -19,11 +21,22 @@ interface IProps {
 }
 const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
   const { state } = useArchive<IAuthInitialState>("auth");
+  const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+
   const navigate = useNavigate();
   const hasPermission = checkPermission(state?.profile?.permissions, EPermissions.DETAIL_ENTERPRISE);
   const handleRedirect = (id: string) => {
     navigate(`/enterprise/detail/${id}`, { replace: true });
   };
+
+  const bidDocument = (value: number) => {
+    if (stateBidBond?.listBidBonds!.length > 0 && value) {
+      return stateBidBond.listBidBonds!.find((item) => +item.id === +value)?.bond_number;
+    }
+  };
+  useEffect(() => {
+    dispatchBidBond(getListBidBond());
+  }, []);
   const columns: ColumnsType = [
     {
       title: "STT",
@@ -101,8 +114,8 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
             id,
             key: id,
             project_id: undefined,
-            enterprise_id: Number(enterprise?.id) || 0, // Chuyển đổi thành number
-            bid_bond_id,
+            enterprise_id: Number(enterprise?.id) || 0,
+            bid_bond_id: (bid_bond_id && bidDocument(+bid_bond_id)) || 0,
             submission_date,
             bid_price,
             implementation_time,

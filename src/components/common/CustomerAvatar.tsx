@@ -18,9 +18,7 @@ const CustomerAvatar: React.FC<CustomerAvatarProps> = ({
   size = "medium",
   avatar = false, // Default to false if not provided
 }) => {
-  const [imageSrc, setImageSrc] = useState<string>(src && src.trim() !== "" ? src : '');
-  console.log(src);
-
+  const [imageSrc, setImageSrc] = useState<string>(src && src.trim() !== "" ? src : "");
 
   const handleImageError = () => {
     setImageSrc(imageError);
