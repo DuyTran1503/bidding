@@ -57,7 +57,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     project: biddingResult?.project as IProject,
     enterprise: biddingResult?.enterprise as IEnterprise,
     enterprise_id: biddingResult?.enterprise_id ?? undefined,
-    project_id: biddingResult?.project_id ?? undefined,
+    project_id: isDialog ? biddingResult?.project?.id : biddingResult?.project_id ?? undefined,
     bid_document: biddingResult?.bid_document as IBidDocument,
     win_amount: biddingResult?.win_amount || "",
     decision_number: biddingResult?.decision_number || "",
@@ -65,6 +65,8 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     is_active: biddingResult?.is_active ? "1" : "0",
     bid_document_id: biddingResult?.bid_document_id || undefined,
   };
+  console.log(initialValues);
+
   const Schema = object().shape({
     bid_document_id: string().required("Hồ sơ trúng thầu là bắt buộc"),
     win_amount: string()

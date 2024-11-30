@@ -90,7 +90,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
         </div>
       }
     >
-      <BiddingResultForm formikRef={formikRef} type={EButtonTypes.CREATE} setVisible={handleFormSubmitSuccess} />
+      <BiddingResultForm formikRef={formikRef} isDialog type={EButtonTypes.CREATE} biddingResult={item} setVisible={handleFormSubmitSuccess} />
       {/* <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
