@@ -59,3 +59,11 @@ export const changeStatusBidDocument = createAsyncThunk("bid_document/change-sta
     return rejectWithValue(error.response.data);
   }
 });
+export const getListBidDocument = createAsyncThunk("bid_document/get-list-bid-documents", async (_, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.patch(`/api/admin/list-bid-documents`);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});

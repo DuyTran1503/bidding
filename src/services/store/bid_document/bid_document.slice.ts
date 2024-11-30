@@ -9,6 +9,7 @@ import {
   deleteBidDocument,
   getAllBidDocument,
   getBidDocumentById,
+  getListBidDocument,
   updateBidDocument,
 } from "./bid_document.thunk";
 import { IError } from "@/shared/interface/error";
@@ -17,11 +18,13 @@ import { IBidDocument } from "./bid_document.model";
 export interface IBidDocumentInitialState extends IInitialState {
   bidDocuments: IBidDocument[];
   bidDocument?: IBidDocument;
+  listDocuments?: IBidDocument[];
 }
 
 const initialState: IBidDocumentInitialState = {
   status: EFetchStatus.IDLE,
   bidDocuments: [],
+  listDocuments: [],
   bidDocument: undefined,
   message: "",
   error: undefined,
@@ -64,6 +67,21 @@ const bidDocumentSlice = createSlice({
         state.loading = false;
       })
       .addCase(getBidDocumentById.rejected, (state, { payload }: PayloadAction<IBidDocument> | any) => {
+        state.bidDocument = payload.data;
+        state.message = transformPayloadErrors(payload?.errors);
+        state.loading = true;
+      });
+    builder
+      .addCase(getListBidDocument.fulfilled, (state, { payload }: PayloadAction<IBidDocument[]> | any) => {
+        if (payload.data) {
+          state.listDocuments = payload.data.map((item: IBidDocument) => ({
+            id: item.id,
+            name: item.name,
+          }));
+          state.loading = false;
+        }
+      })
+      .addCase(getListBidDocument.rejected, (state, { payload }: PayloadAction<IBidDocument> | any) => {
         state.bidDocument = payload.data;
         state.message = transformPayloadErrors(payload?.errors);
         state.loading = true;

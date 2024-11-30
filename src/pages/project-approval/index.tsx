@@ -163,7 +163,7 @@ const ProjectApproval = () => {
   }, [state.filter]);
   return (
     <>
-      <Heading title="Bài viết" hasBreadcrumb />
+      <Heading title="Phê duyệt dự án" hasBreadcrumb />
       <ManagementGrid
         columns={columns}
         data={data}
