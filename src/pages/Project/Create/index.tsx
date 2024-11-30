@@ -33,6 +33,8 @@ import lodash from "lodash";
 import { createBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { Tabs } from "antd";
+import BiddingResultForm from "@/pages/BiddingResults/BiddingResultForm";
+import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 
 const CreateProject = () => {
   const navigate = useNavigate();
@@ -48,6 +50,7 @@ const CreateProject = () => {
   const [selectedChild, setSelectedChild] = useState<INewProject | null>(null);
   const { dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
   const [activeTabKey, setActiveTabKey] = useState<string>("1");
+  const formikRefBidDoc = useRef<FormikProps<IBiddingResult>>(null);
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -234,7 +237,32 @@ const CreateProject = () => {
       key: "5",
       label: "Kết quả đấu thầu",
       // disabled: !state.project?.id,
-      children: <>hdsfd</>,
+      children: (
+        <>
+          <Heading
+            title="Tạo mới "
+            hasBreadcrumb
+            buttons={[
+              {
+                type: "secondary",
+                text: "Hủy",
+                icon: <IoClose className="text-[18px]" />,
+              },
+              {
+                isLoading: state.status === EFetchStatus.PENDING,
+                text: "Tạo mới",
+                icon: <FaPlus className="text-[18px]" />,
+                onClick: () => {
+                  if (formikRefBidDoc.current) {
+                    formikRefBidDoc.current.handleSubmit();
+                  }
+                },
+              },
+            ]}
+          />
+          <BiddingResultForm formikRef={formikRefBidDoc} type={EButtonTypes.CREATE} isOutSide listEnterprises={stateEnterprise.listEnterprise!} />
+        </>
+      ),
     },
   ];
 

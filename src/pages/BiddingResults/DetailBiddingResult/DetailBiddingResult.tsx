@@ -48,7 +48,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
         .catch((error) => {
           const apiErrors = error?.errors || {};
           setErrors(apiErrors);
-        });;
+        });
     } else if (type === EButtonTypes.UPDATE) {
       dispatch(updateBiddingResult({ body, param: item?.id }));
     }
@@ -95,7 +95,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.enterprise.representative}
+                    value={values.enterprise?.representative}
                     name="enterprise.representative"
                     error={touched.enterprise?.representative ? errors.enterprise?.representative : ""}
                     placeholder="Nhập tên đại diện..."
@@ -109,7 +109,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.enterprise.phone}
+                    value={values.enterprise?.phone}
                     name="enterprise.phone"
                     placeholder="Nhập số điện thoại..."
                     onChange={(value) => setFieldValue("enterprise.phone", value)}
@@ -121,7 +121,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.enterprise.address}
+                    value={values.enterprise?.address}
                     name="enterprise.address"
                     placeholder="Nhập địa chỉ..."
                     onChange={(value) => setFieldValue("enterprise.address", value)}
@@ -133,7 +133,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.project.name}
+                    value={values.project?.name}
                     name="project.name"
                     placeholder="Nhập tên dự án..."
                     onChange={(value) => setFieldValue("project.name", value)}
@@ -145,7 +145,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.project.location}
+                    value={values.project?.location}
                     name="project.location"
                     placeholder="Nhập địa điểm..."
                     onChange={(value) => setFieldValue("project.location", value)}
@@ -157,7 +157,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.project.bid_submission_start}
+                    value={values.project?.bid_submission_start}
                     name="project.bid_submission_start"
                     placeholder="Ngày bắt đầu..."
                     onChange={(value) => setFieldValue("project.bid_submission_start", value)}
@@ -228,7 +228,6 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
               </Col>
             </Row>
           </Form>
-
         )}
       </Formik>
     </Dialog>

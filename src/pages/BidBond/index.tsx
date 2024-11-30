@@ -26,6 +26,7 @@ const BidBonds = () => {
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const { state: stateProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+
   const projectName = (value: number) => {
     if (stateProject?.listProjects!.length > 0 && !!value) {
       return stateProject?.listProjects!.find((item) => item.id === value)?.name;
