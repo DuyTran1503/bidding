@@ -34,7 +34,7 @@ import lodash from "lodash";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { EButtonTypes } from "@/shared/enums/button";
 import { convertDataOptions } from "../helper";
-import { resetStatus as resetStatusBidBond, setFilter } from "@/services/store/bid_bond/bidBond.slice";
+import { resetStatus as resetStatusBidBond } from "@/services/store/bid_bond/bidBond.slice";
 const UpdateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
@@ -50,7 +50,7 @@ const UpdateProject = () => {
   const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
-  const {  state: stateBidBond, dispatch:dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -264,9 +264,7 @@ const UpdateProject = () => {
     },
   ];
   return (
-    <>
-      <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />
-    </>
+    <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />
   );
 };
 

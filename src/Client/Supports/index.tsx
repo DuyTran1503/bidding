@@ -1,15 +1,13 @@
-import { Button, Input, Select, Table } from "antd"
-import Banner from "../Home/components/Banner"
-import NewNews from "../Home/components/NewNews"
-import { Link } from "react-router-dom"
-import { ISupportInitialState } from "@/services/store/support/support.slice"
 import { useArchive } from "@/hooks/useArchive"
+import { ISupportInitialState } from "@/services/store/support/support.slice"
+import { Button, Input, Select, Table } from "antd"
+import { Link } from "react-router-dom"
 // import { ITableData } from "@/components/table/PrimaryTable"
-import { useEffect } from "react"
-import { ColumnsType } from "antd/es/table"
-import { EFetchStatus } from "@/shared/enums/fetchStatus"
-import { getAllSupports } from "@/services/store/support/support.thunk"
 import { RootStateType } from "@/services/reducers"
+import { getAllSupports } from "@/services/store/support/support.thunk"
+import { EFetchStatus } from "@/shared/enums/fetchStatus"
+import { ColumnsType } from "antd/es/table"
+import { useEffect } from "react"
 import { useSelector } from "react-redux"
 
 const Support = () => {
@@ -93,8 +91,6 @@ const Support = () => {
     ];
     return (
         <div className="max-w-screen-xl mx-auto">
-            <Banner />
-            <NewNews />
             {/* <FormModal
                 title="Cập nhật trạng thái"
                 open={isModalVisible}

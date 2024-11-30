@@ -3,15 +3,11 @@ import End from "@/components/common/End";
 import Title from "@/components/common/Title";
 import { ConfigProvider } from "antd";
 import { AiOutlineCheck } from "react-icons/ai";
-import Banner from "../Home/components/Banner";
-import NewNews from "../Home/components/NewNews";
 import Newnews from "./News";
 
 const News = () => {
   return (
     <div className="max-w-screen-xl mx-auto">
-      <Banner />
-      <NewNews />
       <ConfigProvider
         theme={{
           components: {
