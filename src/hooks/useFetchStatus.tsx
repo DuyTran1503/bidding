@@ -27,6 +27,8 @@ interface IUseFetchStatusProps {
 const useFetchStatus = <S extends IInitialState>({ module, reset, actions }: IUseFetchStatusProps) => {
   const { state, dispatch } = useArchive<S>(module);
   const navigate = useNavigate();
+  console.log(actions?.success);
+
   const handleStatus = (type: "success" | "error" | "pending") => {
     if (type === "success" && actions?.success) {
       if (typeof actions.success === "function") {

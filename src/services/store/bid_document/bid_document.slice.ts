@@ -47,6 +47,10 @@ const bidDocumentSlice = createSlice({
     resetMessageError(state) {
       state.message = "";
     },
+    resetStatus(state) {
+      state.message = "";
+      state.status = EFetchStatus.IDLE;
+    },
   },
 
   extraReducers(builder) {

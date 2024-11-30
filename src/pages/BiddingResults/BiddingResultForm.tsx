@@ -3,7 +3,7 @@ import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import { Formik } from "formik";
 import lodash from "lodash";
-import { IBiddingResultInitialState } from "@/services/store/biddingResult/biddingResult.slice";
+import { IBiddingResultInitialState, resetStatus } from "@/services/store/biddingResult/biddingResult.slice";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 import { Col, Form, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
@@ -28,10 +28,11 @@ import { getListBidDocument } from "@/services/store/bid_document/bid_document.t
 import { date, object, string } from "yup";
 import { Dispatch } from "@reduxjs/toolkit";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import useFetchStatus from "@/hooks/useFetchStatus";
 
 interface IBiddingResultFormProps {
   formikRef?: any;
-  type?: EButtonTypes.CREATE | EButtonTypes.UPDATE | EButtonTypes.VIEW;
+  type?: EButtonTypes;
   biddingResult?: IBiddingResult;
   isOutSide?: boolean;
   listEnterprises?: IEnterprise[];
@@ -48,7 +49,7 @@ export interface IBiddingResultFormInitialValues {
 }
 
 const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnterprises, isDialog, setVisible }: IBiddingResultFormProps) => {
-  const { dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
+  const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateBidDoc, dispatch: dispatchBidDoc } = useArchive<IBidDocumentInitialState>("bid_document");
@@ -56,17 +57,15 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     id: biddingResult?.id || "",
     project: biddingResult?.project as IProject,
     enterprise: biddingResult?.enterprise as IEnterprise,
-    enterprise_id: biddingResult?.enterprise_id ?? undefined,
-    project_id: isDialog ? biddingResult?.project?.id : biddingResult?.project_id ?? undefined,
+    enterprise_id: biddingResult?.enterprise.id ?? undefined,
+    project_id: biddingResult?.project?.id ?? undefined,
     bid_document: biddingResult?.bid_document as IBidDocument,
     win_amount: biddingResult?.win_amount || "",
     decision_number: biddingResult?.decision_number || "",
     decision_date: biddingResult?.decision_date || "",
     is_active: biddingResult?.is_active ? "1" : "0",
-    bid_document_id: biddingResult?.bid_document_id || undefined,
+    bid_document_id: isDialog ? (biddingResult?.bid_document.id as number) : biddingResult?.bid_document_id || undefined,
   };
-  console.log(initialValues);
-
   const Schema = object().shape({
     bid_document_id: string().required("Hồ sơ trúng thầu là bắt buộc"),
     win_amount: string()
@@ -105,6 +104,15 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
       dispatchEnterprise(getListEnterprise());
     }
   }, [isOutSide]);
+
+  useFetchStatus({
+    module: "bidding_result",
+    reset: resetStatus,
+    actions: {
+      success: { message: state.message },
+      error: { message: state.message },
+    },
+  });
   return (
     <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
@@ -120,7 +128,6 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
                         value={values.enterprise_id}
                         id="enterprise_id"
                         options={convertDataOptions(listEnterprises || [])}
-                        error={touched.enterprise_id ? errors.enterprise_id : ""}
                         placeholder="Nhập tên đại diện..."
                         onChange={(value) => setFieldValue("enterprise_id", value)}
                       />

@@ -13,19 +13,24 @@ import { IBiddingResultInitialState, resetStatus, setFilter } from "@/services/s
 import { getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
 // import { EPermissions } from "@/shared/enums/permissions";
 import { GoDownload } from "react-icons/go";
-import DetailBiddingResult from "../DetailBiddingResult/DetailBiddingResult";
 import { FaPlus } from "react-icons/fa";
 import { EPermissions } from "@/shared/enums/permissions";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
+import ActionModuleBiddingResult from "../ActionModuleBiddingResult/ActionModuleBiddingResult";
+import { useNavigate } from "react-router-dom";
 
 const BiddingResults = () => {
   const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
-
+  const navigate = useNavigate();
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
       permission: EPermissions.DETAIL_BIDDING_RESULT,
+      onClick(record) {
+        navigate(`detail/${record?.key}`);
+      },
     },
+
     {
       type: EButtonTypes.UPDATE,
       permission: EPermissions.UPDATE_BIDDING_RESULT,
@@ -55,7 +60,7 @@ const BiddingResults = () => {
       dataIndex: "enterprise",
       title: "Doanh nghiệp trúng thầu",
       render: (_, record) => {
-        return <span>{record.enterprise?.address}</span>;
+        return <span>{record.enterprise?.user?.name}</span>;
       },
     },
     {
@@ -119,7 +124,7 @@ const BiddingResults = () => {
       <Heading
         title="Kết quả đấu thầu"
         hasBreadcrumb
-        ModalContent={(props) => <DetailBiddingResult {...(props as any)} />}
+        ModalContent={(props) => <ActionModuleBiddingResult {...(props as any)} />}
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
@@ -140,7 +145,7 @@ const BiddingResults = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => <DetailBiddingResult {...(props as any)} />}
+        ModalContent={(props) => <ActionModuleBiddingResult {...(props as any)} />}
       />
     </>
   );

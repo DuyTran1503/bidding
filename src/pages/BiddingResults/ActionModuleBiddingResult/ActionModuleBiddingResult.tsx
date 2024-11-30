@@ -1,9 +1,5 @@
 import { useArchive } from "@/hooks/useArchive";
-import FormGroup from "@/components/form/FormGroup";
-import FormInput from "@/components/form/FormInput";
-import { Formik, FormikProps } from "formik";
-import lodash from "lodash";
-import { Col, Form, Row } from "antd";
+import { FormikProps } from "formik";
 import Dialog from "@/components/dialog/Dialog";
 import { Dispatch, SetStateAction, useRef } from "react";
 import { EButtonTypes } from "@/shared/enums/button";
@@ -13,7 +9,6 @@ import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.mod
 import { IBiddingResultInitialState } from "@/services/store/biddingResult/biddingResult.slice";
 import { IProject } from "@/services/store/project/project.model";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
-import { createBiddingResult, updateBiddingResult } from "@/services/store/biddingResult/biddingResult.thunk";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import BiddingResultForm from "../BiddingResultForm";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
@@ -25,7 +20,7 @@ interface IBiddingResultFormProps {
   item?: IBiddingResult;
 }
 
-const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResultFormProps) => {
+const ActionModuleBiddingResult = ({ visible, type, setVisible, item }: IBiddingResultFormProps) => {
   const formikRef = useRef<FormikProps<IBiddingResult>>(null);
   const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
   const { screenSize } = useViewport();
@@ -55,8 +50,9 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
   //     dispatch(updateBiddingResult({ body, param: item?.id }));
   //   }
   // };
+
   const handleFormSubmitSuccess = () => {
-    setVisible(false); // Close the dialog on successful submission
+    setVisible(false);
   };
   return (
     <Dialog
@@ -68,10 +64,10 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
       setVisible={setVisible}
       title={
         type === EButtonTypes.CREATE
-          ? "Tạo mới danh mục bài viết"
+          ? "Tạo mới kết quả đấu thầu"
           : type === EButtonTypes.UPDATE
-            ? "Cập nhật danh mục bài viết"
-            : "Chi tiết danh mục bài viết"
+            ? "Cập nhật kết quả đấu thầu"
+            : "Chi tiết kết quả đấu thầu"
       }
       footerContent={
         <div className="flex items-center justify-center gap-2">
@@ -90,7 +86,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
         </div>
       }
     >
-      <BiddingResultForm formikRef={formikRef} isDialog type={EButtonTypes.CREATE} biddingResult={item} setVisible={handleFormSubmitSuccess} />
+      <BiddingResultForm formikRef={formikRef} isDialog type={type} biddingResult={item} setVisible={handleFormSubmitSuccess} />
       {/* <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
@@ -239,4 +235,4 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
   );
 };
 
-export default DetailBiddingResult;
+export default ActionModuleBiddingResult;
