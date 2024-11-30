@@ -1,18 +1,18 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { IBiddingResult } from "./biddingResult.model"
+import { IBiddingResult } from "./biddingResult.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { commonStaticReducers } from "@/services/shared";
-import { 
-  getAllBiddingResults, 
-  createBiddingResult, 
-  updateBiddingResult, 
-  deleteBiddingResult, 
-  getBiddingResultById, 
-  changeStatusBiddingResult 
+import {
+  getAllBiddingResults,
+  createBiddingResult,
+  updateBiddingResult,
+  deleteBiddingResult,
+  getBiddingResultById,
+  changeStatusBiddingResult,
 } from "./biddingResult.thunk";
-import { transformPayloadErrors } from '@/shared/utils/common/function';
-import { IError } from '@/shared/interface/error';
+import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { IError } from "@/shared/interface/error";
 
 export interface IBiddingResultInitialState extends IInitialState {
   biddingResults: IBiddingResult[];
@@ -44,23 +44,21 @@ const biddingResultSlice = createSlice({
     // ? Get all bidding historys
     builder.addCase(getAllBiddingResults.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
       if (payload.data) {
-          state.biddingResults = payload.data.data;
-          state.totalRecords = payload.data.total_elements;
-          state.totalPages = payload.data.total_pages;
-          state.pageSize = payload.data.page_size;
-          state.currentPage = payload.data.current_page;
+        state.biddingResults = payload.data.data;
+        state.totalRecords = payload.data.total_elements;
+        state.totalPages = payload.data.total_pages;
+        state.pageSize = payload.data.page_size;
+        state.currentPage = payload.data.current_page;
       }
-  });
+    });
 
-  // ? Get By ID
-    builder.addCase(
-      getBiddingResultById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingResult> | any>) => {
-        if (payload.data) {
-          state.activeBiddingResult = payload.data;
-          state.message = payload.message || transformPayloadErrors(payload?.errors);
-        }
+    // ? Get By ID
+    builder.addCase(getBiddingResultById.fulfilled, (state, { payload }: PayloadAction<IResponse<IBiddingResult> | any>) => {
+      if (payload.data) {
+        state.activeBiddingResult = payload.data;
+        state.message = payload.message || transformPayloadErrors(payload?.errors);
       }
-    );
+    });
 
     // ? Create bidding history
     builder
@@ -74,7 +72,7 @@ const biddingResultSlice = createSlice({
           state.biddingResults.push(payload.data);
         }
       })
-      .addCase(createBiddingResult.rejected, (state, {payload}: PayloadAction<IError | any>) => {
+      .addCase(createBiddingResult.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
@@ -111,7 +109,7 @@ const biddingResultSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = payload.message || transformPayloadErrors(payload?.errors);
       });
-      builder
+    builder
       .addCase(changeStatusBiddingResult.pending, (state) => {
         state.status = EFetchStatus.PENDING;
       })

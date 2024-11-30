@@ -40,7 +40,7 @@ const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
   const formikBidBondRef = useRef<FormikProps<IBidBond>>(null);
-  const { state } = useArchive<IProjectInitialState>("project");
+  const { state, dispatch } = useArchive<IProjectInitialState>("project");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
   const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
@@ -90,7 +90,11 @@ const CreateProject = () => {
     };
     dispatchBidBond(createBidBond({ body: body }));
   };
-
+  useEffect(() => {
+    return () => {
+      dispatch(resetStatus());
+    };
+  }, []);
   const tabItems = [
     {
       key: "1",
@@ -170,7 +174,7 @@ const CreateProject = () => {
             type={EPageTypes.UPDATE}
             isChildren
             item={selectedChild!}
-            project={state.project}
+            project={state.dataCreateProject}
             formikRef={formikRef}
             parent_id={state.project?.id}
             listIndustry={stateIndustry.listIndustry}

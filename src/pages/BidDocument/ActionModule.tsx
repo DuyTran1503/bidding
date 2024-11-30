@@ -23,6 +23,8 @@ import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk"
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { getListBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IOption } from "@/shared/utils/shared-interfaces";
+import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
+import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 
 interface IBidDocumentFormProps {
   formikRef?: FormikRefType<IBidDocumentInitialValues>;
@@ -46,6 +48,7 @@ export interface IBidDocumentInitialValues {
   ranking: string;
   status: string;
   notes: string;
+  file?: File;
 }
 
 const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocumentFormProps) => {
@@ -69,6 +72,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
     ranking: bidDocument?.ranking ?? "",
     status: bidDocument?.status ?? "",
     notes: bidDocument?.notes ?? "",
+    file: bidDocument?.file || undefined,
   };
 
   const Schema = object().shape({});
@@ -95,7 +99,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
       validationSchema={Schema}
       onSubmit={(data) => {
         if (type === EPageTypes.CREATE) {
-          dispatch(createBidDocument({ body: lodash.omit(data, "id") }));
+          dispatch(createBidDocument(data as Omit<IBidDocument, "id">));
         } else if (type === EPageTypes.UPDATE && bidDocument?.id) {
           dispatch(updateBidDocument({ body: lodash.omit(data, "id"), param: String(bidDocument.id) }));
         }
@@ -106,7 +110,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
           <Form>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Dự án">
+                <FormGroup title="Dự án" required>
                   <FormSelect
                     isDisabled={type === "view"}
                     value={values.project_id}
@@ -118,7 +122,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Doanh nghiệp">
+                <FormGroup title="Doanh nghiệp" required>
                   <FormSelect
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}
                     isDisabled={type === "view"}
@@ -133,7 +137,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
 
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Mã bảo lãnh">
+                <FormGroup title="Mã bảo lãnh" required>
                   <FormSelect
                     options={formattedData}
                     isDisabled={type === "view"}
@@ -158,7 +162,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
 
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Giá trị đề nghị">
+                <FormGroup title="Giá trị đề nghị" required>
                   <FormInput
                     placeholder="Nhập giá trị đề nghị..."
                     name="bid_price"
@@ -252,10 +256,21 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
             </Row>
 
             <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Tài liệu đính kèm" required>
+                  <FormUploadFile
+                    name={"file"} // Sử dụng điều kiện để đổi name
+                    value={values.file} // Điều kiện chọn giá trị
+                    onChange={(e) => {
+                      setFieldValue("file", e); // Cập nhật field tương ứng
+                    }}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Ghi chú">
                   <FormCkEditor id="description" direction="vertical" value={values.notes} setFieldValue={setFieldValue} disabled={type === "view"} />
-               </FormGroup>
+                </FormGroup>
               </Col>
             </Row>
           </Form>

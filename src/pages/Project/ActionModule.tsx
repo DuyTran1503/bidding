@@ -65,7 +65,6 @@ const ActionModule = ({
   parent_id,
 }: IPropProject) => {
   const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-
   const [children, setChildren] = useState<INewProject[]>([]);
   const initialValues: INewProject = useMemo(
     () => ({
@@ -380,11 +379,34 @@ const ActionModule = ({
                     id="submission_method"
                     value={values.submission_method as string}
                     error={touched.submission_method ? errors.submission_method : ""}
-                    onChange={(e) => setFieldValue("submission_method", e)}
+                    onChange={(e) => {
+                      setFieldValue("submission_method", e);
+                      // Nếu là online, xóa giá trị Địa Điểm Nhận Hồ Sơ
+                      if (e === SUBMIT_METHOD.online) {
+                        setFieldValue("receiving_place", "");
+                      }
+                    }}
                     options={convertEnum(SUBMIT_METHOD, true)}
                   />
                 </FormGroup>
               </Col>
+
+              {/* Chỉ hiện Địa Điểm Nhận Hồ Sơ khi submission_method không phải là online */}
+              {values.submission_method !== SUBMIT_METHOD.online && (
+                <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+                  <FormGroup title="Địa Điểm Nhận Hồ Sơ">
+                    <FormInput
+                      isDisabled={type === EPageTypes.VIEW}
+                      placeholder="Nhập địa điểm nhận hồ sơ..."
+                      name="receiving_place"
+                      value={values.receiving_place}
+                      error={touched.receiving_place ? errors.receiving_place : ""}
+                      onChange={(e) => setFieldValue("receiving_place", e)}
+                      onBlur={handleBlur}
+                    />
+                  </FormGroup>
+                </Col>
+              )}
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Địa Điểm">
                   <FormInput
@@ -532,19 +554,6 @@ const ActionModule = ({
               </Col>
 
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Địa Điểm Nhận Hồ Sơ">
-                  <FormInput
-                    isDisabled={type === EPageTypes.VIEW}
-                    placeholder="Nhập địa điểm nhận hồ sơ..."
-                    name="receiving_place"
-                    value={values.receiving_place}
-                    error={touched.receiving_place ? errors.receiving_place : ""}
-                    onChange={(e) => setFieldValue("receiving_place", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Thời Gian Nộp Hồ Sơ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -619,7 +628,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tài liệu đính kèm">
                   <FormUploadFile
                     isMultiple
@@ -631,7 +640,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Mô Tả">
                   <FormCkEditor
                     disabled={type === EPageTypes.VIEW}

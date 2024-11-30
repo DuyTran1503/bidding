@@ -66,21 +66,17 @@ const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
       );
     } else if (typeof file === "string") {
       // Kiểm tra nếu file là URL đầy đủ (bắt đầu với https://)
-      const imageUrl = file.startsWith("https://") || file.startsWith("http://")
-        ? file
-        : `${import.meta.env.VITE_API_URL}/${file}`;  // Nếu là đường dẫn tương đối, thêm VITE_API_URL
+      const imageUrl = file.startsWith("https://") || file.startsWith("http://") ? file : `${import.meta.env.VITE_API_URL}/${file}`; // Nếu là đường dẫn tương đối, thêm VITE_API_URL
 
       return <img src={imageUrl} alt={file} className="h-[100px] rounded-lg object-cover" />;
-    }
-
-    else {
+    } else {
       // Handle cases where file is neither a File nor a string
       return null;
     }
   };
 
   return (
-    <div className="custom-upload flex h-[316px] items-center justify-center rounded-lg bg-gray-25 px-3 py-6">
+    <div className="custom-upload flex h-[235px] items-center justify-center rounded-lg bg-gray-25 px-3 py-6">
       <div className="flex-col items-center gap-4">
         <div className="flex justify-center">
           {file && (

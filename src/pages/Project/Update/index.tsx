@@ -2,7 +2,7 @@ import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { INewProject } from "@/services/store/project/project.model";
-import { IProjectInitialState, resetStatus } from "@/services/store/project/project.slice";
+import { IProjectInitialState, resetStatus as resetStatusProject } from "@/services/store/project/project.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
@@ -50,10 +50,10 @@ const UpdateProject = () => {
   const { state: stateMethod, dispatch: dispatchMethod } = useArchive<ISelectionMethodInitialState>("selection_method");
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
-  const {  state: stateBidBond, dispatch:dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
   useFetchStatus({
     module: "project",
-    reset: resetStatus,
+    reset: resetStatusProject,
     actions: {
       success: {
         message: state.message,
@@ -75,7 +75,7 @@ const UpdateProject = () => {
         message: stateBidBond.message,
       },
     },
-  })
+  });
   useEffect(() => {
     if (id) {
       dispatch(getProjectById(id));
@@ -263,6 +263,11 @@ const UpdateProject = () => {
       children: <>hdsfd</>,
     },
   ];
+  useEffect(() => {
+    return () => {
+      dispatch(resetStatusProject());
+    };
+  }, []);
   return (
     <>
       <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />

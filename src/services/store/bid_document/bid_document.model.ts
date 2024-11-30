@@ -2,7 +2,7 @@ export interface IBidDocument {
   id: number | string;
   project_id?: number;
   enterprise_id: number;
-  bid_bond_id: number;
+  bid_bond_id: number | string;
   name?: string;
   submission_date?: string;
   bid_price: string;
@@ -16,4 +16,5 @@ export interface IBidDocument {
   notes: string;
   enterprise?: { id: string; name: string };
   project?: { id: string; name: string };
+  file?: File;
 }

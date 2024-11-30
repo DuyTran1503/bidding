@@ -15,6 +15,8 @@ import { IProject } from "@/services/store/project/project.model";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { createBiddingResult, updateBiddingResult } from "@/services/store/biddingResult/biddingResult.thunk";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
+import BiddingResultForm from "../BiddingResultForm";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 
 interface IBiddingResultFormProps {
   type?: EButtonTypes;
@@ -25,7 +27,7 @@ interface IBiddingResultFormProps {
 
 const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResultFormProps) => {
   const formikRef = useRef<FormikProps<IBiddingResult>>(null);
-  const { dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
+  const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
   const { screenSize } = useViewport();
 
   const initialValues: IBiddingResult = {
@@ -38,22 +40,24 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
     decision_date: item?.decision_date || "",
     is_active: item?.is_active ? "1" : "0",
   };
-  const handleSubmit = (data: IBiddingResult, { setErrors }: any) => {
-    const body = {
-      ...lodash.omit(data, "id", "key", "index"),
-    };
-    if (type === EButtonTypes.CREATE) {
-      dispatch(createBiddingResult({ body }))
-        .unwrap()
-        .catch((error) => {
-          const apiErrors = error?.errors || {};
-          setErrors(apiErrors);
-        });
-    } else if (type === EButtonTypes.UPDATE) {
-      dispatch(updateBiddingResult({ body, param: item?.id }));
-    }
+  // const handleSubmit = (data: IBiddingResult, { setErrors }: any) => {
+  //   const body = {
+  //     ...lodash.omit(data, "id", "key", "index"),
+  //   };
+  //   if (type === EButtonTypes.CREATE) {
+  //     dispatch(createBiddingResult({ body }))
+  //       .unwrap()
+  //       .catch((error) => {
+  //         const apiErrors = error?.errors || {};
+  //         setErrors(apiErrors);
+  //       });
+  //   } else if (type === EButtonTypes.UPDATE) {
+  //     dispatch(updateBiddingResult({ body, param: item?.id }));
+  //   }
+  // };
+  const handleFormSubmitSuccess = () => {
+    setVisible(false); // Close the dialog on successful submission
   };
-
   return (
     <Dialog
       screenSize={screenSize}
@@ -77,6 +81,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
               key="submit"
               kind="submit"
               text={"Lưu"}
+              isLoading={state.status === EFetchStatus.PENDING}
               onClick={() => {
                 formikRef.current && formikRef.current.handleSubmit();
               }}
@@ -85,11 +90,11 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <BiddingResultForm formikRef={formikRef} type={EButtonTypes.CREATE} setVisible={handleFormSubmitSuccess} />
+      {/* <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>
-              {/* Enterprise Information */}
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Đại diện doanh nghiệp">
                   <FormInput
@@ -229,7 +234,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
             </Row>
           </Form>
         )}
-      </Formik>
+      </Formik> */}
     </Dialog>
   );
 };

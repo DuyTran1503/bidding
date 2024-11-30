@@ -15,7 +15,7 @@ import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { EButtonTypes } from "@/shared/enums/button";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
-import { useEffect } from "react";
+import { SetStateAction, useEffect } from "react";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
@@ -26,6 +26,8 @@ import dayjs from "dayjs";
 import { IBidDocumentInitialState } from "@/services/store/bid_document/bid_document.slice";
 import { getListBidDocument } from "@/services/store/bid_document/bid_document.thunk";
 import { date, object, string } from "yup";
+import { Dispatch } from "@reduxjs/toolkit";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 
 interface IBiddingResultFormProps {
   formikRef?: any;
@@ -33,6 +35,8 @@ interface IBiddingResultFormProps {
   biddingResult?: IBiddingResult;
   isOutSide?: boolean;
   listEnterprises?: IEnterprise[];
+  isDialog?: boolean;
+  setVisible?: () => void;
 }
 
 export interface IBiddingResultFormInitialValues {
@@ -43,7 +47,7 @@ export interface IBiddingResultFormInitialValues {
   is_active: string;
 }
 
-const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnterprises }: IBiddingResultFormProps) => {
+const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnterprises, isDialog, setVisible }: IBiddingResultFormProps) => {
   const { dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
@@ -62,8 +66,6 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     bid_document_id: biddingResult?.bid_document_id || undefined,
   };
   const Schema = object().shape({
-    enterprise_id: string().required("Đại diện doanh nghiệp là bắt buộc"),
-    project_id: string().required("Tên dự án là bắt buộc"),
     bid_document_id: string().required("Hồ sơ trúng thầu là bắt buộc"),
     win_amount: string()
       .required("Số tiền thắng thầu là bắt buộc")
@@ -78,19 +80,21 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
   });
   const handleSubmit = (data: IBiddingResult, { setErrors }: any) => {
     const body = {
-      ...lodash.omit(data, "id", "key", "index", "project", "enterprise", "bid_document"),
+      ...lodash.omit(data, "id", "key", "index", "project", "enterprise", "bid_document", "project_id", "enterprise_id"),
     };
-    console.log(body);
-    // if (type === EButtonTypes.CREATE) {
-    //   dispatch(createBiddingResult({ body }))
-    //     .unwrap()
-    //     .catch((error) => {
-    //       const apiErrors = error?.errors || {};
-    //       setErrors(apiErrors);
-    //     });
-    // } else if (type === EButtonTypes.UPDATE) {
-    //   dispatch(updateBiddingResult({ body, param: biddingResult?.id }));
-    // }
+    if (type === EButtonTypes.CREATE) {
+      dispatch(createBiddingResult({ body }))
+        .unwrap()
+        .then(() => {
+          setVisible && setVisible(); // Call the function passed from parent
+        })
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });
+    } else if (type === EButtonTypes.UPDATE) {
+      dispatch(updateBiddingResult({ body, param: biddingResult?.id }));
+    }
   };
   useEffect(() => {
     dispatchProject(getListProject());
@@ -100,88 +104,94 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     }
   }, [isOutSide]);
   return (
-    <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
-      {({ values, errors, touched, handleBlur, setFieldValue }) => (
-        <Form className="mt-3">
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={24} md={12} xl={12}>
-              <FormGroup title="Đại diện doanh nghiệp" required>
-                <FormSelect
-                  isDisabled={type === "view"}
-                  value={values.enterprise_id}
-                  id="enterprise_id"
-                  options={convertDataOptions(listEnterprises || [])}
-                  error={touched.enterprise_id ? errors.enterprise_id : ""}
-                  placeholder="Nhập tên đại diện..."
-                  onChange={(value) => setFieldValue("enterprise_id", value)}
-                />
-              </FormGroup>
-            </Col>
+    <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
+      {({ values, errors, touched, handleBlur, setFieldValue }) => {
+        return (
+          <Form className="mt-3">
+            <Row gutter={[24, 24]}>
+              {type === EButtonTypes.VIEW && (
+                <>
+                  <Col xs={24} sm={24} md={12} xl={12}>
+                    <FormGroup title="Đại diện doanh nghiệp" required>
+                      <FormSelect
+                        isDisabled={type === "view"}
+                        value={values.enterprise_id}
+                        id="enterprise_id"
+                        options={convertDataOptions(listEnterprises || [])}
+                        error={touched.enterprise_id ? errors.enterprise_id : ""}
+                        placeholder="Nhập tên đại diện..."
+                        onChange={(value) => setFieldValue("enterprise_id", value)}
+                      />
+                    </FormGroup>
+                  </Col>
 
-            <Col xs={24} sm={24} md={12} xl={12}>
-              <FormGroup title="Tên dự án" required>
-                <FormSelect
-                  options={convertDataOptions(stateProject.listProjects || [])}
-                  isDisabled={type === "view"}
-                  value={values.project_id}
-                  id="project_id"
-                  placeholder="Nhập tên dự án..."
-                  error={touched.project_id ? errors.project_id : ""}
-                  onChange={(value) => setFieldValue("project_id", value)}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12}>
-              <FormGroup title="Hồ sơ trúng thầu" required>
-                <FormSelect
-                  options={convertDataOptions((stateBidDoc.listDocuments as { id: string; name: string }[]) || [])}
-                  isDisabled={type === "view"}
-                  value={values.bid_document_id}
-                  id="bid_document_id"
-                  placeholder="Nhập tên dự án..."
-                  error={touched.bid_document_id ? errors.bid_document_id : ""}
-                  onChange={(value) => setFieldValue("bid_document_id", value)}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12}>
-              <FormGroup title="Số tiền thắng thầu" required>
-                <FormInput
-                  type="text"
-                  isDisabled={type === "view"}
-                  value={values.win_amount}
-                  name="win_amount"
-                  error={touched.win_amount ? errors.win_amount : ""}
-                  placeholder="Nhập số tiền thắng thầu..."
-                  onChange={(value) => setFieldValue("win_amount", value)}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12}>
-              <FormGroup title="Số quyết định" required>
-                <FormInput
-                  type="text"
-                  isDisabled={type === "view"}
-                  value={values.decision_number}
-                  name="decision_number"
-                  error={touched.decision_number ? errors.decision_number : ""}
-                  placeholder="Nhập số quyết định..."
-                  onChange={(value) => setFieldValue("decision_number", value)}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={24} sm={24} md={12} xl={12}>
-              <FormGroup title="Ngày quyết định">
-                <FormDate
-                  disabled={type === EButtonTypes.VIEW}
-                  value={values.decision_date ? dayjs(values.decision_date) : null}
-                  onChange={(date) => setFieldValue("decision_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-        </Form>
-      )}
+                  <Col xs={24} sm={24} md={12} xl={12}>
+                    <FormGroup title="Tên dự án" required>
+                      <FormSelect
+                        options={convertDataOptions(stateProject.listProjects || [])}
+                        isDisabled={type === "view"}
+                        value={values.project_id}
+                        id="project_id"
+                        placeholder="Nhập tên dự án..."
+                        error={touched.project_id ? errors.project_id : ""}
+                        onChange={(value) => setFieldValue("project_id", value)}
+                      />
+                    </FormGroup>
+                  </Col>
+                </>
+              )}
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormGroup title="Hồ sơ trúng thầu" required>
+                  <FormSelect
+                    options={convertDataOptions((stateBidDoc.listDocuments as { id: string; name: string }[]) || [])}
+                    isDisabled={type === "view"}
+                    value={values.bid_document_id}
+                    id="bid_document_id"
+                    placeholder="Nhập tên dự án..."
+                    error={touched.bid_document_id ? errors.bid_document_id : ""}
+                    onChange={(value) => setFieldValue("bid_document_id", value)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormGroup title="Số tiền thắng thầu" required>
+                  <FormInput
+                    type="text"
+                    isDisabled={type === "view"}
+                    value={values.win_amount}
+                    name="win_amount"
+                    error={touched.win_amount ? errors.win_amount : ""}
+                    placeholder="Nhập số tiền thắng thầu..."
+                    onChange={(value) => setFieldValue("win_amount", value)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormGroup title="Số quyết định" required>
+                  <FormInput
+                    type="text"
+                    isDisabled={type === "view"}
+                    value={values.decision_number}
+                    name="decision_number"
+                    error={touched.decision_number ? errors.decision_number : ""}
+                    placeholder="Nhập số quyết định..."
+                    onChange={(value) => setFieldValue("decision_number", value)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormGroup title="Ngày quyết định">
+                  <FormDate
+                    disabled={type === EButtonTypes.VIEW}
+                    value={values.decision_date ? dayjs(values.decision_date) : null}
+                    onChange={(date) => setFieldValue("decision_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };
