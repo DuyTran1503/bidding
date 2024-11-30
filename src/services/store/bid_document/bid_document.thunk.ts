@@ -3,6 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IError } from "@/shared/interface/error";
 import { IBidDocument } from "./bid_document.model";
+import { objectToFormData } from "@/shared/utils/common/formData";
 
 const prefix = "/api/admin/bid-documents";
 
@@ -24,25 +25,76 @@ export const getBidDocumentById = createAsyncThunk("bid_document/get-bid-documen
   }
 });
 
-export const createBidDocument = createAsyncThunk("bid_document/create-bid-documents", async (payload: IThunkPayload, { rejectWithValue }) => {
-  try {
-    const { response, data } = await client.post(prefix, payload);
+// export const createBidDocument = createAsyncThunk("bid_document/create-bid-documents", async (payload: IThunkPayload, { rejectWithValue }) => {
+//   try {
+//     const { response, data } = await client.post(prefix, payload);
 
-    return response.status >= 400 ? rejectWithValue(data) : data;
+//     return response.status >= 400 ? rejectWithValue(data) : data;
+//   } catch (error: any) {
+//     return rejectWithValue(error.response.data as IError);
+//   }
+// });
+export const createBidDocument = createAsyncThunk("bid_document/create-bid-documents", async (request: Omit<IBidDocument, "id">, thunkAPI) => {
+  try {
+    const formData = objectToFormData(request);
+
+    const accessToken = client.tokens.accessToken();
+
+    const response = await fetch(import.meta.env.VITE_API_URL + prefix, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return thunkAPI.rejectWithValue(error);
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error: any) {
-    return rejectWithValue(error.response.data as IError);
+    return thunkAPI.rejectWithValue(error.response.data);
   }
 });
-
-export const updateBidDocument = createAsyncThunk("bid_document/update-bid-documents", async (payload: IThunkPayload, { rejectWithValue }) => {
+// export const updateBidDocument = createAsyncThunk("bid_document/update-bid-documents", async (payload: IThunkPayload, { rejectWithValue }) => {
+//   try {
+//     const { response, data } = await client.patch(`${prefix}/${payload?.param}`, payload);
+//     return response.status >= 400 ? rejectWithValue(data) : data;
+//   } catch (error: any) {
+//     return rejectWithValue(error.response.data);
+//   }
+// });
+export const updateBidDocument = createAsyncThunk("bid_document/update-bid-documents", async (payload: IThunkPayload, thunkAPI) => {
   try {
-    const { response, data } = await client.patch(`${prefix}/${payload?.param}`, payload);
-    return response.status >= 400 ? rejectWithValue(data) : data;
+    const formData = objectToFormData(payload.body as IBidDocument);
+
+    // Thêm trường _method với giá trị "PUT" vào formData
+    formData.append("_method", "PUT");
+
+    const accessToken = client.tokens.accessToken();
+
+    const response = await fetch(import.meta.env.VITE_API_URL + `${prefix}/${payload?.param}`, {
+      method: "POST", // Thay đổi method thành "POST"
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      return thunkAPI.rejectWithValue(error);
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error: any) {
-    return rejectWithValue(error.response.data);
+    return thunkAPI.rejectWithValue(error.response.data);
   }
 });
-
 export const deleteBidDocument = createAsyncThunk("bid_document/delete-bid-documents", async (id: string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.delete(`${prefix}/${id}`);
@@ -55,6 +107,14 @@ export const changeStatusBidDocument = createAsyncThunk("bid_document/change-sta
   try {
     const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
     return response.status >= 400 ? rejectWithValue(data) : id;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+export const getListBidDocument = createAsyncThunk("bid_document/get-list-bid-documents", async (_, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get(`/api/admin/list-bid-documents`);
+    return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }

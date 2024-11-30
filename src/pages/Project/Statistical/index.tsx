@@ -58,7 +58,6 @@ const Statistical: React.FC = () => {
 
   const fetchTabData = useCallback(
     (projectIds: string[], tabKey: string) => {
-      // console.log("Fetching data for tab:", tabKey);
       switch (tabKey) {
         case "1":
           return dispatchCompare(detailProjectByIds({ body: { project_ids: projectIds } }));
@@ -76,7 +75,7 @@ const Statistical: React.FC = () => {
           return Promise.resolve();
       }
     },
-    [dispatchCompare]
+    [dispatchCompare],
   );
 
   const handleAddToCompare = useCallback(() => {
@@ -92,7 +91,7 @@ const Statistical: React.FC = () => {
 
     localStorage.setItem("selectedProjectIds", JSON.stringify(updatedProjectIds));
     fetchTabData(updatedProjectIds, activeTab);
-  }, [stateProject.project, fetchTabData,activeTab]);
+  }, [stateProject.project, fetchTabData, activeTab]);
 
   useEffect(() => {
     const savedProjectIds = localStorage.getItem("selectedProjectIds");
@@ -301,7 +300,7 @@ const Statistical: React.FC = () => {
         </>
       ),
     },
-  ]
+  ];
 
   return (
     <>
@@ -329,7 +328,7 @@ const Statistical: React.FC = () => {
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
-        // isDisabled={selectedIds.length > 20}
+          // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>

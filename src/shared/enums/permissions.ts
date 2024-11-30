@@ -120,7 +120,9 @@ export enum EPermissions {
 
   // ? Kết quả đấu thầu
   LIST_BIDDING_RESULT = "list_bidding_result",
+  CREATE_BIDDING_RESULT = "create_bidding_result",
   DETAIL_BIDDING_RESULT = "detail_bidding_result",
+  UPDATE_BIDDING_RESULT = "update_bidding_result",
 
   // Nhật ký hoạt động
   LIST_ACTIVITY_LOG = "list_activity_log",

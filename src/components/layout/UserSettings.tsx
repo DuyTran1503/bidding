@@ -65,14 +65,12 @@ const UserSettings = () => {
       key: "3",
     },
   ];
-  console.log(state.profile?.avatar);
-
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
       <div className="flex h-full cursor-pointer items-center gap-3">
         {/* Avatar */}
         <div className="relative h-8 w-8 shrink-0 rounded-circle bg-gray-100">
-          <CustomerAvatar src={state.profile?.avatar as string} alt={"Avatar"} className="rounded-full" />
+          <CustomerAvatar src={state.profile?.avatar as string} alt={"Avatar"} className="h-full w-full rounded-full" />
           <div className="absolute bottom-0 right-0 h-[10px] w-[10px] rounded-circle border-2 border-white bg-green-600"></div>
         </div>
         {/* Info */}

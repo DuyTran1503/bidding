@@ -122,7 +122,7 @@ const bidBondSlice = createSlice({
     builder
       .addCase(getListBidBond.fulfilled, (state, { payload }: PayloadAction<IResponse<IBidBond[]> | any>) => {
         if (payload.data) {
-          state.listBidBonds = payload.data.data;
+          state.listBidBonds = payload.data;
         }
       })
       .addCase(getListBidBond.rejected, (state, { payload }: PayloadAction<IResponse<IBidBond[]> | any>) => {

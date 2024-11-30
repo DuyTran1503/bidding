@@ -4,11 +4,11 @@ import { MethodType } from "@/shared/utils/shared-types";
 
 export const client = {
   SERVER_URL: import.meta.env.VITE_API_URL,
+
   tokens: {
     accessToken: () => {
       try {
         return JSON.parse(localStorage.getItem("accessToken") as string);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         return "";
       }
@@ -16,44 +16,91 @@ export const client = {
     refreshToken: () => {
       try {
         return JSON.parse(localStorage.getItem("refreshToken") as string);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         return "";
       }
     },
   },
+
   async send<MetaDataType>(
     path: string,
     method: MethodType = "GET",
     payload: IThunkPayload = {},
   ): Promise<ClientReturnType<IResponse<MetaDataType>>> {
-    const { headers = {}, body, query = {} } = payload;
+    try {
+      const { headers = {}, body, query = {} } = payload;
 
-    let queryParams = new URLSearchParams(query as Record<string, string>).toString();
-    if (queryParams) queryParams = `?${queryParams}`;
+      let queryParams = new URLSearchParams(query as Record<string, string>).toString();
+      if (queryParams) queryParams = `?${queryParams}`;
 
-    const options: IFetchOptions = {
-      method,
-    };
-    if (this.tokens.accessToken()) {
-      headers.Authorization = `Bearer ${this.tokens.accessToken()}`;
-    }
+      const options: IFetchOptions = {
+        method,
+      };
 
-    if (body) {
-      headers["Content-Type"] = "application/json";
-      options.body = JSON.stringify(body);
-    }
-    Object.assign(options, {
-      headers,
-    });
+      if (this.tokens.accessToken()) {
+        headers.Authorization = `Bearer ${this.tokens.accessToken()}`;
+      }
 
-    const response = await fetch(`${this.SERVER_URL}${path}${queryParams}`, options);
-    const data: IResponse<MetaDataType> = await response.json();
-    if (!response.ok) {
+      if (body) {
+        headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(body);
+      }
+
+      Object.assign(options, { headers });
+
+      const response = await fetch(`${this.SERVER_URL}${path}${queryParams}`, options);
+
+      const contentType = response.headers.get("content-type");
+      let data: IResponse<MetaDataType>;
+
+      try {
+        data = contentType?.includes("application/json")
+          ? await response.json()
+          : ({
+              success: false,
+              message: await response.text(),
+              data: null,
+            } as unknown as IResponse<MetaDataType>);
+      } catch (error) {
+        console.error(`Failed to parse response for ${path}:`, error);
+        data = {
+          success: false,
+          message: "Failed to parse response",
+          data: null,
+        } as unknown as IResponse<MetaDataType>;
+      }
+
+      if (!response.ok || response.status >= 400) {
+        return await interceptor<MetaDataType>({
+          client: this,
+          data,
+          response,
+          sendOptions: {
+            path,
+            method,
+            payload,
+          },
+        });
+      }
+
+      return { response, data };
+    } catch (error) {
+      console.error(`Request failed for ${path}:`, error);
+
+      const errorResponse = {
+        ok: false,
+        status: 0,
+        statusText: "Network Error",
+      } as Response;
+
       return await interceptor<MetaDataType>({
         client: this,
-        data,
-        response,
+        data: {
+          success: false,
+          message: error instanceof Error ? error.message : "Network error",
+          data: null,
+        } as unknown as IResponse<MetaDataType>,
+        response: errorResponse,
         sendOptions: {
           path,
           method,
@@ -61,20 +108,24 @@ export const client = {
         },
       });
     }
-    return { response, data };
   },
+
   get<MetaDataType>(path: string, payload: IThunkPayload = {}) {
     return this.send<MetaDataType>(path, "GET", payload);
   },
+
   post<MetaDataType>(path: string, payload: IThunkPayload = {}) {
     return this.send<MetaDataType>(path, "POST", payload);
   },
+
   put<MetaDataType>(path: string, payload: IThunkPayload = {}) {
     return this.send<MetaDataType>(path, "PUT", payload);
   },
+
   patch<MetaDataType>(path: string, payload: IThunkPayload = {}) {
     return this.send<MetaDataType>(path, "PATCH", payload);
   },
+
   delete<MetaDataType>(path: string, payload: IThunkPayload = {}) {
     return this.send<MetaDataType>(path, "DELETE", payload);
   },

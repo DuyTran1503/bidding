@@ -15,6 +15,8 @@ import { IProject } from "@/services/store/project/project.model";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { createBiddingResult, updateBiddingResult } from "@/services/store/biddingResult/biddingResult.thunk";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
+import BiddingResultForm from "../BiddingResultForm";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 
 interface IBiddingResultFormProps {
   type?: EButtonTypes;
@@ -25,7 +27,7 @@ interface IBiddingResultFormProps {
 
 const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResultFormProps) => {
   const formikRef = useRef<FormikProps<IBiddingResult>>(null);
-  const { dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
+  const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
   const { screenSize } = useViewport();
 
   const initialValues: IBiddingResult = {
@@ -38,22 +40,24 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
     decision_date: item?.decision_date || "",
     is_active: item?.is_active ? "1" : "0",
   };
-  const handleSubmit = (data: IBiddingResult, { setErrors }: any) => {
-    const body = {
-      ...lodash.omit(data, "id", "key", "index"),
-    };
-    if (type === EButtonTypes.CREATE) {
-      dispatch(createBiddingResult({ body }))
-        .unwrap()
-        .catch((error) => {
-          const apiErrors = error?.errors || {};
-          setErrors(apiErrors);
-        });;
-    } else if (type === EButtonTypes.UPDATE) {
-      dispatch(updateBiddingResult({ body, param: item?.id }));
-    }
+  // const handleSubmit = (data: IBiddingResult, { setErrors }: any) => {
+  //   const body = {
+  //     ...lodash.omit(data, "id", "key", "index"),
+  //   };
+  //   if (type === EButtonTypes.CREATE) {
+  //     dispatch(createBiddingResult({ body }))
+  //       .unwrap()
+  //       .catch((error) => {
+  //         const apiErrors = error?.errors || {};
+  //         setErrors(apiErrors);
+  //       });
+  //   } else if (type === EButtonTypes.UPDATE) {
+  //     dispatch(updateBiddingResult({ body, param: item?.id }));
+  //   }
+  // };
+  const handleFormSubmitSuccess = () => {
+    setVisible(false); // Close the dialog on successful submission
   };
-
   return (
     <Dialog
       screenSize={screenSize}
@@ -77,6 +81,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
               key="submit"
               kind="submit"
               text={"Lưu"}
+              isLoading={state.status === EFetchStatus.PENDING}
               onClick={() => {
                 formikRef.current && formikRef.current.handleSubmit();
               }}
@@ -85,17 +90,17 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <BiddingResultForm formikRef={formikRef} type={EButtonTypes.CREATE} setVisible={handleFormSubmitSuccess} />
+      {/* <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>
-              {/* Enterprise Information */}
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Đại diện doanh nghiệp">
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.enterprise.representative}
+                    value={values.enterprise?.representative}
                     name="enterprise.representative"
                     error={touched.enterprise?.representative ? errors.enterprise?.representative : ""}
                     placeholder="Nhập tên đại diện..."
@@ -109,7 +114,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.enterprise.phone}
+                    value={values.enterprise?.phone}
                     name="enterprise.phone"
                     placeholder="Nhập số điện thoại..."
                     onChange={(value) => setFieldValue("enterprise.phone", value)}
@@ -121,7 +126,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.enterprise.address}
+                    value={values.enterprise?.address}
                     name="enterprise.address"
                     placeholder="Nhập địa chỉ..."
                     onChange={(value) => setFieldValue("enterprise.address", value)}
@@ -133,7 +138,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.project.name}
+                    value={values.project?.name}
                     name="project.name"
                     placeholder="Nhập tên dự án..."
                     onChange={(value) => setFieldValue("project.name", value)}
@@ -145,7 +150,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.project.location}
+                    value={values.project?.location}
                     name="project.location"
                     placeholder="Nhập địa điểm..."
                     onChange={(value) => setFieldValue("project.location", value)}
@@ -157,7 +162,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.project.bid_submission_start}
+                    value={values.project?.bid_submission_start}
                     name="project.bid_submission_start"
                     placeholder="Ngày bắt đầu..."
                     onChange={(value) => setFieldValue("project.bid_submission_start", value)}
@@ -228,9 +233,8 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
               </Col>
             </Row>
           </Form>
-
         )}
-      </Formik>
+      </Formik> */}
     </Dialog>
   );
 };

@@ -186,7 +186,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "7.1",
           label: "Kết quả đấu thầu",
           path: "bidding-results",
-          permissions: EPermissions.LIST_BIDDING_TYPE,
+          // permissions: EPermissions.LIST_BIDDING_RESULT,
         },
         {
           id: "7.2",
@@ -333,8 +333,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       <div className="flex h-dvh select-none bg-gray-25">
         {/* Sidebar */}
         <div
-          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 
-            ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"}`}
+          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"}`}
         >
           {/* Logo */}
           <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4" onClick={() => navigate("/dashboard")}>

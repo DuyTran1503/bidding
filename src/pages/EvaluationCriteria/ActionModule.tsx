@@ -32,7 +32,6 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
   const formikRef = useRef<FormikProps<IEvaluationCriteria>>(null);
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-console.log(item);
 
   const { screenSize } = useViewport();
   const initialValues: IEvaluationCriteria = {
@@ -50,7 +49,7 @@ console.log(item);
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên tiêu chí đánh giá"),
     weight: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập trọng số đánh giá"),
     description: string().trim().required("Vui lòng nhập mô tả"),
-  })
+  });
 
   const handleSubmit = (data: IEvaluationCriteria) => {
     const body = {
