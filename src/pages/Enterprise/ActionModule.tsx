@@ -21,8 +21,8 @@ import { IIndustryInitialState } from "@/services/store/industry/industry.slice"
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
-import { useSelector } from "react-redux";
-import { RootStateType } from "@/services/reducers";
+import { IRoleInitialState } from "@/services/store/role/role.slice";
+import { getAllRoles } from "@/services/store/role/role.thunk";
 
 interface IEnterpriseFormProps {
   formikRef?: FormikRefType<IEnterpriseInitialValues>;
@@ -57,7 +57,8 @@ export interface IEnterpriseInitialValues {
 const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) => {
   const { dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: industryState, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
-  const roles = useSelector((state: RootStateType) => state.role.roles);
+  const { state: roleState, dispatch: dispatchrole } = useArchive<IRoleInitialState>("role");
+  // const roles = useSelector((state: RootStateType) => state.role.roles);
   const [processedIndustryIds, setProcessedIndustryIds] = useState<string[]>([]);
   const initialValues: IEnterpriseInitialValues = {
     id: enterprise?.id ?? "",
@@ -91,6 +92,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
   }, []);
   useEffect(() => {
     dispatchIndustry(getIndustries());
+    dispatchrole(getAllRoles({}));
   }, []);
   const typeOptions: IOption[] = typeEnterpriseEnumArray.map((e) => ({
     value: e,
@@ -100,7 +102,6 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     value: e.id,
     label: e.name,
   }));
-
 
   useEffect(() => {
     if (enterprise?.industry_id?.some((item: any) => typeof item === 'object')) {
@@ -162,14 +163,12 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-
-
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Vai trò">
                   <FormSelect
                     isMultiple={true}
                     onChange={(value) => setFieldValue("roles", value)}
-                    options={roles.map((role) => ({ label: role.name, value: role.id }))}
+                    options={roleState.roles.map((role) => ({ label: role.name, value: role.id }))}
                     defaultValue={!!values.roles && values.roles as any}
                     placeholder="Chọn vai trò "
                   />

@@ -1,3 +1,5 @@
+import { IEvaluate } from "../evaluate/evaluate.model";
+
 export interface IEnterprise {
   id: string | number;
   name: string;
@@ -21,5 +23,15 @@ export interface IEnterprise {
   is_blacklist?: number;
   password?: string;
   industries?: any[]
-  roles?:number[]
+  roles?:number[];
+  project_investor?: {
+    id: string;
+    name: string;
+  }
+  project_tenderer?: {
+    id: string;
+    name: string;
+  }
+  evaluates?: IEvaluate[];
+  attachments?: IArguments[]
 }

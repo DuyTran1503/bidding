@@ -295,7 +295,7 @@ const ActionModule = ({
       tenderer_id: project?.tenderer || undefined,
     };
     const updatedFiles = initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
-    const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ files, ...rest }) => rest)(data);
+    const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ ...rest }) => rest)(data);
     const newChild = {
       ...sanitizedProject,
       children: [newData],
@@ -334,7 +334,7 @@ const ActionModule = ({
         if (type === EPageTypes.UPDATE && project?.id) {
           const updatedFiles =
             initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
-          const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ files, ...rest }) => rest)(data);
+          const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ ...rest }) => rest)(data);
           dispatchProject(updateProject({ body: newData, param: String(project.id) }));
         }
       }}
