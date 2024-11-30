@@ -1,20 +1,18 @@
-import { useArchive } from "@/hooks/useArchive";
+import FormCkEditor from "@/components/form/FormCkEditor";
+import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import { Form, Formik } from "formik";
-import lodash from "lodash";
-import { Button, Col, Row } from "antd";
-import { EButtonTypes } from "@/shared/enums/button";
+import FormSelect from "@/components/form/FormSelect";
+import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
+import { useArchive } from "@/hooks/useArchive";
+import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISupport } from "@/services/store/support/support.model";
 import { ISupportInitialState, resetStatus } from "@/services/store/support/support.slice";
 import { createSupports } from "@/services/store/support/support.thunk";
-import FormSelect from "@/components/form/FormSelect";
-import FormGroup from "@/components/form/FormGroup";
-import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
-import Banner from "../Home/components/Banner";
-import NewNews from "../Home/components/NewNews";
+import { EButtonTypes } from "@/shared/enums/button";
+import { Button, Col, Row } from "antd";
+import { Form, Formik } from "formik";
+import lodash from "lodash";
 import { AiFillCaretRight } from "react-icons/ai";
-import FormCkEditor from "@/components/form/FormCkEditor";
-import useFetchStatus from "@/hooks/useFetchStatus";
 
 interface ISupportFormProps {
     formikRef?: any;
@@ -59,8 +57,6 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
       });
     return (
         <div className="max-w-screen-xl mx-auto">
-            <Banner />
-            <NewNews />
             <div className="flex items-center text-2xl font-semibold mt-5">
                 <AiFillCaretRight />Tạo mới yêu cầu
             </div>

@@ -31,9 +31,9 @@ const Employee = () => {
   const enterpriseOption: IOption[] =
     stateEnterprise?.listEnterprise! && stateEnterprise.listEnterprise.length > 0
       ? stateEnterprise.listEnterprise.map((e) => ({
-          value: e.id,
-          label: e.name,
-        }))
+        value: e.id,
+        label: e.name,
+      }))
       : [];
   const optionStatus: IOption[] = employeeEnumArray.map((e) => ({
     label: mappingEmployee[e],
@@ -136,7 +136,7 @@ const Employee = () => {
       options: optionEducation,
     },
     {
-      id: "enterprise_id",
+      id: "enterprise",
       placeholder: "Chọn tên doanh nghiệp...",
       title: "Tên doanh nghiệp",
       type: "select",
@@ -146,25 +146,25 @@ const Employee = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.employees)
       ? state.employees.map((employee, index) => ({
-          index: index + 1,
-          key: employee.id, // Use employee.id as the unique key
-          enterprise_id: employee.enterprise_id,
-          code: employee.code,
-          name: employee.name,
-          phone: employee.phone,
-          email: employee.email,
-          birthday: employee.birthday,
-          gender: employee.gender,
-          taxcode: employee.taxcode,
-          education_level: employee.education_level,
-          start_date: employee.start_date,
-          end_date: employee.end_date,
-          salary: employee.salary,
-          enterprise: enterpriseName(+employee?.enterprise?.id!),
-          address: employee.address,
-          status: employee.status,
-          avatar: employee.avatar,
-        }))
+        index: index + 1,
+        key: employee.id, // Use employee.id as the unique key
+        enterprise_id: employee.enterprise_id,
+        code: employee.code,
+        name: employee.name,
+        phone: employee.phone,
+        email: employee.email,
+        birthday: employee.birthday,
+        gender: employee.gender,
+        taxcode: employee.taxcode,
+        education_level: employee.education_level,
+        start_date: employee.start_date,
+        end_date: employee.end_date,
+        salary: employee.salary,
+        enterprise: enterpriseName(+employee?.enterprise?.id!),
+        address: employee.address,
+        status: employee.status,
+        avatar: employee.avatar,
+      }))
       : [];
   }, [JSON.stringify(state.employees)]);
 

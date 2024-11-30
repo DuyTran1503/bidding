@@ -103,7 +103,7 @@ const Introduce: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-screen-xl mx-auto my-16 space-y-6">
+    <div className="max-w-screen-xl mx-auto my-8 space-y-6">
       {sections.map((section, index) => (
         <div key={index} className="space-y-6">
           <h2 className="text-2xl font-semibold">{`${index + 1}. ${section.title}`}</h2>

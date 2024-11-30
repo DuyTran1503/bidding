@@ -54,9 +54,16 @@ export interface IInitialState {
   message: string;
   error?: { [key: string]: string };
   filter: ISearchParams;
+  totalRecordInvestor?: number;
+  totalRecordTenderer?: number;
+  totalRecordWont?: number;
   totalRecords: number;
+  number_of_elementInvestor?: number;
+  number_of_elementTenderer?: number;
+  number_of_elementWont?: number;
   number_of_elements?: number;
   [key: string]: unknown;
+
 }
 
 export interface IGridButton {

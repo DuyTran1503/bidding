@@ -92,6 +92,7 @@ import Support from "@/Client/Supports";
 import CreateSupport from "@/Client/Supports/Create";
 import ProjectApproval from "@/pages/project-approval";
 import ApproveProjectByStaff from "@/pages/project-approval/Approve";
+import Detail from "@/Client/News/Detail";
 
 export interface IRoute {
   path: string;
@@ -123,7 +124,16 @@ export const routes: IRoute[] = [
               },
               {
                 path: "news",
-                element: () => <News />,
+                pages: [
+                  {
+                    path: "/",
+                    element: () => <News />,
+                  },
+                  {
+                    path: "/:id",
+                    element: () => <Detail />,
+                  }
+                ]
               },
               {
                 path: "instruct",

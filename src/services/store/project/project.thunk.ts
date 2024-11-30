@@ -6,7 +6,25 @@ import { objectToFormData } from "@/shared/utils/common/formData.ts";
 
 const prefix = "/api/admin/projects";
 
-export const getAllProject = createAsyncThunk("staff/get-all-projects", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const getAllProject = createAsyncThunk("get-all-projects", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IProject[]>(prefix, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const getAllProjectInvestor = createAsyncThunk("get-all-projects-investor", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IProject[]>(prefix, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const getAllProjectTenderer = createAsyncThunk("get-all-projects-tenderer", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IProject[]>(prefix, payload);
     return response.status >= 400 ? rejectWithValue(data) : data;

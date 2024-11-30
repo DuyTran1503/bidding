@@ -33,7 +33,6 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
     bond_number: string().required("Vui lòng nhập mã bảo lãnh"),
   });
 
-
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={Schema} innerRef={formik as any}>
       {({ values, handleBlur, errors, touched, setFieldValue }: FormikProps<IBidBond>) => {
@@ -110,7 +109,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                 />
               </FormGroup>
             </Col> */}
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Loại bảo lãnh" required>
                   <FormSelect
                     isDisabled={type === "view"}
@@ -123,7 +122,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Ngày phát hành">
                   <FormDate
                     disabled={type === "view"}
@@ -132,11 +131,11 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Ngày hết hạn">
                   <FormDate
                     disabled={type === "view"}
-                    minDate={values.issue_date ? dayjs(values.issue_date).add(1, "day") : undefined}
+                    minDate={values.issue_date ? dayjs(values.issue_date) : undefined}
                     value={values.expiry_date ? dayjs(values.expiry_date) : null}
                     onChange={(date) => setFieldValue("expiry_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />

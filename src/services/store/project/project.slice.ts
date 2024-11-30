@@ -8,6 +8,8 @@ import {
   createProject,
   deleteProject,
   getAllProject,
+  getAllProjectInvestor,
+  getAllProjectTenderer,
   getListProject,
   getProjectById,
   updateProject,
@@ -16,16 +18,26 @@ import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { INewProject, IProject } from "./project.model.ts";
 
+interface IProjectFilter {
+  page: number;
+  size: number;
+  [key: string]: any; // Dự phòng cho các filter khác
+}
 export interface IProjectInitialState extends IInitialState {
   projects: IProject[];
+  investorProjects: IProject[];
+  tendererProjects: IProject[];
   project?: IProject | any;
   listProjects?: IProject[];
   id_project?: string;
+  filter: IProjectFilter;
   dataCreateProject?: INewProject;
 }
 const initialState: IProjectInitialState = {
   status: EFetchStatus.IDLE,
   projects: [],
+  investorProjects: [],
+  tendererProjects: [],
   listProjects: [],
   id_project: "",
   project: undefined,
@@ -38,6 +50,12 @@ const initialState: IProjectInitialState = {
   },
   totalRecords: 0,
   number_of_elements: 0,
+  number_of_elementInvestor: 0,
+  number_of_elementTenderer: 0,
+  number_of_elementWont: 0,
+  totalRecordInvestor: 0,
+  totalRecordTenderer: 0,
+  totalRecordWont: 0,
 };
 
 const projectSlice = createSlice({
@@ -72,6 +90,28 @@ const projectSlice = createSlice({
         }
       })
       .addCase(getAllProject.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+    builder
+      .addCase(getAllProjectInvestor.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        if (payload.data) {
+          state.investorProjects = payload.data.data;
+          state.totalRecordInvestor = payload?.data?.total_elements;
+          state.number_of_elementInvestor = payload?.data?.number_of_elements;
+        }
+      })  
+      .addCase(getAllProjectInvestor.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+    builder
+      .addCase(getAllProjectTenderer.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        if (payload.data) {
+          state.tendererProjects = payload.data.data;
+          state.totalRecordTenderer = payload?.data?.total_elements;
+          state.number_of_elementTenderer = payload?.data?.number_of_elements;
+        }
+      })
+      .addCase(getAllProjectTenderer.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
     builder
