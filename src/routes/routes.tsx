@@ -625,18 +625,18 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <Instructs />,
               },
-              // {
-              //   path: "/create",
-              //   element: () => <CreateEmployee />,
-              // },
-              // {
-              //   path: "/update/:id",
-              //   element: () => <UpdateEmployee />,
-              // },
-              // {
-              //   path: "/detail/:id",
-              //   element: () => <DetailEmployee />,
-              // },
+              {
+                path: "/create",
+                element: () => <CreateInstruct />,
+              },
+              {
+                path: "/update/:id",
+                element: () => <UpdateInstruct />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailInstruct />,
+              },
             ],
           },
           {

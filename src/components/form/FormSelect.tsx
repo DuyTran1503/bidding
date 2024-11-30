@@ -45,7 +45,7 @@ const FormSelect = ({
         theme={{
           components: {
             Select: {
-              optionSelectedBg: "#f4ecfb",
+              optionSelectedBg: "#ecfeff",
               colorPrimary: "#0891b2",
             },
           },

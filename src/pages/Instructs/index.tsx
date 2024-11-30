@@ -32,23 +32,23 @@ const Instructs = () => {
     {
       type: EButtonTypes.VIEW,
       onClick(record) {
-        navigate(`/funding-sources/detail/${record?.key}`);
+        navigate(`/instructs/detail/${record?.key}`);
       },
-      permission: EPermissions.DETAIL_INSTRUCT,
+      // permission: EPermissions.DETAIL_INSTRUCT,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
-        navigate(`/funding-sources/update/${record?.key}`);
+        navigate(`/instructs/update/${record?.key}`);
       },
-      permission: EPermissions.UPDATE_INSTRUCT,
+      // permission: EPermissions.UPDATE_INSTRUCT,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteFundingSources(record?.key));
       },
-      permission: EPermissions.DESTROY_INSTRUCT,
+      // permission: EPermissions.DESTROY_INSTRUCT,
     },
   ];
 

@@ -8,6 +8,7 @@ export interface IFormSwitchProps {
   isDisabled?: boolean;
   label?: string;
   checked?: boolean;
+  title?: string;
 }
 
 const FormSwitch = ({ checkedText, uncheckedText, isDisabled, label, onChange, checked }: IFormSwitchProps) => {
@@ -24,7 +25,7 @@ const FormSwitch = ({ checkedText, uncheckedText, isDisabled, label, onChange, c
     >
       <div className="flex flex-col items-start gap-[14px]">
         {label && <div className="text-m-medium mb-1 text-black-300">{label}</div>}
-        <Switch checked={checked} unCheckedChildren={uncheckedText} checkedChildren={checkedText} disabled={isDisabled} onChange={onChange} />
+        <Switch checked={checked} unCheckedChildren={uncheckedText} checkedChildren={checkedText} disabled={isDisabled} onChange={onChange}/>
       </div>
     </ConfigProvider>
   );
