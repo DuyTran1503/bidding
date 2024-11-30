@@ -41,6 +41,7 @@ export const interceptor = async <MetaDataType>({
     }
     case 403: {
       // Access Denied
+      toast.error("Bạn không có quyền thực hiện thao tác này");
       data.message = "Access Denied!";
       return { response, data };
     }

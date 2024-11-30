@@ -15,6 +15,7 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IBidDocumentInitialState, resetStatus, setFilter } from "@/services/store/bid_document/bid_document.slice";
 import { deleteBidDocument, getAllBidDocument } from "@/services/store/bid_document/bid_document.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
 
 const BidDocument = () => {
   const navigate = useNavigate();
@@ -48,8 +49,11 @@ const BidDocument = () => {
     },
     {
       dataIndex: "bid_price",
-      title: "Giá thầu",
+      title: "Giá gói thầu",
       className: "w-[250px]",
+      render(_, record) {
+        return convertMoney(record?.bid_price);
+      },
     },
     // {
     //   title: "Trạng thái",
@@ -203,7 +207,7 @@ const BidDocument = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-      // scroll={{ x: 1400 }}
+        // scroll={{ x: 1400 }}
       />
     </>
   );

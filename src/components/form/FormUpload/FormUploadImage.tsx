@@ -78,7 +78,7 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id }) => {
     value && value.length && setFileList(value);
   }, [JSON.stringify(value)]);
   return (
-    <div className="custom-upload flex h-[316px]  items-center justify-center rounded-lg bg-gray-25 px-3 py-6">
+    <div className="custom-upload flex h-[235px] items-center justify-center rounded-lg bg-gray-25 px-3 py-6">
       <div className="flex-col items-center gap-4">
         <div className="flex justify-center">
           {fileList.map((file: File, index: number) => (

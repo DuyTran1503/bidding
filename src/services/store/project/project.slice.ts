@@ -72,6 +72,11 @@ const projectSlice = createSlice({
     resetStatus(state) {
       state.status = EFetchStatus.IDLE;
       state.message = "";
+      state.projects = [];
+      state.listProjects = [];
+      state.id_project = "";
+      state.project = undefined;
+      state.dataCreateProject = undefined;
     },
   },
 

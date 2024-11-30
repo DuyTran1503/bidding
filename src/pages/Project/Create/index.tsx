@@ -33,12 +33,14 @@ import lodash from "lodash";
 import { createBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { Tabs } from "antd";
+import BiddingResultForm from "@/pages/BiddingResults/BiddingResultForm";
+import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 
 const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
   const formikBidBondRef = useRef<FormikProps<IBidBond>>(null);
-  const { state } = useArchive<IProjectInitialState>("project");
+  const { state, dispatch } = useArchive<IProjectInitialState>("project");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
   const { state: stateFundingSource, dispatch: dispatchFundingSource } = useArchive<IFundingSourceInitialState>("funding_source");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
@@ -48,6 +50,7 @@ const CreateProject = () => {
   const [selectedChild, setSelectedChild] = useState<INewProject | null>(null);
   const { dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
   const [activeTabKey, setActiveTabKey] = useState<string>("1");
+  const formikRefBidDoc = useRef<FormikProps<IBiddingResult>>(null);
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -87,7 +90,11 @@ const CreateProject = () => {
     };
     dispatchBidBond(createBidBond({ body: body }));
   };
-
+  useEffect(() => {
+    return () => {
+      dispatch(resetStatus());
+    };
+  }, []);
   const tabItems = [
     {
       key: "1",
@@ -167,7 +174,7 @@ const CreateProject = () => {
             type={EPageTypes.UPDATE}
             isChildren
             item={selectedChild!}
-            project={state.project}
+            project={state.dataCreateProject}
             formikRef={formikRef}
             parent_id={state.project?.id}
             listIndustry={stateIndustry.listIndustry}
@@ -234,7 +241,32 @@ const CreateProject = () => {
       key: "5",
       label: "Kết quả đấu thầu",
       // disabled: !state.project?.id,
-      children: <>hdsfd</>,
+      children: (
+        <>
+          <Heading
+            title="Tạo mới "
+            hasBreadcrumb
+            buttons={[
+              {
+                type: "secondary",
+                text: "Hủy",
+                icon: <IoClose className="text-[18px]" />,
+              },
+              {
+                isLoading: state.status === EFetchStatus.PENDING,
+                text: "Tạo mới",
+                icon: <FaPlus className="text-[18px]" />,
+                onClick: () => {
+                  if (formikRefBidDoc.current) {
+                    formikRefBidDoc.current.handleSubmit();
+                  }
+                },
+              },
+            ]}
+          />
+          <BiddingResultForm formikRef={formikRefBidDoc} type={EButtonTypes.CREATE} isOutSide listEnterprises={stateEnterprise.listEnterprise!} />
+        </>
+      ),
     },
   ];
 
