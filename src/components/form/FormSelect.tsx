@@ -55,7 +55,7 @@ const FormSelect = ({
           allowClear
           maxTagCount={maxTagCount ? maxTagCount : 1}
           disabled={isDisabled}
-          className={clsx(`text-m-medium !h-[35px] w-full ${className}`, isDisabled && "opacity-65", {
+          className={clsx(`text-m-medium !h-[35px] w-full rounded-[4px] border !border-[#e0e2e7] ${className}`, isDisabled && "opacity-65", {
             "border-red-500": !!error,
             "select-none !bg-gray-50 !text-black-300": error,
           })}

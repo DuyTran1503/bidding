@@ -104,11 +104,9 @@ const ProjectPage = () => {
           name={stateIndustry.industryData.map(({ name }) => name)}
           value={stateIndustry.industryData.map(({ value }) => value)}
           seriesName="Dữ liệu Biểu đồ"
-
         />
-
       ),
-      color: "green"
+      color: "green",
     },
     {
       key: "3",
@@ -184,21 +182,21 @@ const ProjectPage = () => {
       placeholder: "Chọn nhân viên phê duyêt...",
       label: "Nhân viên phê duyệt ",
       type: "select",
-      options:convertDataOptions(stateStaff.getListStaff|| [])
+      options: convertDataOptions(stateStaff.getListStaff || []),
     },
     {
       id: "investor",
       placeholder: "Chọn chủ đầu tư...",
       label: "Chủ đầu tư ",
       type: "select",
-      options:convertDataOptions(stateEnterprise.listEnterprise|| [])
+      options: convertDataOptions(stateEnterprise.listEnterprise || []),
     },
     {
       id: "tenderer",
       placeholder: "Chọn bên mời thầu...",
       label: "Bên mời thầu ",
       type: "select",
-      options:convertDataOptions(stateEnterprise.listEnterprise|| [])
+      options: convertDataOptions(stateEnterprise.listEnterprise || []),
     },
     {
       id: "upload_time_start",
@@ -276,11 +274,6 @@ const ProjectPage = () => {
         title="Dự án"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
