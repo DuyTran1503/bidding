@@ -10,7 +10,6 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { GoDownload } from "react-icons/go";
 import { IEvaluateInitialState, resetStatus, setFilter } from "@/services/store/evaluate/evaluate.slice";
 import { deleteEvaluate, getAllEvaluates } from "@/services/store/evaluate/evaluate.thunk";
 import EvaluateForm from "./EvaluateForm";
@@ -44,19 +43,29 @@ const Evaluates = () => {
       className: "w-4",
     },
     {
+      dataIndex: "projectName",
+      title: "Tên dự án",
+      className: "w-[200px]",
+      render: (_, record) => {
+        console.log(record.project);
+
+        return <span>{record?.project?.name}</span>; // Hiển thị tên dự án
+      },
+    },
+    {
+      dataIndex: "enterpriseName",
+      title: "Tên doanh nghiệp",
+      className: "w-[200px]",
+    },
+    {
       dataIndex: "evaluate",
       title: "Tên danh mục",
       className: "w-[300px]",
     },
     {
-      dataIndex: "project.name",
-      title: "Tên dự án",
-      className: "w-[300px]",
-    },
-    {
       dataIndex: "score",
-      title: "Tên danh mục",
-      className: "w-[300px]",
+      title: "Điểm đánh giá",
+      className: "w-[60px]",
     },
     {
       dataIndex: "title",
@@ -76,7 +85,7 @@ const Evaluates = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.evaluates && state.evaluates.length > 0
-        ? state.evaluates.map(({ id, title, score, evaluate, project }, index) => ({
+        ? state.evaluates.map(({ id, title, score, evaluate, project, enterprise }, index) => ({
             index: index + 1,
             key: id,
             id: id,
@@ -84,6 +93,9 @@ const Evaluates = () => {
             score,
             evaluate,
             project,
+            enterprise,
+            projectName: project?.name,
+            enterpriseName: enterprise?.name,
           }))
         : [],
     [JSON.stringify(state.evaluates)],
@@ -115,11 +127,6 @@ const Evaluates = () => {
         hasBreadcrumb
         ModalContent={(props) => <EvaluateForm {...(props as any)} />}
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             icon: <FaPlus className="text-[18px]" />,
             permission: EPermissions.CREATE_EVALUATE,

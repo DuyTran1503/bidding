@@ -45,7 +45,7 @@ const UpdatePost = () => {
         buttons={[
           {
             type: "secondary",
-            text: "Hủy",
+            text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
               navigate("/posts");
@@ -65,7 +65,8 @@ const UpdatePost = () => {
           formikRef={formikRef}
           post={{
             ...state.activePost,
-          }} />
+          }}
+        />
       )}
     </>
   );

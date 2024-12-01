@@ -16,7 +16,7 @@ const UpdateBiddingHistory = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<IBiddingHistoryFormInitialValues>>(null);
   const { state, dispatch } = useArchive<IBiddingHistoryInitialState>("bidding_history");
-//   const [data, setData] = useState<IBiddingHistoryFormInitialValues>();
+  //   const [data, setData] = useState<IBiddingHistoryFormInitialValues>();
   const { id } = useParams();
 
   useFetchStatus({
@@ -39,26 +39,26 @@ const UpdateBiddingHistory = () => {
     }
   }, [id]);
 
-//   useEffect(() => {
-//     if (!!state.activeBiddingHistory) {
-//       setData(state.activeBiddingHistory);
-//     }
-//   }, [JSON.stringify(state.biddingHistory)]);
+  //   useEffect(() => {
+  //     if (!!state.activeBiddingHistory) {
+  //       setData(state.activeBiddingHistory);
+  //     }
+  //   }, [JSON.stringify(state.biddingHistory)]);
 
-//   useEffect(() => {
-//     if (data) {
-//       if (formikRef.current) {
-//         formikRef.current.setValues({
-//             name: data.name,
-//             description: data.description,
-//             is_active: data.is_active,
-//             name: data.name,
-//             description: data.description,
-//             is_active: data.is_active,
-//         });
-//       }
-//     }
-//   }, [data]);
+  //   useEffect(() => {
+  //     if (data) {
+  //       if (formikRef.current) {
+  //         formikRef.current.setValues({
+  //             name: data.name,
+  //             description: data.description,
+  //             is_active: data.is_active,
+  //             name: data.name,
+  //             description: data.description,
+  //             is_active: data.is_active,
+  //         });
+  //       }
+  //     }
+  //   }, [data]);
 
   return (
     <>
@@ -68,10 +68,10 @@ const UpdateBiddingHistory = () => {
         buttons={[
           {
             type: "secondary",
-            text: "Hủy",
+            text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/bidding-historys");
+              navigate(-1);
             },
           },
           {

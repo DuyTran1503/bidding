@@ -153,11 +153,6 @@ const WorkProgresses = () => {
         hasBreadcrumb
         buttons={[
           {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
-          {
             text: "Thêm tiến độ dự án",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {

@@ -1,5 +1,6 @@
 import React from "react";
 import { ITableData } from "@/components/table/PrimaryTable";
+import { Tag } from "antd";
 interface DetailBusinessActivityProps {
   record: ITableData;
 }
@@ -13,10 +14,12 @@ const DetailBusinessActivity: React.FC<DetailBusinessActivityProps> = ({ record 
         <div>
           <span className="text-m-medium mb-1 font-semibold text-black-900">
             Mô tả:
-            <span className="mb-1 ml-2 text-sm text-black-300">{record?.description}</span>
+            <span className="mb-1 ml-2 text-sm text-black-300" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></span>
           </span>
         </div>
-        <div className="text-m-medium mb-1 block font-semibold text-black-900">Trạng thái</div>
+        <div className="text-m-medium mb-1 block font-semibold text-black-900">
+          Trạng thái : <Tag color="#2db7f5">{record.is_active ? "Hoạt động" : "Không hoạt động"}</Tag>
+        </div>
       </div>
     </div>
   );

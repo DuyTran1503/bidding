@@ -183,11 +183,6 @@ const FundingSources = () => {
         hasBreadcrumb
         buttons={[
           {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
-          {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {

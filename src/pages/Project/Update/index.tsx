@@ -125,7 +125,7 @@ const UpdateProject = () => {
             buttons={[
               {
                 type: "secondary",
-                text: "Hủy",
+                text: "Quay lại",
                 icon: <IoClose className="text-[18px]" />,
                 onClick: () => {
                   navigate("/project");
@@ -171,7 +171,7 @@ const UpdateProject = () => {
             buttons={[
               {
                 type: "secondary",
-                text: "Hủy",
+                text: "Quay lại",
                 icon: <IoClose className="text-[18px]" />,
                 onClick: () => {
                   navigate("/project");
@@ -219,7 +219,7 @@ const UpdateProject = () => {
             buttons={[
               {
                 type: "secondary",
-                text: "Hủy",
+                text: "Quay lại",
                 icon: <IoClose className="text-[18px]" />,
                 onClick: () => {
                   navigate("/bid-document");
@@ -268,9 +268,7 @@ const UpdateProject = () => {
       dispatch(resetStatusProject());
     };
   }, []);
-  return (
-    <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />
-  );
+  return <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />;
 };
 
 export default UpdateProject;

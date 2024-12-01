@@ -135,11 +135,6 @@ const SelectionMethods = () => {
         ModalContent={(props) => <SelectionMethodForm {...(props as any)} />}
         buttons={[
           {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
-          {
             icon: <FaPlus className="text-[18px]" />,
             // permission: EPermissions.CREATE_SELECTION_METHOD,
             text: "Thêm mới",
