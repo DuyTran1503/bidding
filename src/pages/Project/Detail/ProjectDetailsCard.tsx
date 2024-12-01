@@ -15,7 +15,9 @@ import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import BiddingDocument from "./BiddingDocument";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
-
+import IMAGE_ICON from "@/assets/images/customerDefaultAvatar.png";
+import DEFAULT_FILE from "@/assets/images/file_error.png";
+import BiddingResult from "./BiddingResult";
 const { Title } = Typography;
 const { Panel } = Collapse;
 interface ProjectDetailsCardProps {
@@ -53,8 +55,15 @@ const getStatusLabel = (status?: string): string => {
   return STATUS_PROJECT_LABELS[statusNumber as STATUS_PROJECT] || "Không xác định";
 };
 
-export const getFileIcon = (fileType: string) => {
-  switch (fileType.toLowerCase()) {
+export const getFileIcon = (fileType: string | undefined) => {
+  if (!fileType) {
+    return DEFAULT_FILE;
+  }
+
+  const isFullFileName = fileType.includes(".");
+  const extension = isFullFileName ? fileType.split(".").pop()!.toLowerCase() : fileType.toLowerCase(); // Sử dụng '!' để khẳng định rằng pop không trả về undefined
+
+  switch (extension) {
     case "pdf":
       return PDF;
     case "xlsx":
@@ -63,8 +72,13 @@ export const getFileIcon = (fileType: string) => {
     case "doc":
     case "docx":
       return WORD;
+    case "jpg":
+    case "jpeg":
+    case "png":
+    case "gif":
+      return IMAGE_ICON;
     default:
-      return "📁";
+      return DEFAULT_FILE;
   }
 };
 
@@ -174,8 +188,13 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({
 
     {
       label: "Kết quả đấu thầu",
-      value: data?.bidding_bond ? (
-        <BiddingBondsList items={[{ bidding_bond: data.bidding_bond }]} title_project={data?.name} listEnterprise={listEnterprise} />
+      value: data?.bidding_result ? (
+        <BiddingResult
+          items={[{ bidding_result: data.bidding_result }]}
+          listBidDocument={data?.bidding_document}
+          title_project={data?.name}
+          listEnterprise={listEnterprise}
+        />
       ) : (
         <div>Chưa có bảo lãnh dự thầu</div>
       ),

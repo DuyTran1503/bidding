@@ -46,9 +46,9 @@ const UpdateBidDocument = () => {
     if (data) {
       if (formikRef.current) {
         formikRef.current.setValues({
-          project_id: data?.project_id ?? 0,
-          enterprise_id: data?.enterprise_id ?? 0,
-          bid_bond_id: data?.bid_bond_id ?? 0,
+          project_id: (data?.project?.id as number) ?? undefined,
+          enterprise_id: data?.enterprise?.id ?? undefined,
+          bid_bond_id: data?.bid_bond?.id || undefined,
           submission_date: data?.submission_date ?? "",
           bid_price: data?.bid_price ?? "",
           implementation_time: data?.implementation_time ?? "",
@@ -58,7 +58,7 @@ const UpdateBidDocument = () => {
           totalScore: data?.totalScore ?? "",
           ranking: data?.ranking ?? "",
           status: data?.status ?? "",
-          notes: data?.notes ?? "",
+          note: data?.note ?? "",
         });
       }
     }

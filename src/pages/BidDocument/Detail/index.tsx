@@ -9,12 +9,11 @@ import { EPageTypes } from "@/shared/enums/page";
 import { useArchive } from "@/hooks/useArchive";
 import { IBidDocumentInitialState, resetStatus } from "@/services/store/bid_document/bid_document.slice";
 import { getBidDocumentById } from "@/services/store/bid_document/bid_document.thunk";
-import ProjectDetailsCard from "@/pages/Project/Detail/ProjectDetailsCard";
+import ProjectDetailsCard, { getFileIcon } from "@/pages/Project/Detail/ProjectDetailsCard";
 import { Tooltip } from "antd";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
-import { getListBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 
 const DetailBidDocument = () => {
   const navigate = useNavigate();
@@ -22,7 +21,6 @@ const DetailBidDocument = () => {
   const { id } = useParams();
 
   const { state, dispatch } = useArchive<IBidDocumentInitialState>("bid_document");
-  const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
   const [data, setData] = useState<IBidDocumentInitialValues>();
   useFetchStatus({
     module: "bid_document",
@@ -40,12 +38,11 @@ const DetailBidDocument = () => {
   useEffect(() => {
     if (id) {
       dispatch(getBidDocumentById(id));
-      dispatchBidBond(getListBidBond());
     }
   }, [id]);
   useEffect(() => {
     if (!!state.bidDocument) {
-      setData(state.bidDocument);
+      setData(state.bidDocument as IBidDocumentInitialValues);
     }
   }, [JSON.stringify(state.bidDocument)]);
   useEffect(() => {
@@ -65,7 +62,7 @@ const DetailBidDocument = () => {
           totalScore: data?.totalScore ?? "",
           ranking: data?.ranking ?? "",
           status: data?.status ?? "",
-          notes: data?.notes ?? "",
+          note: data?.note ?? "",
         });
       }
     }
@@ -76,8 +73,7 @@ const DetailBidDocument = () => {
     }
     return navigate(`/project/detail/${id}`, { replace: true });
   };
-  const codeBidBond =
-    stateBidBond.listBidBonds && data?.bid_bond_id && stateBidBond?.listBidBonds.find((item) => item.id === data.bid_bond_id)?.bond_number;
+
   const labels = [
     {
       label: "Tên dự án",
@@ -97,20 +93,47 @@ const DetailBidDocument = () => {
       value: (
         <Tooltip title={"Chi tiết doanh nghiệp"} color={"#108ee9"}>
           <span
-            onClick={() => handleRedirect(data?.enterprise?.id as unknown as string, "enterprise")}
+            onClick={() => handleRedirect(data?.enterprise?.user?.id as unknown as string, "enterprise")}
             className="cursor-pointer text-blue-600 hover:underline"
           >
-            {data?.enterprise && data?.enterprise.name}
+            {data?.enterprise && data?.enterprise.user?.name}
           </span>
         </Tooltip>
       ),
     },
-    { label: "Mã bảo lãnh dự thầu", value: codeBidBond },
+    { label: "Email doanh nghiệp ", value: data?.enterprise?.user?.email },
+    { label: "Mã số thuế doanh nghiệp ", value: data?.enterprise?.user?.taxcode },
+    { label: "Số điện thoại doanh nghiệp ", value: data?.enterprise?.phone },
+    { label: "Địa chỉ doanh nghiệp ", value: data?.enterprise?.address },
+    { label: "Mã bảo lãnh dự thầu", value: data?.bid_bond?.bond_number },
     { label: "Giá thầu ", value: convertMoney(data?.bid_price as string) },
     { label: "Ngày gửi hồ sơ", value: data?.submission_date },
     { label: "Thời gian thực hiện", value: data?.implementation_time },
     { label: "Thời gian hiệu lực", value: data?.validity_period },
-    { label: "Ghi chú", value: data?.notes || "Bạn chưa có ghi chú nào" },
+    {
+      label: "File đính kèm",
+      value: (
+        <div className="flex flex-wrap items-center gap-4">
+          {data && data.file ? (
+            <Tooltip title={data.file as string} color={"#108ee9"}>
+              <a
+                href={data.file as string}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 transition-opacity hover:opacity-80"
+              >
+                {data.file && getFileIcon(data.file as string) && (
+                  <img src={getFileIcon(data.file as string)} alt={data.file as string} className="h-6 w-6 object-contain" />
+                )}
+              </a>
+            </Tooltip>
+          ) : (
+            <span>Không có tệp đính kèm</span>
+          )}
+        </div>
+      ),
+    },
+    { label: "Ghi chú", value: data?.note || "Bạn chưa có ghi chú nào" },
   ];
   return (
     <>

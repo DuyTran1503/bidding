@@ -26,6 +26,9 @@ import { IOption } from "@/shared/utils/shared-interfaces";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
+import { IProject } from "@/services/store/project/project.model";
+import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 
 interface IBidDocumentFormProps {
   formikRef?: FormikRefType<IBidDocumentInitialValues>;
@@ -49,10 +52,11 @@ export interface IBidDocumentInitialValues {
   totalScore?: string;
   ranking: string;
   status: string;
-  notes: string;
-  file?: File;
-  enterprise?: { id: string; name: string };
-  project?: { id: string; name: string };
+  note: string;
+  file?: File | string;
+  enterprise?: IEnterprise;
+  project?: { id: string; name: string } | IProject;
+  bid_bond?: IBidBond;
 }
 
 const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFromProject }: IBidDocumentFormProps) => {
@@ -63,9 +67,9 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
 
   const [initialValues, setInitialValues] = useState<IBidDocumentInitialValues>({
     id: bidDocument?.id ?? "",
-    project_id: project_id ? project_id : bidDocument?.project_id ?? undefined,
-    enterprise_id: bidDocument?.enterprise_id ?? undefined,
-    bid_bond_id: bidDocument?.bid_bond_id || undefined,
+    project_id: project_id ? project_id : (bidDocument?.project?.id as number) ?? undefined,
+    enterprise_id: bidDocument?.enterprise?.id ?? undefined,
+    bid_bond_id: bidDocument?.bid_bond?.id || undefined,
     submission_date: bidDocument?.submission_date ?? "",
     bid_price: bidDocument?.bid_price ?? "",
     implementation_time: bidDocument?.implementation_time ?? "",
@@ -75,7 +79,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
     totalScore: bidDocument?.totalScore ?? "",
     ranking: bidDocument?.ranking ?? "",
     status: bidDocument?.status ?? "",
-    notes: bidDocument?.notes ?? "",
+    note: bidDocument?.note ?? "",
     file: bidDocument?.file || undefined,
   });
 
@@ -89,7 +93,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
     return () => {
       dispatch(resetMessageError());
     };
-  }, []);
+  }, [dispatch]);
   const formattedData: IOption[] =
     stateBidBond?.listBidBonds?.map((bidBond) => ({
       value: bidBond.id,
@@ -119,7 +123,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
               totalScore: "",
               ranking: "",
               status: "",
-              notes: "",
+              note: "",
               file: undefined,
             });
           }
@@ -145,7 +149,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
               totalScore: "",
               ranking: "",
               status: "",
-              notes: "",
+              note: "",
               file: undefined,
             });
           }
@@ -198,7 +202,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Ngày nộp">
+                <FormGroup title="Ngày nộp hồ sơ">
                   <FormDate
                     disabled={type === "view"}
                     value={values.submission_date ? dayjs(values.submission_date) : null}
@@ -242,65 +246,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Điểm kỹ thuật">
-                  <FormInput
-                    placeholder="Nhập điểm kỹ thuật..."
-                    name="technical_score"
-                    value={values.technical_score}
-                    error={touched.technical_score ? errors.technical_score : ""}
-                    onChange={(e) => setFieldValue("technical_score", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Điểm tài chính">
-                  <FormInput
-                    placeholder="Nhập điểm tài chính..."
-                    name="financial_score"
-                    value={values.financial_score}
-                    error={touched.financial_score ? errors.financial_score : ""}
-                    onChange={(e) => setFieldValue("financial_score", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tổng điểm">
-                  <FormInput
-                    placeholder="Nhập tổng điểm..."
-                    name="totalScore"
-                    value={values.totalScore}
-                    error={touched.totalScore ? errors.totalScore : ""}
-                    onChange={(e) => setFieldValue("totalScore", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Xếp hạng">
-                  <FormInput
-                    placeholder="Nhập xếp hạng..."
-                    name="ranking"
-                    value={values.ranking}
-                    error={touched.ranking ? errors.ranking : ""}
-                    onChange={(e) => setFieldValue("ranking", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Trạng thái">
-                  <FormSwitch checked={!!values.status} onChange={(value) => setFieldValue("status", value)} />
-                </FormGroup>
-              </Col>
             </Row>
 
             <Row gutter={[24, 24]}>
@@ -317,7 +262,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Ghi chú">
-                  <FormCkEditor id="description" direction="vertical" value={values.notes} setFieldValue={setFieldValue} disabled={type === "view"} />
+                  <FormCkEditor id="description" direction="vertical" value={values.note} setFieldValue={setFieldValue} disabled={type === "view"} />
                 </FormGroup>
               </Col>
             </Row>
