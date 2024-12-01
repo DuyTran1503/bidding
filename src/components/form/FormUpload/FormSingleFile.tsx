@@ -5,48 +5,15 @@ import imageFile from "@/assets/images/img-file.png";
 import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import clsx from "clsx";
-import PDF from "@/assets/images/pdf.png";
-import EXCEL from "@/assets/images/excel.png";
-import WORD from "@/assets/images/word.jpg";
 
 interface IProps {
   value?: File;
   onChange: (value: File | null) => void;
   id?: string;
   error?: string;
-  classNameOneFile?: string;
 }
-const renderFileIcon = (file: File) => {
-  const validImageExtensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "webp", "svg"];
 
-  if (file.type.startsWith("image/") || validImageExtensions.some((ext) => file.name.endsWith(ext))) {
-    return (
-      <img
-        src={URL.createObjectURL(file)}
-        alt={file.name}
-        className="h-[100px] rounded-lg object-cover"
-        onError={(e) => {
-          e.currentTarget.src = imageError;
-        }}
-      />
-    );
-  } else if (file.type.startsWith("application/")) {
-    if (file.type.startsWith("application/msword")) {
-      return <img src={WORD} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
-    }
-    if (file.type.startsWith("application/vnd.ms-excel")) {
-      return <img src={EXCEL} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
-    }
-    if (file.type.startsWith("application/pdf")) {
-      return <img src={PDF} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
-    } else {
-      return <img src={imageFile} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
-    }
-  } else {
-    return <img src={imageFile} alt={file.name} className="h-[100px] rounded-lg object-cover" />;
-  }
-};
-const FormSingleFile: React.FC<IProps> = ({ value, onChange, id, classNameOneFile }) => {
+const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,42 +40,43 @@ const FormSingleFile: React.FC<IProps> = ({ value, onChange, id, classNameOneFil
     }
   };
 
-  //   const value = typeof file === "string" ? file : null;
+  const renderFileIcon = (file: File | string) => {
+    const value = typeof file === "string" ? file : null;
 
-  //   if (file instanceof File) {
-  //     return file.type && file.type.startsWith("image/") ? (
-  //       <img
-  //         src={(() => {
-  //           try {
-  //             return URL.createObjectURL(file);
-  //           } catch (error) {
-  //             if (error instanceof TypeError && error.message.includes("Cannot create object URL")) {
-  //               return `${import.meta.env.VITE_API_URL}/${value}`;
-  //             } else {
-  //               throw error;
-  //             }
-  //           }
-  //         })()}
-  //         alt={file.name}
-  //         className="h-[100px] rounded-lg object-cover"
-  //         onError={(e) => (e.currentTarget.src = imageError)}
-  //       />
-  //     ) : (
-  //       <img src={imageFile} alt={file.name} className="h-[100px] rounded-lg object-cover" />
-  //     );
-  //   } else if (typeof file === "string") {
-  //     // Kiểm tra nếu file là URL đầy đủ (bắt đầu với https://)
-  //     const imageUrl = file.startsWith("https://") || file.startsWith("http://") ? file : `${import.meta.env.VITE_API_URL}/${file}`; // Nếu là đường dẫn tương đối, thêm VITE_API_URL
+    if (file instanceof File) {
+      return file.type && file.type.startsWith("image/") ? (
+        <img
+          src={(() => {
+            try {
+              return URL.createObjectURL(file);
+            } catch (error) {
+              if (error instanceof TypeError && error.message.includes("Cannot create object URL")) {
+                return `${import.meta.env.VITE_API_URL}/${value}`;
+              } else {
+                throw error;
+              }
+            }
+          })()}
+          alt={file.name}
+          className="h-[100px] rounded-lg object-cover"
+          onError={(e) => (e.currentTarget.src = imageError)}
+        />
+      ) : (
+        <img src={imageFile} alt={file.name} className="h-[100px] rounded-lg object-cover" />
+      );
+    } else if (typeof file === "string") {
+      // Kiểm tra nếu file là URL đầy đủ (bắt đầu với https://)
+      const imageUrl = file.startsWith("https://") || file.startsWith("http://") ? file : `${import.meta.env.VITE_API_URL}/${file}`; // Nếu là đường dẫn tương đối, thêm VITE_API_URL
 
-  //     return <img src={imageUrl} alt={file} className="h-[100px] rounded-lg object-cover" />;
-  //   } else {
-  //     // Handle cases where file is neither a File nor a string
-  //     return null;
-  //   }
-  // };
+      return <img src={imageUrl} alt={file} className="h-[100px] rounded-lg object-cover" />;
+    } else {
+      // Handle cases where file is neither a File nor a string
+      return null;
+    }
+  };
 
   return (
-    <div className={`custom-upload flex h-[260px] items-center justify-center rounded-lg bg-gray-25 px-3 py-6 ${classNameOneFile}`}>
+    <div className="custom-upload flex h-[235px] items-center justify-center rounded-lg bg-gray-25 px-3 py-6">
       <div className="flex-col items-center gap-4">
         <div className="flex justify-center">
           {file && (
