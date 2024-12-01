@@ -60,7 +60,7 @@ const MenuItem = ({
       {hasChildren && (
         <FaCaretUp
           className={clsx(
-            "text-lg text-gray-400 transition-transform group-hover:text-cyan-600",
+            "text-lg text-gray-400 transition-transform group-hover:text-cyan-700",
             isChildActive && "text-cyan-600",
             isOpen && "rotate-180 text-cyan-600",
           )}

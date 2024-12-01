@@ -8,9 +8,9 @@ interface DetailBusinessActivityProps {
 const DetailBusinessActivity: React.FC<DetailBusinessActivityProps> = ({ record }: ITableData | any) => {
   return (
     <div className="bg-white p-6">
-      <h2 className="mb-4 text-2xl font-semibold">Chi tiết loại hình hoạt động</h2>
+      <h2 className="mb-4 text-2xl font-semibold">Chi tiết loại hình kinh doanh</h2>
       <div className="flex flex-col gap-3">
-        <div className="text-m-medium mb-1 block font-semibold text-black-900">Tên loại hình hoạt động: {record?.name}</div>
+        <div className="text-m-medium mb-1 block font-semibold text-black-900">Tên loại hình kinh doanh: {record?.name}</div>
         <div>
           <span className="text-m-medium mb-1 font-semibold text-black-900">
             Mô tả:
