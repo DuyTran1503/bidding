@@ -150,7 +150,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       label: "Phê duyệt dự án",
       path: "project-approval",
       icon: { component: MdOutlineCreditScore },
-      permissions: EPermissions.PROJECT_BY_STAFF,
+      permissions: EPermissions.APPROVE_PROJECT,
     },
     {
       id: "4",
