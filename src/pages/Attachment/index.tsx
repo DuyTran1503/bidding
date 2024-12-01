@@ -83,7 +83,7 @@ const Attachment = () => {
       placeholder: "Nhập ...",
       label: "Loại hình doanh nghiệp",
       type: "text",
-    }
+    },
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.attachments)
@@ -135,11 +135,6 @@ const Attachment = () => {
         title="Tài liệu đính kèm"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,

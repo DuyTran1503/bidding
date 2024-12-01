@@ -18,6 +18,7 @@ import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk"
 import { getListProject } from "@/services/store/project/project.thunk";
 import FormSelect from "@/components/form/FormSelect";
 import { convertDataOptions } from "../Project/helper";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 
 interface IEvaluateFormProps {
   type?: EButtonTypes;
@@ -28,7 +29,7 @@ interface IEvaluateFormProps {
 
 const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluate>>(null);
-  const { dispatch } = useArchive<IEvaluateInitialState>("evaluate");
+  const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { screenSize } = useViewport();
@@ -60,7 +61,11 @@ const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) =
     dispatchEnterprise(getListEnterprise());
     dispatchProject(getListProject());
   }, []);
-
+  useEffect(() => {
+    if (state.status === EFetchStatus.FULFILLED) {
+      setVisible(false);
+    }
+  }, [state.status === EFetchStatus.FULFILLED]);
   return (
     <Dialog
       screenSize={screenSize}

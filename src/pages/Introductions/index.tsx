@@ -1,4 +1,3 @@
-
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
 import ManagementGrid from "@/components/grid/ManagementGrid";
@@ -59,13 +58,13 @@ const Introductions = () => {
       className: "w-[80px]",
     },
     {
-        dataIndex: "introduction",
-        title: "Giới thiệu",
-        className: "w-[250px]",
+      dataIndex: "introduction",
+      title: "Giới thiệu",
+      className: "w-[250px]",
 
-        render(_, record) {
-            return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.introduction || "" }}></div>;
-        },
+      render(_, record) {
+        return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.introduction || "" }}></div>;
+      },
     },
     {
       title: "Trạng thái",
@@ -158,11 +157,6 @@ const Introductions = () => {
         title="Giới thiệu"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,

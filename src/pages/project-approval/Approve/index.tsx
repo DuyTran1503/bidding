@@ -37,6 +37,7 @@ const ApproveProjectByStaff = () => {
   const [visible, setVisible] = useState(false);
   const { screenSize } = useViewport();
   const [is_approve, setIsApprove] = useState(true);
+
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -88,7 +89,7 @@ const ApproveProjectByStaff = () => {
             text: "Trở lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/project-approval");
+              navigate(-1);
             },
           },
           {

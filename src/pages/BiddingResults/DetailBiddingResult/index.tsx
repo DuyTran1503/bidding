@@ -75,7 +75,7 @@ const DetailBiddingResult = () => {
             text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/bidding-results");
+              navigate(-1);
             },
           },
         ]}

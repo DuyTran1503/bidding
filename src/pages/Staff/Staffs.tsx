@@ -167,11 +167,6 @@ const Staffs = () => {
         hasBreadcrumb
         buttons={[
           {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
-          {
             text: "Thêm nhân viên",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {

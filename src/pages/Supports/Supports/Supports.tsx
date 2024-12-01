@@ -77,11 +77,7 @@ const Supports = () => {
           5: "Đề xuất tính năng/Đóng góp ý tưởng",
           6: "Báo lỗi",
         };
-        return (
-          <div className="flex items-center space-x-2">
-            {statusMap[record.type as number] || "Không xác định"}
-          </div>
-        );
+        return <div className="flex items-center space-x-2">{statusMap[record.type as number] || "Không xác định"}</div>;
       },
     },
     {
@@ -93,17 +89,13 @@ const Supports = () => {
       dataIndex: "status",
       render: (_, record) => {
         const statusMap: { [key: string]: string } = {
-          "sent": "Đã gửi",
-          "processing": "Đang xử lý",
-          "responded": "Đã xử lý",
+          sent: "Đã gửi",
+          processing: "Đang xử lý",
+          responded: "Đã xử lý",
         };
         return (
           <div className="flex items-center space-x-2">
-            <button
-              onClick={() => handleOpenModal(record as ITableData)}
-            >
-              {statusMap[record.status as string] || "Không xác định"}
-            </button>
+            <button onClick={() => handleOpenModal(record as ITableData)}>{statusMap[record.status as string] || "Không xác định"}</button>
           </div>
         );
       },
@@ -123,18 +115,18 @@ const Supports = () => {
     () =>
       state.supports && state.supports.length > 0
         ? state.supports.map(({ id, title, email, phone, sender, content, document, type, status }, index) => ({
-          index: index + 1,
-          key: id,
-          id: id,
-          title: title,
-          email,
-          phone,
-          sender,
-          content,
-          document,
-          type,
-          status,
-        }))
+            index: index + 1,
+            key: id,
+            id: id,
+            title: title,
+            email,
+            phone,
+            sender,
+            content,
+            document,
+            type,
+            status,
+          }))
         : [],
     [state.supports],
   );
@@ -180,28 +172,18 @@ const Supports = () => {
         ModalContent={(props) => <SupportForm {...(props as any)} />}
         buttons={[
           {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
-          {
             icon: <FaPlus className="text-[18px]" />,
             permission: EPermissions.CREATE_BANNER,
             text: "Thêm mới",
           },
         ]}
       />
-      <FormModal
-        title="Cập nhật trạng thái"
-        open={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        onConfirm={handleConfirmStatus}
-      >
+      <FormModal title="Cập nhật trạng thái" open={isModalVisible} onCancel={() => setIsModalVisible(false)} onConfirm={handleConfirmStatus}>
         <FormRadio
           value={selectedStatus}
           options={statusOptions}
           onChange={(e: RadioChangeEvent) => {
-            setSelectedStatus(e.target.value)
+            setSelectedStatus(e.target.value);
           }}
         />
       </FormModal>

@@ -20,7 +20,7 @@ import {
   industryHasTheMostEnterprise,
   projectsStatusPreMonth,
   topEnterprisesHaveCompletedProjectsByFundingSource,
-  topEnterprisesHaveCompletedProjectsByIndustry
+  topEnterprisesHaveCompletedProjectsByIndustry,
 } from "@/services/store/chart/chart.thunk";
 import { IEnterpriseInitialState, resetStatus, setFilter } from "@/services/store/enterprise/enterprise.slice";
 import { changeStatusActiveEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
@@ -92,7 +92,7 @@ const Enterprise = () => {
   const handleIndustryChange = (value: string) => {
     message.loading("Đang tải dữ liệu");
     setSelectedIndustry(value);
-  }
+  };
   useEffect(() => {
     if (selectedYearProjectStatus) {
       dispatch(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
@@ -111,9 +111,9 @@ const Enterprise = () => {
   // Hoặc sử dụng toán tử nullish coalescing
   const industryOptions: IOption[] = industryState?.listIndustry?.length
     ? industryState.listIndustry.map((item) => ({
-      value: item.id,
-      label: item.name,
-    }))
+        value: item.id,
+        label: item.name,
+      }))
     : [];
   const columns: ColumnsType = [
     {
@@ -162,12 +162,8 @@ const Enterprise = () => {
       render(_, record) {
         return (
           <div className="flex flex-col">
-          {record.industries.length > 0 ? (
-            record.industries.map((item:any, index:number) => (
-              <div key={index}>{item}</div>
-            ))
-          ) : null}
-        </div>
+            {record.industries.length > 0 ? record.industries.map((item: any, index: number) => <div key={index}>{item}</div>) : null}
+          </div>
         );
       },
     },
@@ -323,23 +319,26 @@ const Enterprise = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(enterpriseState.enterprises)
       ? enterpriseState.enterprises.map(
-        ({ id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at,industries }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          representative,
-          enterprises: (industry_id?.length && industry(industry_id)) || [],
-          organization_type,
-          industry_id,
-          industries,
-          phone,
-          email,
-          address,
-          is_active,
-          is_blacklist,
-          account_ban_at,
-        }),
-      )
+          (
+            { id, name, organization_type, industry_id, representative, phone, email, address, is_active, is_blacklist, account_ban_at, industries },
+            index,
+          ) => ({
+            index: index + 1,
+            key: id,
+            name,
+            representative,
+            enterprises: (industry_id?.length && industry(industry_id)) || [],
+            organization_type,
+            industry_id,
+            industries,
+            phone,
+            email,
+            address,
+            is_active,
+            is_blacklist,
+            account_ban_at,
+          }),
+        )
       : [];
   }, [JSON.stringify(enterpriseState.enterprises)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -356,7 +355,7 @@ const Enterprise = () => {
     enterpriseDispatch(getAllEnterprise({ query: enterpriseState.filter }));
     dispatchFundingSource(getListFundingSource());
     industryDispatch(getIndustries());
-    dispatch(industryHasTheMostEnterprise({}))
+    dispatch(industryHasTheMostEnterprise({}));
   }, [JSON.stringify(enterpriseState.filter)]);
   useEffect(() => {
     if (enterpriseState.status === EFetchStatus.FULFILLED) {
