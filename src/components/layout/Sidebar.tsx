@@ -284,13 +284,13 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       path: "selection-methods",
       permissions: EPermissions.LIST_SELECTION_METHOD,
     },
-    {
-      id: "10",
-      label: "Phản hồi và Khiếu nại",
-      icon: { component: IoChatbubblesOutline },
-      path: "feedback-complaint",
-      permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
-    },
+    // {
+    //   id: "10",
+    //   label: "Phản hồi và Khiếu nại",
+    //   icon: { component: IoChatbubblesOutline },
+    //   path: "feedback-complaint",
+    //   permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
+    // },
     {
       id: "11",
       label: "Hỗ trợ",
@@ -298,26 +298,26 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       path: "supports",
       permissions: EPermissions.LIST_SUPPORT,
     },
-    {
-      id: "12",
-      label: "Giới thiệu",
-      icon: { component: IoInformationCircleOutline },
-      path: "introductions",
-      permissions: EPermissions.LIST_INTRODUCTION,
-    },
-    {
-      id: "13",
-      label: "Hướng dẫn",
-      icon: { component: IoNewspaperOutline },
-      path: "instructs",
-      permissions: EPermissions.LIST_INDUSTRY,
-    },
-    {
-      id: "14",
-      label: "Components",
-      path: "components",
-      icon: { component: RxComponent1 },
-    },
+    // {
+    //   id: "12",
+    //   label: "Giới thiệu",
+    //   icon: { component: IoInformationCircleOutline },
+    //   path: "introductions",
+    //   permissions: EPermissions.LIST_INTRODUCTION,
+    // },
+    // {
+    //   id: "13",
+    //   label: "Hướng dẫn",
+    //   icon: { component: IoNewspaperOutline },
+    //   path: "instructs",
+    //   permissions: EPermissions.LIST_INDUSTRY,
+    // },
+    // {
+    //   id: "14",
+    //   label: "Components",
+    //   path: "components",
+    //   icon: { component: RxComponent1 },
+    // },
   ];
 
   return (
