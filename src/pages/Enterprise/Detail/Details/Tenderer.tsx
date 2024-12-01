@@ -6,7 +6,7 @@ import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 const Tenderer = () => {
     const { state: projectState, dispatch: projectDispatch } = useArchive<IProjectInitialState>("project");
     const { id } = useParams();
@@ -26,12 +26,15 @@ const Tenderer = () => {
         {
             dataIndex: "name",
             title: "Tên dự án",
-            className: "w-[150px]",
+            render: (text: string, record) => (
+                <Link to={`/project/detail/${record.id}`} className="hover:text-cyan-600">
+                    {text}
+                </Link>
+            ),
         },
         {
             dataIndex: "total_amount",
             title: "Tổng giá gói thầu",
-            className: "w-[150px]",
             render(_, record) {
                 return convertMoney(record?.total_amount);
             },
@@ -39,7 +42,6 @@ const Tenderer = () => {
         {
             dataIndex: "upload_time",
             title: "Ngày đăng tải",
-            className: "w-[100px]",
             render(_, record) {
                 return convertTimestamp(record?.upload_time);
             },
@@ -65,7 +67,7 @@ const Tenderer = () => {
     return (
             <div className="pt-2">
                 <h2 className="my-4 text-xl font-medium">
-                    Danh sách dự án đầu tư <span className="ml-2 text-sm text-gray-500">
+                    Danh sách dự án đã đăng tải <span className="ml-2 text-sm text-gray-500">
                         Tổng: ({projectState.totalRecordTenderer} dự án)
                     </span>
                 </h2>

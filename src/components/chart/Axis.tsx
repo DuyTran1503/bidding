@@ -37,6 +37,7 @@ const AbleBarChart: React.FC<AbleBarChartProps> = ({
 }) => {
     const chartRef = useRef<HTMLDivElement>(null);
 
+    const computedBarWidth = data.map((item) => item.name) && data.map((item) => item.name).length < 10 ? 45 : 0;
     const [config, setConfig] = useState({
         rotate: 90,
         align: "left" as AlignOptions,
@@ -122,6 +123,7 @@ const AbleBarChart: React.FC<AbleBarChartProps> = ({
                 name: seriesData.name,
                 type: "bar",
                 data: seriesData.values,
+                barWidth: computedBarWidth,
                 label: labelOption,
                 emphasis: {
                     focus: "series",

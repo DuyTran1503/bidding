@@ -118,19 +118,93 @@ const Dashboard: React.FC = () => {
             </p>
             <ul className="list-inside list-disc">
               <li>Số gói thầu đã đóng</li>
-              <li>Số gói thầu đang mở thầu</li>
-              <li>Số gói thầu mới đăng tải trong 24h</li>
+              <li>Số gói thầu mới đăng tải</li>
               <li>Số gói thầu mới có cập nhật/thay đổi trạng thái trong ngày</li>
             </ul>
+          </Col>
+        </Row>  
+      </div>
+      <div className="w-full">
+        <h2 className="mb-4 text-xl font-semibold">2. Top biểu đồ</h2>
+        <Row gutter={[24, 24]}>
+          <Col xs={24} sm={24} md={24} xl={24}>
+            <ChartSection
+              title="2.1 Top 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo số lượng"
+              chartTitle="Top 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo số lượng"
+              data={state.toptenderersbyprojectcountData}
+              chartType="bar"
+              barWidth={50}
+              valueType="quantity"
+              description={[
+                "Đây là biểu đồ thể hiện 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo số lượng.",
+                "Giúp doanh nghiệp nắm bắt được các đơn vị mời thầu có bao nhiêu gói thầu.",
+              ]}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} xl={24}>
+            <ChartSection
+              title="2.2 Top 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo giá"
+              chartTitle="Top 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo giá"
+              data={state.toptenderersbyprojecttotalamountData}
+              chartType="bar"
+              barWidth={50}
+              valueType="currency"
+              description={[
+                "Đây là biểu đồ thể hiện 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo giá.",
+                "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
+              ]}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} xl={12}>
+            <ChartSection
+              title="2.3 Top 10 đơn vị trúng thầu nhiều nhất theo từng phần"
+              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo từng phần"
+              data={state.topinvestorsbyprojectpartialData}
+              chartType="bar"
+              barWidth={50}
+              valueType="quantity"
+              description={[
+                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo từng phần.",
+                "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
+              ]}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} xl={12}>
+            <ChartSection
+              title="2.4 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
+              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
+              data={state.topinvestorsbyprojectfullData}
+              chartType="bar"
+              barWidth={50}
+              valueType="quantity"
+              description={[
+                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.",
+                "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
+              ]}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} xl={24}>
+            <ChartSection
+              title="2.5 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
+              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
+              data={state.topinvestorsbyprojecttotalamountData}
+              chartType="bar"
+              barWidth={50}
+              valueType="currency"
+              description={[
+                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.",
+                "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
+              ]}
+            />
           </Col>
         </Row>
       </div>
       <div className="w-full">
-        <h2 className="mb-4 text-xl font-semibold">2. Phân tích chi tiết</h2>
+        <h2 className="mb-4 text-xl font-semibold">3. Phân tích chi tiết</h2>
         <Row gutter={[24, 24]}>
           <Col xs={24} sm={24} md={24} xl={24}>
             <ChartSection
-              title="2.1 Dự án theo ngành"
+              title="3.1 Dự án theo ngành"
               chartTitle="Dự án theo ngành"
               data={state.industryData}
               chartType="bar"
@@ -144,7 +218,7 @@ const Dashboard: React.FC = () => {
           </Col>
           <Col xs={24} sm={24} md={24} xl={24}>
             <ChartSection
-              title="2.2 Dự án theo nguồn tài trợ"
+              title="3.2 Dự án theo nguồn tài trợ"
               chartTitle="Dự án nguồn tài trợ"
               data={state.fundingData}
               chartType="bar"
@@ -156,7 +230,7 @@ const Dashboard: React.FC = () => {
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
-              title="2.3 Dự án theo phạm vi trong nước/quốc tế"
+              title="3.3 Dự án theo phạm vi trong nước/quốc tế"
               chartTitle="Dự án theo phạm vi trong nước/quốc tế"
               data={state.domesticData}
               chartType="pie"
@@ -168,7 +242,7 @@ const Dashboard: React.FC = () => {
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
-              title="2.4 Dự án theo phương pháp lựa chọn nhà thầu"
+              title="3.4 Dự án theo phương pháp lựa chọn nhà thầu"
               chartTitle="Dự án theo phương pháp lựa chọn nhà thầu"
               data={state.selectionData}
               chartType="pie"
@@ -180,7 +254,7 @@ const Dashboard: React.FC = () => {
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
-              title="2.5 Dự án theo phương thức nộp thầu"
+              title="3.5 Dự án theo phương thức nộp thầu"
               chartTitle="Dự án theo phương thức nộp thầu"
               data={state.submissionData}
               chartType="pie"
@@ -192,7 +266,7 @@ const Dashboard: React.FC = () => {
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
-              title="2.6 Dự án theo nhà thầu và nhà đầu tư"
+              title="3.6 Dự án theo nhà thầu và nhà đầu tư"
               chartTitle="Doanh nghiệp thuộc diện"
               data={state.tendererData}
               chartType="pie"
@@ -204,7 +278,7 @@ const Dashboard: React.FC = () => {
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
-              title="2.7 Dự án theo loại hình tổ chức"
+              title="3.7 Dự án theo loại hình tổ chức"
               chartTitle="Dự án theo loại hình tổ chức"
               data={state.organizationData}
               chartType="bar"
@@ -219,7 +293,7 @@ const Dashboard: React.FC = () => {
 
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
-              title="2.8 Thời gian trung bình của dự án theo ngành"
+              title="3.8 Thời gian trung bình của dự án theo ngành"
               chartTitle="Thời gian trung bình của dự án theo ngành"
               data={state.durationData}
               chartType="pie"
@@ -227,81 +301,6 @@ const Dashboard: React.FC = () => {
               description={[
                 "Biểu đồ này thể hiện thời gian trung bình hoàn thành các dự án trong từng ngành khác nhau, giúp nhận biết ngành nào có chu kỳ dự án dài hoặc ngắn hơn.",
                 "Giúp doanh nghiệp lập kế hoạch hiệu quả hơn, phân bổ tài nguyên đúng cho các dự án trong ngành có thời gian ngắn hoặc dài, điều chỉnh chiến lược để đảm bảo tiến độ và tối ưu hóa nguồn lực.",
-              ]}
-            />
-          </Col>
-        </Row>
-      </div>
-      <div className="w-full">
-        <h2 className="mb-4 text-xl font-semibold">3. Top biểu đồ</h2>
-        <Row gutter={[24, 24]}>
-          <Col xs={24} sm={24} md={24} xl={24}>
-            <ChartSection
-              title="3.1 Top 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo số lượng"
-              chartTitle="Top 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo số lượng"
-              data={state.toptenderersbyprojectcountData}
-              chartType="bar"
-              barWidth={50}
-              valueType="quantity"
-              description={[
-                "Đây là biểu đồ thể hiện 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo số lượng.",
-                "Giúp doanh nghiệp nắm bắt được các đơn vị mời thầu có bao nhiêu gói thầu.",
-              ]}
-            />
-          </Col>
-          <Col xs={24} sm={24} md={24} xl={24}>
-            <ChartSection
-              title="3.2 Top 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo giá"
-              chartTitle="Top 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo giá"
-              data={state.toptenderersbyprojecttotalamountData}
-              chartType="bar"
-              barWidth={50}
-              valueType="currency"
-              description={[
-                "Đây là biểu đồ thể hiện 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo giá.",
-                "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
-              ]}
-            />
-          </Col>
-          <Col xs={24} sm={24} md={24} xl={12}>
-            <ChartSection
-              title="3.3 Top 10 đơn vị trúng thầu nhiều nhất theo từng phần"
-              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo từng phần"
-              data={state.topinvestorsbyprojectpartialData}
-              chartType="bar"
-              barWidth={50}
-              valueType="quantity"
-              description={[
-                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo từng phần.",
-                "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
-              ]}
-            />
-          </Col>
-          <Col xs={24} sm={24} md={24} xl={12}>
-            <ChartSection
-              title="3.4 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
-              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
-              data={state.topinvestorsbyprojectfullData}
-              chartType="bar"
-              barWidth={50}
-              valueType="quantity"
-              description={[
-                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.",
-                "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
-              ]}
-            />
-          </Col>
-          <Col xs={24} sm={24} md={24} xl={24}>
-            <ChartSection
-              title="3.5 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
-              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
-              data={state.topinvestorsbyprojecttotalamountData}
-              chartType="bar"
-              barWidth={50}
-              valueType="currency"
-              description={[
-                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.",
-                "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
               ]}
             />
           </Col>

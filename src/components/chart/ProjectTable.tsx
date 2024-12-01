@@ -111,7 +111,7 @@ const getFileIcon = (fileType: string) => {
             title: 'Tệp đính kèm',
             dataIndex: 'attachments',
             render: (attachments: { type: string; path: string; name: string }[]) => (
-                <div>
+                <div className='flex gap-2'>
                     {attachments && attachments.length > 0 ? (
                         attachments.map((file, index) => (
                             <Tooltip title={file.name} color={"#108ee9"} key={index}>

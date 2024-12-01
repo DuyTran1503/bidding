@@ -30,5 +30,6 @@ export enum EPageNames {
   "work-progresses" = "Tiến độ dự án",
   "evaluation_criteria" = "Tiêu chí đánh giá",
   "evaluates" = "Đánh giá kết quả dự án",
-  "attachment" = "Tài liệu đính kèm"
+  "attachment" = "Tài liệu đính kèm",
+  "project-approval" = "Phê duyệt dự án"
 } 

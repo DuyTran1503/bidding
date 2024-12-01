@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { useArchive } from "@/hooks/useArchive";
-import CustomTabs from "@/components/table/CustomTabs";
-import Heading from "@/components/layout/Heading";
-import { IoClose } from "react-icons/io5";
-import { useNavigate, useParams } from "react-router-dom";
+import AbleBarChart from "@/components/chart/Axis";
+import ChartLabel from "@/components/chart/ChartLable";
+import GenericChart from "@/components/chart/GenericChart";
 import Button from "@/components/common/Button";
+import FormGroup from "@/components/form/FormGroup";
+import FormSelect from "@/components/form/FormSelect";
+import Heading from "@/components/layout/Heading";
+import CustomTabs from "@/components/table/CustomTabs";
+import { useArchive } from "@/hooks/useArchive";
+import { convertDataOptions } from "@/pages/Project/helper";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { getEnterpriseById, getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IChartEnterpriseInitialState } from "@/services/store/enterprise_chart/enterprise_chart.slice";
-import FormSelect from "@/components/form/FormSelect";
-import { convertDataOptions } from "@/pages/Project/helper";
-import { Form, Formik } from "formik";
-import FormGroup from "@/components/form/FormGroup";
-import { Col, Row, Select } from "antd";
 import {
   averageDifficultyLevelTasksByEnterprise,
   detailEnterpriseByIds,
-  evaluationsStatisticsByEnterprise,
   getEmployeeProjectStatistic,
   getEmployeeResultBiddingStatistic,
   projectCompletedByEnterprise,
   projectWonByEnterprise,
-  reputationsStatisticsByEnterprise,
 } from "@/services/store/enterprise_chart/enterprise_chart.thunk";
+import { Col, Row, Select } from "antd";
+import { Form, Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import { IoClose } from "react-icons/io5";
+import { useNavigate, useParams } from "react-router-dom";
 import EnterpriseDetail from "./EnterpriseTable";
-import GenericChart from "@/components/chart/GenericChart";
-import AbleBarChart from "@/components/chart/Axis";
-import ChartLabel from "@/components/chart/ChartLable";
 
 interface IProp {
   ids: string[] | number[];
@@ -73,10 +71,10 @@ const StatisticalEnterprise: React.FC = () => {
           dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
         } else if (selectedTabKey === "6") {
           dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
-        } else if (selectedTabKey === "7") {
-          dispatchChartEnterprise(evaluationsStatisticsByEnterprise({ body: { ids: enterpriseIds } }));
-        } else if (selectedTabKey === "8") {
-          dispatchChartEnterprise(reputationsStatisticsByEnterprise({ body: { ids: enterpriseIds } }));
+          // } else if (selectedTabKey === "7") {
+          //   dispatchChartEnterprise(evaluationsStatisticsByEnterprise({ body: { ids: enterpriseIds } }));
+          // } else if (selectedTabKey === "8") {
+          //   dispatchChartEnterprise(reputationsStatisticsByEnterprise({ body: { ids: enterpriseIds } }));
           // } else if (selectedTabKey === "8") {
           //   dispatchChartEnterprise(averageDifficultyLevelTasksByEmployee({ body: enterpriseIds }));
           // } else if (selectedTabKey === "9") {
@@ -103,10 +101,10 @@ const StatisticalEnterprise: React.FC = () => {
         dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
       } else if (selectedTabKey === "6") {
         dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
-      } else if (selectedTabKey === "7") {
-        dispatchChartEnterprise(evaluationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
-      } else if (selectedTabKey === "8") {
-        dispatchChartEnterprise(reputationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
+        // } else if (selectedTabKey === "7") {
+        //   dispatchChartEnterprise(evaluationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
+        // } else if (selectedTabKey === "8") {
+        //   dispatchChartEnterprise(reputationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
         // } else if (selectedTabKey === "8") {
         //   dispatchChartEnterprise(averageDifficultyLevelTasksByEmployee({ body: enterpriseIds }));
         // } else if (selectedTabKey === "9") {
@@ -114,16 +112,16 @@ const StatisticalEnterprise: React.FC = () => {
       }
     }
   }, [selectedTabKey]);
-  const xAxisData = stateChartEnterprise.projectCompletedByEnterprise.flatMap((enterprise) =>
-    enterprise.monthly_data.map((data) => `Tháng ${data.month}`),
-  );
+  // const xAxisData = stateChartEnterprise.projectCompletedByEnterprise.flatMap((enterprise) =>
+  //   enterprise.monthly_data.map((data) => `Tháng ${data.month}`)
+  // );
 
   // Lọc các tháng có dữ liệu (loại bỏ các tháng không có dữ liệu)
-  const filteredXAxisData = [...new Set(xAxisData)].sort((a, b) => {
-    const monthA = parseInt(a.split(" ")[1]);
-    const monthB = parseInt(b.split(" ")[1]);
-    return monthA - monthB; // Sắp xếp tháng từ nhỏ đến lớn
-  });
+  // const filteredXAxisData = [...new Set(xAxisData)].sort((a, b) => {
+  //   const monthA = parseInt(a.split(' ')[1]);
+  //   const monthB = parseInt(b.split(' ')[1]);
+  //   return monthA - monthB;  // Sắp xếp tháng từ nhỏ đến lớn
+  // });
 
   const enterpriseId = stateEnterprise.enterprise?.id;
   const tabItems = [
@@ -134,7 +132,7 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "2",
-      label: "Số lượng dự án",
+      label: "Biểu đồ dự án đã đăng tải và đã đầu tư của doanh nghiệp",
       content: (
         <AbleBarChart
           data={[
@@ -142,13 +140,13 @@ const StatisticalEnterprise: React.FC = () => {
             { name: "Đã đăng tải", values: stateChartEnterprise.getEmployeeProjectStatistic.map((item) => item.investorProjectCount) },
           ]}
           xAxisData={stateChartEnterprise.getEmployeeProjectStatistic.map(({ enterprise }) => enterprise)}
-          title="Thống kê dự án đăng tải và đầu tư của doanh nghiệp"
+          title="Biểu đồ thống kê dự án đã đăng tải và đã đầu tư của doanh nghiệp"
         />
       ),
     },
     {
       key: "3",
-      label: "Số lượng gói thầu đã trúng ",
+      label: "Biểu đồ số lượng gói thầu đã trúng ",
       content: (
         <AbleBarChart
           data={[
@@ -157,13 +155,13 @@ const StatisticalEnterprise: React.FC = () => {
             { name: "Tổng số tiền thắng", values: stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.totalWinningAmount) },
           ]}
           xAxisData={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
-          title="Thống kê số dự án trúng, giá trúng thầu trung bình và tổng giá trị thầu trúng của doanh nghiệp"
+          title="Biểu đồ thống kê số dự án trúng, giá trúng thầu trung bình và tổng giá trị thầu trúng của doanh nghiệp"
         />
       ),
     },
     {
       key: "4",
-      label: "Độ khó trung bình của nhiệm vụ",
+      label: "Biểu đồ độ khó trung bình của nhiệm vụ",
       content: (
         <>
           <GenericChart
@@ -180,49 +178,7 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "5",
-      label: "Dự án đã trúng thầu",
-      content: (
-        <AbleBarChart
-          title="Biểu đồ thống kê số lượng dự án đã trúng thầu của doanh nghiệp theo từng tháng trong năm"
-          xAxisData={filteredXAxisData}
-          data={stateChartEnterprise.projectWonByEnterprise.map((enterprise) => ({
-            name: enterprise.enterprise_name,
-            values: enterprise.monthly_data.map((item) => item.won_projects || 0),
-          }))}
-        />
-      ),
-    },
-    {
-      key: "6",
-      label: "Dự án đã hoàn thành",
-      content: (
-        <AbleBarChart
-          title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
-          xAxisData={filteredXAxisData}
-          data={stateChartEnterprise.projectCompletedByEnterprise.map((enterprise) => ({
-            name: enterprise.enterprise_name,
-            values: enterprise.monthly_data.map((item) => item.completed_projects || 0),
-          }))}
-        />
-      ),
-    },
-    {
-      key: "7",
-      label: "Đánh giá doanh nghiệp",
-      content: (
-        <AbleBarChart
-          data={[
-            { name: "Tổng số đánh giá", values: stateChartEnterprise.evaluationsStatisticsByEnterprise.map((item) => item.total_evaluations) },
-            { name: "Điểm trung bình", values: stateChartEnterprise.evaluationsStatisticsByEnterprise.map((item) => item.average_score) },
-          ]}
-          xAxisData={stateChartEnterprise.evaluationsStatisticsByEnterprise.map(({ enterprise_name }) => enterprise_name)}
-          title="Biểu đồ thể hiện số lượng đánh giá và đánh giá trung bình doanh nghiệp nhận được"
-        />
-      ),
-    },
-    {
-      key: "8",
-      label: "Điểm uy tín",
+      label: "Biểu đồ điểm uy tín",
       content: (
         <AbleBarChart
           data={[
@@ -238,39 +194,49 @@ const StatisticalEnterprise: React.FC = () => {
         />
       ),
     },
+    {
+      key: "6",
+      label: "Biểu đồ đánh giá doanh nghiệp",
+      content: (
+        <AbleBarChart
+          data={[
+            { name: "Tổng số đánh giá", values: stateChartEnterprise.evaluationsStatisticsByEnterprise.map((item) => item.total_evaluations) },
+            { name: "Điểm trung bình", values: stateChartEnterprise.evaluationsStatisticsByEnterprise.map((item) => item.average_score) },
+          ]}
+          xAxisData={stateChartEnterprise.evaluationsStatisticsByEnterprise.map(({ enterprise_name }) => enterprise_name)}
+          title="Biểu đồ thể hiện số lượng đánh giá và đánh giá trung bình doanh nghiệp nhận được"
+        />
+      ),
+    },
     // {
-    //   key: "5",
-    //   label: "Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà nhân viên thực hiện",
+    //   key: "7",
+    //   label: "Dự án đã trúng thầu",
     //   content: (
-    //     <>
-    //       <GenericChart
-    //         chartType="bar"
-    //         grid={120}
-    //         title="Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà nhân viên thực hiện"
-    //         name={stateChartEnterprise.averageDifficultyLevelTasksByEmployee.map(({ employee_name }) => employee_name)}
-    //         value={stateChartEnterprise.averageDifficultyLevelTasksByEmployee.map((item) => item.average_difficulty)}
-    //         seriesName="Mức độ khó khăn trung bình"
-    //       />
-    //       <ChartLabel value={["Chưa có nhiệm vụ", "Dễ", "Trung bình", "Khó", "Rất khó"]} />
-    //     </>
+    //     <AbleBarChart
+    //       title="Biểu đồ thống kê số lượng dự án đã trúng thầu của doanh nghiệp theo từng tháng trong năm"
+    //       xAxisData={filteredXAxisData}
+    //       data={stateChartEnterprise.projectWonByEnterprise.map((enterprise) => ({
+    //         name: enterprise.enterprise_name,
+    //         values: enterprise.monthly_data.map((item) => item.won_projects || 0),
+    //       }))}
+
+    //     />
 
     //   ),
     // },
     // {
-    //   key: "6",
-    //   label: "Biểu đồ thống kê đánh giá trung bình của nhân viên",
+    //   key: "8",
+    //   label: "Dự án đã hoàn thành",
     //   content: (
-    //     <>
-    //       <GenericChart
-    //         chartType="bar"
-    //         grid={120}
-    //         title="Biểu đồ thống kê đánh giá trung bình của nhân viên"
-    //         name={stateChartEnterprise.averageFeedbackByEmployee.map(({ employee_name }) => employee_name)}
-    //         value={stateChartEnterprise.averageFeedbackByEmployee.map((item) => item.average_feedback)}
-    //         seriesName="Mức độ khó khăn trung bình"
+    //       <AbleBarChart
+    //           title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
+    //           xAxisData={filteredXAxisData}
+    //           data={stateChartEnterprise.projectCompletedByEnterprise.map((enterprise) => ({
+    //             name: enterprise.enterprise_name,
+    //             values: enterprise.monthly_data.map((item) => item.completed_projects || 0),
+    //           }))}
+
     //       />
-    //       <ChartLabel value={["Chưa có nhiệm vụ", "Dễ", "Trung bình", "Khó", "Rất khó"]} />
-    //     </>
 
     //   ),
     // },

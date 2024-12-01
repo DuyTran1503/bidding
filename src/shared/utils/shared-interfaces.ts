@@ -56,11 +56,11 @@ export interface IInitialState {
   filter: ISearchParams;
   totalRecordInvestor?: number;
   totalRecordTenderer?: number;
-  totalRecordWont?: number;
+  totalRecordWin?: number;
   totalRecords: number;
   number_of_elementInvestor?: number;
   number_of_elementTenderer?: number;
-  number_of_elementWont?: number;
+  number_of_elementWin?: number;
   number_of_elements?: number;
   [key: string]: unknown;
 

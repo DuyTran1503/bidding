@@ -33,6 +33,15 @@ export const getAllProjectTenderer = createAsyncThunk("get-all-projects-tenderer
   }
 });
 
+export const getAllProjectWin = createAsyncThunk("get-all-projects-Win", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IProject[]>(prefix, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
 export const getProjectById = createAsyncThunk("projects/get-projects-by-id", async (id: string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IProject>(prefix + `/${id}`);

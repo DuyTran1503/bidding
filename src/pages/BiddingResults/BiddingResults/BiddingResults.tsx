@@ -1,23 +1,22 @@
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import { IBiddingResultInitialState, resetStatus, setFilter } from "@/services/store/biddingResult/biddingResult.slice";
+import { getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
-import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IBiddingResultInitialState, resetStatus, setFilter } from "@/services/store/biddingResult/biddingResult.slice";
-import { getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
 // import { EPermissions } from "@/shared/enums/permissions";
-import { GoDownload } from "react-icons/go";
-import { FaPlus } from "react-icons/fa";
 import { EPermissions } from "@/shared/enums/permissions";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
-import ActionModuleBiddingResult from "../ActionModuleBiddingResult/ActionModuleBiddingResult";
+import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import ActionModuleBiddingResult from "../ActionModuleBiddingResult/ActionModuleBiddingResult";
 
 const BiddingResults = () => {
   const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");

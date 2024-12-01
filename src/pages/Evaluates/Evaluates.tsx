@@ -43,34 +43,23 @@ const Evaluates = () => {
       className: "w-4",
     },
     {
-      dataIndex: "projectName",
+      dataIndex: "project",
       title: "Tên dự án",
-      className: "w-[200px]",
       render: (_, record) => {
-        console.log(record.project);
-
-        return <span>{record?.project?.name}</span>; // Hiển thị tên dự án
+        return <span>{record.project?.name || "Không có tên dự án"}</span>;
       },
     },
     {
-      dataIndex: "enterpriseName",
-      title: "Tên doanh nghiệp",
-      className: "w-[200px]",
+      dataIndex: "score",
+      title: "Tên danh mục",
     },
     {
       dataIndex: "evaluate",
-      title: "Tên danh mục",
-      className: "w-[300px]",
-    },
-    {
-      dataIndex: "score",
-      title: "Điểm đánh giá",
-      className: "w-[60px]",
+      title: "Nội dung",
     },
     {
       dataIndex: "title",
       title: "Mô tả",
-      className: "w-[300px]",
     },
   ];
   const search: ISearchTypeTable[] = [

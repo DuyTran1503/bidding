@@ -30,7 +30,6 @@ const EnterpriseDetail: React.FC<EnterpriseDetailProps> = ({ detailEnterpriseByI
         { key: 'is_active', title: 'Trạng thái', dataIndex: 'is_active', render: (item) => item?.is_active || 'Không có' }, // Renamed to "Doanh nghiệp"
         { key: 'organization_type', title: 'Loại hình tổ chức', dataIndex: 'organization_type', render: (item) => item?.organization_type || 'Không có' },
         { key: 'establish_date', title: 'Ngày thành lập', dataIndex: 'establish_date' },
-        { key: 'description', title: 'Mô tả', dataIndex: 'description' },
         // {
         //     key: 'total_amount',
         //     title: 'Giá',
@@ -43,6 +42,11 @@ const EnterpriseDetail: React.FC<EnterpriseDetailProps> = ({ detailEnterpriseByI
         // },
         { key: 'establish_date', title: 'Ngày thành lập', dataIndex: 'establish_date' },
         { key: 'registration_date', title: 'Ngày đăng ký', dataIndex: 'registration_date' },
+        {
+            key: 'description', title: 'Mô tả', dataIndex: 'description', render: (description: string) => (
+                <div dangerouslySetInnerHTML={{ __html: description }} />
+            ),
+        },
         // { key: 'children', title: 'Gói thầu con', dataIndex: 'children', render: (item) => item.length },
     ];
 

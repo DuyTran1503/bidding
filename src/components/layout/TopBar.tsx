@@ -1,8 +1,7 @@
-import { IoHome, IoMailOutline, IoSearchOutline } from "react-icons/io5";
-import UserSettings from "./UserSettings";
 import IconHasBadge from "@/components/common/IconHasBadge";
-import { PiBell } from "react-icons/pi";
+import { IoHome, IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import UserSettings from "./UserSettings";
 
 const TopBar = () => {
   return (
@@ -23,8 +22,8 @@ const TopBar = () => {
       {/* Actions */}
       <div className="flex h-full items-center gap-2">
         <IconHasBadge icon={<Link to={`/`}><IoHome className="text-[18px] text-gray-400" /></Link>} badge={0} />
-        <IconHasBadge icon={<PiBell className="text-[18px] text-gray-400" />} badge={2} />
-        <IconHasBadge icon={<IoMailOutline className="text-[18px] text-gray-400" />} badge={2} />
+        {/* <IconHasBadge icon={<PiBell className="text-[18px] text-gray-400" />} badge={2} /> */}
+        {/* <IconHasBadge icon={<IoMailOutline className="text-[18px] text-gray-400" />} badge={2} /> */}
         <div className="h-full border border-gray-50"></div>
         <UserSettings />
       </div>
