@@ -21,22 +21,14 @@ interface IProps {
 }
 const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
   const { state } = useArchive<IAuthInitialState>("auth");
-  const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
 
   const navigate = useNavigate();
   const hasPermission = checkPermission(state?.profile?.permissions, EPermissions.DETAIL_ENTERPRISE);
+
   const handleRedirect = (id: string) => {
-    navigate(`/enterprise/detail/${id}`, { replace: true });
+    hasPermission && navigate(`/enterprise/detail/${id}`, { replace: true });
   };
 
-  const bidDocument = (value: number) => {
-    if (stateBidBond?.listBidBonds!.length > 0 && value) {
-      return stateBidBond.listBidBonds!.find((item) => +item.id === +value)?.bond_number;
-    }
-  };
-  useEffect(() => {
-    dispatchBidBond(getListBidBond());
-  }, []);
   const columns: ColumnsType = [
     {
       title: "STT",
@@ -45,9 +37,9 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
     },
     {
       title: "Doanh nghiệp",
-      dataIndex: "enterprise",
+      dataIndex: "enterpriseName",
       render(_, record) {
-        return record.enterprise.name;
+        return record.enterpriseName;
       },
     },
     {
@@ -56,7 +48,7 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
     },
     {
       title: "Mã bảo lãnh doanh nghiệp",
-      dataIndex: "bid_bond_id",
+      dataIndex: "bid_bond",
     },
     {
       title: "Ngày gửi hồ sơ",
@@ -90,44 +82,21 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
     },
   ];
 
-  const data: IBidDocument[] = useMemo(() => {
+  const data: any[] = useMemo(() => {
     return Array.isArray(listBidDocument)
       ? listBidDocument.map(
-          (
-            {
-              id,
-              enterprise,
-              bid_bond_id,
-              submission_date,
-              bid_price,
-              implementation_time,
-              validity_period,
-              technical_score,
-              financial_score,
-              totalScore,
-              ranking,
-              status,
-              notes,
-            },
-            index,
-          ) => ({
+          ({ id, enterprise, bid_bond, submission_date, bid_price, implementation_time, validity_period, status, note }, index) => ({
             id,
             key: id,
-            project_id: undefined,
-            enterprise_id: Number(enterprise?.id) || 0,
-            bid_bond_id: (bid_bond_id && bidDocument(+bid_bond_id)) || 0,
+            enterpriseName: enterprise?.user?.name,
+            bid_bond: bid_bond && bid_bond.bond_number,
             submission_date,
             bid_price,
             implementation_time,
             validity_period,
-            technical_score,
-            financial_score,
-            totalScore,
-            ranking,
             status,
-            notes: notes || "",
-            enterprise: enterprise ? { id: enterprise.id, name: enterprise.name } : undefined,
-            project: undefined,
+            note: note || "",
+            enterprise,
           }),
         )
       : [];
@@ -136,7 +105,14 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
   return (
     <>
       <div className="font- p-4 text-[14px] text-[#000000a6]">{title}</div>
-      <Table bordered columns={columns} dataSource={data} />
+      <Table
+        bordered
+        columns={columns}
+        dataSource={data}
+        onRow={(record) => ({
+          onClick: () => handleRedirect(record?.enterprise.id),
+        })}
+      />
     </>
   );
 };
