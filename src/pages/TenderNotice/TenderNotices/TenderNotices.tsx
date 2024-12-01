@@ -16,7 +16,6 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { ITenderNoticeInitialState, resetStatus, setFilter } from "@/services/store/tenderNotice/tenderNotice.slice";
 import { changeStatusTenderNotice, deleteTenderNotice, getAllTenderNotices } from "@/services/store/tenderNotice/tenderNotice.thunk";
 // import { EPermissions } from "@/shared/enums/permissions";
-import { GoDownload } from "react-icons/go";
 
 const TenderNotices = () => {
   const navigate = useNavigate();

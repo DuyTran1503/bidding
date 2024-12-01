@@ -16,7 +16,6 @@ import {
   IoClose,
   IoMenu,
   IoPodiumOutline,
-  IoChatbubblesOutline,
   IoReceiptOutline,
   IoTimerOutline,
   IoBookmarkOutline,
@@ -25,7 +24,6 @@ import {
 } from "react-icons/io5";
 
 import logo from "@/assets/images/logo.png";
-import { RxComponent1 } from "react-icons/rx";
 import { EPermissions } from "@/shared/enums/permissions";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";

@@ -15,11 +15,11 @@ interface IProps {
 const MemoizedFormUploadImage = React.memo(FormUploadImage);
 const MemoizedFormSingleFile = React.memo(FormSingleFile);
 
-const FormUploadFile = ({ value, onChange, isMultiple, name, error, classNameOneFile, classNameFilMany }: IProps) => {
+const FormUploadFile = ({ value, onChange, isMultiple, name, error, classNameFilMany }: IProps) => {
   return isMultiple ? (
     <MemoizedFormUploadImage onChange={onChange} value={value} id={name} error={error} classNameFilMany={classNameFilMany} />
   ) : (
-    <MemoizedFormSingleFile value={value as File} onChange={onChange} id={name} error={error} classNameOneFile={classNameOneFile} />
+    <MemoizedFormSingleFile value={value as File} onChange={onChange} id={name} error={error} />
   );
 };
 

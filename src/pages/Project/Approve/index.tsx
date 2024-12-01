@@ -4,13 +4,11 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { INewProject } from "@/services/store/project/project.model";
 import { IProjectInitialState, resetStatus } from "@/services/store/project/project.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { Form, Formik, FormikProps } from "formik";
-import { useEffect, useRef, useState } from "react";
+import { Form, Formik } from "formik";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
-import ActionModule from "../ActionModule";
-import { EPageTypes } from "@/shared/enums/page";
 import { approveProject, getProjectById } from "@/services/store/project/project.thunk";
 import Dialog from "@/components/dialog/Dialog";
 import Button from "@/components/common/Button";
@@ -33,7 +31,6 @@ interface IApprove {
 
 const ApproveProject = () => {
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<INewProject>>(null);
   const { state, dispatch } = useArchive<IProjectInitialState>("project");
   const [data, setData] = useState<INewProject>();
   const { id } = useParams();

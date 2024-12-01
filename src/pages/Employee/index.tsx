@@ -16,7 +16,7 @@ import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { GoDownload } from "react-icons/go";
+
 import { useNavigate } from "react-router-dom";
 
 const Employee = () => {

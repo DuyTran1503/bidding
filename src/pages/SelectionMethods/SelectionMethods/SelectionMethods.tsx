@@ -14,7 +14,7 @@ import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { ISelectionMethodInitialState, resetStatus, setFilter } from "@/services/store/selectionMethod/selectionMethod.slice";
 import { changeStatusSelectionMethod, deleteSelectionMethod, getAllSelectionMethods } from "@/services/store/selectionMethod/selectionMethod.thunk";
-import { GoDownload } from "react-icons/go";
+
 import SelectionMethodForm from "../SelectionMethodForm";
 
 const SelectionMethods = () => {

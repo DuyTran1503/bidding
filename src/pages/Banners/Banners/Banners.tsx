@@ -14,7 +14,7 @@ import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IBannerInitialState, resetStatus, setFilter } from "@/services/store/banner/banner.slice";
 import { changeStatusBanner, deleteBanner, getAllBanners } from "@/services/store/banner/banner.thunk";
-import { GoDownload } from "react-icons/go";
+
 import BannerForm from "../BannerForm";
 import { EPermissions } from "@/shared/enums/permissions";
 import CustomerAvatar from "@/components/common/CustomerAvatar";

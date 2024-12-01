@@ -1,14 +1,12 @@
 import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
-import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
-import { getListBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import { EPermissions } from "@/shared/enums/permissions";
 import { Table, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import clsx from "clsx";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { IoEyeOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
@@ -30,7 +28,6 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
     {
       title: "STT",
       dataIndex: "stt",
-      render: (text, record, index: number) => <span>{index + 1}</span>, // Hiện số thứ tự
     },
     {
       title: "Doanh nghiệp",
@@ -64,7 +61,7 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
     {
       title: "Action",
       key: "action",
-      render: (text, record, index) => {
+      render: (_, record, index) => {
         return (
           <Tooltip title="Chi tiết doanh nghiệp" key={index}>
             <IoEyeOutline
@@ -83,6 +80,7 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
     return Array.isArray(listBidDocument)
       ? listBidDocument.map(
           ({ id, enterprise, bid_bond, submission_date, bid_price, implementation_time, validity_period, status, note }, index) => ({
+            index: index + 1,
             id,
             key: id,
             enterpriseName: enterprise?.user?.name,

@@ -43,7 +43,7 @@ const Enterprise = () => {
   const { state, dispatch } = useArchive<IChartInitialState>("chart");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
+  const [selectedYearProjectStatus] = useState<string>(yearOptions[0]);
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
   const [selectedFundingSource, setSelectedFundingSource] = useState<string>();
 

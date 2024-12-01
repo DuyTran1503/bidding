@@ -12,7 +12,7 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { GoDownload } from "react-icons/go";
+
 import { IProcurementCategorieInitialState, resetStatus, setFilter } from "@/services/store/procurementCategorie/procurementCategorie.slice";
 import {
   changeStatusProcurementCategorie,

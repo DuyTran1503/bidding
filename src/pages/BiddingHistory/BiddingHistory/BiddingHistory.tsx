@@ -16,7 +16,6 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IBiddingHistoryInitialState, resetStatus, setFilter } from "@/services/store/biddingHistory/biddingHistory.slice";
 import { changeStatusBiddingHistory, deleteBiddingHistory, getAllBiddingHistorys } from "@/services/store/biddingHistory/biddingHistory.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
-import { GoDownload } from "react-icons/go";
 
 const BiddingHistorys = () => {
   const navigate = useNavigate();
