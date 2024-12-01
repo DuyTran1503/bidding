@@ -1,9 +1,8 @@
 import { client } from "@/services/config/client";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { IError } from "@/shared/interface/error";
-import { IBidDocument } from "./bid_document.model";
 import { objectToFormData } from "@/shared/utils/common/formData";
+import { IThunkPayload } from "@/shared/utils/shared-interfaces";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { IBidDocument } from "./bid_document.model";
 
 const prefix = "/api/admin/bid-documents";
 

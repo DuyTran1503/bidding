@@ -5,7 +5,7 @@ import { IEmployeeInitialState } from "@/services/store/employee/employee.slice"
 import { getAllEmployee } from "@/services/store/employee/employee.thunk";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 const Employee = () => {
     const { state, dispatch } = useArchive<IEmployeeInitialState>("employee");
     const { id } = useParams();
@@ -25,25 +25,26 @@ const Employee = () => {
         {
             dataIndex: "name",
             title: "Name",
-            className: "w-[200px]",
+            render: (text: string, record) => (
+                <Link to={`/employees/detail/${record.id}`} className="hover:text-cyan-600">
+                    {text}
+                </Link>
+            ),
         },
         {
             dataIndex: "avatar",
             title: "Ảnh đại diện",
             render(_, record) {
-                return <CustomerAvatar src={!!record.avatar && record.avatar} alt={"Ảnh đại diện"} />;
+                return <CustomerAvatar src={!!record.avatar && record.avatar} size={"large"} alt={"Ảnh đại diện"} />;
             },
-            className: "!h-auto"
         },
         {
             dataIndex: "email",
             title: "Email",
-            className: "w-[200px]",
         },
         {
             dataIndex: "phone",
             title: "Số điện thoại",
-            className: "w-[150px]",
         },
     ];
 

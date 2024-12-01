@@ -13,7 +13,7 @@ export interface IEnterprise {
   representative: string;
   phone: string;
   email: string;
-  avatar: File;
+  avatar: File | string;
   taxcode?: string;
   account_ban_at: string | null;
   website?: string;
