@@ -1,14 +1,11 @@
-import Button from "@/components/common/Button";
-import { ITableData } from "@/components/table/PrimaryTable";
 import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { getListBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
-import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { EPermissions } from "@/shared/enums/permissions";
-import { Collapse, Table, TableProps, Tooltip } from "antd";
+import { Table, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import clsx from "clsx";
 import { useEffect, useMemo } from "react";

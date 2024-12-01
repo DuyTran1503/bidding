@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   const handleLogin = (data: ILoginFormData) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const taxIdRegex = /^[0-9]{10,12}$/;
-    
+
     const payload: ILoginPayload = {
       password: data.password
     };
@@ -66,9 +66,9 @@ const Login: React.FC = () => {
   });
 
   // Giá trị khởi tạo cho form
-  const loginFormInitialValues: ILoginFormData = { 
-    identifier: "", 
-    password: "" 
+  const loginFormInitialValues: ILoginFormData = {
+    identifier: "",
+    password: ""
   };
 
   // Schema validation
@@ -84,14 +84,14 @@ const Login: React.FC = () => {
   });
 
   return (
-    <section className="bg-gray-50">
+    <section className="bg-gradient-to-tl from-blue-500 to-cyan-300">
       <div className="mx-auto flex h-screen flex-col items-center justify-center px-6 py-8 lg:py-0">
-        <a href="#" className="text-gray-900 display-m-semibold mb-6 gap-4 flex items-center text-2xl">
-          <Logo />
-          Septenary Solution
-        </a>
+
         <div className="w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0">
           <div className="flex flex-col gap-5 p-8">
+              <a href="/" className="flex justify-center">
+                <Logo />
+              </a>
             <h1 className="text-gray-900 display-m-bold md:text-xl-semibold text-center">
               Chào mừng bạn đến với Septenary Solution
             </h1>
@@ -128,13 +128,13 @@ const Login: React.FC = () => {
                     }}
                     placeholder="Nhập mật khẩu..."
                   />
-                  <Button 
-                    text="Đăng nhập" 
-                    isLoading={state.status === EFetchStatus.PENDING} 
-                    className="mt-3" 
+                  <Button
+                    text="Đăng nhập"
+                    isLoading={state.status === EFetchStatus.PENDING}
+                    className="mt-3"
                   />
                   <Link
-                    to="/forgot-password"
+                    to="/auth/enter-email"
                     className="cursor-pointer text-end font-normal text-cyan-600 transition-colors hover:text-cyan-500"
                   >
                     Quên mật khẩu?

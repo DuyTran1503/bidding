@@ -40,10 +40,12 @@ import { taskSlice } from "./store/task/task.slice";
 import { evaluateSlice } from "./store/evaluate/evaluate.slice";
 import { workProgressSlice } from "./store/workProgresses/workProgresses.slice";
 import { projectApprovalSlice } from "./store/project-approval/project-approval.slice";
+import { editProfileSlice } from "./store/profile/profile.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
   auth: authSlice.reducer,
+  edit_profile: editProfileSlice.reducer,
   account: accountSlice.reducer,
   role: roleSlice.reducer,
   permission: permissionSlice.reducer,

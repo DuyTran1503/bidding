@@ -63,6 +63,13 @@ const DetailEnterprise = () => {
       <div className="break-words">{value}</div>
     </Descriptions.Item>
   );
+const fullImageSrc = 
+  typeof data?.avatar === 'string' && 
+  (data?.avatar.startsWith("http://") || data?.avatar.startsWith("https://"))
+  ? data?.avatar
+  : data?.avatar instanceof File 
+  ? URL.createObjectURL(data.avatar)
+  : `${import.meta.env.VITE_API_URL}/${data?.avatar}`;
 
   const tabItems = [
     {
@@ -73,9 +80,9 @@ const DetailEnterprise = () => {
           <div className="w-36 h-[188px] mx-6 bg-gray-100 border border-gray-100 rounded-md flex justify-center items-center absolute right-0">
             {data?.avatar ? (
               <img
-                src={data?.avatar as any}
+                src={fullImageSrc}
                 alt="Lỗi ảnh"
-                className="object-cover w-36 h-[188px]"
+                className="w-36 h-[188px]"
               />
             ) : (
               <span className="text-gray-500 w-36 h-[188px] flex items-center justify-center"><IoImage className="text-9xl" /></span>

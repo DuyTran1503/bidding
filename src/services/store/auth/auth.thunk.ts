@@ -16,6 +16,17 @@ export const getProfile = createAsyncThunk("auth/get-profile", async (_, { rejec
   }
 });
 
+// industry-has-the-most-enterprise
+export const sendMailForgotPassword  = 
+createAsyncThunk("sendMailForgotPassword ", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { data } = await client.post(`${prefix}/send-mail-forgot-password `, payload);
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+  }
+});
+
 export const login = createAsyncThunk("auth/login", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.post<ILoginResponseData>(`${prefix}/login`, payload);

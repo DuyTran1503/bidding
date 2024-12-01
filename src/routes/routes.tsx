@@ -93,6 +93,13 @@ import CreateSupport from "@/Client/Supports/Create";
 import ProjectApproval from "@/pages/project-approval";
 import ApproveProjectByStaff from "@/pages/project-approval/Approve";
 import Detail from "@/Client/News/Detail";
+import Profile from "@/pages/Profile";
+import CreateInstruct from "@/pages/Instructs/Create";
+import UpdateInstruct from "@/pages/Instructs/Update";
+import DetailInstruct from "@/pages/Instructs/Detail";
+import EnterEmail from "@/pages/ForgotPassword/EnterEmail";
+import NewPassword from "@/pages/ForgotPassword/NewPassword";
+import Update from "@/pages/Profile/Update";
 
 export interface IRoute {
   path: string;
@@ -168,6 +175,19 @@ export const routes: IRoute[] = [
           {
             path: "dashboard",
             element: () => <Dashboard />,
+          },
+          {
+            path: "profile",
+            pages: [
+              {
+                path: "/",
+                element: () => <Profile />,
+              },
+              {
+                path: "/update",
+                element: () => <Update />,
+              },
+            ],
           },
           {
             path: "staffs",
@@ -691,6 +711,14 @@ export const routes: IRoute[] = [
           {
             path: "login",
             element: () => <Login />,
+          },
+          {
+            path: "/enter-email",
+            element: () => <EnterEmail />,
+          },
+          {
+            path: "/change-password",
+            element: () => <NewPassword />,
           },
         ],
       },
