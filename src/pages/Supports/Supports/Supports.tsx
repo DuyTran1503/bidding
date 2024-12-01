@@ -11,7 +11,7 @@ import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { ISupportInitialState, resetStatus, setFilter } from "@/services/store/support/support.slice";
 import { changeStatusSupport, deleteSupport, getAllSupports } from "@/services/store/support/support.thunk";
-import { GoDownload } from "react-icons/go";
+
 import { EButtonTypes } from "@/shared/enums/button";
 import FormRadio from "@/components/form/FormRadio";
 import FormModal from "@/components/form/FormModal";

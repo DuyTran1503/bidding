@@ -35,7 +35,6 @@ import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { Tabs } from "antd";
 import BiddingResultForm from "@/pages/BiddingResults/BiddingResultForm";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
-import { resetStatus as resetStatusBidResult } from "@/services/store/biddingResult/biddingResult.slice";
 const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);

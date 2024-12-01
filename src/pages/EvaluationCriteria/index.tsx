@@ -13,7 +13,7 @@ import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { GoDownload } from "react-icons/go";
+
 import ActionModule from "./ActionModule";
 import { IEvaluationCriteriaInitialState, resetStatus, setFilter } from "@/services/store/evaluation/evaluation.slice";
 import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/services/store/evaluation/evaluation.thunk";

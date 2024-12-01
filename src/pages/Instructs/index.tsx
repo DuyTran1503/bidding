@@ -13,13 +13,12 @@ import { getAllInstructs } from "@/services/store/instruct/instruct.thunk";
 import { changeStatusIntroduction } from "@/services/store/introduction/introduction.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { EPermissions } from "@/shared/enums/permissions";
 import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { GoDownload } from "react-icons/go";
+
 import { useNavigate } from "react-router-dom";
 
 const Instructs = () => {
@@ -116,7 +115,7 @@ const Instructs = () => {
     },
   ];
 
-  const data: ITableData[] = useMemo(
+  const data: any[] = useMemo(
     () =>
       state.instructs && state.instructs.length > 0
         ? state.instructs.map(({ id, instruct, is_use }, index) => ({

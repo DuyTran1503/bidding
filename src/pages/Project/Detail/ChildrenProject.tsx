@@ -1,20 +1,14 @@
-import Button from "@/components/common/Button";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
-import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
-import { getListBidBond } from "@/services/store/bid_bond/bidBond.thunk";
-import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
-import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { INewProject } from "@/services/store/project/project.model";
 import { EPermissions } from "@/shared/enums/permissions";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
-import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
-import { Collapse, Table, TableProps, Tooltip } from "antd";
+import { Table, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
 import clsx from "clsx";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { IoEyeOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
@@ -60,7 +54,7 @@ const ListChildrenProject: React.FC<IProps> = ({ listChildrenProject, title }) =
     {
       title: "Action",
       key: "action",
-      render: (text, record, index) => {
+      render: (_, record, index) => {
         return (
           <Tooltip title="Chi tiết dự án" key={index}>
             <IoEyeOutline

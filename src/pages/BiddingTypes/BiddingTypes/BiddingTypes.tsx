@@ -16,7 +16,7 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IBiddingTypeInitialState, resetStatus, setFilter } from "@/services/store/biddingType/biddingType.slice";
 import { changeStatusBiddingType, deleteBiddingType, getAllBiddingTypes } from "@/services/store/biddingType/biddingType.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
-import { GoDownload } from "react-icons/go";
+
 import FormModal from "@/components/form/FormModal";
 import DetailBiddingType from "../DetailBiddingType/DetailBiddingType";
 

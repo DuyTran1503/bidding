@@ -45,7 +45,7 @@ export interface IBiddingResultFormInitialValues {
 
 const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnterprises, isDialog, setVisible }: IBiddingResultFormProps) => {
   const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
-  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateBidDoc, dispatch: dispatchBidDoc } = useArchive<IBidDocumentInitialState>("bid_document");
   const initialValues: IBiddingResult = {
@@ -110,7 +110,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
   });
   return (
     <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
-      {({ values, errors, touched, handleBlur, setFieldValue }) => {
+      {({ values, errors, touched, setFieldValue }) => {
         return (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>

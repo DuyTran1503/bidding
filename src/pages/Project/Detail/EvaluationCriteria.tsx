@@ -1,19 +1,11 @@
-import Button from "@/components/common/Button";
-import { ITableData } from "@/components/table/PrimaryTable";
 import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
-import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
-import { getListBidBond } from "@/services/store/bid_bond/bidBond.thunk";
-import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
-import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { IEvaluationCriteria } from "@/services/store/evaluation/evaluation.model";
 import { EPermissions } from "@/shared/enums/permissions";
-import { Collapse, Table, TableProps, Tooltip } from "antd";
+import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
-import clsx from "clsx";
-import { useEffect, useMemo } from "react";
-import { IoEyeOutline } from "react-icons/io5";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
@@ -34,7 +26,6 @@ const EvaluationCriteria: React.FC<IProps> = ({ listEvaluationCriteria, title })
     {
       title: "STT",
       dataIndex: "stt",
-      render: (text, record, index: number) => <span>{index + 1}</span>, // Hiện số thứ tự
     },
     {
       title: "Tên tiêu chí đánh giá",
@@ -57,6 +48,7 @@ const EvaluationCriteria: React.FC<IProps> = ({ listEvaluationCriteria, title })
   const data: any[] = useMemo(() => {
     return Array.isArray(listEvaluationCriteria)
       ? listEvaluationCriteria.map(({ id, name, project_id, weight, created_at }, index) => ({
+          index: index + 1,
           id,
           key: id,
           name: name,

@@ -8,7 +8,6 @@ import { DOMESTIC, mappingDOMESTIC } from "@/shared/enums/domestic";
 import PDF from "@/assets/images/pdf.png";
 import EXCEL from "@/assets/images/excel.png";
 import WORD from "@/assets/images/word.jpg";
-import { Link } from "react-router-dom";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { mappingBidBond, TypeBidBond } from "@/shared/enums/types";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
@@ -143,15 +142,7 @@ const BiddingBondsList: React.FC<BiddingBondsListProps> = ({ items, title_projec
     </Collapse>
   );
 };
-const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({
-  data2,
-  data,
-  title,
-  customDetails = [],
-  listEnterprise,
-  showDefaultDetails = true,
-  dataBidDoc,
-}) => {
+const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, customDetails = [], listEnterprise, showDefaultDetails = true }) => {
   // Mặc định các trường dự án
   const defaultDetails = [
     { label: "Tên dự án", value: data?.name },

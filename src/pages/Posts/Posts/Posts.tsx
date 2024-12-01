@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IPostInitialState, resetStatus, setFilter } from "@/services/store/post/post.slice";
 import { deletePost, getAllPosts } from "@/services/store/post/post.thunk";
-import { GoDownload } from "react-icons/go";
+
 import { EButtonTypes } from "@/shared/enums/button";
 import Image from "@/components/table/Image";
 import { mappingStatust } from "@/shared/enums/types";

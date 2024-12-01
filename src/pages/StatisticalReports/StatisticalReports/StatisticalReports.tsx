@@ -21,7 +21,6 @@ import {
   deleteStatisticalReport,
   getAllStatisticalReports,
 } from "@/services/store/statisticalReport/statisticalReport.thunk";
-import { GoDownload } from "react-icons/go";
 
 const StatisticalReports = () => {
   const navigate = useNavigate();
