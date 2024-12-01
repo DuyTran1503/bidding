@@ -144,7 +144,7 @@ const StatisticalEnterprise: React.FC = () => {
             { name: "Đã đăng tải", values: stateChartEnterprise.getEmployeeProjectStatistic.map((item) => item.investorProjectCount) },
           ]}
           xAxisData={stateChartEnterprise.getEmployeeProjectStatistic.map(({ enterprise }) => enterprise)}
-          title="Biểu đồ thống kê dự án đã đăng tải và dự án đã đầu tư của doanh nghiệp" />
+          title="Thống kê dự án đăng tải và đầu tư của doanh nghiệp" />
       ),
     },
     {
@@ -158,7 +158,7 @@ const StatisticalEnterprise: React.FC = () => {
             { name: "Tổng số tiền thắng", values: stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.totalWinningAmount) },
           ]}
           xAxisData={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
-          title="Biểu đồ thống kê số lượng dự án đã trúng, giá trúng thầu trung bình và tổng giá trị thầu đã trúng của doanh nghiệp" />
+          title="Thống kê số dự án trúng, giá trúng thầu trung bình và tổng giá trị thầu trúng của doanh nghiệp" />
       ),
     },
     {

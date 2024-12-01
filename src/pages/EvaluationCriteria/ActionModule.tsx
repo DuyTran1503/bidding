@@ -84,7 +84,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
         type === EButtonTypes.CREATE
           ? "Tạo mới tiêu chi đánh giá"
           : type === EButtonTypes.UPDATE
-            ? "Cập nhật Tạo mới tiêu chi đánh giá"
+            ? "Cập nhật tiêu chi đánh giá"
             : "Chi tiết tiêu chi đánh giá"
       }
       footerContent={
