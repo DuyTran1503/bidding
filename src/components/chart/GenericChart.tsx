@@ -111,6 +111,7 @@ const GenericChart: React.FC<GenericChartProps> = ({
         textStyle: {
           fontSize: titleFontSize, // Điều chỉnh kích thước tiêu đề ở đây
           fontWeight: "bold",
+          fontFamily: "Arial, sans-serif",
         },
       },
       legend: legendPosition

@@ -144,7 +144,7 @@ const StatisticalEnterprise: React.FC = () => {
             { name: "Đã đăng tải", values: stateChartEnterprise.getEmployeeProjectStatistic.map((item) => item.investorProjectCount) },
           ]}
           xAxisData={stateChartEnterprise.getEmployeeProjectStatistic.map(({ enterprise }) => enterprise)}
-          title="Biểu đồ thống kê dự án đã đăng tải và dự án đã đầu tư của doanh nghiệp" />
+          title="Thống kê dự án đăng tải và đầu tư của doanh nghiệp" />
       ),
     },
     {
@@ -158,7 +158,7 @@ const StatisticalEnterprise: React.FC = () => {
             { name: "Tổng số tiền thắng", values: stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.totalWinningAmount) },
           ]}
           xAxisData={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
-          title="Biểu đồ thống kê số lượng dự án đã trúng,giá trúng thầu trung bình và tổng giá trị thầu đã trúng của doanh nghiệp" />
+          title="Thống kê số dự án trúng, giá trúng thầu trung bình và tổng giá trị thầu trúng của doanh nghiệp" />
       ),
     },
     {
@@ -180,14 +180,14 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "5",
-      label: "Dự án đã hoàn thành",
+      label: "Dự án đã trúng thầu",
       content: (
         <AbleBarChart
-          title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
+          title="Biểu đồ thống kê số lượng dự án đã trúng thầu của doanh nghiệp theo từng tháng trong năm"
           xAxisData={filteredXAxisData}
-          data={stateChartEnterprise.projectCompletedByEnterprise.map((enterprise) => ({
+          data={stateChartEnterprise.projectWonByEnterprise.map((enterprise) => ({
             name: enterprise.enterprise_name,
-            values: enterprise.monthly_data.map((item) => item.completed_projects || 0),
+            values: enterprise.monthly_data.map((item) => item.won_projects || 0),
           }))}
 
         />
@@ -196,17 +196,17 @@ const StatisticalEnterprise: React.FC = () => {
     },
     {
       key: "6",
-      label: "Dự án đã trúng thầu",
+      label: "Dự án đã hoàn thành",
       content: (
-        <AbleBarChart
-          title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
-          xAxisData={filteredXAxisData}
-          data={stateChartEnterprise.projectWonByEnterprise.map((enterprise) => ({
-            name: enterprise.enterprise_name,
-            values: enterprise.monthly_data.map((item) => item.won_projects || 0),
-          }))}
+          <AbleBarChart
+              title="Biểu đồ thống kê số lượng dự án đã hoàn thành của doanh nghiệp theo từng tháng trong năm"
+              xAxisData={filteredXAxisData}
+              data={stateChartEnterprise.projectCompletedByEnterprise.map((enterprise) => ({
+                name: enterprise.enterprise_name,
+                values: enterprise.monthly_data.map((item) => item.completed_projects || 0),
+              }))}
 
-        />
+          />
 
       ),
     },

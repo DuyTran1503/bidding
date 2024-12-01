@@ -110,7 +110,7 @@ const ProjectPage = () => {
     },
     {
       key: "3",
-      label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
+      label: "Thống kê dự án",
       content: (
         <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
           <Select
@@ -122,7 +122,7 @@ const ProjectPage = () => {
           />
           <AreaChart
             categories={names}
-            title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+            title="Biểu đồ thống kê số dự án hoàn thành, phê duyệt và mở thầu theo tháng"
             series={[
               { name: "Hoàn thành", data: completedValues },
               { name: "Phê duyệt", data: approvedValues },
@@ -304,7 +304,7 @@ const ProjectPage = () => {
         setFilter={setFilter}
         filter={stateProject.filter}
         scroll={{ x: 1500 }}
-        tabLabel="Danh sách dữ liệu"
+        tabLabel="Danh sách"
         additionalTabs={additionalTabs}
       />
     </>
