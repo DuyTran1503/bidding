@@ -1,10 +1,8 @@
-/* eslint-disable max-len */
 import { useArchive } from "@/hooks/useArchive";
 import { IEditProfileInitialState } from "@/services/store/profile/profile.slice";
 import { getEditProfile } from "@/services/store/profile/profile.thunk";
-import { Card, Descriptions } from "antd";
+import { Card, Descriptions, Button } from "antd";
 import { useEffect } from "react";
-import { AiOutlineRight } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 const Profile = () => {
@@ -14,84 +12,97 @@ const Profile = () => {
     dispatch(getEditProfile({}));
   }, []);
 
-  const renderDescriptionItem = (label: string, value: React.ReactNode, span: number = 1) => (
-    <Descriptions.Item className="!px-2 !py-3"
-      label={<span className="!w-32 block font-bold">{label}</span>}
-      span={span}
-    >
-      <div className="break-words">{value}</div>
-    </Descriptions.Item>
-  );
-  const fullImageSrc = state.editProfiles?.profile?.avatar.startsWith("http://") || state.editProfiles?.profile?.avatar.startsWith("https://") ? state.editProfiles?.profile?.avatar : `${import.meta.env.VITE_API_URL}/${state.editProfiles?.profile?.avatar}`;
   const formatDate = (dateString: string): string => {
-    if (!dateString) {
-      return "Không có"; // Trả về khi không có dữ liệu
-    }
+    if (!dateString) return "Không có";
 
     try {
-      const fixedDate = dateString.includes("T") ? dateString : dateString.replace(" ", "T") + "Z";
+      const fixedDate = dateString.includes("T") ? dateString : `${dateString.replace(" ", "T")}Z`;
       const date = new Date(fixedDate);
+      if (isNaN(date.getTime())) return "Không có";
 
-      if (isNaN(date.getTime())) {
-        return "Không có"; // Trả về khi giá trị không hợp lệ
-      }
-
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      const seconds = String(date.getSeconds()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
 
-      return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+      return `${day}/${month}/${year} ${hours}:${minutes}`;
     } catch {
-      return "Không có"; // Trả về khi xảy ra lỗi không mong muốn
+      return "Không có";
     }
   };
-  const created = formatDate(state.editProfiles?.profile?.created_at);;
-  const update = formatDate(state.editProfiles?.profile?.updated_at);
+
+  const avatarSrc =
+    state.editProfiles?.profile?.avatar?.startsWith("http")
+      ? state.editProfiles?.profile?.avatar
+      : `${import.meta.env.VITE_API_URL}/${state.editProfiles?.profile?.avatar}`;
+
+  const createdDate = formatDate(state.editProfiles?.profile?.created_at);
+  const updatedDate = formatDate(state.editProfiles?.profile?.updated_at);
 
   return (
-    <Card title={"Thông Tin Doanh Nghiệp " + state.editProfiles?.name} className="shadow-lg">
-      <div className="flex items-end pb-6">
-        <div className="w-32 h-32 mx-6 bg-gray-200 rounded-md overflow-hidden shadow-md">
+    <Card className="shadow-lg rounded-lg p-6">
+      <div className="flex items-center space-x-6">
+        <div className="w-32 h-32 rounded-full overflow-hidden border border-gray-300 shadow-sm">
           <img
-            src={fullImageSrc}
-            alt="Ảnh đại diện"
+            src={avatarSrc || "/default-avatar.png"}
+            alt="Avatar"
             className="w-full h-full object-cover"
           />
         </div>
-
-        <div>
-          <Link to={`update`} className="flex items-center">
-            <AiOutlineRight className="mr-2" />
-            Sửa thông tin
+        <div className="flex-1">
+          <h2 className="text-2xl font-bold">{state.editProfiles?.name || "Tên doanh nghiệp"}</h2>
+          <p className="text-gray-600">
+            Chức vụ: {state.editProfiles?.account_type === "staff"
+              ? "Nhân viên"
+              : state.editProfiles?.account_type === "enterprise"
+                ? "Doanh nghiệp"
+                : "Không xác định"}
+          </p>
+          <p className="text-gray-600">
+            Ngày tạo: {createdDate}
+          </p>
+          <p className="text-gray-600">
+            Cập nhật gần nhất: {updatedDate}
+          </p>
+          <Link to="update">
+            <Button type="primary" className="mt-2">
+              Sửa thông tin
+            </Button>
           </Link>
-          <div className="flex items-center">
-            <AiOutlineRight className="mr-2" />
-            Đăng nhập vào trang vào ngày: {created}
-
-          </div>
-          <div className="flex items-center">
-            <AiOutlineRight className="mr-2" />
-            Ngày cập nhập gần nhất: {update}
-
-          </div>
         </div>
       </div>
-      <Descriptions
-        bordered
-        className="table-fixed w-full"
-        column={{ xs: 1, sm: 2, md: 3 }}
-      >
-        {renderDescriptionItem("Tên doanh nghiệp", state.editProfiles?.name, 3)}
-        {renderDescriptionItem("Chức vụ", state.editProfiles?.account_type, 3)}
-        {renderDescriptionItem("Mã số thuế", state.editProfiles?.taxcode, 3)}
-        {renderDescriptionItem("Email", state.editProfiles?.email, 3)}
-        {renderDescriptionItem("Số điện thoại", state.editProfiles?.profile?.phone, 3)}
-        {renderDescriptionItem("Ngày sinh", state.editProfiles?.profile?.birthday, 3)}
-        {renderDescriptionItem("Giới tính", state.editProfiles?.profile?.gender === 1 ? "Nam" : state.editProfiles?.profile?.gender === 2 ? "Nữ" : "Không xác định", 3)}
 
+      <Descriptions bordered className="mt-6" column={{ xs: 1, sm: 2, lg: 3 }}>
+        <Descriptions.Item label="Tên doanh nghiệp" span={3}>
+          {state.editProfiles?.name || "Không có"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Chức vụ" span={3}>
+          {state.editProfiles?.account_type === "staff"
+            ? "Nhân viên"
+            : state.editProfiles?.account_type === "enterprise"
+              ? "Doanh nghiệp"
+              : "Không xác định"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Mã số thuế" span={3}>
+          {state.editProfiles?.taxcode || "Không có"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Email" span={3}>
+          {state.editProfiles?.email || "Không có"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Số điện thoại" span={3}>
+          {state.editProfiles?.profile?.phone || "Không có"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Ngày sinh" span={3}>
+          {state.editProfiles?.profile?.birthday || "Không có"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Giới tính" span={3}>
+          {state.editProfiles?.profile?.gender === 1
+            ? "Nam"
+            : state.editProfiles?.profile?.gender === 2
+              ? "Nữ"
+              : "Không xác định"}
+        </Descriptions.Item>
       </Descriptions>
     </Card>
   );

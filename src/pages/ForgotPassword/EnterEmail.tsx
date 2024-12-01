@@ -61,8 +61,8 @@ const EnterEmail: React.FC = () => {
 
     // Giá trị khởi tạo cho form
     const loginFormInitialValues = {
-        email: "",
-        taxcode: "",
+        identifier: "",
+        // taxcode: "",
     };
 
     // Schema validation

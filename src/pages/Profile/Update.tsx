@@ -1,3 +1,4 @@
+import Button from "@/components/common/Button";
 import FormDate from "@/components/form/FormDate";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
@@ -9,11 +10,12 @@ import { IEditProfile } from "@/services/store/profile/profile.model";
 import { IEditProfileInitialState, resetStatus } from "@/services/store/profile/profile.slice";
 import { getEditProfile, updateEditProfile } from "@/services/store/profile/profile.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
-import { Button, Col, Form, Row } from "antd";
-import { Formik } from "formik";
-import { AiFillCaretRight } from "react-icons/ai";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { Col, Row } from "antd";
 import dayjs from "dayjs";
+import { Formik } from "formik";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 interface IIEditProfileFormProps {
     formikRef?: any;
@@ -32,6 +34,7 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
         gender: item?.gender || state.editProfiles?.profile?.gender,
     };
     const handleSubmit = (data: IEditProfile) => {
+        // console.log(data);
 
         const newData = {
             id: data.id,
@@ -60,19 +63,29 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
         },
     });
     return (
-        <div className="max-w-screen-xl mx-auto">
-            <div className="flex items-center text-2xl font-semibold mt-5">
-                <AiFillCaretRight />Cập nhập thông tin cá nhân
-            </div>
+        <div className="max-w-screen-xl ">
             <Formik
                 innerRef={formikRef}
                 initialValues={initialValues}
                 enableReinitialize={true}
                 onSubmit={handleSubmit}>
-                {({ values, handleBlur, setFieldValue, touched, errors }) => (
-                    <Form className="mt-3 ">
-                        <Row gutter={[24, 24]}>
-                            <Col xs={24} sm={24} md={24} xl={24}>
+                {({ values, handleBlur, handleSubmit, setFieldValue, touched, errors }) => (
+                    <form className=" my-5 space-y-6" onSubmit={handleSubmit}>
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center text-2xl font-semibold mt-5">
+                                Cập nhập thông tin cá nhân
+                            </div>
+                            <div className="flex items-center justify-center gap-4">
+                                <Link to={`/profile`} className="border border-cyan-600 py-1.5 text-cyan-600 font-semibold px-4 rounded-lg">Quay lại</Link>
+                                <Button
+                                    text="Cập nhật"
+                                    isLoading={state.status === EFetchStatus.PENDING}
+                                />
+                            </div>
+                        </div>
+                        <Row gutter={[24, 24]} className="justify-center">
+
+                            <Col xs={24} sm={24} md={8} xl={8}>
                                 <FormGroup title="Ảnh đại diện">
                                     <FormUploadFile
                                         isMultiple={false}
@@ -81,6 +94,8 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
                                     />
                                 </FormGroup>
                             </Col>
+                        </Row>
+                        <Row gutter={[24, 24]}>
                             <Col xs={24} sm={24} md={12} xl={12}>
                                 <FormGroup title="Họ và tên" required>
                                     <FormInput
@@ -132,10 +147,7 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
                                 </FormGroup>
                             </Col>
                         </Row>
-                        <Button type="primary" htmlType="submit" className="w-36 h-12 mx-auto flex mt-5 bg-cyan-500 font-medium text-lg">
-                            Gửi yêu cầu
-                        </Button>
-                    </Form>
+                    </form>
                 )}
             </Formik>
         </div>
