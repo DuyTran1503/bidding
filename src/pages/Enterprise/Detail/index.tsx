@@ -17,6 +17,7 @@ import Tenderer from "./Details/Tenderer";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { checkPermission } from "@/helpers/checkPermission";
 import { EPermissions } from "@/shared/enums/permissions";
+import Win from "./Details/Win";
 const DetailEnterprise = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
@@ -110,6 +111,7 @@ const DetailEnterprise = () => {
 
           <Investor />
           <Tenderer />
+          <Win />
         </Card>
       ),
     },

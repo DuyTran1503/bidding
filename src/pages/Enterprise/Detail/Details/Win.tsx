@@ -1,13 +1,13 @@
 import PaginatedTable from "@/components/table/PaginatedTable";
 import { useArchive } from "@/hooks/useArchive";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { getAllProjectTenderer } from "@/services/store/project/project.thunk";
+import { getAllProjectWin } from "@/services/store/project/project.thunk";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-const Tenderer = () => {
+const Win = () => {
     const { state: projectState, dispatch: projectDispatch } = useArchive<IProjectInitialState>("project");
     const { id } = useParams();
     const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
@@ -49,17 +49,17 @@ const Tenderer = () => {
     ];
 
     useEffect(() => {
-        projectDispatch(getAllProjectTenderer({
+        projectDispatch(getAllProjectWin({
             query: {
                 ...projectState.projects,
                 page: projectState.filter.page,
                 size: projectState.filter.size,
-                tenderer: id
+                win: id
             },
         }))
     }, [projectDispatch, projectState.filter.page, projectState.filter.size, id]);
     // Thêm key cho mỗi record nếu chưa có
-    const dataSourceWithKey = projectState.tendererProjects.map((item, index) => ({
+    const dataSourceWithKey = projectState.winProjects.map((item, index) => ({
         ...item,
          key: `key_${index}`, // Dùng id hoặc tên làm key duy nhất
     }));
@@ -67,8 +67,8 @@ const Tenderer = () => {
     return (
             <div className="pt-2">
                 <h2 className="my-4 text-xl font-medium">
-                    Danh sách dự án đã đăng tải <span className="ml-2 text-sm text-gray-500">
-                        Tổng: ({projectState.totalRecordTenderer} dự án)
+                    Danh sách dự án đã trúng thầu <span className="ml-2 text-sm text-gray-500">
+                        Tổng: ({projectState.totalRecordWin} dự án)
                     </span>
                 </h2>
 
@@ -78,7 +78,7 @@ const Tenderer = () => {
                     // loading={projectState.isLoading}
                     currentPage={projectState.filter.page}
                     pageSize={projectState.filter.size}
-                    totalRecords={projectState.totalRecordTenderer as number}
+                    totalRecords={projectState.totalRecordWin as number}
                     onPageChange={handlePageChange}
                     rowSelection={handleRowSelection} // Hỗ trợ chọn hàng
                     bordered={true} // Hiển thị border bảng
@@ -88,4 +88,4 @@ const Tenderer = () => {
     );
 };
 
-export default Tenderer;
+export default Win;

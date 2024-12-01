@@ -377,7 +377,6 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 <FormGroup title="Ngày sinh">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    label="Ngày sinh"
                     value={values.birthday ? dayjs(values.birthday) : null}
                     onChange={(date) => setFieldValue("birthday", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />

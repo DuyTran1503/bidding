@@ -8,8 +8,7 @@ const Footer = () => {
             <ul className="flex gap-5">
                 <li><Link to={`/`} className="hover:text-gray-400">Trang chủ</Link></li>
                 <li><Link to={`/introduce`} className="hover:text-gray-400">Giới thiệu</Link></li>
-                <li><Link to={`/`} className="hover:text-gray-400">Dịch vụ</Link></li>
-                <li><Link to={`/`} className="hover:text-gray-400">Tin tức</Link></li>
+                <li><Link to={`/news`} className="hover:text-gray-400">Tin tức</Link></li>
                 <li><Link to={`/`} className="hover:text-gray-400">Liên hệ</Link></li>
             </ul>
         </div>

@@ -26,7 +26,7 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
     const { state, dispatch } = useArchive<IEditProfileInitialState>("edit_profile");
     const initialValues: IEditProfile = {
         id: item?.id || "",
-        account_type: item?.account_type || state.editProfiles?.profile?.avatar,
+        account_type: item?.account_type || state.editProfiles?.profile?.account_type,
         name: item?.name || state.editProfiles?.name,
         phone: item?.phone || state.editProfiles?.profile?.phone,
         avatar: item?.avatar || state.editProfiles?.profile?.avatar,
@@ -90,7 +90,7 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
                                     <FormUploadFile
                                         isMultiple={false}
                                         value={values.avatar}
-                                        onChange={(e: any) => setFieldValue("document", e)}
+                                        onChange={(e: any) => setFieldValue("avatar", e)}
                                     />
                                 </FormGroup>
                             </Col>

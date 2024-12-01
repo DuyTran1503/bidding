@@ -10,6 +10,7 @@ import {
   getAllProject,
   getAllProjectInvestor,
   getAllProjectTenderer,
+  getAllProjectWin,
   getListProject,
   getProjectById,
   updateProject,
@@ -27,6 +28,7 @@ export interface IProjectInitialState extends IInitialState {
   projects: IProject[];
   investorProjects: IProject[];
   tendererProjects: IProject[];
+  winProjects: IProject[];
   project?: IProject | any;
   listProjects?: IProject[];
   id_project?: string;
@@ -38,6 +40,7 @@ const initialState: IProjectInitialState = {
   projects: [],
   investorProjects: [],
   tendererProjects: [],
+  winProjects: [],
   listProjects: [],
   id_project: "",
   project: undefined,
@@ -52,10 +55,10 @@ const initialState: IProjectInitialState = {
   number_of_elements: 0,
   number_of_elementInvestor: 0,
   number_of_elementTenderer: 0,
-  number_of_elementWont: 0,
+  number_of_elementWin: 0,
   totalRecordInvestor: 0,
   totalRecordTenderer: 0,
-  totalRecordWont: 0,
+  totalRecordWin: 0,
 };
 
 const projectSlice = createSlice({
@@ -112,6 +115,17 @@ const projectSlice = createSlice({
         }
       })
       .addCase(getAllProjectTenderer.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+    builder
+      .addCase(getAllProjectWin.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        if (payload.data) {
+          state.winProjects = payload.data.data;
+          state.totalRecordWin = payload?.data?.total_elements;
+          state.number_of_elementWin = payload?.data?.number_of_elements;
+        }
+      })
+      .addCase(getAllProjectWin.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
     builder
