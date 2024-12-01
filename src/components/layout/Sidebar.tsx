@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import MenuItem from "./MenuItem";
 
-// Icons
+// Keep all existing imports...
 import {
   IoBusinessOutline,
   IoNewspaperOutline,
@@ -24,13 +24,13 @@ import {
   IoBriefcaseOutline,
 } from "react-icons/io5";
 
-// Images
 import logo from "@/assets/images/logo.png";
 import { RxComponent1 } from "react-icons/rx";
 import { EPermissions } from "@/shared/enums/permissions";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { checkPermission } from "@/helpers/checkPermission";
+import { MdOutlineCreditScore } from "react-icons/md";
 
 export interface IMenuItem {
   id: string;
@@ -47,20 +47,31 @@ export interface IMenuItem {
 
 const Sidebar = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
-
   const { state } = useArchive<IAuthInitialState>("auth");
-
   const [activeMenuItemId, setActiveMenuItemId] = useState<string | null>();
   const [openingMenuId, setOpeningMenuId] = useState<string | null>();
   const { pathname } = useLocation();
   const activePath = lodash.last(lodash.remove(pathname.split("/")));
   const [isSidebarVisible, setSidebarVisible] = useState<boolean>(false);
+
+  // Helper function to check if menu item should be visible
+  const shouldShowMenuItem = (item: IMenuItem) => {
+    // For items with no children, check its own permissions
+    if (!item.items?.length) {
+      return checkPermission(state.profile?.permissions, item.permissions);
+    }
+
+    // For items with children, check if at least one child has valid permissions
+    return item.items.some((child) => checkPermission(state.profile?.permissions, child.permissions));
+  };
+
   const menuItems: IMenuItem[] = [
     {
       id: "1",
       label: "Trang chủ",
       path: "dashboard",
       icon: { component: IoHome },
+      permissions: EPermissions.DASHBOARD,
     },
     {
       id: "2",
@@ -122,18 +133,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           path: "enterprise",
           permissions: EPermissions.LIST_ENTERPRISE,
         },
-        // {
-        //   id: "2.2",
-        //   label: "Lĩnh vực đấu thầu",
-        //   path: "bidding-fields",
-        //   permissions: EPermissions.LIST_BIDDING_FIELD,
-        // },
-        // {
-        //   id: "2.3",
-        //   label: "Loại hình đấu thầu",
-        //   path: "bidding-types",
-        //   permissions: EPermissions.LIST_BIDDING_TYPE,
-        // },
         {
           id: "3.2",
           label: "Nhân viên",
@@ -141,12 +140,19 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           permissions: EPermissions.LIST_EMPLOYEE,
         },
         {
-          id: "3.1",
+          id: "3.3",
           label: "Công việc",
           path: "task",
           permissions: EPermissions.LIST_TASK,
         },
       ],
+    },
+    {
+      id: "15",
+      label: "Phê duyệt dự án",
+      path: "project-approval",
+      icon: { component: MdOutlineCreditScore },
+      permissions: EPermissions.PROJECT_BY_STAFF,
     },
     {
       id: "4",
@@ -167,15 +173,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
       ],
     },
-
-    // {
-    //   id: "4",
-    //   label: "Nhân viên",
-    //   icon: { component: IoPeopleOutline },
-    //   items: [
-    //   ],
-    // },
-
     {
       id: "7",
       label: "Lịch sử đấu thầu",
@@ -185,7 +182,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "7.1",
           label: "Kết quả đấu thầu",
           path: "bidding-results",
-          // permissions: EPermissions.LIST_BIDDING_RESULT,
+          permissions: EPermissions.LIST_BIDDING_RESULT,
         },
         {
           id: "7.2",
@@ -211,12 +208,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           label: "Nhân viên",
           path: "staffs",
           permissions: EPermissions.LIST_STAFF,
-        },
-        {
-          id: "8.8",
-          label: "Phê duyệt dự án",
-          path: "project-approval",
-          // permissions: EPermissions.LIST_STAFF,
         },
         {
           id: "8.3",
@@ -274,22 +265,22 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       icon: { component: IoBriefcaseOutline },
       label: "Loại hình mua sắm công",
       path: "procurement-categories",
-      permissions: EPermissions.LIST_PROCUREMENT_CATEGORIE,
+      permissions: EPermissions.LIST_PROCUREMENT_CATEGORY,
     },
     {
       id: "5",
       icon: { component: IoBookmarkOutline },
-      label: "Hình thức lựa chọn Nhà thầu",
+      label: "Hình thức lựa chọn nhà thầu",
       path: "selection-methods",
       permissions: EPermissions.LIST_SELECTION_METHOD,
     },
-    {
-      id: "10",
-      label: "Phản hồi và Khiếu nại",
-      icon: { component: IoChatbubblesOutline },
-      path: "feedback-complaint",
-      permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
-    },
+    // {
+    //   id: "10",
+    //   label: "Phản hồi và khiếu nại",
+    //   icon: { component: IoChatbubblesOutline },
+    //   path: "feedback-complaint",
+    //   permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
+    // },
     {
       id: "11",
       label: "Hỗ trợ",
@@ -311,17 +302,16 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       path: "instructs",
       permissions: EPermissions.LIST_INDUSTRY,
     },
-    {
-      id: "14",
-      label: "Components",
-      path: "components",
-      icon: { component: RxComponent1 },
-    },
+    // {
+    //   id: "14",
+    //   label: "Components",
+    //   path: "components",
+    //   icon: { component: RxComponent1 },
+    // },
   ];
 
   return (
     <>
-      {/* Button to toggle sidebar on small screens */}
       <button
         className="fixed left-6 top-7 z-50 block rounded bg-blue-200 p-2 text-white hover:bg-blue-500 md:hidden"
         onClick={() => setSidebarVisible(!isSidebarVisible)}
@@ -330,37 +320,40 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       </button>
 
       <div className="flex h-dvh select-none bg-gray-25">
-        {/* Sidebar */}
         <div
-          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"}`}
+          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 ${
+            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
-          {/* Logo */}
           <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4" onClick={() => navigate("/dashboard")}>
             <img src={logo} alt="" className="w-20" />
             <div className="display-m-semibold">Septenary Solution</div>
           </div>
 
-          {/* Navbar */}
           <nav className="no-scrollbar mb-2 flex grow flex-col gap-2 overflow-y-scroll pt-4">
             {menuItems.map((item, index) => {
+              // Only render if the item or at least one of its children has permissions
+              if (!shouldShowMenuItem(item)) {
+                return null;
+              }
+
               return (
                 <div key={index} className="flex flex-col gap-2">
-                  {checkPermission(state.profile?.permissions, item.permissions) && (
-                    <MenuItem
-                      onClick={() => {
-                        setActiveMenuItemId(activeMenuItemId === item.id ? null : item.id);
-                        setOpeningMenuId(openingMenuId === item.id ? null : item.id);
-                      }}
-                      {...item}
-                      isOpen={item.id === openingMenuId}
-                      hasChildren={!!item.items?.length}
-                      isActive={!!item.path && item.path === activePath}
-                      isChildActive={item.items?.some((i) => !!i.path && i.path === activePath)}
-                    />
-                  )}
-                  {activeMenuItemId === item.id && item.items?.some((child) => checkPermission(state.profile?.permissions, child.permissions)) && (
+                  <MenuItem
+                    onClick={() => {
+                      setActiveMenuItemId(activeMenuItemId === item.id ? null : item.id);
+                      setOpeningMenuId(openingMenuId === item.id ? null : item.id);
+                    }}
+                    {...item}
+                    isOpen={item.id === openingMenuId}
+                    hasChildren={!!item.items?.length}
+                    isActive={!!item.path && item.path === activePath}
+                    isChildActive={item.items?.some((i) => !!i.path && i.path === activePath)}
+                  />
+                  {activeMenuItemId === item.id && (
                     <div className="flex flex-col gap-2">
                       {item.items?.map((child, index) => {
+                        // Only render children that have permissions
                         return (
                           checkPermission(state.profile?.permissions, child.permissions) && (
                             <MenuItem key={index} {...child} isChild isActive={child.path === activePath} />
@@ -375,7 +368,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           </nav>
         </div>
 
-        {/* Main content */}
         <main className="ml-0 flex grow flex-col gap-6 overflow-y-scroll p-6 md:ml-[264px]">{children}</main>
       </div>
     </>
