@@ -49,11 +49,11 @@ export enum EPermissions {
   DESTROY_SELECTION_METHOD = "destroy_selection_method",
 
   // ? ProcurementCategorie
-  LIST_PROCUREMENT_CATEGORIE = "list_procurement_category",
-  DETAIL_PROCUREMENT_CATEGORIE = "detail_procurement_category",
-  CREATE_PROCUREMENT_CATEGORIE = "create_procurement_category",
-  UPDATE_PROCUREMENT_CATEGORIE = "update_procurement_category",
-  DESTROY_PROCUREMENT_CATEGORIE = "destroy_procurement_category",
+  LIST_PROCUREMENT_CATEGORY = "list_procurement_category",
+  DETAIL_PROCUREMENT_CATEGORY = "detail_procurement_category",
+  CREATE_PROCUREMENT_CATEGORY = "create_procurement_category",
+  UPDATE_PROCUREMENT_CATEGORY = "update_procurement_category",
+  DESTROY_PROCUREMENT_CATEGORY = "destroy_procurement_category",
 
   // staff
   LIST_STAFF = "list_staff",
@@ -61,6 +61,7 @@ export enum EPermissions {
   CREATE_STAFF = "create_staff",
   UPDATE_STAFF = "update_staff",
   DESTROY_STAFF = "destroy_staff",
+  BAN_STAFF = "ban_staff",
 
   // Lĩnh vực hoạt động
   LIST_BUSINESS_ACTIVITY_TYPE = "list_business_activity_type",
@@ -135,6 +136,8 @@ export enum EPermissions {
   CREATE_PROJECT = "create_project",
   UPDATE_PROJECT = "update_project",
   DESTROY_PROJECT = "destroy_project",
+  APPROVE_PROJECT = "approve_project",
+  PROJECT_BY_STAFF = "project_by_staff",
 
   // ? Banner
   LIST_BANNER = "list_banner",
@@ -231,4 +234,26 @@ export enum EPermissions {
   CREATE_EVALUATE = "create_evaluate",
   UPDATE_EVALUATE = "update_evaluate",
   DESTROY_EVALUATE = "destroy_evaluate",
+
+  DASHBOARD = "dashboard",
+  MOVE_TO_BLACKLIST_ENTERPRISE = "move_to_blacklist_enterprise",
+  EMPLOYEE_QTY_STATISTIC_BY_ENTERPRISE = "employee_qty_statistic_by_enterprise",
+  EMPLOYEE_EDUCATION_LEVEL_STATISTIC_BY_ENTERPRISE = "employee_education_level_statistic_by_enterprise",
+  EMPLOYEE_SALARY_STATISTIC_BY_ENTERPRISE = "employee_salary_statistic_by_enterprise",
+  EMPLOYEE_AGE_STATISTIC_BY_ENTERPRISE = "employee_age_statistic_by_enterprise",
+  EMPLOYEE_PROJECT_STATISTIC_BY_ENTERPRISE = "employee_project_statistic_by_enterprise",
+  BIDDING_RESULT_STATISTICS_BY_ENTERPRISE = "bidding_result_statistics_by_enterprise",
+  AVERAGE_DIFFICULTY_LEVEL_TASKS_BY_ENTERPRISE = "average_difficulty_level_tasks_by_enterprise",
+  AVERAGE_DIFFICULTY_LEVEL_TASKS_BY_EMPLOYEE = "average_difficulty_level_tasks_by_employee",
+  AVERAGE_FEEDBACK_BY_EMPLOYEE = "average_feedback_by_employee",
+  GET_DETAIL_ENTERPRISE_BY_IDS = "get_detail_enterprise_by_ids",
+  PROJECT_COMPLETED_BY_ENTERPRISE = "project_completed_by_enterprise",
+  PROJECT_WON_BY_ENTERPRISE = "project_won_by_enterprise",
+  EVALUATIONS_STATISTICS_BY_ENTERPRISE = "evaluations_statistics_by_enterprise",
+  REPUTATIONS_STATISTICS_BY_ENTERPRISE = "reputations_statistics_by_enterprise",
+  COMPARE_BAR_CHART_TOTAL_AMOUNT = "compare_bar_chart_total_amount",
+  COMPARE_BAR_CHART_CONSTRUCTION_TIME = "compare_bar_chart_construction_time",
+  COMPARE_BAR_CHART_BID_SUBMISSION_TIME = "compare_bar_chart_bid_submission_time",
+  COMPARE_PIE_CHART_TOTAL_AMOUNT = "compare_pie_chart_total_amount",
+  COMPARE_BAR_CHART_BIDDER_COUNT = "compare_bar_chart_bidder_count",
 }

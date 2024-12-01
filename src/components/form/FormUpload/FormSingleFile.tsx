@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { message } from "antd";
 import "@/assets/scss/overwrite/index.scss";
 import imageError from "@/assets/images/imgError-table.jpg";
@@ -76,7 +77,7 @@ const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
   };
 
   return (
-    <div className="custom-upload flex h-[255px] items-center justify-center rounded-lg bg-gray-25 px-3 py-6">
+    <div className="custom-upload flex h-[235px] items-center justify-center rounded-lg bg-gray-25 px-3 py-6">
       <div className="flex-col items-center gap-4">
         <div className="flex justify-center">
           {file && (

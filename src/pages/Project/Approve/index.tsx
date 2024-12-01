@@ -22,6 +22,7 @@ import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProje
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormInput from "@/components/form/FormInput";
 import { mixed, object } from "yup";
+import ProjectDetailsCard from "../Detail/ProjectDetailsCard";
 
 interface IApprove {
   status?: STATUS_PROJECT;
@@ -110,7 +111,8 @@ const ApproveProject = () => {
           },
         ]}
       />
-      <ActionModule type={EPageTypes.APPROVE} formikRef={formikRef} project={data} />
+      {/* <ActionModule type={EPageTypes.APPROVE} formikRef={formikRef} project={data} /> */}
+      <ProjectDetailsCard data={data} title={"Thông tin dự án"} />
       <Dialog visible={visible} setVisible={setVisible} title=" Phê duyệt dự án" footerContent={null} screenSize={screenSize}>
         <Formik
           initialValues={initialValues}

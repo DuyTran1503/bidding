@@ -1,9 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { getProfile, login, logout } from "./auth.thunk";
+import { getProfile, login, logout, sendMailForgotPassword } from "./auth.thunk";
 import { ILoginResponseData, IUserProfile } from "./auth.model";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { IError } from "@/shared/interface/error";
 
 export interface IAuthInitialState extends Partial<IInitialState> {
   isLogin: boolean;
@@ -59,6 +60,19 @@ const authSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors || payload?.message || "Tài khoản mật khẩu không chính xác");
       });
+      // ? Create
+    builder
+    .addCase(sendMailForgotPassword.pending, (state) => {
+      state.status = EFetchStatus.PENDING;
+    })
+    .addCase(sendMailForgotPassword.fulfilled, (state) => {
+      state.status = EFetchStatus.FULFILLED;
+      state.message = "Tạo mới thành công ";
+    })
+    .addCase(sendMailForgotPassword.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = transformPayloadErrors(payload?.errors);
+    });
     // ? Logout
     builder
       .addCase(logout.pending, (state) => {

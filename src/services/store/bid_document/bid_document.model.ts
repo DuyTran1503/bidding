@@ -1,3 +1,7 @@
+import { IBidBond } from "../bid_bond/bidBond.model";
+import { IEnterprise } from "../enterprise/enterprise.model";
+import { IProject } from "../project/project.model";
+
 export interface IBidDocument {
   id: number | string;
   project_id?: number;
@@ -8,13 +12,10 @@ export interface IBidDocument {
   bid_price: string;
   implementation_time?: string;
   validity_period?: string;
-  technical_score?: string;
-  financial_score?: string;
-  totalScore?: string;
-  ranking: string;
-  status: string;
-  notes: string;
-  enterprise?: { id: string; name: string };
-  project?: { id: string; name: string };
+  note: string;
+  status?: string;
+  enterprise?: IEnterprise;
+  project?: IProject;
+  bid_bond?: IBidBond;
   file?: File;
 }
