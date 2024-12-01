@@ -14,12 +14,14 @@ import { mappingBidBond, TypeBidBond } from "@/shared/enums/types";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import BiddingDocument from "./BiddingDocument";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
+import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 
 const { Title } = Typography;
 const { Panel } = Collapse;
 interface ProjectDetailsCardProps {
   data?: INewProject | undefined;
   data2?: IBiddingResult;
+  dataBidDoc?: IBidDocument;
   title?: string;
   customDetails?: { label: string; value: any }[];
   listEnterprise?: IEnterprise[];
@@ -129,6 +131,7 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({
   customDetails = [],
   listEnterprise,
   showDefaultDetails = true,
+  dataBidDoc,
 }) => {
   // Mặc định các trường dự án
   const defaultDetails = [

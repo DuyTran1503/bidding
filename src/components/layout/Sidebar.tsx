@@ -81,7 +81,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "2.3",
-          label: "Hồ sơ mời thầu",
+          label: "Hồ sơ dự thầu",
           path: "bid-document",
           permissions: EPermissions.LIST_BID_DOCUMENT,
         },
@@ -167,7 +167,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
       ],
     },
-
 
     // {
     //   id: "4",
