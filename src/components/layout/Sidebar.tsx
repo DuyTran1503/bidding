@@ -288,22 +288,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       path: "supports",
       permissions: EPermissions.LIST_SUPPORT,
     },
-<<<<<<< HEAD
-    // {
-    //   id: "12",
-    //   label: "Giới thiệu",
-    //   icon: { component: IoInformationCircleOutline },
-    //   path: "introductions",
-    //   permissions: EPermissions.LIST_INTRODUCTION,
-    // },
-    // {
-    //   id: "13",
-    //   label: "Hướng dẫn",
-    //   icon: { component: IoNewspaperOutline },
-    //   path: "instructs",
-    //   permissions: EPermissions.LIST_INDUSTRY,
-    // },
-=======
     {
       id: "12",
       label: "Giới thiệu",
@@ -318,7 +302,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       path: "instructs",
       permissions: EPermissions.LIST_INDUSTRY,
     },
->>>>>>> 1111daaf4a721768eaaa0f6a7166d92158c05fbb
     // {
     //   id: "14",
     //   label: "Components",

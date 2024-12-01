@@ -8,7 +8,7 @@ export enum EPageNames {
   "enterprise" = "Doanh nghiệp",
   "project" = "Dự án",
   "staffs" = "Nhân viên",
-  "business-activity" = "Loại hình hoạt động",
+  "business-activity" = "Loại hình kinh doanh",
   "bidding-fields" = "Lĩnh vực đấu thầu",
   "bidding-types" = "Loại hình đấu thầu",
   "statistical-reports" = "Báo cáo thống kê",

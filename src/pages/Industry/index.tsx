@@ -40,10 +40,12 @@ const Industry = () => {
     {
       dataIndex: "name",
       title: "Ngành kinh doanh",
+      className: "w-[250px]"
     },
     {
       dataIndex: "business_activity_type_id",
       title: "Loại hình kinh doanh",
+      className: "w-[250px]"
     },
     {
       dataIndex: "description",
