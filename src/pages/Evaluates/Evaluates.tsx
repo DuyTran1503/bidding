@@ -44,24 +44,23 @@ const Evaluates = () => {
       className: "w-4",
     },
     {
-      dataIndex: "evaluate",
-      title: "Tên danh mục",
-      className: "w-[300px]",
-    },
-    {
-      dataIndex: "project.name",
+      dataIndex: "project",
       title: "Tên dự án",
-      className: "w-[300px]",
+      render: (_, record) => {
+        return <span>{record.project?.name || "Không có tên dự án"}</span>;
+      },
     },
     {
       dataIndex: "score",
       title: "Tên danh mục",
-      className: "w-[300px]",
+    },
+    {
+      dataIndex: "evaluate",
+      title: "Nội dung",
     },
     {
       dataIndex: "title",
       title: "Mô tả",
-      className: "w-[300px]",
     },
   ];
   const search: ISearchTypeTable[] = [

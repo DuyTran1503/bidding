@@ -17,10 +17,10 @@ export const menu: IMenuItem[] = [
     label: "Tin tức",
     path: "/news",
   },
-  {
-    label: "Hướng dẫn",
-    path: "/instruct",
-  },
+  // {
+  //   label: "Hướng dẫn",
+  //   path: "/instruct",
+  // },
   {
     label: "Liên hệ & Hỗ trợ",
     path: "/support",

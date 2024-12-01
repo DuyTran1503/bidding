@@ -1,3 +1,4 @@
+import AreaChart from "@/components/chart/AreaChart";
 import GenericChart from "@/components/chart/GenericChart";
 import ConfirmModal from "@/components/common/CommonModal";
 import ManagementGrid from "@/components/grid/ManagementGrid";
@@ -6,30 +7,28 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { getIndustries } from "@/services/store/industry/industry.thunk";
+import { IAccountInitialState } from "@/services/store/account/account.slice";
+import { getListStaff } from "@/services/store/account/account.thunk";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
 import { projectByIndustry, projectsStatusPreMonth } from "@/services/store/chart/chart.thunk";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { IProjectInitialState, resetStatus, setFilter } from "@/services/store/project/project.slice";
 import { deleteProject, getAllProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
+import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
+import { Select } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
-import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
-import { convertMoney } from "@/shared/utils/common/convertMoney";
-import { message, Select } from "antd";
-import AreaChart from "@/components/chart/AreaChart";
-import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
-import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { convertDataOptions } from "./helper";
-import { IAccountInitialState } from "@/services/store/account/account.slice";
-import { getListStaff } from "@/services/store/account/account.thunk";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 
@@ -96,11 +95,11 @@ const ProjectPage = () => {
   const additionalTabs = [
     {
       key: "2",
-      label: "Dự án theo ngành",
+      label: "Biểu đồ số lượng dự án theo ngành",
       content: (
         <GenericChart
           chartType="bar"
-          title="Dự án theo ngành"
+          title="Biểu đồ số lượng dự án theo ngành"
           name={stateIndustry.industryData.map(({ name }) => name)}
           value={stateIndustry.industryData.map(({ value }) => value)}
           seriesName="Dữ liệu Biểu đồ"
@@ -110,7 +109,7 @@ const ProjectPage = () => {
     },
     {
       key: "3",
-      label: "Thống kê dự án",
+      label: "Biểu đồ thống kê số dự án hoàn thành, phê duyệt và mở thầu theo tháng",
       content: (
         <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
           <Select
@@ -240,7 +239,6 @@ const ProjectPage = () => {
     if (selectedYearProjectStatus) {
       dispatchIndustry(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
     }
-    message.loading("Đang tải dữ liệu");
   }, [selectedYearProjectStatus, dispatchIndustry]);
 
   useEffect(() => {

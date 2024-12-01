@@ -5,25 +5,26 @@ import { AiOutlineUser } from "react-icons/ai";
 import { IoLogOutOutline, IoWarning } from "react-icons/io5";
 import { useArchive } from "@/hooks/useArchive";
 import { logout } from "@/services/store/auth/auth.thunk";
-import { IAuthInitialState } from "@/services/store/auth/auth.slice";
+import { IAuthInitialState, resetStatus } from "@/services/store/auth/auth.slice";
 import CustomerAvatar from "../common/CustomerAvatar";
+import useFetchStatus from "@/hooks/useFetchStatus";
 
 const { confirm } = Modal;
 
 const UserSettings = () => {
   const { state, dispatch } = useArchive<IAuthInitialState>("auth");
-  // useFetchStatus({
-  //   module: "auth",
-  //   reset: resetStatus,
-  //   actions: {
-  //     success: {
-  //       navigate: "/auth/login",
-  //     },
-  //     error: {
-  //       message: state.message,
-  //     },
-  //   },
-  // });
+  useFetchStatus({
+    module: "auth",
+    reset: resetStatus,
+    actions: {
+      success: {
+        navigate: "/",
+      },
+      error: {
+        message: state.message,
+      },
+    },
+  });
 
   const items: MenuProps["items"] = [
     {

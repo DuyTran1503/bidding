@@ -150,7 +150,7 @@ const Statistical: React.FC = () => {
     },
     {
       key: "2",
-      label: "Tổng số tiền",
+      label: "Biểu đồ so sánh tổng số tiền",
       content: (
         <>
           <GenericChart
@@ -177,7 +177,7 @@ const Statistical: React.FC = () => {
     },
     {
       key: "3",
-      label: "Thời gian thực hiện dự án",
+      label: "Biểu đồ so sánh thời gian thực hiện dự án",
       content: (
         <>
           <GenericChart
@@ -204,7 +204,7 @@ const Statistical: React.FC = () => {
     },
     {
       key: "4",
-      label: "Thời gian mở thầu",
+      label: "Biểu đồ so sánh thời gian mở thầu",
       content: (
         <>
           <GenericChart
@@ -231,12 +231,12 @@ const Statistical: React.FC = () => {
     },
     {
       key: "5",
-      label: "Tỷ lệ vốn các project con của các dự án ",
+      label: "Biểu đồ so sánh tỷ lệ vốn các dự án con của các dự án",
       content: (
         <>
           <GenericChart
             chartType="bar"
-            title="Biểu đồ so sánh tỷ lệ vốn các project con của các dự án "
+            title="Biểu đồ so sánh tỷ lệ vốn các dự án con của các dự án"
             name={stateCompare.comparePieChartTotalAmount.map((item, index) => `${item.name} (${index + 1})`)}
             value={stateCompare.comparePieChartTotalAmount.map((item) => item.value)}
             valueType="currency"
@@ -275,7 +275,7 @@ const Statistical: React.FC = () => {
     },
     {
       key: "6",
-      label: "Số lượng nhà thầu tham gia",
+      label: "Biểu đồ so sánh số lượng nhà thầu tham gia",
       content: (
         <>
           <GenericChart
@@ -328,7 +328,7 @@ const Statistical: React.FC = () => {
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
-          // isDisabled={selectedIds.length > 20}
+        // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>

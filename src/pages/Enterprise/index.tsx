@@ -1,28 +1,20 @@
-import Heading from "@/components/layout/Heading";
-import { GoDownload } from "react-icons/go";
-import { FaPlus } from "react-icons/fa6";
-import ManagementGrid from "@/components/grid/ManagementGrid";
-import { ColumnsType } from "antd/es/table";
-import { ITableData } from "@/components/table/PrimaryTable";
-import { useNavigate } from "react-router-dom";
-import { useArchive } from "@/hooks/useArchive";
-import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
-import { EButtonTypes } from "@/shared/enums/button";
-import { Fragment, useEffect, useMemo, useState } from "react";
 import ConfirmModal from "@/components/common/CommonModal";
 import CommonSwitch from "@/components/common/CommonSwitch";
-import useFetchStatus from "@/hooks/useFetchStatus";
+import ManagementGrid from "@/components/grid/ManagementGrid";
+import Heading from "@/components/layout/Heading";
+import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
+import { useArchive } from "@/hooks/useArchive";
+import useFetchStatus from "@/hooks/useFetchStatus";
+import { EButtonTypes } from "@/shared/enums/button";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
+import { ColumnsType } from "antd/es/table";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { FaPlus } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { IEnterpriseInitialState, resetStatus, setFilter } from "@/services/store/enterprise/enterprise.slice";
-import { changeStatusActiveEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
-import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
-import { EPermissions } from "@/shared/enums/permissions";
-import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
-import { getIndustries } from "@/services/store/industry/industry.thunk";
-import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
 import GenericChart from "@/components/chart/GenericChart";
+import SelectChart from "@/components/chart/SelectChart";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
 import {
   industryHasTheMostEnterprise,
@@ -30,11 +22,17 @@ import {
   topEnterprisesHaveCompletedProjectsByFundingSource,
   topEnterprisesHaveCompletedProjectsByIndustry
 } from "@/services/store/chart/chart.thunk";
-import { message, Select } from "antd";
-import SelectChart from "@/components/chart/SelectChart";
+import { IEnterpriseInitialState, resetStatus, setFilter } from "@/services/store/enterprise/enterprise.slice";
+import { changeStatusActiveEnterprise, deleteEnterprise, getAllEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IFundingSourceInitialState } from "@/services/store/funding_source/funding_source.slice";
 import { getListFundingSource } from "@/services/store/funding_source/funding_source.thunk";
-import AreaChart from "@/components/chart/AreaChart";
+import { IIndustryInitialState } from "@/services/store/industry/industry.slice";
+import { getIndustries } from "@/services/store/industry/industry.thunk";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { EPermissions } from "@/shared/enums/permissions";
+import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
+import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
+import { message } from "antd";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Enterprise = () => {
@@ -87,10 +85,10 @@ const Enterprise = () => {
     }
   }, [selectedIndustry, dispatch]);
 
-  const handleFundingSourceChange = (value: string) => {
-    message.loading("Đang tải dữ liệu");
-    setSelectedFundingSource(value);
-  }
+  // const handleFundingSourceChange = (value: string) => {
+  //   message.loading("Đang tải dữ liệu");
+  //   setSelectedFundingSource(value);
+  // }
   const handleIndustryChange = (value: string) => {
     message.loading("Đang tải dữ liệu");
     setSelectedIndustry(value);
@@ -221,29 +219,29 @@ const Enterprise = () => {
       permission: EPermissions.DESTROY_ENTERPRISE,
     },
   ];
-  const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
-  const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
-  const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
-  const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
+  // const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
+  // const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
+  // const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
+  // const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
   const additionalTabs = [
     {
       key: "2",
-      label: "Doanh nghiệp theo ngành nghề",
+      label: "Thống kê số lượng doanh nghiệp phân bổ theo ngành nghề",
       content: (
         <GenericChart
           name={state.industryHasTheMostEnterprise.map(({ industry }) => industry)}
           value={state.industryHasTheMostEnterprise.map(({ total_enterprise }) => total_enterprise)}
           chartType="bar"
-          title="Thống kê số lượng Doanh nghiệp phân bổ theo ngành nghề"
+          title="Thống kê số lượng doanh nghiệp phân bổ theo ngành nghề"
         />
       ),
     },
     {
       key: "3",
-      label: "Dự án hoàn thành theo ngành",
+      label: "Top 10 doanh nghiệp hoàn thành nhiều dự án nhất theo ngành nghề",
       content: (
         <SelectChart
-          title="Các doanh nghiệp hàng đầu có dự án hoàn thành theo ngành"
+          title="Top 10 doanh nghiệp hoàn thành nhiều dự án nhất theo ngành nghề"
           data={state.topEnterprisesHaveCompletedProjectsByIndustry}
           selectedValue={selectedIndustry}
           options={industryState.listIndustry.map((ind: any) => ({ label: ind.name, value: String(ind.id) }))}
@@ -386,11 +384,6 @@ const Enterprise = () => {
         title="Doanh nghiệp"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,

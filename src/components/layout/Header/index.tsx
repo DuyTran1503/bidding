@@ -3,8 +3,8 @@ import logo from "@/assets/images/logo.png"; // Ảnh đã xóa nền
 import { useSelector } from "react-redux";
 import { RootStateType } from "@/services/reducers";
 import { Image } from "antd";
-import { useEffect, useRef } from "react";
-import { FaCaretDown } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
+import { FaCaretDown, FaBars, FaTimes } from "react-icons/fa";
 import ChildMenuItem from "./ChildMenuItem";
 import { menu } from "./menu";
 
@@ -12,13 +12,22 @@ const Header: React.FC = () => {
   const isLoggedIn = useSelector((state: RootStateType) => state.auth.isLogin);
   const userProfile = useSelector((state: RootStateType) => state.auth.profile);
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const parentRef = useRef<HTMLLIElement>(null);
-  const firstChildRef = useRef<HTMLUListElement>(null);
-  const secondChild = useRef<HTMLUListElement>(null);
-  const thirdChild = useRef<HTMLUListElement>(null);
+
   useEffect(() => {
+    // Hàm này không có tác dụng gì, bạn có thể bỏ đi nếu không cần
     document.body.clientWidth;
-  });
+  }, []);
+
+  const handleMenuClick = (path: string | undefined) => {
+    if (path) navigate(path);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
     <div className="h-14">
@@ -27,15 +36,22 @@ const Header: React.FC = () => {
           <Image src={logo} preview={false} alt="Logo" className="!w-10" /> SEPTENARY SOLUTION
         </Link>
 
-        <ul className="flex h-full items-center">
+        {/* Mobile menu toggle button */}
+        <button
+          className="lg:hidden text-white"
+          onClick={toggleMobileMenu}
+        >
+          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+        {/* Desktop menu */}
+        <ul className="hidden lg:flex h-full items-center">
           {menu.map((menuData, index) => (
             <li
               ref={parentRef}
               key={index}
-              className="group/root relative flex h-full cursor-pointer px-4 items-center text-white hover:text-gray-300 transition-all"
-              onClick={() => {
-                if (menuData.path) navigate(menuData.path);
-              }}
+              className="group relative flex h-full cursor-pointer px-4 items-center text-white hover:text-gray-300 transition-all"
+              onClick={() => handleMenuClick(menuData.path)}
             >
               <div className="flex items-center gap-2 uppercase">
                 <span>{menuData.label}</span>
@@ -44,28 +60,19 @@ const Header: React.FC = () => {
 
               {/* Child Menu Level 1 */}
               {menuData.items && (
-                <ul
-                  ref={firstChildRef}
-                  className="absolute left-0 top-full z-10 hidden w-72 bg-white text-black-500 py-2 shadow-lg group-hover/root:block"
-                >
-                  {menuData.items?.map((menuData, index) => (
-                    <ChildMenuItem key={index} {...menuData} group="group/1">
+                <ul className="absolute left-0 top-full z-10 hidden w-72 bg-white text-black py-2 shadow-lg group-hover:block">
+                  {menuData.items.map((item, index) => (
+                    <ChildMenuItem key={index} {...item} group="group/1">
                       {/* Child Menu Level 2 */}
-                      {menuData.items && (
-                        <ul
-                          ref={secondChild}
-                          className="absolute left-full top-0 hidden w-72 bg-white py-2 shadow-lg group-hover/1:block"
-                        >
-                          {menuData.items?.map((menuData, index) => (
-                            <ChildMenuItem key={index} {...menuData} group="group/2">
+                      {item.items && (
+                        <ul className="absolute left-full top-0 hidden w-72 bg-white py-2 shadow-lg group-hover:block">
+                          {item.items.map((subItem, index) => (
+                            <ChildMenuItem key={index} {...subItem} group="group/2">
                               {/* Child Menu Level 3 */}
-                              {menuData.items && (
-                                <ul
-                                  ref={thirdChild}
-                                  className="absolute left-full top-0 hidden w-72 bg-white py-2 shadow-lg group-hover/2:block"
-                                >
-                                  {menuData.items?.map((menuData, index) => (
-                                    <ChildMenuItem key={index} {...menuData} group="group/3" />
+                              {subItem.items && (
+                                <ul className="absolute left-full top-0 hidden w-72 bg-white py-2 shadow-lg group-hover:block">
+                                  {subItem.items.map((subSubItem, index) => (
+                                    <ChildMenuItem key={index} {...subSubItem} group="group/3" />
                                   ))}
                                 </ul>
                               )}
@@ -80,14 +87,59 @@ const Header: React.FC = () => {
             </li>
           ))}
         </ul>
+
+        {/* Mobile menu */}
+        {isMobileMenuOpen && (
+          <ul className="lg:hidden absolute left-0 top-14 w-full bg-cyan-600 text-white py-4">
+            {menu.map((menuData, index) => (
+              <li
+                key={index}
+                className="px-4 py-2 cursor-pointer hover:bg-cyan-500"
+                onClick={() => handleMenuClick(menuData.path)}
+              >
+                <div className="flex items-center gap-2">
+                  <span>{menuData.label}</span>
+                  {menuData.items && <FaCaretDown />}
+                </div>
+
+                {/* Child Menu Level 1 */}
+                {menuData.items && (
+                  <ul className="pl-4 ">
+                    {menuData.items.map((item, index) => (
+                      <ChildMenuItem key={index} {...item} group="group/1">
+                        {/* Child Menu Level 2 */}
+                        {item.items && (
+                          <ul className="pl-4">
+                            {item.items.map((subItem, index) => (
+                              <ChildMenuItem key={index} {...subItem} group="group/2">
+                                {/* Child Menu Level 3 */}
+                                {subItem.items && (
+                                  <ul className="pl-4">
+                                    {subItem.items.map((subSubItem, index) => (
+                                      <ChildMenuItem key={index} {...subSubItem} group="group/3" />
+                                    ))}
+                                  </ul>
+                                )}
+                              </ChildMenuItem>
+                            ))}
+                          </ul>
+                        )}
+                      </ChildMenuItem>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
         {isLoggedIn ? (
           <div className="flex items-center space-x-4">
-            <p className="text-white">Chào, {userProfile?.name || "Người dùng"}!</p>
+            <p className="text-white hidden lg:flex">Chào, {userProfile?.name || "Người dùng"}!</p>
             <Link
               to="/dashboard"
               className="h-full flex items-center justify-center text-white hover:text-gray-200 font-medium transition-all"
             >
-              Admin
+              Trang Admin
             </Link>
           </div>
         ) : (
@@ -97,7 +149,7 @@ const Header: React.FC = () => {
         )}
       </header>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
