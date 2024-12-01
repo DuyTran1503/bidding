@@ -51,6 +51,8 @@ export interface IBidDocumentInitialValues {
   status: string;
   notes: string;
   file?: File;
+  enterprise?: { id: string; name: string };
+  project?: { id: string; name: string };
 }
 
 const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFromProject }: IBidDocumentFormProps) => {

@@ -66,7 +66,7 @@ const UpdateBidDocument = () => {
   return (
     <>
       <Heading
-        title="Cập nhật hồ sơ mời thầu"
+        title="Cập nhật hồ sơ dự thầu"
         hasBreadcrumb
         buttons={[
           {
