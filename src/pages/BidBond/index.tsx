@@ -171,21 +171,21 @@ const BidBonds = () => {
   const search: ISearchTypeTable[] = [
     {
       id: "bidbond_number",
-      placeholder: "Nhập mã bão lãnh...",
-      label: "Mã bão lãnh dự thầu",
+      placeholder: "Nhập mã bảo lãnh...",
+      label: "Mã bảo lãnh dự thầu",
       type: "text",
     },
     {
       id: "enterprise_id",
       placeholder: "Nhập tên Người/Tổ chức...",
-      label: "Tên Người/Tổ chức bão lãnh dự thầu",
+      label: "Tên Người/Tổ chức bảo lãnh dự thầu",
       type: "select",
       options: enterpriseOption as { value: string; label: string }[],
     },
     {
       id: "bond_type",
-      placeholder: "Nhập loại bão lãnh...",
-      label: "Loại bão lãnh ",
+      placeholder: "Nhập loại bảo lãnh...",
+      label: "Loại bảo lãnh ",
       type: "select",
       options: optionType,
     },
@@ -201,7 +201,7 @@ const BidBonds = () => {
   return (
     <>
       <Heading
-        title="Bão lãnh dự thầu"
+        title="Bảo lãnh dự thầu"
         ModalContent={(props) => <ActionModuleBidBod {...(props as any)} />}
         hasBreadcrumb
         buttons={[

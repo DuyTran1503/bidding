@@ -72,9 +72,9 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
           <Form>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tên nghành kinh doanh" required>
+                <FormGroup title="Ngành kinh doanh" required>
                   <FormInput
-                    placeholder="Tên nghành kinh doanh..."
+                    placeholder="Nhập ngành kinh doanh..."
                     name="name"
                     value={values.name}
                     isDisabled={type === EPageTypes.VIEW}
@@ -85,7 +85,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Ngành nghề kinh doanh" required>
+                <FormGroup title="Loại hình kinh doanh" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."

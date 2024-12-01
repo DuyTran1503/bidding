@@ -38,7 +38,7 @@ const BusinessActivities = () => {
     },
     {
       dataIndex: "name",
-      title: "Tên loại hình doanh nghiệp",
+      title: "Loại hình kinh doanh",
       className: "w-[250px]",
     },
     {
@@ -49,8 +49,8 @@ const BusinessActivities = () => {
       },
     },
     {
-      title: "Trạng thái tài khoản",
-      className: "w-[250px]",
+      title: "Trạng thái",
+      className: "w-[150px]",
       dataIndex: "is_active",
       render(_, record) {
         return (
@@ -91,7 +91,7 @@ const BusinessActivities = () => {
     {
       id: "name",
       placeholder: "Nhập ...",
-      label: "Loại hình doanh nghiệp",
+      label: "Loại hình kinh doanh",
       type: "text",
     },
   ];
@@ -144,7 +144,7 @@ const BusinessActivities = () => {
   return (
     <>
       <Heading
-        title="Loại hình hoạt động"
+        title="Loại hình kinh doanh"
         hasBreadcrumb
         buttons={[
           {
