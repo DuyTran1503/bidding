@@ -18,6 +18,7 @@ import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import IMAGE_ICON from "@/assets/images/customerDefaultAvatar.png";
 import DEFAULT_FILE from "@/assets/images/file_error.png";
 import BiddingResult from "./BiddingResult";
+import ListChildrenProject from "./ChildrenProject";
 const { Title } = Typography;
 const { Panel } = Collapse;
 interface ProjectDetailsCardProps {
@@ -224,21 +225,6 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({
         </div>
       ),
     },
-    {
-      label: "Doanh nghiệp tham gia",
-      value:
-        data?.tenderer?.length > 0
-          ? data?.industries
-              .map((item: any) => (
-                <Tooltip title="Xem chi tiết" key={item.id}>
-                  <Link to={`/enterprise/detail/${item.id}`} className="text-blue-600 hover:underline">
-                    {item.name}
-                  </Link>
-                </Tooltip>
-              ))
-              .reduce((prev: any, curr: any) => [prev, ", ", curr])
-          : "Chưa có doanh nghiệp tham gia",
-    },
   ];
 
   // Kết hợp các trường mặc định với các trường tùy chỉnh
@@ -263,6 +249,7 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({
           </Descriptions.Item>
         ))}
       </Descriptions>
+      <ListChildrenProject listChildrenProject={data?.children} title="Gói thầu của dự án" />
       {showDefaultDetails && (
         <>
           <BiddingDocument listBidDocument={data?.bidding_document} title={"Hồ sơ dự thầu"} />
