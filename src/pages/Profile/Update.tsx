@@ -76,7 +76,7 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
                                 Cập nhập thông tin cá nhân
                             </div>
                             <div className="flex items-center justify-center gap-4">
-                                <Link to={`/profile`} className="border border-cyan-600 py-1.5 text-cyan-600 font-semibold px-4 rounded-lg">Quay lại</Link>
+                                <Link to={`/profile`} className="border border-cyan-600 py-1.5 text-cyan-600 font-semiboldy px-4 rounded-lg">Quay lại</Link>
                                 <Button
                                     text="Cập nhật"
                                     isLoading={state.status === EFetchStatus.PENDING}

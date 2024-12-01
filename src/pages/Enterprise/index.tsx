@@ -234,16 +234,16 @@ const Enterprise = () => {
           name={state.industryHasTheMostEnterprise.map(({ industry }) => industry)}
           value={state.industryHasTheMostEnterprise.map(({ total_enterprise }) => total_enterprise)}
           chartType="bar"
-          title="Biểu đồ số lượng dự án phân bổ theo ngành nghề"
+          title="Thống kê số lượng Doanh nghiệp phân bổ theo ngành nghề"
         />
       ),
     },
     {
       key: "3",
-      label: "Dự án theo ngành",
+      label: "Dự án hoàn thành theo ngành",
       content: (
         <SelectChart
-          title="Doanh nghiệp đã hoàn thành dự án theo ngành"
+          title="Các doanh nghiệp hàng đầu có dự án hoàn thành theo ngành"
           data={state.topEnterprisesHaveCompletedProjectsByIndustry}
           selectedValue={selectedIndustry}
           options={industryState.listIndustry.map((ind: any) => ({ label: ind.name, value: String(ind.id) }))}
@@ -252,44 +252,44 @@ const Enterprise = () => {
         />
       ),
     },
-    {
-      key: "4",
-      label: "Dự án theo nguồn tài trợ",
-      content: (
-        <SelectChart
-          title="Top 10 doanh nghiệp đã hoàn thành dự án theo nguồn tài trợ"
-          data={state.topEnterprisesHaveCompletedProjectsByFundingSource}
-          selectedValue={selectedFundingSource}
-          options={stateFundingSource.listFundingSources.map((fs: any) => ({ label: fs.name, value: String(fs.id) }))}
-          onChange={handleFundingSourceChange}
-          placeholder="Chọn nguồn tài trợ..."
-        />
-      ),
-    },
-    {
-      key: "5",
-      label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
-      content: (
-        <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
-          <Select
-            placeholder="Chọn năm..."
-            value={selectedYearProjectStatus}
-            onChange={setSelectedYearProjectStatus}
-            options={yearOptions.map((year) => ({ label: year, value: year }))}
-            style={{ width: 150, marginBottom: 16 }}
-          />
-          <AreaChart
-            categories={names}
-            title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
-            series={[
-              { name: "Hoàn thành", data: completedValues },
-              { name: "Phê duyệt", data: approvedValues },
-              { name: "Mở thầu", data: openedBiddingValues },
-            ]}
-          />
-        </div>
-      ),
-    },
+    // {
+    //   key: "4",
+    //   label: "Dự án theo nguồn tài trợ",
+    //   content: (
+    //     <SelectChart
+    //       title="Top 10 doanh nghiệp đã hoàn thành dự án theo nguồn tài trợ"
+    //       data={state.topEnterprisesHaveCompletedProjectsByFundingSource}
+    //       selectedValue={selectedFundingSource}
+    //       options={stateFundingSource.listFundingSources.map((fs: any) => ({ label: fs.name, value: String(fs.id) }))}
+    //       onChange={handleFundingSourceChange}
+    //       placeholder="Chọn nguồn tài trợ..."
+    //     />
+    //   ),
+    // },
+    // {
+    //   key: "5",
+    //   label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
+    //   content: (
+    //     <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
+    //       <Select
+    //         placeholder="Chọn năm..."
+    //         value={selectedYearProjectStatus}
+    //         onChange={setSelectedYearProjectStatus}
+    //         options={yearOptions.map((year) => ({ label: year, value: year }))}
+    //         style={{ width: 150, marginBottom: 16 }}
+    //       />
+    //       <AreaChart
+    //         categories={names}
+    //         title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+    //         series={[
+    //           { name: "Hoàn thành", data: completedValues },
+    //           { name: "Phê duyệt", data: approvedValues },
+    //           { name: "Mở thầu", data: openedBiddingValues },
+    //         ]}
+    //       />
+    //     </div>
+    //   ),
+    // },
   ];
   const search: ISearchTypeTable[] = [
     {
@@ -422,7 +422,7 @@ const Enterprise = () => {
         setFilter={setFilter}
         filter={enterpriseState.filter}
         scroll={{ x: 3000 }}
-        tabLabel="Tổng quan"
+        tabLabel="Danh sách"
         additionalTabs={additionalTabs}
       />
     </>

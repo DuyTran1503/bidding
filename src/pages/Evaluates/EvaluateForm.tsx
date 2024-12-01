@@ -71,10 +71,10 @@ const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) =
       setVisible={setVisible}
       title={
         type === EButtonTypes.CREATE
-          ? "Tạo mới danh mục bài viết"
+          ? "Tạo mới đanh giá kết quả dự án"
           : type === EButtonTypes.UPDATE
-            ? "Cập nhật danh mục bài viết"
-            : "Chi tiết danh mục bài viết"
+            ? "Cập nhật đanh giá kết quả dự án"
+            : "Chi tiết đanh giá kết quả dự án"
       }
       footerContent={
         <div className="flex items-center justify-center gap-2">

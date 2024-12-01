@@ -13,14 +13,22 @@ import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { mappingBidBond, TypeBidBond } from "@/shared/enums/types";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import BiddingDocument from "./BiddingDocument";
-
+import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
+import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
+import IMAGE_ICON from "@/assets/images/customerDefaultAvatar.png";
+import DEFAULT_FILE from "@/assets/images/file_error.png";
+import BiddingResult from "./BiddingResult";
+import ListChildrenProject from "./ChildrenProject";
 const { Title } = Typography;
 const { Panel } = Collapse;
 interface ProjectDetailsCardProps {
-  data: INewProject | undefined;
+  data?: INewProject | undefined;
+  data2?: IBiddingResult;
+  dataBidDoc?: IBidDocument;
   title?: string;
   customDetails?: { label: string; value: any }[];
   listEnterprise?: IEnterprise[];
+  showDefaultDetails?: boolean;
 }
 interface BiddingBondsListProps {
   items: {
@@ -48,8 +56,15 @@ const getStatusLabel = (status?: string): string => {
   return STATUS_PROJECT_LABELS[statusNumber as STATUS_PROJECT] || "Không xác định";
 };
 
-const getFileIcon = (fileType: string) => {
-  switch (fileType.toLowerCase()) {
+export const getFileIcon = (fileType: string | undefined) => {
+  if (!fileType) {
+    return DEFAULT_FILE;
+  }
+
+  const isFullFileName = fileType.includes(".");
+  const extension = isFullFileName ? fileType.split(".").pop()!.toLowerCase() : fileType.toLowerCase(); // Sử dụng '!' để khẳng định rằng pop không trả về undefined
+
+  switch (extension) {
     case "pdf":
       return PDF;
     case "xlsx":
@@ -58,8 +73,13 @@ const getFileIcon = (fileType: string) => {
     case "doc":
     case "docx":
       return WORD;
+    case "jpg":
+    case "jpeg":
+    case "png":
+    case "gif":
+      return IMAGE_ICON;
     default:
-      return "📁";
+      return DEFAULT_FILE;
   }
 };
 
@@ -119,7 +139,15 @@ const BiddingBondsList: React.FC<BiddingBondsListProps> = ({ items, title_projec
     </Collapse>
   );
 };
-const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, customDetails = [], listEnterprise }) => {
+const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({
+  data2,
+  data,
+  title,
+  customDetails = [],
+  listEnterprise,
+  showDefaultDetails = true,
+  dataBidDoc,
+}) => {
   // Mặc định các trường dự án
   const defaultDetails = [
     { label: "Tên dự án", value: data?.name },
@@ -161,8 +189,13 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
 
     {
       label: "Kết quả đấu thầu",
-      value: data?.bidding_bond ? (
-        <BiddingBondsList items={[{ bidding_bond: data.bidding_bond }]} title_project={data?.name} listEnterprise={listEnterprise} />
+      value: data?.bidding_result ? (
+        <BiddingResult
+          items={[{ bidding_result: data.bidding_result }]}
+          listBidDocument={data?.bidding_document}
+          title_project={data?.name}
+          listEnterprise={listEnterprise}
+        />
       ) : (
         <div>Chưa có bảo lãnh dự thầu</div>
       ),
@@ -192,25 +225,10 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
         </div>
       ),
     },
-    {
-      label: "Doanh nghiệp tham gia",
-      value:
-        data?.tenderer?.length > 0
-          ? data?.industries
-            .map((item: any) => (
-              <Tooltip title="Xem chi tiết" key={item.id}>
-                <Link to={`/enterprise/detail/${item.id}`} className="text-blue-600 hover:underline">
-                  {item.name}
-                </Link>
-              </Tooltip>
-            ))
-            .reduce((prev: any, curr: any) => [prev, ", ", curr])
-          : "Chưa có doanh nghiệp tham gia",
-    },
   ];
 
   // Kết hợp các trường mặc định với các trường tùy chỉnh
-  const projectDetails = [...defaultDetails, ...customDetails];
+  const projectDetails = showDefaultDetails ? [...defaultDetails, ...customDetails] : customDetails;
 
   return (
     <Card title={title} className="shadow-lg">
@@ -229,14 +247,18 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, cu
           >
             {item.value}
           </Descriptions.Item>
-
         ))}
       </Descriptions>
-      <BiddingDocument listBidDocument={data?.bidding_document} title={'Hồ sơ dự thầu'} />
-      <Typography className="mt-6">
-        <Title level={4}>Mô tả dự án</Title>
-        <div dangerouslySetInnerHTML={{ __html: data?.description || "" }}></div>
-      </Typography>
+      <ListChildrenProject listChildrenProject={data?.children} title="Gói thầu của dự án" />
+      {showDefaultDetails && (
+        <>
+          <BiddingDocument listBidDocument={data?.bidding_document} title={"Hồ sơ dự thầu"} />
+          <Typography className="mt-6">
+            <Title level={4}>Mô tả dự án</Title>
+            <div dangerouslySetInnerHTML={{ __html: data?.description || "" }}></div>
+          </Typography>
+        </>
+      )}
     </Card>
   );
 };

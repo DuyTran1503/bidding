@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { message } from "antd";
 import "@/assets/scss/overwrite/index.scss";
 import imageError from "@/assets/images/imgError-table.jpg";

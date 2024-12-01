@@ -116,12 +116,8 @@ const BidDocument = () => {
               bid_price,
               implementation_time,
               validity_period,
-              technical_score,
-              financial_score,
-              totalScore,
-              ranking,
               status,
-              notes,
+              note,
               enterprise,
               project,
             },
@@ -137,12 +133,8 @@ const BidDocument = () => {
             bid_price,
             implementation_time,
             validity_period,
-            technical_score,
-            financial_score,
-            totalScore,
-            ranking,
             status,
-            notes,
+            note,
             enterprise,
             project,
           }),
@@ -179,11 +171,6 @@ const BidDocument = () => {
         title="Hồ sơ dự thầu"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,

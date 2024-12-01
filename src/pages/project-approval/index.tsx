@@ -112,7 +112,7 @@ const ProjectApproval = () => {
       onClick(record) {
         navigate(`/project-approval/approve/${record?.key}`);
       },
-      permission: EPermissions.UPDATE_PROJECT,
+      permission: EPermissions.APPROVE_PROJECT,
     },
   ];
   const search: ISearchTypeTable[] = [

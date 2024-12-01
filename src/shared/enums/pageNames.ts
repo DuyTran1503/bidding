@@ -1,14 +1,12 @@
 // ? [key: path]: name
 export enum EPageNames {
   "dashboard" = "Bảng điều khiển",
-  "products" = "Products",
-  "categories" = "Categories",
   "orders" = "Orders",
-  "customers" = "Customers",
   "update" = "Cập nhật",
   "detail" = "Chi tiết",
   "create" = "Tạo mới",
   "enterprise" = "Doanh nghiệp",
+  "project" = "Dự án",
   "staffs" = "Nhân viên",
   "business-activity" = "Loại hình hoạt động",
   "bidding-fields" = "Lĩnh vực đấu thầu",
@@ -17,6 +15,7 @@ export enum EPageNames {
   "industry" = "Ngành kinh doanh",
   "bidding-historys" = "Lịch sử Đấu thầu",
   "bidding-results" = "Kết quả Đấu thầu",
+  "bid-document" = "Hồ sơ dự thầu",
   "activity-logs" = "Nhật ký hoạt động",
   "selection-methods" = "Hình thức lựa chọn Nhà thầu",
   "procurement-categories" = "Loại hình mua sắm công",
@@ -30,5 +29,7 @@ export enum EPageNames {
   "introductions" = "Giới thiệu",
   "work-progresses" = "Tiến độ dự án",
   "evaluation_criteria" = "Tiêu chí đánh giá",
-  "evaluates" = "Đánh giá kết quả dự án"
+  "evaluates" = "Đánh giá kết quả dự án",
+  "attachment" = "Tài liệu đính kèm",
+  "project-approval" = "Phê duyệt dự án"
 } 

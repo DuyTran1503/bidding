@@ -104,15 +104,13 @@ const ProjectPage = () => {
           name={stateIndustry.industryData.map(({ name }) => name)}
           value={stateIndustry.industryData.map(({ value }) => value)}
           seriesName="Dữ liệu Biểu đồ"
-
         />
-
       ),
-      color: "green"
+      color: "green",
     },
     {
       key: "3",
-      label: "Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu",
+      label: "Thống kê dự án",
       content: (
         <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
           <Select
@@ -124,7 +122,7 @@ const ProjectPage = () => {
           />
           <AreaChart
             categories={names}
-            title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+            title="Biểu đồ thống kê số dự án hoàn thành, phê duyệt và mở thầu theo tháng"
             series={[
               { name: "Hoàn thành", data: completedValues },
               { name: "Phê duyệt", data: approvedValues },
@@ -184,21 +182,21 @@ const ProjectPage = () => {
       placeholder: "Chọn nhân viên phê duyêt...",
       label: "Nhân viên phê duyệt ",
       type: "select",
-      options:convertDataOptions(stateStaff.getListStaff|| [])
+      options: convertDataOptions(stateStaff.getListStaff || []),
     },
     {
       id: "investor",
       placeholder: "Chọn chủ đầu tư...",
       label: "Chủ đầu tư ",
       type: "select",
-      options:convertDataOptions(stateEnterprise.listEnterprise|| [])
+      options: convertDataOptions(stateEnterprise.listEnterprise || []),
     },
     {
       id: "tenderer",
       placeholder: "Chọn bên mời thầu...",
       label: "Bên mời thầu ",
       type: "select",
-      options:convertDataOptions(stateEnterprise.listEnterprise|| [])
+      options: convertDataOptions(stateEnterprise.listEnterprise || []),
     },
     {
       id: "upload_time_start",
@@ -277,11 +275,6 @@ const ProjectPage = () => {
         hasBreadcrumb
         buttons={[
           {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
-          {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
@@ -311,7 +304,7 @@ const ProjectPage = () => {
         setFilter={setFilter}
         filter={stateProject.filter}
         scroll={{ x: 1500 }}
-        tabLabel="Danh sách dữ liệu"
+        tabLabel="Danh sách"
         additionalTabs={additionalTabs}
       />
     </>

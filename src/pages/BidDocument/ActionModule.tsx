@@ -7,7 +7,7 @@ import { useArchive } from "@/hooks/useArchive";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { EPageTypes } from "@/shared/enums/page";
 import { Col, Row } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IBidDocumentInitialState, resetMessageError } from "@/services/store/bid_document/bid_document.slice";
 import { createBidDocument, updateBidDocument } from "@/services/store/bid_document/bid_document.thunk";
 import FormCkEditor from "@/components/form/FormCkEditor";
@@ -25,12 +25,17 @@ import { getListBidBond } from "@/services/store/bid_bond/bidBond.thunk";
 import { IOption } from "@/shared/utils/shared-interfaces";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
+import { IProject } from "@/services/store/project/project.model";
+import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 
 interface IBidDocumentFormProps {
   formikRef?: FormikRefType<IBidDocumentInitialValues>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
   bidDocument?: IBidDocumentInitialValues;
   project_id?: number;
+  isCreateFromProject?: boolean;
 }
 
 export interface IBidDocumentInitialValues {
@@ -47,21 +52,24 @@ export interface IBidDocumentInitialValues {
   totalScore?: string;
   ranking: string;
   status: string;
-  notes: string;
-  file?: File;
+  note: string;
+  file?: File | string;
+  enterprise?: IEnterprise;
+  project?: { id: string; name: string } | IProject;
+  bid_bond?: IBidBond;
 }
 
-const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocumentFormProps) => {
-  const { dispatch } = useArchive<IBidDocumentInitialState>("bid_document");
+const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFromProject }: IBidDocumentFormProps) => {
+  const { state, dispatch } = useArchive<IBidDocumentInitialState>("bid_document");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
 
-  const initialValues: IBidDocumentInitialValues = {
+  const [initialValues, setInitialValues] = useState<IBidDocumentInitialValues>({
     id: bidDocument?.id ?? "",
-    project_id: project_id ? project_id : bidDocument?.project_id ?? undefined,
-    enterprise_id: bidDocument?.enterprise_id ?? undefined,
-    bid_bond_id: bidDocument?.bid_bond_id || undefined,
+    project_id: project_id ? project_id : (bidDocument?.project?.id as number) ?? undefined,
+    enterprise_id: bidDocument?.enterprise?.id ?? undefined,
+    bid_bond_id: bidDocument?.bid_bond?.id || undefined,
     submission_date: bidDocument?.submission_date ?? "",
     bid_price: bidDocument?.bid_price ?? "",
     implementation_time: bidDocument?.implementation_time ?? "",
@@ -71,9 +79,9 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
     totalScore: bidDocument?.totalScore ?? "",
     ranking: bidDocument?.ranking ?? "",
     status: bidDocument?.status ?? "",
-    notes: bidDocument?.notes ?? "",
+    note: bidDocument?.note ?? "",
     file: bidDocument?.file || undefined,
-  };
+  });
 
   const Schema = object().shape({});
   useEffect(() => {
@@ -85,7 +93,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
     return () => {
       dispatch(resetMessageError());
     };
-  }, []);
+  }, [dispatch]);
   const formattedData: IOption[] =
     stateBidBond?.listBidBonds?.map((bidBond) => ({
       value: bidBond.id,
@@ -100,12 +108,56 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
       onSubmit={(data) => {
         if (type === EPageTypes.CREATE) {
           dispatch(createBidDocument(data as Omit<IBidDocument, "id">));
+          if (state.status === EFetchStatus.FULFILLED || isCreateFromProject) {
+            setInitialValues({
+              id: "",
+              project_id: undefined,
+              enterprise_id: undefined,
+              bid_bond_id: undefined,
+              submission_date: "",
+              bid_price: "",
+              implementation_time: "",
+              validity_period: "",
+              technical_score: "",
+              financial_score: "",
+              totalScore: "",
+              ranking: "",
+              status: "",
+              note: "",
+              file: undefined,
+            });
+          }
         } else if (type === EPageTypes.UPDATE && bidDocument?.id) {
           dispatch(updateBidDocument({ body: lodash.omit(data, "id"), param: String(bidDocument.id) }));
         }
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
+        const handleCreateSuccess = () => {
+          if (state.status === EFetchStatus.FULFILLED || isCreateFromProject) {
+            setInitialValues({
+              id: "",
+              project_id: undefined,
+              enterprise_id: undefined,
+              bid_bond_id: undefined,
+              submission_date: "",
+              bid_price: "",
+              implementation_time: "",
+              validity_period: "",
+              technical_score: "",
+              financial_score: "",
+              totalScore: "",
+              ranking: "",
+              status: "",
+              note: "",
+              file: undefined,
+            });
+          }
+        };
+
+        useEffect(() => {
+          handleCreateSuccess();
+        }, [state.status, isCreateFromProject]);
         return (
           <Form>
             <Row gutter={[24, 24]}>
@@ -150,7 +202,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Ngày nộp">
+                <FormGroup title="Ngày nộp hồ sơ">
                   <FormDate
                     disabled={type === "view"}
                     value={values.submission_date ? dayjs(values.submission_date) : null}
@@ -194,65 +246,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Điểm kỹ thuật">
-                  <FormInput
-                    placeholder="Nhập điểm kỹ thuật..."
-                    name="technical_score"
-                    value={values.technical_score}
-                    error={touched.technical_score ? errors.technical_score : ""}
-                    onChange={(e) => setFieldValue("technical_score", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Điểm tài chính">
-                  <FormInput
-                    placeholder="Nhập điểm tài chính..."
-                    name="financial_score"
-                    value={values.financial_score}
-                    error={touched.financial_score ? errors.financial_score : ""}
-                    onChange={(e) => setFieldValue("financial_score", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tổng điểm">
-                  <FormInput
-                    placeholder="Nhập tổng điểm..."
-                    name="totalScore"
-                    value={values.totalScore}
-                    error={touched.totalScore ? errors.totalScore : ""}
-                    onChange={(e) => setFieldValue("totalScore", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Xếp hạng">
-                  <FormInput
-                    placeholder="Nhập xếp hạng..."
-                    name="ranking"
-                    value={values.ranking}
-                    error={touched.ranking ? errors.ranking : ""}
-                    onChange={(e) => setFieldValue("ranking", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Trạng thái">
-                  <FormSwitch checked={!!values.status} onChange={(value) => setFieldValue("status", value)} />
-                </FormGroup>
-              </Col>
             </Row>
 
             <Row gutter={[24, 24]}>
@@ -269,7 +262,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id }: IBidDocum
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Ghi chú">
-                  <FormCkEditor id="description" direction="vertical" value={values.notes} setFieldValue={setFieldValue} disabled={type === "view"} />
+                  <FormCkEditor id="description" direction="vertical" value={values.note} setFieldValue={setFieldValue} disabled={type === "view"} />
                 </FormGroup>
               </Col>
             </Row>

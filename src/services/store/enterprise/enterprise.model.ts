@@ -1,5 +1,11 @@
 import { IEvaluate } from "../evaluate/evaluate.model";
 
+interface IUser {
+  name: string;
+  email: string;
+  id: string;
+  taxcode: string;
+}
 export interface IEnterprise {
   id: string | number;
   name: string;
@@ -22,16 +28,17 @@ export interface IEnterprise {
   is_active?: number;
   is_blacklist?: number;
   password?: string;
-  industries?: any[]
-  roles?:number[];
+  industries?: any[];
+  roles?: number[];
   project_investor?: {
     id: string;
     name: string;
-  }
+  };
   project_tenderer?: {
     id: string;
     name: string;
-  }
+  };
   evaluates?: IEvaluate[];
-  attachments?: IArguments[]
+  attachments?: IArguments[];
+  user?: IUser;
 }

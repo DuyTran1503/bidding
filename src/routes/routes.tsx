@@ -93,13 +93,14 @@ import CreateSupport from "@/Client/Supports/Create";
 import ProjectApproval from "@/pages/project-approval";
 import ApproveProjectByStaff from "@/pages/project-approval/Approve";
 import Detail from "@/Client/News/Detail";
-import Profile from "@/pages/Profile";
 import CreateInstruct from "@/pages/Instructs/Create";
 import UpdateInstruct from "@/pages/Instructs/Update";
 import DetailInstruct from "@/pages/Instructs/Detail";
+import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult";
+import Profile from "@/pages/Profile";
+import Update from "@/pages/Profile/Update";
 import EnterEmail from "@/pages/ForgotPassword/EnterEmail";
 import NewPassword from "@/pages/ForgotPassword/NewPassword";
-import Update from "@/pages/Profile/Update";
 
 export interface IRoute {
   path: string;
@@ -139,8 +140,8 @@ export const routes: IRoute[] = [
                   {
                     path: "/:id",
                     element: () => <Detail />,
-                  }
-                ]
+                  },
+                ],
               },
               {
                 path: "instruct",
@@ -447,6 +448,10 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <BiddingResults />,
               },
+              {
+                path: "/detail/:id",
+                element: () => <DetailBiddingResult />,
+              },
             ],
           },
           {
@@ -727,5 +732,5 @@ export const routes: IRoute[] = [
   {
     path: "*",
     element: () => <NotFound />,
-  }
+  },
 ];
