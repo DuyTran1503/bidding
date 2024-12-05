@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { IPostInitialState, resetStatus, setFilter } from "@/services/store/post/post.slice";
 import { deletePost, getAllPosts } from "@/services/store/post/post.thunk";
-import { GoDownload } from "react-icons/go";
+
 import { EButtonTypes } from "@/shared/enums/button";
 import Image from "@/components/table/Image";
 import { mappingStatust } from "@/shared/enums/types";
@@ -57,19 +57,13 @@ const Posts = () => {
       title: "Người đăng bài",
       render: (_, record) => {
         return <span>{record.author?.name}</span>;
-      }
+      },
     },
     {
       dataIndex: "catalog",
       title: "Thể loại",
       render: (_, record) => {
-        return (
-          <div className="flex flex-col">
-            {record.catalog?.map((catalog: any) => (
-              <div key={catalog.id}>{catalog.name}</div>
-            ))}
-          </div>
-        );
+        return <div className="flex flex-col">{record.catalog?.map((catalog: any) => <div key={catalog.id}>{catalog.name}</div>)}</div>;
       },
     },
     {
@@ -128,16 +122,16 @@ const Posts = () => {
     () =>
       state.posts && state.posts.length > 0
         ? state.posts.map(({ id, author, catalog, short_title, title, thumbnail, status }, index) => ({
-          index: index + 1,
-          key: id,
-          id: id,
-          author,
-          catalog,
-          short_title,
-          title,
-          thumbnail,
-          status,
-        }))
+            index: index + 1,
+            key: id,
+            id: id,
+            author,
+            catalog,
+            short_title,
+            title,
+            thumbnail,
+            status,
+          }))
         : [],
     [JSON.stringify(state.posts)],
   );
@@ -172,11 +166,6 @@ const Posts = () => {
         title="Bài viết"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             icon: <FaPlus className="text-[18px]" />,
             permission: EPermissions.CREATE_POST,

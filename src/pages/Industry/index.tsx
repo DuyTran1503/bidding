@@ -1,5 +1,5 @@
 import Heading from "@/components/layout/Heading";
-import { GoDownload } from "react-icons/go";
+
 import { FaPlus } from "react-icons/fa6";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import { ColumnsType } from "antd/es/table";
@@ -40,10 +40,12 @@ const Industry = () => {
     {
       dataIndex: "name",
       title: "Ngành kinh doanh",
+      className: "w-[250px]"
     },
     {
       dataIndex: "business_activity_type_id",
       title: "Loại hình kinh doanh",
+      className: "w-[250px]"
     },
     {
       dataIndex: "description",
@@ -156,11 +158,6 @@ const Industry = () => {
         title="Ngành kinh doanh"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,

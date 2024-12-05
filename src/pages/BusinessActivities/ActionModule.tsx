@@ -36,7 +36,7 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
   };
   const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const tagSchema = object().shape({
-    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên loại hình doanh nghiệp"),
+    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên loại hình kinh doanh"),
   });
   useEffect(() => {
     return () => {
@@ -60,9 +60,9 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
         <Form>
           <Row gutter={[24, 24]}>
             <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormGroup title="Tên loại hình doanh nghiệp" required>
+              <FormGroup title="Loại hình kinh doanh" required>
                 <FormInput
-                  placeholder="Tên loại hình doanh nghiệp..."
+                  placeholder="Loại hình kinh doanh..."
                   name="name"
                   value={values.name}
                   error={touched.name ? errors.name : ""}

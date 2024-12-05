@@ -16,7 +16,7 @@ interface IProps {
   listEnterprise?: IEnterprise[];
   listBidDocument?: IBidDocument[];
 }
-const BiddingResult: React.FC<IProps> = ({ items, title_project, listEnterprise, listBidDocument }) => {
+const BiddingResult: React.FC<IProps> = ({ items, title_project, listEnterprise }) => {
   const { state } = useArchive<IAuthInitialState>("auth");
   const enterpriseName = (value: number) => {
     if (listEnterprise!.length > 0 && !!value) {

@@ -11,7 +11,7 @@ import {
   changeStatusBiddingField,
   deleteBiddingField,
   getAllBiddingFields,
-  getBiddingFieldAllIds
+  getBiddingFieldAllIds,
 } from "@/services/store/biddingField/biddingField.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
@@ -21,7 +21,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { GoDownload } from "react-icons/go";
+
 import { useNavigate } from "react-router-dom";
 
 const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
@@ -158,7 +158,7 @@ const BiddingFields = () => {
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllBiddingFields({ query: state.filter }));
-      dispatch(getBiddingFieldAllIds())
+      dispatch(getBiddingFieldAllIds());
     }
   }, [JSON.stringify(state.status)]);
 
@@ -168,11 +168,6 @@ const BiddingFields = () => {
         title="Lĩnh vực đấu thầu"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             icon: <FaPlus className="text-[18px]" />,
             permission: EPermissions.CREATE_BIDDING_FIELD,

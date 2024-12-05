@@ -49,7 +49,7 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
         "findAndReplace",
         "horizontalLine",
         "|",
-        // 'style',
+        'style',
         "fontFamily",
         "fontSize",
         "fontColor",

@@ -25,7 +25,7 @@ const DetailPost = () => {
         buttons={[
           {
             type: "secondary",
-            text: "Hủy",
+            text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
               navigate("/posts");
@@ -39,7 +39,8 @@ const DetailPost = () => {
           type={EPageTypes.VIEW}
           post={{
             ...state.activePost,
-          }} />
+          }}
+        />
       )}
     </>
   );

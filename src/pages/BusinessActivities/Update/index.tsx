@@ -61,11 +61,9 @@ const UpdateBusinessActivity = () => {
         buttons={[
           {
             type: "secondary",
-            text: "Hủy",
+            text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
-            onClick: () => {
-              navigate("/business-activity");
-            },
+            onClick: () => navigate(-1),
           },
           {
             isLoading: state.status === EFetchStatus.PENDING,

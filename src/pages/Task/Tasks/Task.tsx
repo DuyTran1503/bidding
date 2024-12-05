@@ -10,7 +10,6 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { GoDownload } from "react-icons/go";
 import TaskForm from "../TaskForm";
 import { ITaskInitialState, resetStatus, setFilter } from "@/services/store/task/task.slice";
 import { deleteTask, getAllTasks } from "@/services/store/task/task.thunk";
@@ -161,11 +160,6 @@ const Tasks = () => {
         hasBreadcrumb
         ModalContent={(props) => <TaskForm {...(props as any)} />}
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             icon: <FaPlus className="text-[18px]" />,
             // permission: EPermissions.CREATE_TASK,

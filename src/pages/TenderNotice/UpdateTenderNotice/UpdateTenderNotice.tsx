@@ -54,7 +54,7 @@ const UpdateTenderNotice = () => {
           notice_content: data.notice_content,
           notice_date: data.notice_date,
           expiry_date: data.expiry_date,
-          is_active: data.is_active
+          is_active: data.is_active,
         });
       }
     }
@@ -68,10 +68,10 @@ const UpdateTenderNotice = () => {
         buttons={[
           {
             type: "secondary",
-            text: "Hủy",
+            text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/tender-notices");
+              navigate(-1);
             },
           },
           {

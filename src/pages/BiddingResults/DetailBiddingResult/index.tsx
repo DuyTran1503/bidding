@@ -1,12 +1,12 @@
 import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
-import ProjectDetailsCard, { getFileIcon } from "@/pages/Project/Detail/ProjectDetailsCard";
+import ProjectDetailsCard from "@/pages/Project/Detail/ProjectDetailsCard";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 import { IBiddingResultInitialState } from "@/services/store/biddingResult/biddingResult.slice";
 import { getBiddingResultById } from "@/services/store/biddingResult/biddingResult.thunk";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { Tooltip } from "antd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -75,7 +75,7 @@ const DetailBiddingResult = () => {
             text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/bidding-results");
+              navigate(-1);
             },
           },
         ]}

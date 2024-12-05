@@ -1,5 +1,5 @@
 import Heading from "@/components/layout/Heading";
-import { GoDownload } from "react-icons/go";
+
 import { FaPlus } from "react-icons/fa6";
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import { ColumnsType } from "antd/es/table";
@@ -38,7 +38,7 @@ const BusinessActivities = () => {
     },
     {
       dataIndex: "name",
-      title: "Tên loại hình doanh nghiệp",
+      title: "Loại hình kinh doanh",
       className: "w-[250px]",
     },
     {
@@ -49,8 +49,8 @@ const BusinessActivities = () => {
       },
     },
     {
-      title: "Trạng thái tài khoản",
-      className: "w-[250px]",
+      title: "Trạng thái",
+      className: "w-[150px]",
       dataIndex: "is_active",
       render(_, record) {
         return (
@@ -91,19 +91,19 @@ const BusinessActivities = () => {
     {
       id: "name",
       placeholder: "Nhập ...",
-      label: "Loại hình doanh nghiệp",
+      label: "Loại hình kinh doanh",
       type: "text",
     },
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.businessActivities)
       ? state.businessActivities.map(({ id, name, description, is_active }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        description,
-        is_active,
-      }))
+          index: index + 1,
+          key: id,
+          name,
+          description,
+          is_active,
+        }))
       : [];
   }, [JSON.stringify(state.businessActivities)]);
   const handleChangeStatus = (item: ITableData) => {
@@ -113,7 +113,6 @@ const BusinessActivities = () => {
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
       dispatch(changeStatusBusinessActivity(String(confirmItem.key)));
-      dispatch(getAllBusinessActivity({ query: state.filter }));
     }
   };
 
@@ -145,14 +144,9 @@ const BusinessActivities = () => {
   return (
     <>
       <Heading
-        title="Loại hình hoạt động"
+        title="Loại hình kinh doanh"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,

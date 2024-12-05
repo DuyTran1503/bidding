@@ -14,51 +14,51 @@ import { useNavigate } from "react-router-dom";
 import InstructForm from "../ActionModule";
 
 const CreateInstruct = () => {
-    const navigate = useNavigate();
-    const formikRef = useRef<FormikProps<IInstruct>>(null);
-    const { state } = useArchive<IInstructInitialState>("instruct");
-    useFetchStatus({
-        module: "instruct",
-        reset: resetStatus,
-        actions: {
-            success: {
-                message: state.message,
-                navigate: "/instructs",
-            },
-            error: {
-                message: state.message,
-            },
-        },
-    });
+  const navigate = useNavigate();
+  const formikRef = useRef<FormikProps<IInstruct>>(null);
+  const { state } = useArchive<IInstructInitialState>("instruct");
+  useFetchStatus({
+    module: "instruct",
+    reset: resetStatus,
+    actions: {
+      success: {
+        message: state.message,
+        navigate: "/instructs",
+      },
+      error: {
+        message: state.message,
+      },
+    },
+  });
 
-    return (
-        <>
-            <Heading
-                title="Tạo mới hướng dẫn"
-                hasBreadcrumb
-                buttons={[
-                    {
-                        type: "secondary",
-                        text: "Cancel",
-                        icon: <IoClose className="text-[18px]" />,
-                        onClick: () => {
-                            navigate("/instructs");
-                        },
-                    },
-                    {
-                        isLoading: state.status === EFetchStatus.PENDING,
-                        text: "Tạo mới",
-                        icon: <FaPlus className="text-[18px]" />,
-                        // permission: EPermissions.CREATE_INSTRUCT,
-                        onClick: () => {
-                            formikRef && formikRef.current && formikRef.current.handleSubmit();
-                        },
-                    },
-                ]}
-            />
-            <InstructForm formikRef={formikRef} type={EPageTypes.CREATE} />
-        </>
-    );
+  return (
+    <>
+      <Heading
+        title="Tạo mới hướng dẫn"
+        hasBreadcrumb
+        buttons={[
+          {
+            type: "secondary",
+            text: "Quay lại",
+            icon: <IoClose className="text-[18px]" />,
+            onClick: () => {
+              navigate("/instructs");
+            },
+          },
+          {
+            isLoading: state.status === EFetchStatus.PENDING,
+            text: "Tạo mới",
+            icon: <FaPlus className="text-[18px]" />,
+            // permission: EPermissions.CREATE_INSTRUCT,
+            onClick: () => {
+              formikRef && formikRef.current && formikRef.current.handleSubmit();
+            },
+          },
+        ]}
+      />
+      <InstructForm formikRef={formikRef} type={EPageTypes.CREATE} />
+    </>
+  );
 };
 
 export default CreateInstruct;

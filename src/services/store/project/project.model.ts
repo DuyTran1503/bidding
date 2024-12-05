@@ -4,6 +4,7 @@ import { SUBMIT_METHOD } from "@/shared/enums/submissionMethod";
 import { IBidBond } from "../bid_bond/bidBond.model";
 import { IBidDocument } from "../bid_document/bid_document.model";
 import { IBiddingResult } from "../biddingResult/biddingResult.model";
+import { IEvaluationCriteria } from "../evaluation/evaluation.model";
 
 export interface IProject {
   id: number;
@@ -59,4 +60,5 @@ export interface INewProject extends IProject {
   investor_id: number | null;
   children?: INewProject[];
   selection_methodName?: string;
+  evaluation_criterias?: IEvaluationCriteria[];
 }

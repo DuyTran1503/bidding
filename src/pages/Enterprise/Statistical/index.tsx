@@ -17,7 +17,7 @@ import {
   getEmployeeProjectStatistic,
   getEmployeeResultBiddingStatistic,
   projectCompletedByEnterprise,
-  projectWonByEnterprise
+  projectWonByEnterprise,
 } from "@/services/store/enterprise_chart/enterprise_chart.thunk";
 import { Col, Row, Select } from "antd";
 import { Form, Formik } from "formik";
@@ -71,10 +71,10 @@ const StatisticalEnterprise: React.FC = () => {
           dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
         } else if (selectedTabKey === "6") {
           dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
-        // } else if (selectedTabKey === "7") {
-        //   dispatchChartEnterprise(evaluationsStatisticsByEnterprise({ body: { ids: enterpriseIds } }));
-        // } else if (selectedTabKey === "8") {
-        //   dispatchChartEnterprise(reputationsStatisticsByEnterprise({ body: { ids: enterpriseIds } }));
+          // } else if (selectedTabKey === "7") {
+          //   dispatchChartEnterprise(evaluationsStatisticsByEnterprise({ body: { ids: enterpriseIds } }));
+          // } else if (selectedTabKey === "8") {
+          //   dispatchChartEnterprise(reputationsStatisticsByEnterprise({ body: { ids: enterpriseIds } }));
           // } else if (selectedTabKey === "8") {
           //   dispatchChartEnterprise(averageDifficultyLevelTasksByEmployee({ body: enterpriseIds }));
           // } else if (selectedTabKey === "9") {
@@ -101,10 +101,10 @@ const StatisticalEnterprise: React.FC = () => {
         dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
       } else if (selectedTabKey === "6") {
         dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
-      // } else if (selectedTabKey === "7") {
-      //   dispatchChartEnterprise(evaluationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
-      // } else if (selectedTabKey === "8") {
-      //   dispatchChartEnterprise(reputationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
+        // } else if (selectedTabKey === "7") {
+        //   dispatchChartEnterprise(evaluationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
+        // } else if (selectedTabKey === "8") {
+        //   dispatchChartEnterprise(reputationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
         // } else if (selectedTabKey === "8") {
         //   dispatchChartEnterprise(averageDifficultyLevelTasksByEmployee({ body: enterpriseIds }));
         // } else if (selectedTabKey === "9") {
@@ -128,9 +128,7 @@ const StatisticalEnterprise: React.FC = () => {
     {
       key: "1",
       label: "Thống kê chung",
-      content: (
-        <EnterpriseDetail detailEnterpriseByIds={stateChartEnterprise.detailEnterpriseByIds} enterpriseId={enterpriseId} />
-      ),
+      content: <EnterpriseDetail detailEnterpriseByIds={stateChartEnterprise.detailEnterpriseByIds} enterpriseId={enterpriseId} />,
     },
     {
       key: "2",
@@ -142,7 +140,8 @@ const StatisticalEnterprise: React.FC = () => {
             { name: "Đã đăng tải", values: stateChartEnterprise.getEmployeeProjectStatistic.map((item) => item.investorProjectCount) },
           ]}
           xAxisData={stateChartEnterprise.getEmployeeProjectStatistic.map(({ enterprise }) => enterprise)}
-          title="Biểu đồ thống kê dự án đã đăng tải và đã đầu tư của doanh nghiệp" />
+          title="Biểu đồ thống kê dự án đã đăng tải và đã đầu tư của doanh nghiệp"
+        />
       ),
     },
     {
@@ -156,7 +155,8 @@ const StatisticalEnterprise: React.FC = () => {
             { name: "Tổng số tiền thắng", values: stateChartEnterprise.employeeResultBiddingStatistic.map((item) => item.totalWinningAmount) },
           ]}
           xAxisData={stateChartEnterprise.employeeResultBiddingStatistic.map(({ enterprise }) => enterprise)}
-          title="Biểu đồ thống kê số dự án trúng, giá trúng thầu trung bình và tổng giá trị thầu trúng của doanh nghiệp" />
+          title="Biểu đồ thống kê số dự án trúng, giá trúng thầu trung bình và tổng giá trị thầu trúng của doanh nghiệp"
+        />
       ),
     },
     {
@@ -183,11 +183,15 @@ const StatisticalEnterprise: React.FC = () => {
         <AbleBarChart
           data={[
             { name: "Điểm uy tín", values: stateChartEnterprise.reputationsStatisticsByEnterprise.map((item) => item.prestige_score) },
-            { name: "Số lần bị đưa vào danh sách đen", values: stateChartEnterprise.reputationsStatisticsByEnterprise.map((item) => item.blacklist_count) },
+            {
+              name: "Số lần bị đưa vào danh sách đen",
+              values: stateChartEnterprise.reputationsStatisticsByEnterprise.map((item) => item.blacklist_count),
+            },
             { name: "Số lần bị khóa tài khoản", values: stateChartEnterprise.reputationsStatisticsByEnterprise.map((item) => item.ban_count) },
           ]}
           xAxisData={stateChartEnterprise.reputationsStatisticsByEnterprise.map(({ enterprise_name }) => enterprise_name)}
-          title="Biểu đồ thể hiện điểm uy tín của doanh nghiệp và lịch sử bị trừ điểm uy tín của doanh nghiệp" />
+          title="Biểu đồ thể hiện điểm uy tín của doanh nghiệp và lịch sử bị trừ điểm uy tín của doanh nghiệp"
+        />
       ),
     },
     {
@@ -200,7 +204,8 @@ const StatisticalEnterprise: React.FC = () => {
             { name: "Điểm trung bình", values: stateChartEnterprise.evaluationsStatisticsByEnterprise.map((item) => item.average_score) },
           ]}
           xAxisData={stateChartEnterprise.evaluationsStatisticsByEnterprise.map(({ enterprise_name }) => enterprise_name)}
-          title="Biểu đồ thể hiện số lượng đánh giá và đánh giá trung bình doanh nghiệp nhận được" />
+          title="Biểu đồ thể hiện số lượng đánh giá và đánh giá trung bình doanh nghiệp nhận được"
+        />
       ),
     },
     // {
@@ -251,7 +256,7 @@ const StatisticalEnterprise: React.FC = () => {
         buttons={[
           {
             type: "secondary",
-            text: "Hủy",
+            text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
               navigate("/enterprise");
@@ -285,7 +290,8 @@ const StatisticalEnterprise: React.FC = () => {
                         onChange={(e) => {
                           setFieldValue("ids", e);
                           setIds(e as any);
-                        }} />
+                        }}
+                      />
                       <Select
                         // showLabel={false}
                         className="w-72"
@@ -295,7 +301,8 @@ const StatisticalEnterprise: React.FC = () => {
                         onChange={(e) => {
                           setFieldValue("year", e);
                           setYear(e as any);
-                        }} />
+                        }}
+                      />
                       <Button className="w-48" type="primary" text="So sánh" kind="submit" isDisabled={ids.length === 0} />
                     </div>
                   </FormGroup>

@@ -18,7 +18,7 @@ import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { GoDownload } from "react-icons/go";
+
 import { useNavigate } from "react-router-dom";
 
 const FundingSources = () => {
@@ -182,11 +182,6 @@ const FundingSources = () => {
         title="Nguồn Tài Trợ"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,

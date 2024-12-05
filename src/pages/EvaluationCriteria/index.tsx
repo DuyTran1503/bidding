@@ -13,7 +13,7 @@ import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { GoDownload } from "react-icons/go";
+
 import ActionModule from "./ActionModule";
 import { IEvaluationCriteriaInitialState, resetStatus, setFilter } from "@/services/store/evaluation/evaluation.slice";
 import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/services/store/evaluation/evaluation.thunk";
@@ -112,16 +112,16 @@ const EvaluationCriteria = () => {
     () =>
       state.evaluations && state.evaluations.length > 0
         ? state.evaluations.map(({ id, project, name, weight, description, is_active }, index) => ({
-          index: index + 1,
-          key: id,
-          id,
-          project_id: (project as IProject).id ,
-          project,
-          name,
-          weight,
-          description,
-          is_active,
-        }))
+            index: index + 1,
+            key: id,
+            id,
+            project_id: (project as IProject).id,
+            project,
+            name,
+            weight,
+            description,
+            is_active,
+          }))
         : [],
     [JSON.stringify(state.evaluations), JSON.stringify(stateProject.listProjects)],
   );
@@ -157,9 +157,9 @@ const EvaluationCriteria = () => {
   const projectOptions: IOption[] =
     stateProject?.listProjects && stateProject.listProjects.length > 0
       ? stateProject.listProjects.map((e) => ({
-        value: e.id,
-        label: e.name,
-      }))
+          value: e.id,
+          label: e.name,
+        }))
       : [];
   const search: ISearchTypeTable[] = [
     {
@@ -192,11 +192,6 @@ const EvaluationCriteria = () => {
         ModalContent={(props) => <ActionModule {...(props as any)} />}
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             icon: <FaPlus className="text-[18px]" />,
             permission: EPermissions.CREATE_EVALUATION,

@@ -14,7 +14,7 @@ import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { ISelectionMethodInitialState, resetStatus, setFilter } from "@/services/store/selectionMethod/selectionMethod.slice";
 import { changeStatusSelectionMethod, deleteSelectionMethod, getAllSelectionMethods } from "@/services/store/selectionMethod/selectionMethod.thunk";
-import { GoDownload } from "react-icons/go";
+
 import SelectionMethodForm from "../SelectionMethodForm";
 
 const SelectionMethods = () => {
@@ -134,11 +134,6 @@ const SelectionMethods = () => {
         hasBreadcrumb
         ModalContent={(props) => <SelectionMethodForm {...(props as any)} />}
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             icon: <FaPlus className="text-[18px]" />,
             // permission: EPermissions.CREATE_SELECTION_METHOD,

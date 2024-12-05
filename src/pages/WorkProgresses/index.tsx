@@ -12,7 +12,6 @@ import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { GoDownload } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 
 const WorkProgresses = () => {
@@ -152,11 +151,6 @@ const WorkProgresses = () => {
         title="Tiến độ dự án "
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm tiến độ dự án",
             icon: <FaPlus className="text-[18px]" />,

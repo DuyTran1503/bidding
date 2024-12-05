@@ -4,8 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FormikProps } from "formik";
 import Heading from "@/components/layout/Heading";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import BidDocumentForm, { IBidDocumentInitialValues } from "../ActionModule";
-import { EPageTypes } from "@/shared/enums/page";
+import { IBidDocumentInitialValues } from "../ActionModule";
 import { useArchive } from "@/hooks/useArchive";
 import { IBidDocumentInitialState, resetStatus } from "@/services/store/bid_document/bid_document.slice";
 import { getBidDocumentById } from "@/services/store/bid_document/bid_document.thunk";
@@ -13,7 +12,6 @@ import ProjectDetailsCard, { getFileIcon } from "@/pages/Project/Detail/ProjectD
 import { Tooltip } from "antd";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
-import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 
 const DetailBidDocument = () => {
   const navigate = useNavigate();
@@ -143,11 +141,9 @@ const DetailBidDocument = () => {
         buttons={[
           {
             type: "secondary",
-            text: "Hủy",
+            text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
-            onClick: () => {
-              navigate("/bid-document");
-            },
+            onClick: () => navigate(-1),
           },
         ]}
       />

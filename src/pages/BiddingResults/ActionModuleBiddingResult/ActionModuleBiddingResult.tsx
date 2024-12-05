@@ -7,9 +7,6 @@ import Button from "@/components/common/Button";
 import { useViewport } from "@/hooks/useViewport";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 import { IBiddingResultInitialState } from "@/services/store/biddingResult/biddingResult.slice";
-import { IProject } from "@/services/store/project/project.model";
-import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
-import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import BiddingResultForm from "../BiddingResultForm";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 
@@ -22,19 +19,19 @@ interface IBiddingResultFormProps {
 
 const ActionModuleBiddingResult = ({ visible, type, setVisible, item }: IBiddingResultFormProps) => {
   const formikRef = useRef<FormikProps<IBiddingResult>>(null);
-  const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
+  const { state } = useArchive<IBiddingResultInitialState>("bidding_result");
   const { screenSize } = useViewport();
 
-  const initialValues: IBiddingResult = {
-    id: item?.id || "",
-    project: item?.project as IProject,
-    enterprise: item?.enterprise as IEnterprise,
-    bid_document: item?.bid_document as IBidDocument,
-    win_amount: item?.win_amount || "",
-    decision_number: item?.decision_number || "",
-    decision_date: item?.decision_date || "",
-    is_active: item?.is_active ? "1" : "0",
-  };
+  // const initialValues: IBiddingResult = {
+  //   id: item?.id || "",
+  //   project: item?.project as IProject,
+  //   enterprise: item?.enterprise as IEnterprise,
+  //   bid_document: item?.bid_document as IBidDocument,
+  //   win_amount: item?.win_amount || "",
+  //   decision_number: item?.decision_number || "",
+  //   decision_date: item?.decision_date || "",
+  //   is_active: item?.is_active ? "1" : "0",
+  // };
   // const handleSubmit = (data: IBiddingResult, { setErrors }: any) => {
   //   const body = {
   //     ...lodash.omit(data, "id", "key", "index"),

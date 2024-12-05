@@ -8,7 +8,6 @@ import { DOMESTIC, mappingDOMESTIC } from "@/shared/enums/domestic";
 import PDF from "@/assets/images/pdf.png";
 import EXCEL from "@/assets/images/excel.png";
 import WORD from "@/assets/images/word.jpg";
-import { Link } from "react-router-dom";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { mappingBidBond, TypeBidBond } from "@/shared/enums/types";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
@@ -19,6 +18,8 @@ import IMAGE_ICON from "@/assets/images/customerDefaultAvatar.png";
 import DEFAULT_FILE from "@/assets/images/file_error.png";
 import BiddingResult from "./BiddingResult";
 import ListChildrenProject from "./ChildrenProject";
+import EvaluationCriteria from "./EvaluationCriteria";
+import { IEvaluationCriteria } from "@/services/store/evaluation/evaluation.model";
 const { Title } = Typography;
 const { Panel } = Collapse;
 interface ProjectDetailsCardProps {
@@ -28,6 +29,7 @@ interface ProjectDetailsCardProps {
   title?: string;
   customDetails?: { label: string; value: any }[];
   listEnterprise?: IEnterprise[];
+  evaluation_criterias?: IEvaluationCriteria[];
   showDefaultDetails?: boolean;
 }
 interface BiddingBondsListProps {
@@ -85,9 +87,10 @@ export const getFileIcon = (fileType: string | undefined) => {
 
 const BiddingBondsList: React.FC<BiddingBondsListProps> = ({ items, title_project, listEnterprise }) => {
   const enterpriseName = (value: number) => {
-    if (listEnterprise!.length > 0 && !!value) {
+    if (listEnterprise && listEnterprise!?.length > 0 && !!value) {
       return listEnterprise!.find((item) => item.id === value)?.name;
     }
+    return null;
   };
   const collapseItems = items.map((data, index) => ({
     key: index.toString(), // Convert index to string for key
@@ -108,7 +111,7 @@ const BiddingBondsList: React.FC<BiddingBondsListProps> = ({ items, title_projec
           <strong>Số tiền bảo lãnh (viết bằng chữ):</strong> {data.bidding_bond.bond_amount_in_words}
         </div>
         <div>
-          <strong>Tên tổ chức phát hành:</strong> {enterpriseName(+data?.bidding_bond?.enterprise_id!)}
+          <strong>Tên tổ chức phát hành:</strong> {data?.bidding_bond?.enterprise_id ? enterpriseName(+data?.bidding_bond?.enterprise_id!) : ""}
         </div>
         <div>
           <strong>Ngày phát hành:</strong> {data.bidding_bond.issue_date}
@@ -139,15 +142,7 @@ const BiddingBondsList: React.FC<BiddingBondsListProps> = ({ items, title_projec
     </Collapse>
   );
 };
-const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({
-  data2,
-  data,
-  title,
-  customDetails = [],
-  listEnterprise,
-  showDefaultDetails = true,
-  dataBidDoc,
-}) => {
+const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({ data, title, customDetails = [], listEnterprise, showDefaultDetails = true }) => {
   // Mặc định các trường dự án
   const defaultDetails = [
     { label: "Tên dự án", value: data?.name },
@@ -249,10 +244,11 @@ const ProjectDetailsCard: React.FC<ProjectDetailsCardProps> = ({
           </Descriptions.Item>
         ))}
       </Descriptions>
-      <ListChildrenProject listChildrenProject={data?.children} title="Gói thầu của dự án" />
       {showDefaultDetails && (
         <>
+          <ListChildrenProject listChildrenProject={data?.children} title="Gói thầu của dự án" />
           <BiddingDocument listBidDocument={data?.bidding_document} title={"Hồ sơ dự thầu"} />
+          <EvaluationCriteria listEvaluationCriteria={data?.evaluation_criterias} title={"Tiêu chí đánh giá"} />
           <Typography className="mt-6">
             <Title level={4}>Mô tả dự án</Title>
             <div dangerouslySetInnerHTML={{ __html: data?.description || "" }}></div>

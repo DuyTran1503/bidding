@@ -16,7 +16,7 @@ import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { GoDownload } from "react-icons/go";
+
 import { useNavigate } from "react-router-dom";
 
 const Employee = () => {
@@ -31,9 +31,9 @@ const Employee = () => {
   const enterpriseOption: IOption[] =
     stateEnterprise?.listEnterprise! && stateEnterprise.listEnterprise.length > 0
       ? stateEnterprise.listEnterprise.map((e) => ({
-        value: e.id,
-        label: e.name,
-      }))
+          value: e.id,
+          label: e.name,
+        }))
       : [];
   const optionStatus: IOption[] = employeeEnumArray.map((e) => ({
     label: mappingEmployee[e],
@@ -61,7 +61,7 @@ const Employee = () => {
       render(_, record) {
         return <CustomerAvatar src={!!record.avatar && record.avatar} alt={"Ảnh đại diện"} />;
       },
-      className: "!h-auto"
+      className: "!h-auto",
     },
     {
       dataIndex: "email",
@@ -146,25 +146,25 @@ const Employee = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.employees)
       ? state.employees.map((employee, index) => ({
-        index: index + 1,
-        key: employee.id, // Use employee.id as the unique key
-        enterprise_id: employee.enterprise_id,
-        code: employee.code,
-        name: employee.name,
-        phone: employee.phone,
-        email: employee.email,
-        birthday: employee.birthday,
-        gender: employee.gender,
-        taxcode: employee.taxcode,
-        education_level: employee.education_level,
-        start_date: employee.start_date,
-        end_date: employee.end_date,
-        salary: employee.salary,
-        enterprise: enterpriseName(+employee?.enterprise?.id!),
-        address: employee.address,
-        status: employee.status,
-        avatar: employee.avatar,
-      }))
+          index: index + 1,
+          key: employee.id, // Use employee.id as the unique key
+          enterprise_id: employee.enterprise_id,
+          code: employee.code,
+          name: employee.name,
+          phone: employee.phone,
+          email: employee.email,
+          birthday: employee.birthday,
+          gender: employee.gender,
+          taxcode: employee.taxcode,
+          education_level: employee.education_level,
+          start_date: employee.start_date,
+          end_date: employee.end_date,
+          salary: employee.salary,
+          enterprise: enterpriseName(+employee?.enterprise?.id!),
+          address: employee.address,
+          status: employee.status,
+          avatar: employee.avatar,
+        }))
       : [];
   }, [JSON.stringify(state.employees)]);
 
@@ -187,11 +187,6 @@ const Employee = () => {
         title="Nhân viên"
         hasBreadcrumb
         buttons={[
-          {
-            text: "Export",
-            type: "ghost",
-            icon: <GoDownload className="text-[18px]" />,
-          },
           {
             text: "Thêm nhân viên",
             icon: <FaPlus className="text-[18px]" />,
