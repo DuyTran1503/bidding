@@ -37,7 +37,7 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
         "|",
         "link",
         "blockQuote",
-        // 'imageUpload',
+        'imageUpload',
         "mediaEmbed",
         "insertTable",
         "|",

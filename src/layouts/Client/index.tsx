@@ -8,7 +8,7 @@ const ClientLayout = () => {
     return (
         <>
             <Header />
-            <div className="max-w-screen-xl mx-auto">
+            <div className="max-w-screen-xl mx-4 xl:mx-auto">
                 <Banner />
                 <NewNews />
                 <Outlet />

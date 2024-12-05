@@ -44,7 +44,7 @@ const EnterpriseDetail: React.FC<EnterpriseDetailProps> = ({ detailEnterpriseByI
         { key: 'registration_date', title: 'Ngày đăng ký', dataIndex: 'registration_date' },
         {
             key: 'description', title: 'Mô tả', dataIndex: 'description', render: (description: string) => (
-                <div dangerouslySetInnerHTML={{ __html: description }} />
+                <div className=' line-clamp-6' dangerouslySetInnerHTML={{ __html: description }} />
             ),
         },
         // { key: 'children', title: 'Gói thầu con', dataIndex: 'children', render: (item) => item.length },
