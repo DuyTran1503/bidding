@@ -2,6 +2,7 @@ import { Col, Row } from "antd";
 import { FormikErrors, FormikTouched } from "formik";
 import { ForwardedRef, forwardRef, memo, useMemo } from "react";
 import CustomFormikEditor from "../ckfinder/CustomizeCkfinder";
+
 interface Props {
   id: string;
   label?: string;
@@ -15,31 +16,41 @@ interface Props {
   touched?: FormikTouched<any>;
   className?: string;
 }
+
 const FormCkEditor = forwardRef(function FormCkEditor(props: Props, ref?: ForwardedRef<any>) {
   const { id, label, value, setFieldValue, onChange, disabled, direction = "vertical", isRequired, errors, touched, className } = props;
-  const Label = () => <div className={`text-medium-md ${isRequired ? "required-start" : ""}`}>{label}</div>;
+
+  const Label = () =>
+    label ? (
+      <label htmlFor={id} className={`text-medium-md ${isRequired ? "required-start" : ""}`}>
+        {label}
+      </label>
+    ) : null;
+
   const Editor = useMemo(
     () => <CustomFormikEditor id={id} name={id} value={value} onChange={onChange} setFieldValue={setFieldValue} readonly={disabled} />,
     [disabled, id, setFieldValue, value],
   );
-  const Error = () => errors && !!errors[id] && touched && touched[id] && <div className="block">{`${errors[id]}`}</div>;
+
+  const Error = () => errors?.[id] && touched?.[id] && <div className="block text-red-500">{`${errors[id]}`}</div>;
 
   return direction === "vertical" ? (
-    <div ref={ref} className="flex w-full flex-col items-start">
+    <div ref={ref} className={`flex w-full flex-col items-start ${className || ""}`}>
       <Label />
       {Editor}
       <Error />
     </div>
   ) : (
-    <Row ref={ref}>
+    <Row ref={ref} className={`${className || ""}`}>
       <Col xs={24} lg={6}>
         <Label />
       </Col>
-      <Col xs={24} lg={18} className={`${className}`}>
+      <Col xs={24} lg={18}>
         {Editor}
         <Error />
       </Col>
     </Row>
   );
 });
+
 export default memo(FormCkEditor);
