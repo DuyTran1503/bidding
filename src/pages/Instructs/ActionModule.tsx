@@ -1,5 +1,6 @@
+import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
-import FormInputArea from "@/components/form/FormInputArea";
+import FormSwitch from "@/components/form/FormSwitch.tsx";
 import { useArchive } from "@/hooks/useArchive";
 import { resetMessageError } from "@/services/store/funding_source/funding_source.slice";
 import { createInstruct } from "@/services/store/instruct/instruct.thunk";
@@ -10,8 +11,7 @@ import { Col, Row } from "antd";
 import { Formik } from "formik";
 import lodash from "lodash";
 import { useEffect } from "react";
-import {object, string} from "yup";
-import FormSwitch from "@/components/form/FormSwitch.tsx";
+import { object, string } from "yup";
 
 interface IInstructFormProps {
   formikRef?: FormikRefType<IInstructInitialValues>;
@@ -56,18 +56,17 @@ const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
         }
       }}
     >
-      {({ values, errors, touched, setFieldValue }) => {
+      {({ values, setFieldValue }) => {
         return (
           <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Hướng dẫn">
-                  <FormInputArea
-                    placeholder="Nhập bài hướng dẫn..."
-                    name="instruct"
-                    isReadonly={type === EPageTypes.VIEW}
+                  <FormCkEditor
+                    id="instruct"
+                    direction="vertical"
                     value={values.instruct}
-                    error={touched.instruct ? errors.instruct : ""}
-                    onChange={(e) => setFieldValue("instruct", e)}
+                    setFieldValue={setFieldValue}
+                    disabled={type === EPageTypes.VIEW}
                   />
                 </FormGroup>
                 <FormGroup title="Trạng thái">

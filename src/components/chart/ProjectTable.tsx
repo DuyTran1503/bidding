@@ -19,21 +19,21 @@ interface RowType {
 }
 
 const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, projectId }) => {
-    
-const getFileIcon = (fileType: string) => {
-    switch (fileType.toLowerCase()) {
-      case "pdf":
-        return PDF;
-      case "xlsx":
-      case "xls":
-        return EXCEL;
-      case "doc":
-      case "docx":
-        return WORD;
-      default:
-        return "📁";
-    }
-  };
+
+    const getFileIcon = (fileType: string) => {
+        switch (fileType.toLowerCase()) {
+            case "pdf":
+                return PDF;
+            case "xlsx":
+            case "xls":
+                return EXCEL;
+            case "doc":
+            case "docx":
+                return WORD;
+            default:
+                return "📁";
+        }
+    };
     const rows: RowType[] = [
         // { key: 'name', title: 'Tên dự án', dataIndex: 'name' },
         { key: 'decision_number_issued', title: 'Số quyết định', dataIndex: 'decision_number_issued' },
@@ -103,7 +103,7 @@ const getFileIcon = (fileType: string) => {
             title: 'Mô tả dự án',
             dataIndex: 'description',
             render: (description: string) => (
-                <div dangerouslySetInnerHTML={{ __html: description }} />
+                <div className=' line-clamp-6' dangerouslySetInnerHTML={{ __html: description }} />
             ),
         },
         {
@@ -115,17 +115,17 @@ const getFileIcon = (fileType: string) => {
                     {attachments && attachments.length > 0 ? (
                         attachments.map((file, index) => (
                             <Tooltip title={file.name} color={"#108ee9"} key={index}>
-                            <a
-                              href={file.path}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-2 transition-opacity hover:opacity-80"
-                            >
-                              {file.type && getFileIcon(file.type) && (
-                                <img src={getFileIcon(file.type)} alt={file.type} className="h-6 w-6 object-contain" />
-                              )}
-                            </a>
-                          </Tooltip>
+                                <a
+                                    href={file.path}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 transition-opacity hover:opacity-80"
+                                >
+                                    {file.type && getFileIcon(file.type) && (
+                                        <img src={getFileIcon(file.type)} alt={file.type} className="h-6 w-6 object-contain" />
+                                    )}
+                                </a>
+                            </Tooltip>
                         ))
                     ) : (
                         'Không có tệp đính kèm'
@@ -133,7 +133,7 @@ const getFileIcon = (fileType: string) => {
                 </div>
             ),
         }
-        
+
     ];
 
     const mainProject = detailProjectByIds.find((project) => project.id === projectId);
