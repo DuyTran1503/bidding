@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { getProfile, login, logout, sendMailForgotPassword } from "./auth.thunk";
+import { changePassword, getProfile, login, logout, sendMailForgotPassword } from "./auth.thunk";
 import { ILoginResponseData, IUserProfile } from "./auth.model";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
@@ -60,16 +60,29 @@ const authSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors || payload?.message || "Tài khoản mật khẩu không chính xác");
       });
-      // ? Create
+      // ? Gửi yêu cầu đổi mật khẩu
     builder
     .addCase(sendMailForgotPassword.pending, (state) => {
       state.status = EFetchStatus.PENDING;
     })
     .addCase(sendMailForgotPassword.fulfilled, (state) => {
       state.status = EFetchStatus.FULFILLED;
-      state.message = "Tạo mới thành công ";
+      state.message = "Gửi yêu cầu thành công";
     })
     .addCase(sendMailForgotPassword.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+      state.status = EFetchStatus.REJECTED;
+      state.message = transformPayloadErrors(payload?.errors);
+    });
+      // ? Mật khẩu mới
+    builder
+    .addCase(changePassword.pending, (state) => {
+      state.status = EFetchStatus.PENDING;
+    })
+    .addCase(changePassword.fulfilled, (state) => {
+      state.status = EFetchStatus.FULFILLED;
+      state.message = "Gửi yêu cầu thành công";
+    })
+    .addCase(changePassword.rejected, (state, { payload }: PayloadAction<IError | any>) => {
       state.status = EFetchStatus.REJECTED;
       state.message = transformPayloadErrors(payload?.errors);
     });

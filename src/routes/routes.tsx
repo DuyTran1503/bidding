@@ -101,6 +101,7 @@ import Profile from "@/pages/Profile";
 import Update from "@/pages/Profile/Update";
 import EnterEmail from "@/pages/ForgotPassword/EnterEmail";
 import NewPassword from "@/pages/ForgotPassword/NewPassword";
+import Success from "@/pages/ForgotPassword/Success";
 
 export interface IRoute {
   path: string;
@@ -717,15 +718,24 @@ export const routes: IRoute[] = [
             path: "login",
             element: () => <Login />,
           },
-          {
-            path: "/enter-email",
-            element: () => <EnterEmail />,
-          },
-          {
-            path: "/change-password",
-            element: () => <NewPassword />,
-          },
         ],
+      },
+    ],
+  },
+  {
+    path: "auth",
+    pages: [
+      {
+        path: "/enter-email",
+        element: () => <EnterEmail />,
+      },
+      {
+        path: "/change-password",
+        element: () => <NewPassword />,
+      },
+      {
+        path: "/success",
+        element: () => <Success />,
       },
     ],
   },

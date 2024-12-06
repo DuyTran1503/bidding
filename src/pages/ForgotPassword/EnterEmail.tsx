@@ -51,7 +51,7 @@ const EnterEmail: React.FC = () => {
         actions: {
             success: {
                 message: 'Gửi email thành công',
-                navigate: "/auth/new-password",
+                navigate: "/auth/success",
             },
             error: {
                 message: state.message,

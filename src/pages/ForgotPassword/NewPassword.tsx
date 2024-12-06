@@ -1,49 +1,40 @@
-import React from "react";
 import Button from "@/components/common/Button";
+import Logo from "@/components/common/Logo";
 import FormInput from "@/components/form/FormInput";
 import { useArchive } from "@/hooks/useArchive";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { IAuthInitialState, resetStatus } from "@/services/store/auth/auth.slice";
-import { Formik } from "formik";
-import { Link } from "react-router-dom";
-import { object, mixed } from "yup";
-import { login } from "@/services/store/auth/auth.thunk";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import Logo from "@/components/common/Logo";
+import { IAuthInitialState, resetStatus } from "@/services/store/auth/auth.slice";
+import { changePassword } from "@/services/store/auth/auth.thunk";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { Formik } from "formik";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import * as Yup from "yup";
 
-// Interface cho form data
-interface ILoginFormData {
-    identifier: string; // Nhận email hoặc tax code
+interface INewPasswordFormData {
     password: string;
-}
-
-// Interface cho payload gửi lên server
-interface ILoginPayload {
-    email?: string;
-    taxcode?: string;
-    password: string;
+    password_confirmation: string;
 }
 
 const NewPassword: React.FC = () => {
     const { state, dispatch } = useArchive<IAuthInitialState>("auth");
+    const location = useLocation();
 
-    // Xử lý login với phân biệt email/taxcode
-    const handleLogin = (data: ILoginFormData) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Trích xuất token từ URL
+    const token = new URLSearchParams(location.search).get("token") || "";
+    const email = new URLSearchParams(location.search).get("email") || "";
 
-        const payload: ILoginPayload = {
-            password: data.password
-        };
-
-        // Kiểm tra và gán giá trị tương ứng cho payload
-        if (emailRegex.test(data.identifier)) {
-            payload.email = data.identifier;
-        }
-
+    // Gửi yêu cầu đổi mật khẩu
+    const handleNewPassword = (data: INewPasswordFormData) => {
         dispatch(
-            login({
-                body: payload,
-            }),
+            changePassword({
+                body: {
+                    token,
+                    email,
+                    password: data.password,
+                    password_confirmation: data.password_confirmation,
+                },
+            })
         );
     };
 
@@ -53,7 +44,7 @@ const NewPassword: React.FC = () => {
         reset: resetStatus,
         actions: {
             success: {
-                message: 'Lấy lại mật khẩu thành công',
+                message: "Đổi mật khẩu thành công!",
                 navigate: "/auth/login",
             },
             error: {
@@ -63,20 +54,19 @@ const NewPassword: React.FC = () => {
     });
 
     // Giá trị khởi tạo cho form
-    const loginFormInitialValues: ILoginFormData = {
-        identifier: "",
-        password: ""
+    const NewPasswordInitialValues: INewPasswordFormData = {
+        password: "",
+        password_confirmation: "",
     };
 
     // Schema validation
-    const validateSchema = object().shape({
-        identifier: mixed()
-            .required("Vui lòng nhập email hoặc mã số thuế!")
-            .test('is-email-or-tax-id', 'Vui lòng nhập đúng định dạng email hoặc mã số thuế!', value => {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const taxIdRegex = /^[0-9]{10,12}$/;
-                return emailRegex.test(value as string) || taxIdRegex.test(value as string);
-            }),
+    const validationSchema = Yup.object().shape({
+        password: Yup.string()
+            .required("Vui lòng nhập mật khẩu!")
+            .min(6, "Mật khẩu phải có ít nhất 6 ký tự!"),
+        password_confirmation: Yup.string()
+            .required("Vui lòng xác nhận mật khẩu!")
+            .oneOf([Yup.ref("password")], "Mật khẩu xác nhận không khớp!"),
     });
 
     return (
@@ -84,48 +74,40 @@ const NewPassword: React.FC = () => {
             <div className="mx-auto flex h-screen flex-col items-center justify-center px-6 py-8 lg:py-0">
                 <div className="w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0">
                     <div className="flex flex-col gap-5 p-8">
-                    <a href="/" className="flex justify-center">
-                        <Logo />
-                    </a>
+                        <a href="/" className="flex justify-center">
+                            <Logo />
+                        </a>
                         <h1 className="text-gray-900 display-m-bold md:text-xl-semibold text-center">
-                            Tạo lại mật khẩu người dùng
+                            Nhập mật khẩu mới
                         </h1>
                         <Formik
-                            validationSchema={validateSchema}
-                            initialValues={loginFormInitialValues}
+                            validationSchema={validationSchema}
+                            initialValues={NewPasswordInitialValues}
                             validateOnBlur
-                            onSubmit={handleLogin}
+                            onSubmit={handleNewPassword}
                         >
                             {({ handleSubmit, values, setFieldValue, errors, touched, handleBlur }) => (
                                 <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-                                    <p className="text-cyan-600 font-medium text-center">Hãy tạo mật khẩu mới!</p>
-
                                     <FormInput
                                         type="password"
-                                        name="password"
                                         value={values.password}
                                         error={touched.password ? errors.password : ""}
-                                        isDisabled={state.status === EFetchStatus.PENDING}
+                                        name="password"
+                                        onChange={(value) => setFieldValue("password", value)}
                                         onBlur={handleBlur}
-                                        onChange={(value) => {
-                                            setFieldValue("password", value);
-                                        }}
-                                        placeholder="Nhập mật khẩu..."
+                                        placeholder="Nhập mật khẩu mới"
                                     />
                                     <FormInput
                                         type="password"
-                                        name="password"
-                                        value={values.password}
-                                        error={touched.password ? errors.password : ""}
-                                        isDisabled={state.status === EFetchStatus.PENDING}
+                                        value={values.password_confirmation}
+                                        error={touched.password_confirmation ? errors.password_confirmation : ""}
+                                        name="password_confirmation"
+                                        onChange={(value) => setFieldValue("password_confirmation", value)}
                                         onBlur={handleBlur}
-                                        onChange={(value) => {
-                                            setFieldValue("password", value);
-                                        }}
-                                        placeholder="Nhập lại mật khẩu..."
+                                        placeholder="Xác nhận mật khẩu mới"
                                     />
                                     <Button
-                                        text="Gửi yêu cầu"
+                                        text="Đặt lại mật khẩu"
                                         isLoading={state.status === EFetchStatus.PENDING}
                                         className="mt-3"
                                     />

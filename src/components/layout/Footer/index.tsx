@@ -35,7 +35,9 @@ const Footer = () => {
                         </li>
                         <li>
                             <Link
-                                to={`/introduce`}
+                                to={`https://zalo.me/0338475943`}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="bg-gray-600 text-gray-300 hover:text-gray-100 rounded-full  p-3 flex items-center justify-center transition"
                             >
                                 <SiZalo />
@@ -77,15 +79,15 @@ const Footer = () => {
                         <li><Link to={`/support/create`} className="hover:text-gray-400">Đăng ký cấp tài khoản</Link></li>
                     </ul>
                 </div>
-                <div>
+                <div className="max-w-[350px]">
                     <Link to="/" className=" flex items-center gap-2 font-medium text-white hover:text-gray-200">
                         <Image src={logo} preview={false} alt="Logo" className="!w-12" />
                         <strong>SEPTENARY SOLUTION</strong>
                     </Link>
                     <p>Thực hiện bởi nhóm: <strong>SEPTENARY SOLUTION</strong></p>
-                    <p>Địa chỉ:</p>
-                    <p>Hotline: ... hoặc ...</p>
-                    <p>Email: ....</p>
+                    <p>Địa chỉ: Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</p>
+                    <p>Hotline: 0702208708 hoặc 0338475943</p>
+                    <p>Email: septenarysolution@gmail.com</p>
                 </div>
                 <div className="w-56">
                     <Link
