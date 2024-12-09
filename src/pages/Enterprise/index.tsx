@@ -32,7 +32,6 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
 import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
-import { message } from "antd";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Enterprise = () => {
@@ -90,14 +89,12 @@ const Enterprise = () => {
   //   setSelectedFundingSource(value);
   // }
   const handleIndustryChange = (value: string) => {
-    message.loading("Đang tải dữ liệu");
     setSelectedIndustry(value);
   };
   useEffect(() => {
     if (selectedYearProjectStatus) {
       dispatch(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
     }
-    message.loading("Đang tải dữ liệu");
   }, [selectedYearProjectStatus, dispatch]);
 
   const typeOptions: IOption[] = typeEnterpriseEnumArray.map((e) => ({

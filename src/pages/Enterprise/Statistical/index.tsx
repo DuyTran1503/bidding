@@ -9,7 +9,7 @@ import CustomTabs from "@/components/table/CustomTabs";
 import { useArchive } from "@/hooks/useArchive";
 import { convertDataOptions } from "@/pages/Project/helper";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
-import { getEnterpriseById, getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IChartEnterpriseInitialState } from "@/services/store/enterprise_chart/enterprise_chart.slice";
 import {
   averageDifficultyLevelTasksByEnterprise,
@@ -19,7 +19,7 @@ import {
   projectCompletedByEnterprise,
   projectWonByEnterprise,
 } from "@/services/store/enterprise_chart/enterprise_chart.thunk";
-import { Col, Row, Select } from "antd";
+import { Col, message, Row, Select } from "antd";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
@@ -49,15 +49,13 @@ const StatisticalEnterprise: React.FC = () => {
     dispatchEnterprise(getListEnterprise());
   }, [dispatchEnterprise]);
 
-  useEffect(() => {
-    !!id && dispatchEnterprise(getEnterpriseById(id));
-  }, [id]);
-
   const handleAddToCompare = () => {
-    if (ids.length && id) {
+    if (ids.length && id) {    
       const enterpriseIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
       setSelectedEnterpriseIds(enterpriseIds);
       const selectedYear = year.length ? year : [new Date().getFullYear()];
+      message.success("So sánh thành công", 1);
+
       if (enterpriseIds.length > 1) {
         if (selectedTabKey === "1") {
           dispatchChartEnterprise(detailEnterpriseByIds({ body: { ids: enterpriseIds } }));

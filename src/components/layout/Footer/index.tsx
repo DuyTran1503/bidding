@@ -51,7 +51,7 @@ const Footer = () => {
             <div className="flex justify-between gap-4">
                 <div>
                     <h1 className="text-xl font-bold text-nowrap mb-4">Dành cho doanh nghiệp</h1>
-                    <ul className="">
+                    <ul className="space-y-1">
                         <li><Link to={`/`} className="hover:text-gray-400">Thông báo mời thầu</Link></li>
                         <li><Link to={`/introduce`} className="hover:text-gray-400">Kết quả đấu thầu</Link></li>
                         <li><Link to={`/news`} className="hover:text-gray-400">So sánh thông tin dự án</Link></li>
@@ -61,7 +61,7 @@ const Footer = () => {
                 </div>
                 <div>
                     <h1 className="text-xl font-bold text-nowrap mb-4">Dịch vụ của chúng tôi</h1>
-                    <ul className="">
+                    <ul className="space-y-1">
                         <li><Link to={`/`} className="hover:text-gray-400">Phân tích quan hệ thầu</Link></li>
                         <li><Link to={`/`} className="hover:text-gray-400">Phân tích tình trạng thầu</Link></li>
                         <li><Link to={`/introduce`} className="hover:text-gray-400">Biểu đồ hóa</Link></li>
@@ -71,7 +71,7 @@ const Footer = () => {
                 </div>
                 <div>
                     <h1 className="text-xl font-bold text-nowrap mb-4">Tiện ích</h1>
-                    <ul className="">
+                    <ul className="space-y-1">
                         <li><Link to={`/introduce`} className="hover:text-gray-400">Về chúng tôi</Link></li>
                         <li><Link to={`/news`} className="hover:text-gray-400">Tin tức</Link></li>
                         <li><Link to={`/support`} className="hover:text-gray-400">Liên hệ</Link></li>
@@ -79,8 +79,8 @@ const Footer = () => {
                         <li><Link to={`/support/create`} className="hover:text-gray-400">Đăng ký cấp tài khoản</Link></li>
                     </ul>
                 </div>
-                <div className="max-w-[350px]">
-                    <Link to="/" className=" flex items-center gap-2 font-medium text-white hover:text-gray-200">
+                <div className="max-w-[350px] space-y-1">
+                    <Link to="/" className="mb-2 flex items-center gap-2 font-medium text-white hover:text-gray-200">
                         <Image src={logo} preview={false} alt="Logo" className="!w-12" />
                         <strong>SEPTENARY SOLUTION</strong>
                     </Link>
@@ -94,7 +94,7 @@ const Footer = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         to="https://vietfuture.world/"
-                        className=" flex items-center gap-2 font-medium text-white hover:text-gray-200">
+                        className="mb-3 flex items-center gap-2 font-medium text-white hover:text-gray-200">
                         <Image src={logoVietFuture} preview={false} alt="logoVietFuture" className="!w-8" />
                         <strong>VIETFUTURE</strong>
                     </Link>
