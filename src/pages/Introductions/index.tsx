@@ -19,10 +19,9 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
-import { useNavigate } from "react-router-dom";
+import IntroductionForm from "./ActionMoudle";
 
 const Introductions = () => {
-  const navigate = useNavigate();
   const { state, dispatch } = useArchive<IIntroductionInitialState>("introduction");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
@@ -30,16 +29,10 @@ const Introductions = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
-      onClick(record) {
-        navigate(`/introductions/detail/${record?.key}`);
-      },
       permission: EPermissions.DETAIL_INTRODUCTION,
     },
     {
       type: EButtonTypes.UPDATE,
-      onClick(record) {
-        navigate(`/introductions/update/${record?.key}`);
-      },
       permission: EPermissions.UPDATE_INTRODUCTION,
     },
     {
@@ -69,7 +62,7 @@ const Introductions = () => {
     {
       title: "Trạng thái",
       dataIndex: "is_active",
-      className: "w-[150px]",
+      className: "w-[50px]",
 
       render(_, record) {
         return (
@@ -118,11 +111,11 @@ const Introductions = () => {
     () =>
       state.introductions && state.introductions.length > 0
         ? state.introductions.map(({ id, introduction, is_use }, index) => ({
-            index: index + 1,
-            key: id,
-            introduction,
-            is_use,
-          }))
+          index: index + 1,
+          key: id,
+          introduction,
+          is_use,
+        }))
         : [],
     [JSON.stringify(state.introductions)],
   );
@@ -156,13 +149,12 @@ const Introductions = () => {
       <Heading
         title="Giới thiệu"
         hasBreadcrumb
+        ModalContent={(props) => <IntroductionForm {...(props as any)} />}
         buttons={[
           {
-            text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
-            onClick: () => {
-              navigate("create");
-            },
+            permission: EPermissions.CREATE_CATALOG,
+            text: "Thêm mới",
           },
         ]}
       />
@@ -187,7 +179,7 @@ const Introductions = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        scroll={{ x: 1200 }}
+        ModalContent={(props) => <IntroductionForm {...(props as any)} />}
       />
     </>
   );

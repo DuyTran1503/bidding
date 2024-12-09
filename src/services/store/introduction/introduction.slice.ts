@@ -1,30 +1,28 @@
-import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { commonStaticReducers } from "@/services/shared";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IIntroduction } from "./introduction.moldel";
 import {
   changeStatusIntroduction,
   createIntroduction,
   deleteIntroduction,
   getAllIntroductions,
+  getIntroduction,
   getIntroductionById,
-  getListIntroduction,
-  updateIntroduction,
+  updateIntroduction
 } from "./introduction.thunk";
 
 export interface IIntroductionInitialState extends IInitialState {
   introductions: IIntroduction[];
   introduction?: IIntroduction | any;
-  listIntroductions: IIntroduction[];
 }
 
 const initialState: IIntroductionInitialState = {
   status: EFetchStatus.IDLE,
   introductions: [],
-  listIntroductions: [],
   introduction: undefined,
   message: "",
   error: undefined,
@@ -61,6 +59,13 @@ const introductionSlice = createSlice({
       .addCase(getAllIntroductions.rejected, (state, { payload }: PayloadAction<IResponse<IIntroduction[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
+
+    builder
+      .addCase(getIntroduction.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
+        if (payload.data) {
+          state.introduction = payload.data;
+        }
+      })
 
     builder
       .addCase(getIntroductionById.fulfilled, (state, { payload }: PayloadAction<IIntroduction[]> | any) => {
@@ -120,15 +125,6 @@ const introductionSlice = createSlice({
       })
       .addCase(deleteIntroduction.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
-      });
-    builder
-      .addCase(getListIntroduction.fulfilled, (state, { payload }: PayloadAction<IResponse<IIntroduction[]> | any>) => {
-        if (payload.data) {
-          state.listIntroductions = payload.data;
-        }
-      })
-      .addCase(getListIntroduction.rejected, (state, { payload }: PayloadAction<IResponse<IIntroduction[]> | any>) => {
-        state.message = transformPayloadErrors(payload?.errors);
       });
   },
 });

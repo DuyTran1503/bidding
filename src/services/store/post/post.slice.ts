@@ -58,10 +58,6 @@ const postSlice = createSlice({
     builder.addCase(getPosts.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
       if (payload.data) {
           state.posts = payload.data.data;
-          state.totalRecords = payload.data.total_elements;
-          state.totalPages = payload.data.total_pages;
-          state.pageSize = payload.data.page_size;
-          state.currentPage = payload.data.current_page;
       }
   });
 

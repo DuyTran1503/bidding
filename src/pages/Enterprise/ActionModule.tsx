@@ -51,7 +51,7 @@ export interface IEnterpriseInitialValues {
   is_active?: number;
   is_blacklist?: number;
   password?: string;
-  roles?: number[]
+  roles?: number[] 
 }
 
 const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) => {
@@ -168,7 +168,8 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   <FormSelect
                     isMultiple={true}
                     onChange={(value) => setFieldValue("roles", value)}
-                    options={roleState.roles.map((role) => ({ label: role.name, value: role.id }))}
+                    options={roleState.roles.map((role) => ({ value: role.id, label: role.name }))}
+                    value={values.roles?.map((role: any) => role.name  )}
                     defaultValue={!!values.roles && values.roles as any}
                     placeholder="Chọn vai trò "
                   />
@@ -252,7 +253,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."
-                    value={typeOptions?.find((e) => e.value === values.organization_type)?.label}
+                    value={typeOptions?.find((e) => e.value == values.organization_type)?.label}
                     id="organization_type"
                     onChange={(value) => {
                       setFieldValue("organization_type", value);

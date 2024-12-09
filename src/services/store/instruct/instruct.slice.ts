@@ -1,16 +1,15 @@
-import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { commonStaticReducers } from "@/services/shared";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IInstruct } from "./instruct.mode";
-import { changeStatusInstruct, createInstruct, deleteInstruct, getAllInstructs, getInstructById, getListInstruct, updateInstruct } from "./instruct.thunk";
+import { changeStatusInstruct, createInstruct, deleteInstruct, getAllInstructs, getInstruct, getInstructById, updateInstruct } from "./instruct.thunk";
 
 export interface IInstructInitialState extends IInitialState {
   instructs: IInstruct[];
   instruct?: IInstruct | any;
-  listInstructs: IInstruct[];
 }
 
 const initialState: IInstructInitialState = {
@@ -53,6 +52,16 @@ const insTructSlice = createSlice({
       .addCase(getAllInstructs.rejected, (state, { payload }: PayloadAction<IResponse<IInstruct[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
+
+      builder
+        .addCase(getInstruct.fulfilled, (state, { payload }: PayloadAction<IResponse<IInstruct[]> | any>) => {
+          if (payload.data) {
+            state.instructs = payload.data.data;
+          }
+        })
+        .addCase(getInstruct.rejected, (state, { payload }: PayloadAction<IResponse<IInstruct[]> | any>) => {
+          state.message = transformPayloadErrors(payload?.errors);
+        });  
 
     builder
       .addCase(getInstructById.fulfilled, (state, { payload }: PayloadAction<IInstruct[]> | any) => {
@@ -112,15 +121,6 @@ const insTructSlice = createSlice({
       })
       .addCase(deleteInstruct.rejected, (state) => {
         state.status = EFetchStatus.REJECTED;
-      });
-    builder
-      .addCase(getListInstruct.fulfilled, (state, { payload }: PayloadAction<IResponse<IInstruct[]> | any>) => {
-        if (payload.data) {
-          state.listInstructs = payload.data;
-        }
-      })
-      .addCase(getListInstruct.rejected, (state, { payload }: PayloadAction<IResponse<IInstruct[]> | any>) => {
-        state.message = transformPayloadErrors(payload?.errors);
       });
   },
 });
