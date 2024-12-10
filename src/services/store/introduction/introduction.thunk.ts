@@ -13,6 +13,14 @@ export const getAllIntroductions = createAsyncThunk("staff/get-all-introductions
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }
+}); 
+export const getIntroduction = createAsyncThunk("get-introduction", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IIntroduction[]>(`/api/get-introduction`, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
 });
 
 export const getIntroductionById = createAsyncThunk("introductions/get-introductions-by-id", async (id: string, { rejectWithValue }) => {
@@ -55,7 +63,7 @@ export const changeStatusIntroduction = createAsyncThunk(
   "introductions/change-status-introductions",
   async (id: string, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
+      const { response, data } = await client.put(`${prefix}/${id}/changeActive`);
       return response.status >= 400 ? rejectWithValue(data) : id;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

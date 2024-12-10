@@ -104,7 +104,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
           return dispatch(createEmployee(body as any));
         }
         if (type === EPageTypes.UPDATE) {
-          const payload = employee?.avatar === body.avatar ? (({ avatar, ...rest }) => rest)(body) : body;
+          const payload = employee?.avatar === body.avatar ? (({ ...rest }) => rest)(body) : body;
           return dispatch(updateEmployee({ body: payload, param: String(employee?.id) }));
         }
       }}

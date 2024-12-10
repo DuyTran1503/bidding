@@ -90,6 +90,7 @@ const Statistical: React.FC = () => {
     }
 
     localStorage.setItem("selectedProjectIds", JSON.stringify(updatedProjectIds));
+    message.success("So sánh thành công", 1);
     fetchTabData(updatedProjectIds, activeTab);
   }, [stateProject.project, fetchTabData, activeTab]);
 

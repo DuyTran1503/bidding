@@ -1,134 +1,124 @@
+import Button from "@/components/common/Button";
+import Dialog from "@/components/dialog/Dialog";
+import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
-import FormInputArea from "@/components/form/FormInputArea";
+import FormSwitch from "@/components/form/FormSwitch";
 import { useArchive } from "@/hooks/useArchive";
-import { resetMessageError } from "@/services/store/funding_source/funding_source.slice";
+import { useViewport } from "@/hooks/useViewport";
+import { IIntroduction } from "@/services/store/introduction/introduction.moldel";
 import { IIntroductionInitialState } from "@/services/store/introduction/introduction.slice";
 import { createIntroduction, updateIntroduction } from "@/services/store/introduction/introduction.thunk";
-import { EPageTypes } from "@/shared/enums/page";
-import { FormikRefType } from "@/shared/utils/shared-types";
-import { Col, Row } from "antd";
-import { Formik } from "formik";
+import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { Col, Form, Row } from "antd";
+import { Formik, FormikProps } from "formik";
 import lodash from "lodash";
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { object, string } from "yup";
 
 interface IIntroductionFormProps {
-  formikRef?: FormikRefType<IIntroductionInitialValues>;
-  type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
-  introduction?: IIntroductionInitialValues;
+  type?: EButtonTypes;
+  visible: boolean;
+  setVisible: Dispatch<SetStateAction<boolean>>;
+  item?: IIntroduction;
 }
 
-export interface IIntroductionInitialValues {
-  id?: string;
-  introduction: string;
-  is_use?: string;
-}
+const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionFormProps) => {
+  const formikRef = useRef<FormikProps<IIntroduction>>(null);
+  const { state, dispatch } = useArchive<IIntroductionInitialState>("introduction");
+  const { screenSize } = useViewport();
 
-const IntroductionForm = ({ formikRef, type, introduction }: IIntroductionFormProps) => {
-  const { dispatch } = useArchive<IIntroductionInitialState>("introduction");
-
-  const initialValues: IIntroductionInitialValues = {
-    id: introduction?.id ?? "", // kieu du lieu bat buoc
-    introduction: introduction?.introduction ?? "",
-    is_use: introduction?.is_use ?? "",
+  const initialValues: IIntroduction = {
+    id: item?.id ?? "", // kieu du lieu bat buoc
+    introduction: item?.introduction ?? "",
+    is_use: item?.is_use ?? "0",
+  };
+  const handleSubmit = (data: IIntroduction, { setErrors }: any) => {
+    const body = {
+      ...lodash.omit(data, "id", "key", "index"),
+    };
+    if (type === EButtonTypes.CREATE) {
+      dispatch(createIntroduction({ body }))
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });;
+    } else if (type === EButtonTypes.UPDATE) {
+      dispatch(updateIntroduction({ body, param: item?.id }));
+    }
   };
 
-  const tagSchema = object().shape({
+  const Schema = object().shape({
     introduction: string().trim().required("Vui lòng không để trống trường này"),
   });
   useEffect(() => {
-    return () => {
-      dispatch(resetMessageError());
-    };
-  }, []);
+    if (state.status === EFetchStatus.FULFILLED) {
+      setVisible(false);
+    }
+  }, [state.status]);
 
   return (
-    <Formik
-      innerRef={formikRef}
-      initialValues={initialValues}
-      validationSchema={tagSchema}
-      onSubmit={(data) => {
-        if (type === EPageTypes.CREATE) {
-          dispatch(createIntroduction({ body: lodash.omit(data, "id") }));
-        } else if (type === EPageTypes.UPDATE && introduction?.id) {
-          dispatch(updateIntroduction({ body: lodash.omit(data, "id"), param: introduction.id }));
-        }
+    <Dialog
+      screenSize={screenSize}
+      handleSubmit={() => {
+        formikRef.current && formikRef.current.handleSubmit();
       }}
+      visible={visible}
+      setVisible={setVisible}
+      title={
+        type === EButtonTypes.CREATE
+          ? "Tạo mới giới thiệu"
+          : type === EButtonTypes.UPDATE
+            ? "Cập nhật giới thiệu"
+            : "Chi tiết giới thiệu"
+      }
+      footerContent={
+        <div className="flex items-center justify-center gap-2">
+          <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
+          {type !== EButtonTypes.VIEW && (
+            <Button
+              key="submit"
+              kind="submit"
+              text={"Lưu"}
+              onClick={() => {
+                formikRef.current && formikRef.current.handleSubmit();
+              }}
+            />
+          )}
+        </div>
+      }
     >
-      {({ values, errors, touched, setFieldValue }) => {
-        return (
-          <>
-            {/* <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tên nguồn tài trợ">
-                  <FormInput
-                    label="Tên nguồn tài trợ"
-                    placeholder="Tên nguồn tài trợ..."
-                    name="name"
-                    value={values.name}
-                    error={touched.name ? errors.name : ""}
-                    onChange={(e) => setFieldValue("name", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Loại nguồn tài trợ">
-                  <FormSelect
-                    label="Loại nguồn tài trợ"
-                    placeholder="Chọn loại nguồn tài trợ..."
-                    isDisabled={type === EPageTypes.VIEW}
-                    id="type"
-                    options={convertEnum(TypeFundingSource)}
-                    value={values.type || undefined}
-                    error={touched.type ? errors.type : ""}
-                    onChange={(e) => setFieldValue("type", e)}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Mã nguồn tài trợ">
-                  <FormInput
-                    label="Mã nguồn tài trợ"
-                    placeholder="Mã nguồn tài trợ..."
-                    name="code"
-                    value={values.code}
-                    error={touched.code ? errors.code : ""}
-                    onChange={(e) => setFieldValue("code", e)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Trạng thái hoạt động">
+      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
+        {({ values, setFieldValue }) => (
+          <Form className="mt-3">
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
+                <FormGroup title="Trạng thái">
                   <FormSwitch
-                    checked={!!values.is_active ? true : false}
+                    checked={values.is_use === "1"}
                     onChange={(value) => {
-                      setFieldValue("is_active", value);
+                      setFieldValue("is_use", value ? "1" : "0");
                     }}
                   />
                 </FormGroup>
               </Col>
-            </Row> */}
-            <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Giới thiệu">
-                  <FormInputArea
-                    label="Giới thiệu"
-                    placeholder="Nhập bài giới thiệu..."
-                    name="introduction"
-                    isReadonly={type === EPageTypes.VIEW}
+                  <FormCkEditor
+                    id="introduction"
+                    direction="vertical"
                     value={values.introduction}
-                    error={touched.introduction ? errors.introduction : ""}
-                    onChange={(e) => setFieldValue("introduction", e)}
+                    setFieldValue={setFieldValue}
+                    disabled={type === EButtonTypes.VIEW}
                   />
                 </FormGroup>
               </Col>
             </Row>
-          </>
-        );
-      }}
-    </Formik>
+        </Form>
+        )}
+      </Formik>
+    </Dialog>
   );
 };
 

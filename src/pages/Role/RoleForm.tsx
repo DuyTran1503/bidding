@@ -179,7 +179,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
         return (
           <UpdateGrid
             colNumber="2"
-            rate="1-3"
+            rate="2-2"
             isLoading={loading}
             groups={{
               colLeft: (

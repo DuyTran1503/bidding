@@ -15,7 +15,16 @@ export const getAllInstructs = createAsyncThunk("staff/get-all-instructs", async
   }
 });
 
-export const getInstructById = createAsyncThunk("funding-sources/get-instructs-by-id", async (id: string, { rejectWithValue }) => {
+export const getInstruct = createAsyncThunk("get-instruct", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IInstruct[]>(`/api/get-instruct`, payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const getInstructById = createAsyncThunk("get-instructs-by-id", async (id: string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IInstruct>(prefix + `/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : data;
@@ -55,18 +64,10 @@ export const changeStatusInstruct = createAsyncThunk(
   "instructs/change-status-instructs",
   async (id: string, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
+      const { response, data } = await client.put(`${prefix}/${id}/changeActive`);
       return response.status >= 400 ? rejectWithValue(data) : id;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
   },
 );
-export const getListInstruct = createAsyncThunk("instructs/get-list-instructs", async (_, { rejectWithValue }) => {
-  try {
-    const { response, data } = await client.get(`/api/admin/list-instructs`);
-    return response.status >= 400 ? rejectWithValue(data) : data;
-  } catch (error: any) {
-    return rejectWithValue(error.response.data);
-  }
-});

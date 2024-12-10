@@ -14,9 +14,15 @@ import { IEvaluateInitialState, resetStatus, setFilter } from "@/services/store/
 import { deleteEvaluate, getAllEvaluates } from "@/services/store/evaluate/evaluate.thunk";
 import EvaluateForm from "./EvaluateForm";
 import { EPermissions } from "@/shared/enums/permissions";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { getListProject } from "@/services/store/project/project.thunk";
 
 const Evaluates = () => {
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
+  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
 
   const buttons: IGridButton[] = [
     {
@@ -35,6 +41,11 @@ const Evaluates = () => {
       permission: EPermissions.DESTROY_EVALUATE,
     },
   ];
+
+  useEffect(() => {
+    dispatchEnterprise(getListEnterprise());
+    dispatchProject(getListProject());
+  }, []);
 
   const columns: ColumnsType = [
     {
@@ -83,8 +94,6 @@ const Evaluates = () => {
             evaluate,
             project,
             enterprise,
-            projectName: project?.name,
-            enterpriseName: enterprise?.name,
           }))
         : [],
     [JSON.stringify(state.evaluates)],
@@ -114,7 +123,13 @@ const Evaluates = () => {
       <Heading
         title="Đánh giá kết quả dự án"
         hasBreadcrumb
-        ModalContent={(props) => <EvaluateForm {...(props as any)} />}
+        ModalContent={(props) => 
+          <EvaluateForm
+            {...(props as any)}
+            listEnterprise={stateEnterprise.listEnterprise}
+            listProjects={stateProject.listProjects}
+          />
+        }
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
@@ -135,7 +150,13 @@ const Evaluates = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => <EvaluateForm {...(props as any)} />}
+        ModalContent={(props) => 
+          <EvaluateForm
+            {...(props as any)}
+            listEnterprise={stateEnterprise.listEnterprise}
+            listProjects={stateProject.listProjects}
+          />
+        }
       />
     </>
   );

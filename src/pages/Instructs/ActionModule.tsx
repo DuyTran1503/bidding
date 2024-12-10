@@ -1,64 +1,108 @@
+import Button from "@/components/common/Button";
+import Dialog from "@/components/dialog/Dialog";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
-import FormSwitch from "@/components/form/FormSwitch.tsx";
+import FormSwitch from "@/components/form/FormSwitch";
 import { useArchive } from "@/hooks/useArchive";
-import { resetMessageError } from "@/services/store/funding_source/funding_source.slice";
-import { createInstruct } from "@/services/store/instruct/instruct.thunk";
-import { IIntroductionInitialState } from "@/services/store/introduction/introduction.slice";
-import { EPageTypes } from "@/shared/enums/page";
-import { FormikRefType } from "@/shared/utils/shared-types";
-import { Col, Row } from "antd";
-import { Formik } from "formik";
+import { useViewport } from "@/hooks/useViewport";
+import { IInstruct } from "@/services/store/instruct/instruct.mode";
+import { IInstructInitialState } from "@/services/store/instruct/instruct.slice";
+import { createInstruct, updateInstruct } from "@/services/store/instruct/instruct.thunk";
+import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { Col, Form, Row } from "antd";
+import { Formik, FormikProps } from "formik";
 import lodash from "lodash";
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { object, string } from "yup";
 
 interface IInstructFormProps {
-  formikRef?: FormikRefType<IInstructInitialValues>;
-  type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
-  instruct?: IInstructInitialValues;
+  type?: EButtonTypes;
+  visible: boolean;
+  setVisible: Dispatch<SetStateAction<boolean>>;
+  item?: IInstruct;
 }
 
-export interface IInstructInitialValues {
-  id?: string;
-  instruct: string;
-  is_use?: string;
-}
+const InstructForm = ({ visible, type, setVisible, item }: IInstructFormProps) => {
+  const formikRef = useRef<FormikProps<IInstruct>>(null);
+  const { state, dispatch } = useArchive<IInstructInitialState>("instruct");
+  const { screenSize } = useViewport();
 
-const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
-  const { dispatch } = useArchive<IIntroductionInitialState>("instruct");
-
-  const initialValues: IInstructInitialValues = {
-    id: instruct?.id ?? "", // kieu du lieu bat buoc
-    instruct: instruct?.instruct ?? "",
-    is_use: instruct?.is_use ?? "",
+  const initialValues: IInstruct = {
+    id: item?.id ?? "", // kieu du lieu bat buoc
+    instruct: item?.instruct ?? "",
+    is_use: item?.is_use ?? "0",
+  };
+  const handleSubmit = (data: IInstruct, { setErrors }: any) => {
+    const body = {
+      ...lodash.omit(data, "id", "key", "index"),
+    };
+    if (type === EButtonTypes.CREATE) {
+      dispatch(createInstruct({ body }))
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });;
+    } else if (type === EButtonTypes.UPDATE) {
+      dispatch(updateInstruct({ body, param: item?.id }));
+    }
   };
 
-  const tagSchema = object().shape({
+  const Schema = object().shape({
     instruct: string().trim().required("Vui lòng không để trống trường này"),
   });
   useEffect(() => {
-    return () => {
-      dispatch(resetMessageError());
-    };
-  }, []);
+    if (state.status === EFetchStatus.FULFILLED) {
+      setVisible(false);
+    }
+  }, [state.status]);
 
   return (
-    <Formik
-      innerRef={formikRef}
-      initialValues={initialValues}
-      validationSchema={tagSchema}
-      onSubmit={(data) => {
-        if (type === EPageTypes.CREATE) {
-          dispatch(createInstruct({ body: lodash.omit(data, "id") }));
-        } else if (type === EPageTypes.UPDATE && instruct?.id) {
-          dispatch(createInstruct({ body: lodash.omit(data, "id"), param: instruct.id }));
-        }
+    <Dialog
+      screenSize={screenSize}
+      handleSubmit={() => {
+        formikRef.current && formikRef.current.handleSubmit();
       }}
+      visible={visible}
+      setVisible={setVisible}
+      title={
+        type === EButtonTypes.CREATE
+          ? "Tạo mới hướng dẫn"
+          : type === EButtonTypes.UPDATE
+            ? "Cập nhật hướng dẫn"
+            : "Chi tiết hướng dẫn"
+      }
+      footerContent={
+        <div className="flex items-center justify-center gap-2">
+          <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
+          {type !== EButtonTypes.VIEW && (
+            <Button
+              key="submit"
+              kind="submit"
+              text={"Lưu"}
+              onClick={() => {
+                formikRef.current && formikRef.current.handleSubmit();
+              }}
+            />
+          )}
+        </div>
+      }
     >
-      {({ values, setFieldValue }) => {
-        return (
-          <Row gutter={[24, 24]}>
+      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
+        {({ values, setFieldValue }) => (
+          <Form className="mt-3">
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
+                <FormGroup title="Trạng thái">
+                  <FormSwitch
+                    checked={values.is_use === "1"}
+                    onChange={(value) => {
+                      setFieldValue("is_use", value ? "1" : "0");
+                    }}
+                  />
+                </FormGroup>
+              </Col>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Hướng dẫn">
                   <FormCkEditor
@@ -66,22 +110,15 @@ const InstructForm = ({ formikRef, type, instruct }: IInstructFormProps) => {
                     direction="vertical"
                     value={values.instruct}
                     setFieldValue={setFieldValue}
-                    disabled={type === EPageTypes.VIEW}
-                  />
-                </FormGroup>
-                <FormGroup title="Trạng thái">
-                  <FormSwitch
-                      checked={!!values.is_use ? true : false} // tar 0 1
-                      onChange={(value) => {
-                        setFieldValue("is_use", value);
-                      }}
+                    disabled={type === EButtonTypes.VIEW}
                   />
                 </FormGroup>
               </Col>
             </Row>
-        );
-      }}
-    </Formik>
+        </Form>
+        )}
+      </Formik>
+    </Dialog>
   );
 };
 

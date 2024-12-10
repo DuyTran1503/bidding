@@ -30,7 +30,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <div className="h-14">
+    <div className="h-11">
       <header className="fixed top-0 left-0 w-full shadow-md p-2 z-50 bg-cyan-600">
         <div className="flex w-full max-w-screen-xl mx-4 xl:mx-auto items-center justify-between">
           <Link to="/" className="flex justify-center items-center font-medium text-white gap-2 hover:text-gray-200">

@@ -1,5 +1,5 @@
 export interface IIntroduction {
-    id: string | number,
+    id: string,
     introduction: string,
     is_use: string
 }

@@ -7,22 +7,19 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
-import { deleteFundingSources } from "@/services/store/funding_source/funding_source.thunk";
 import { IInstructInitialState } from "@/services/store/instruct/instruct.slice";
-import { getAllInstructs } from "@/services/store/instruct/instruct.thunk";
-import { changeStatusIntroduction } from "@/services/store/introduction/introduction.thunk";
+import { changeStatusInstruct, deleteInstruct, getAllInstructs } from "@/services/store/instruct/instruct.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { EPermissions } from "@/shared/enums/permissions";
 import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-
-import { useNavigate } from "react-router-dom";
+import InstructForm from "./ActionModule";
 
 const Instructs = () => {
-  const navigate = useNavigate();
   const { state, dispatch } = useArchive<IInstructInitialState>("instruct");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
@@ -30,24 +27,18 @@ const Instructs = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
-      onClick(record) {
-        navigate(`/instructs/detail/${record?.key}`);
-      },
-      // permission: EPermissions.DETAIL_INSTRUCT,
+      permission: EPermissions.DETAIL_INSTRUCT,
     },
     {
       type: EButtonTypes.UPDATE,
-      onClick(record) {
-        navigate(`/instructs/update/${record?.key}`);
-      },
-      // permission: EPermissions.UPDATE_INSTRUCT,
+      permission: EPermissions.UPDATE_INSTRUCT,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteFundingSources(record?.key));
+        dispatch(deleteInstruct(record?.key));
       },
-      // permission: EPermissions.DESTROY_INSTRUCT,
+      permission: EPermissions.DESTROY_INSTRUCT,
     },
   ];
 
@@ -55,27 +46,26 @@ const Instructs = () => {
     {
       dataIndex: "index",
       title: "STT",
-      className: "w-[80px]",
+      className: "w-[50px]",
     },
     {
       dataIndex: "instruct",
       title: "Hướng dẫn",
-      className: "w-[250px]",
-
+      className: "w-[400px]",
       render(_, record) {
         return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.instruct || "" }}></div>;
       },
     },
     {
       title: "Trạng thái",
-      dataIndex: "is_active",
-      className: "w-[150px]",
+      dataIndex: "is_use",
+      className: "w-[50px]",
 
       render(_, record) {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record as ITableData)}
-            checked={!!record.is_active}
+            checked={!!record.is_use}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
         );
@@ -90,7 +80,7 @@ const Instructs = () => {
 
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusIntroduction(String(confirmItem.key)));
+      dispatch(changeStatusInstruct(String(confirmItem.key)));
     }
   };
 
@@ -119,11 +109,11 @@ const Instructs = () => {
     () =>
       state.instructs && state.instructs.length > 0
         ? state.instructs.map(({ id, instruct, is_use }, index) => ({
-            index: index + 1,
-            key: id,
-            instruct,
-            is_use,
-          }))
+          index: index + 1,
+          key: id,
+          instruct,
+          is_use,
+        }))
         : [],
     [JSON.stringify(state.instructs)],
   );
@@ -157,13 +147,12 @@ const Instructs = () => {
       <Heading
         title="Hướng dẫn"
         hasBreadcrumb
+        ModalContent={(props) => <InstructForm {...(props as any)} />}
         buttons={[
           {
-            text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
-            onClick: () => {
-              navigate("create");
-            },
+            permission: EPermissions.CREATE_INSTRUCT,
+            text: "Thêm mới",
           },
         ]}
       />
@@ -188,6 +177,7 @@ const Instructs = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
+        ModalContent={(props) => <InstructForm {...(props as any)} />}
         scroll={{ x: 1200 }}
       />
     </>

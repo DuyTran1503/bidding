@@ -7,9 +7,8 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
-import { deleteFundingSources } from "@/services/store/funding_source/funding_source.thunk";
 import { IIntroductionInitialState } from "@/services/store/introduction/introduction.slice";
-import { changeStatusIntroduction, getAllIntroductions } from "@/services/store/introduction/introduction.thunk";
+import { changeStatusIntroduction, deleteIntroduction, getAllIntroductions } from "@/services/store/introduction/introduction.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
@@ -19,10 +18,9 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
-import { useNavigate } from "react-router-dom";
+import IntroductionForm from "./ActionMoudle";
 
 const Introductions = () => {
-  const navigate = useNavigate();
   const { state, dispatch } = useArchive<IIntroductionInitialState>("introduction");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
@@ -30,22 +28,16 @@ const Introductions = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
-      onClick(record) {
-        navigate(`/introductions/detail/${record?.key}`);
-      },
       permission: EPermissions.DETAIL_INTRODUCTION,
     },
     {
       type: EButtonTypes.UPDATE,
-      onClick(record) {
-        navigate(`/introductions/update/${record?.key}`);
-      },
       permission: EPermissions.UPDATE_INTRODUCTION,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteFundingSources(record?.key));
+        dispatch(deleteIntroduction(record?.key));
       },
       permission: EPermissions.DESTROY_INTRODUCTION,
     },
@@ -68,14 +60,14 @@ const Introductions = () => {
     },
     {
       title: "Trạng thái",
-      dataIndex: "is_active",
-      className: "w-[150px]",
+      dataIndex: "is_use",
+      className: "w-[50px]",
 
       render(_, record) {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record as ITableData)}
-            checked={!!record.is_active}
+            checked={!!record.is_use}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
         );
@@ -118,11 +110,11 @@ const Introductions = () => {
     () =>
       state.introductions && state.introductions.length > 0
         ? state.introductions.map(({ id, introduction, is_use }, index) => ({
-            index: index + 1,
-            key: id,
-            introduction,
-            is_use,
-          }))
+          index: index + 1,
+          key: id,
+          introduction,
+          is_use,
+        }))
         : [],
     [JSON.stringify(state.introductions)],
   );
@@ -156,13 +148,12 @@ const Introductions = () => {
       <Heading
         title="Giới thiệu"
         hasBreadcrumb
+        ModalContent={(props) => <IntroductionForm {...(props as any)} />}
         buttons={[
           {
-            text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
-            onClick: () => {
-              navigate("create");
-            },
+            permission: EPermissions.CREATE_INTRODUCTION,
+            text: "Thêm mới",
           },
         ]}
       />
@@ -187,7 +178,7 @@ const Introductions = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        scroll={{ x: 1200 }}
+        ModalContent={(props) => <IntroductionForm {...(props as any)} />}
       />
     </>
   );
