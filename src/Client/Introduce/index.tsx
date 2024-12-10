@@ -13,7 +13,7 @@ const Introduce = () => {
 
   return (
     <div className="max-w-screen-xl mx-auto my-8 space-y-6">
-        <div dangerouslySetInnerHTML={{ __html: state.introduction.introduction }}/>
+        <div dangerouslySetInnerHTML={{ __html: state.introduction?.introduction }}/>
     </div>
 
   );

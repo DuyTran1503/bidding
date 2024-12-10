@@ -93,9 +93,6 @@ import CreateSupport from "@/Client/Supports/Create";
 import ProjectApproval from "@/pages/project-approval";
 import ApproveProjectByStaff from "@/pages/project-approval/Approve";
 import Detail from "@/Client/News/Detail";
-import CreateInstruct from "@/pages/Instructs/Create";
-import UpdateInstruct from "@/pages/Instructs/Update";
-import DetailInstruct from "@/pages/Instructs/Detail";
 import DetailBiddingResult from "@/pages/BiddingResults/DetailBiddingResult";
 import Profile from "@/pages/Profile";
 import Update from "@/pages/Profile/Update";
@@ -650,20 +647,8 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <Instructs />,
-              },
-              {
-                path: "/create",
-                element: () => <CreateInstruct />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateInstruct />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailInstruct />,
-              },
-            ],
+              }
+            ]
           },
           {
             path: "feedback-complaint",

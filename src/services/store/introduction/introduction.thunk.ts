@@ -63,7 +63,7 @@ export const changeStatusIntroduction = createAsyncThunk(
   "introductions/change-status-introductions",
   async (id: string, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.patch(`${prefix}/${id}/toggle-status`);
+      const { response, data } = await client.put(`${prefix}/${id}/changeActive`);
       return response.status >= 400 ? rejectWithValue(data) : id;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

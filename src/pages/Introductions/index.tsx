@@ -7,9 +7,8 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
-import { deleteFundingSources } from "@/services/store/funding_source/funding_source.thunk";
 import { IIntroductionInitialState } from "@/services/store/introduction/introduction.slice";
-import { changeStatusIntroduction, getAllIntroductions } from "@/services/store/introduction/introduction.thunk";
+import { changeStatusIntroduction, deleteIntroduction, getAllIntroductions } from "@/services/store/introduction/introduction.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
@@ -38,7 +37,7 @@ const Introductions = () => {
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
-        dispatch(deleteFundingSources(record?.key));
+        dispatch(deleteIntroduction(record?.key));
       },
       permission: EPermissions.DESTROY_INTRODUCTION,
     },
@@ -61,14 +60,14 @@ const Introductions = () => {
     },
     {
       title: "Trạng thái",
-      dataIndex: "is_active",
+      dataIndex: "is_use",
       className: "w-[50px]",
 
       render(_, record) {
         return (
           <CommonSwitch
             onChange={() => handleChangeStatus(record as ITableData)}
-            checked={!!record.is_active}
+            checked={!!record.is_use}
             title={`Bạn có chắc chắn muốn thay đổi trạng thái không?`}
           />
         );
@@ -153,7 +152,7 @@ const Introductions = () => {
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
-            permission: EPermissions.CREATE_CATALOG,
+            permission: EPermissions.CREATE_INTRODUCTION,
             text: "Thêm mới",
           },
         ]}

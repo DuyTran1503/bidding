@@ -57,7 +57,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
 
   const { dispatch, state } = useArchive<IAccountInitialState>("account");
   const roles = useSelector((state: RootStateType) => state.role.roles);
-  
+
   const initialValues: IStaffFormInitialValues = {
     name: "",
     id_role: [],
@@ -310,6 +310,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   <FormGroup title="Vai trò">
                     <FormSelect
                       isMultiple={true}
+                      isDisabled={type === "view"}
                       onChange={(value) => setFieldValue("id_role", value)}
                       options={roles.map((role) => ({ label: role.name, value: role.id }))}
                       defaultValue={!!values.id_role && values.id_role}

@@ -31,7 +31,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
   const initialValues: IIntroduction = {
     id: item?.id ?? "", // kieu du lieu bat buoc
     introduction: item?.introduction ?? "",
-    is_use: item?.is_use ?? "",
+    is_use: item?.is_use ?? "0",
   };
   const handleSubmit = (data: IIntroduction, { setErrors }: any) => {
     const body = {
@@ -68,10 +68,10 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
       setVisible={setVisible}
       title={
         type === EButtonTypes.CREATE
-          ? "Tạo mới danh mục bài viết"
+          ? "Tạo mới giới thiệu"
           : type === EButtonTypes.UPDATE
-            ? "Cập nhật danh mục bài viết"
-            : "Chi tiết danh mục bài viết"
+            ? "Cập nhật giới thiệu"
+            : "Chi tiết giới thiệu"
       }
       footerContent={
         <div className="flex items-center justify-center gap-2">
