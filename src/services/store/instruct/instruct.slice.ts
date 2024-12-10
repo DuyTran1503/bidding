@@ -56,7 +56,7 @@ const insTructSlice = createSlice({
       builder
         .addCase(getInstruct.fulfilled, (state, { payload }: PayloadAction<IResponse<IInstruct[]> | any>) => {
           if (payload.data) {
-            state.instructs = payload.data.data;
+            state.instruct = payload.data;
           }
         })
         .addCase(getInstruct.rejected, (state, { payload }: PayloadAction<IResponse<IInstruct[]> | any>) => {

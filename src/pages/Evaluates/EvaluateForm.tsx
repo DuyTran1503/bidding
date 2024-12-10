@@ -1,71 +1,77 @@
-import { useArchive } from "@/hooks/useArchive";
+import Button from "@/components/common/Button";
+import Dialog from "@/components/dialog/Dialog";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import { Formik, FormikProps } from "formik";
-import lodash from "lodash";
-import { Col, Form, Row } from "antd";
-import Dialog from "@/components/dialog/Dialog";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { EButtonTypes } from "@/shared/enums/button";
-import Button from "@/components/common/Button";
+import FormSelect from "@/components/form/FormSelect";
+import { useArchive } from "@/hooks/useArchive";
 import { useViewport } from "@/hooks/useViewport";
 import { IEvaluate } from "@/services/store/evaluate/evaluate.model";
-import { createEvaluate, updateEvaluate } from "@/services/store/evaluate/evaluate.thunk";
 import { IEvaluateInitialState } from "@/services/store/evaluate/evaluate.slice";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
-import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
-import { getListProject } from "@/services/store/project/project.thunk";
-import FormSelect from "@/components/form/FormSelect";
-import { convertDataOptions } from "../Project/helper";
+import { createEvaluate, updateEvaluate } from "@/services/store/evaluate/evaluate.thunk";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { Col, Form, Row } from "antd";
+import { Formik, FormikProps } from "formik";
+import lodash from "lodash";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { convertDataOptions } from "../Project/helper";
+import FormCkEditor from "@/components/form/FormCkEditor";
+import { EPageTypes } from "@/shared/enums/page";
 
 interface IEvaluateFormProps {
-  type?: EButtonTypes;
+  type?: EPageTypes;
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
   item?: IEvaluate;
+  listEnterprise?: any[]; // Thay đổi kiểu nếu cần
+  listProjects?: any[]; // Thay đổi kiểu nếu cần
 }
 
-const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) => {
+const EvaluateForm = ({
+  visible,
+  type,
+  setVisible,
+  item,
+  listEnterprise = [],
+  listProjects = [],
+}: IEvaluateFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluate>>(null);
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
-  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { screenSize } = useViewport();
+
   const initialValues: IEvaluate = {
     id: item?.id || "",
-    project_id: item?.project_id || [],
-    enterprise_id: item?.enterprise_id || [],
+    project_id: item?.project_id || undefined,
+    enterprise_id: item?.enterprise_id || undefined,
     title: item?.title || "",
     score: item?.score || 0,
     evaluate: item?.evaluate || "",
+    project: item?.project || undefined,
+    enterprise: item?.enterprise || undefined,
   };
+
   const handleSubmit = (data: IEvaluate, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index"),
     };
-    if (type === EButtonTypes.CREATE) {
+    if (type === EPageTypes.CREATE) {
       dispatch(createEvaluate({ body }))
         .unwrap()
         .catch((error) => {
           const apiErrors = error?.errors || {};
           setErrors(apiErrors);
         });
-    } else if (type === EButtonTypes.UPDATE) {
+    } else if (type === EPageTypes.UPDATE) {
       dispatch(updateEvaluate({ body, param: item?.id }));
     }
   };
 
   useEffect(() => {
-    dispatchEnterprise(getListEnterprise());
-    dispatchProject(getListProject());
-  }, []);
-  useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       setVisible(false);
     }
-  }, [state.status === EFetchStatus.FULFILLED]);
+  }, [state.status]);
+  // console.log(state.evaluates.project?.name);
+
   return (
     <Dialog
       screenSize={screenSize}
@@ -75,16 +81,16 @@ const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) =
       visible={visible}
       setVisible={setVisible}
       title={
-        type === EButtonTypes.CREATE
-          ? "Tạo mới đanh giá kết quả dự án"
-          : type === EButtonTypes.UPDATE
-            ? "Cập nhật đanh giá kết quả dự án"
-            : "Chi tiết đanh giá kết quả dự án"
+        type === EPageTypes.CREATE
+          ? "Tạo mới đánh giá kết quả dự án"
+          : type === EPageTypes.UPDATE
+            ? "Cập nhật đánh giá kết quả dự án"
+            : "Chi tiết đánh giá kết quả dự án"
       }
       footerContent={
         <div className="flex items-center justify-center gap-2">
           <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
-          {type !== EButtonTypes.VIEW && (
+          {type !== EPageTypes.VIEW && (
             <Button
               key="submit"
               kind="submit"
@@ -104,37 +110,39 @@ const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) =
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Doanh nghiệp">
                   <FormSelect
+                    isDisabled={type === "view"}
                     placeholder="Nhập doanh nghiệp"
                     id="enterprise_id"
-                    value={values.enterprise_id}
+                    value={values.enterprise?.user?.name}
                     error={touched.enterprise_id ? errors.enterprise_id : ""}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
-                    options={convertDataOptions(stateEnterprise.listEnterprise || [])}
+                    options={convertDataOptions(listEnterprise)}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Dự án">
                   <FormSelect
-                    placeholder="Nhập dự án"
+                    isDisabled={type === "view"}
+                    value={values.project?.name}
                     id="project_id"
-                    value={values.project_id}
-                    error={touched.project_id ? errors.project_id : ""}
-                    onChange={(e) => setFieldValue("project_id", e)}
-                    options={convertDataOptions(stateProject.listProjects || [])}
+                    placeholder="Nhập tên dự án..."
+                    onChange={(value) => setFieldValue("project_id", value)}
+                    options={convertDataOptions(listProjects)}
                   />
                 </FormGroup>
               </Col>
+              {/* Các trường khác */}
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tiêu đề">
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.evaluate}
-                    name="evaluate"
-                    error={touched.evaluate ? errors.evaluate : ""}
+                    value={values.title}
+                    name="title"
+                    error={touched.title ? errors.title : ""}
                     placeholder="Nhập tiêu đề..."
-                    onChange={(value) => setFieldValue("evaluate", value)}
+                    onChange={(value) => setFieldValue("title", value)}
                     onBlur={handleBlur}
                   />
                 </FormGroup>
@@ -154,16 +162,13 @@ const EvaluateForm = ({ visible, type, setVisible, item }: IEvaluateFormProps) =
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={24} xl={24}>
-                <FormGroup title="Tiêu đề tài">
-                  <FormInput
-                    type="text"
-                    isDisabled={type === "view"}
-                    value={values.title}
-                    name="title"
-                    error={touched.title ? errors.title : ""}
-                    placeholder="Nhập tiêu đề dài..."
-                    onChange={(value) => setFieldValue("title", value)}
-                    onBlur={handleBlur}
+                <FormGroup title="Nội dung">
+                  <FormCkEditor
+                    id="content"
+                    direction="vertical"
+                    value={values.evaluate}
+                    setFieldValue={setFieldValue}
+                    disabled={type === EPageTypes.VIEW}
                   />
                 </FormGroup>
               </Col>

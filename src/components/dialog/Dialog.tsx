@@ -39,7 +39,7 @@ const Dialog = (props: IProps) => {
 
   return (
     <Modal
-      title={title}
+      title={<div className="flex justify-center text-2xl font-semibold">{title}</div>}
       open={visible}
       onOk={handleOk}
       onCancel={() => setVisible(false)}
@@ -48,7 +48,7 @@ const Dialog = (props: IProps) => {
       maskClosable={true}
       destroyOnClose={true}
       width={maxWidth}
-      style={{ width: "100%", maxWidth, top: 0 }} // Chiều cao modal
+      style={{ width: "100%", maxWidth, top: 20 }} // Chiều cao modal
     >
       <div className="pb-4">{children}</div>
       {/* <div
