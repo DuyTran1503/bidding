@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Formik, FormikHelpers, FormikState } from "formik";
 import FormInput from "../form/FormInput";
 import Button from "../common/Button";
-import { Col, Row } from "antd";
+import { Col, message, Row } from "antd";
 import FormSelect from "../form/FormSelect";
 import FormDate from "../form/FormDate";
 import FormTreeSelect from "../form/FormTreeSelect"; // Import FormTreeSelect
@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import React from "react";
 
 export interface ISearchTypeTable {
-  type: "text" | "select" | "treeSelect" | "datetime";
+  type: "text" | "select" | "treeSelect" | "datetime" | "number";
   value?: string;
   onChange?: (value: string | string[]) => void;
   isMultiple?: boolean;
@@ -83,6 +83,26 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                       <FormInput
                         id={item.id}
                         type="text"
+                        label={item.label}
+                        value={value}
+                        placeholder={item.placeholder || "Nhập ..."}
+                        onChange={(data) => {
+                          setFieldValue(item.id, data);
+                          item.onChange && item.onChange(String(data));
+                        }}
+                        onBlur={handleBlur}
+                      />
+                    </Col>
+                  );
+                }
+                if (item.type === "number") {
+                  const value: any = values[item.id] || "";
+
+                  return (
+                    <Col xs={24} sm={24} md={12} lg={6} key={index}>
+                      <FormInput
+                        id={item.id}
+                        type="number"
                         label={item.label}
                         value={value}
                         placeholder={item.placeholder || "Nhập ..."}
@@ -174,10 +194,11 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
             </Row>
             <div className="mt-[12px] flex flex-row items-center justify-center gap-2">
               <Button
-                kind="submit"
                 text={"Tìm kiếm"}
+                kind="submit"
                 onClick={() => {
-                  handleSubmit();
+                  handleSubmit(); // Gọi submit form
+                  message.success("Tìm kiếm thành công", 1); // Hiển thị thông báo
                 }}
               />
               <Button

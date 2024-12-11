@@ -16,7 +16,7 @@ import { EButtonTypes } from "@/shared/enums/button";
 import FormRadio from "@/components/form/FormRadio";
 import FormModal from "@/components/form/FormModal";
 import { mappingSupport, statusEnumArray } from "@/shared/enums/support";
-import { RadioChangeEvent } from "antd";
+import { RadioChangeEvent, Tooltip } from "antd";
 import SupportForm from "../SupportForm";
 import { EPermissions } from "@/shared/enums/permissions";
 
@@ -62,6 +62,10 @@ const Supports = () => {
       title: "Email",
     },
     {
+      title: "Số điện thoại",
+      dataIndex: "phone",
+    },
+    {
       title: "Hỗ trợ",
       dataIndex: "title",
     },
@@ -81,33 +85,86 @@ const Supports = () => {
       },
     },
     {
-      title: "Nội dung hỗ trợ",
-      dataIndex: "content",
-    },
-    {
       title: "Trạng thái",
       dataIndex: "status",
-      render: (_, record) => {
-        const statusMap: { [key: string]: string } = {
-          sent: "Đã gửi",
-          processing: "Đang xử lý",
-          responded: "Đã xử lý",
+      render: (_, record: { status: "sent" | "processing" | "responded" }) => {
+        const statusMap = {
+          sent: { text: "Đã gửi", color: "text-red-500 hover:text-red-400" },
+          processing: { text: "Đang xử lý", color: "text-yellow-500 hover:text-yellow-400" },
+          responded: { text: "Đã xử lý", color: "text-blue-500 hover:text-blue-400" },
         };
+
+        const { text, color } = statusMap[record.status] || { text: "Không xác định", color: "text-gray-500 hover:text-gray-400" };
+
         return (
           <div className="flex items-center space-x-2">
-            <button onClick={() => handleOpenModal(record as ITableData)}>{statusMap[record.status as string] || "Không xác định"}</button>
+            {record.status === "responded" ? (
+              <Tooltip title={"Đã hoàn thành"} color={"#108ee9"}>
+                <span className={color}>{text}</span>
+              </Tooltip>
+            ) : (
+              <button onClick={() => handleOpenModal(record as any)} className={color}>
+                {text}
+              </button>
+            )}
           </div>
         );
       },
-    },
+    }
+
   ];
+  const statusOption = Object.entries({
+    sent: "Đã gửi",
+    processing: "Đang xử lý",
+    responded: "Đã xử lý",
+  }).map(([value, label]) => ({ value, label }));
+  const typeOption = Object.entries({
+    1: "Khác",
+    2: "Kỹ thuật",
+    3: "Tự vấn đấu thầu",
+    4: "Hỗ trợ tài khoản",
+    5: "Đề xuất tính năng/Đóng góp ý tưởng",
+    6: "Báo lỗi",
+  }).map(([value, label]) => ({ value, label }));
 
   const search: ISearchTypeTable[] = [
     {
       id: "title",
-      placeholder: "Nhập tiêu đề thư hỗ trợ...",
-      label: "Tiêu đề thư hỗ trợ",
+      placeholder: "Nhập yêu cầu hỗ trợ...",
+      label: "Yêu cầu hỗ trợ",
       type: "text",
+    },
+    {
+      id: "email",
+      placeholder: "Nhập email...",
+      label: "Email",
+      type: "text",
+    },
+    {
+      id: "phone",
+      placeholder: "Nhập số điện thoại...",
+      label: "Số điện thoại",
+      type: "text",
+    },
+    {
+      id: "sender",
+      placeholder: "Nhập người gửi...",
+      label: "Người gửi",
+      type: "text",
+    },
+    {
+      id: "type",
+      placeholder: "Chọn loại yêu cầu...",
+      label: "Loại yêu cầu",
+      type: "select",
+      options: typeOption
+    },
+    {
+      id: "status",
+      placeholder: "Chọn trạng thái...",
+      label: "Trạng thái",
+      type: "select",
+      options: statusOption
     },
   ];
 
@@ -115,18 +172,18 @@ const Supports = () => {
     () =>
       state.supports && state.supports.length > 0
         ? state.supports.map(({ id, title, email, phone, sender, content, document, type, status }, index) => ({
-            index: index + 1,
-            key: id,
-            id: id,
-            title: title,
-            email,
-            phone,
-            sender,
-            content,
-            document,
-            type,
-            status,
-          }))
+          index: index + 1,
+          key: id,
+          id: id,
+          title: title,
+          email,
+          phone,
+          sender,
+          content,
+          document,
+          type,
+          status,
+        }))
         : [],
     [state.supports],
   );

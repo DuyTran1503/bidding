@@ -1,27 +1,32 @@
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import { IPostInitialState, resetStatus, setFilter } from "@/services/store/post/post.slice";
+import { deletePost, getAllPosts } from "@/services/store/post/post.thunk";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
+import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IPostInitialState, resetStatus, setFilter } from "@/services/store/post/post.slice";
-import { deletePost, getAllPosts } from "@/services/store/post/post.thunk";
 
-import { EButtonTypes } from "@/shared/enums/button";
 import Image from "@/components/table/Image";
-import { mappingStatust } from "@/shared/enums/types";
-import { statusEnumArray } from "@/shared/enums/statusActive";
+import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
+import { convertDataOptions } from "@/pages/Project/helper";
+import { IPostCatalogInitialState } from "@/services/store/postCatalog/postCatalog.slice";
+import { getAllPostCatalogs } from "@/services/store/postCatalog/postCatalog.thunk";
+import { IAccountInitialState } from "@/services/store/account/account.slice";
+import { getListStaff } from "@/services/store/account/account.thunk";
 
 const Posts = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IPostInitialState>("post");
+  const { state: stateCatalog, dispatch: dispatchCatalog } = useArchive<IPostCatalogInitialState>("post_catalog");
+  const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
 
   const buttons: IGridButton[] = [
     {
@@ -97,41 +102,55 @@ const Posts = () => {
       },
     },
   ];
-  const optionStatus: IOption[] = statusEnumArray.map((e) => ({
-    label: mappingStatust[e],
-    value: e,
-  }));
+  // const optionStatus: IOption[] = statusEnumArray.map((e) => ({
+  //   label: mappingStatust[e],
+  //   value: e,
+  // }));
 
   const search: ISearchTypeTable[] = [
     {
-      id: "short_title",
+      id: "title",
       placeholder: "Nhập tiêu đề bài viết...",
       label: "Tiêu đề bài viết",
       type: "text",
     },
     {
-      id: "status",
-      placeholder: "Chọn trạng thái...",
-      label: "Tên trạng thái",
+      id: "catalog",
+      placeholder: "Chọn tên danh mục...",
+      label: "Tên danh mục",
       type: "select",
-      options: optionStatus,
+      options: convertDataOptions(stateCatalog.postCatalogs || []),
     },
+    {
+      id: "author",
+      placeholder: "Chọn người đăng bài...",
+      label: "Người đăng bài",
+      type: "select",
+      options: convertDataOptions(stateStaff.getListStaff || []),
+    },
+    // {
+    //   id: "status",
+    //   placeholder: "Chọn trạng thái...",
+    //   label: "Tên trạng thái",
+    //   type: "select",
+    //   options: optionStatus,
+    // },
   ];
 
   const data: ITableData[] = useMemo(
     () =>
       state.posts && state.posts.length > 0
         ? state.posts.map(({ id, author, catalog, short_title, title, thumbnail, status }, index) => ({
-            index: index + 1,
-            key: id,
-            id: id,
-            author,
-            catalog,
-            short_title,
-            title,
-            thumbnail,
-            status,
-          }))
+          index: index + 1,
+          key: id,
+          id: id,
+          author,
+          catalog,
+          short_title,
+          title,
+          thumbnail,
+          status,
+        }))
         : [],
     [JSON.stringify(state.posts)],
   );
@@ -155,7 +174,10 @@ const Posts = () => {
       dispatch(getAllPosts({ query: state.filter }));
     }
   }, [JSON.stringify(state.status)]);
-
+  useEffect(() => {
+    dispatchCatalog(getAllPostCatalogs({ query: state.filter }));
+    dispatchStaff(getListStaff());
+  }, [])
   useEffect(() => {
     dispatch(getAllPosts({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
