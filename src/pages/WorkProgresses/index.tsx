@@ -199,8 +199,7 @@ const WorkProgresses = () => {
     dispatch(getAllWorkProgresses({ query: state.filter }));
     dispatchTask(getListTask());
     dispatchProject(getListProject());
-  }, []);
-
+  }, [state.filter]);
   return (
     <>
       <Heading
