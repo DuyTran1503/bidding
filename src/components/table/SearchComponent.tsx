@@ -193,10 +193,14 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
               })}
             </Row>
             <div className="mt-[12px] flex flex-row items-center justify-center gap-2">
-              <Button text={"Tìm kiếm"} onClick={() => {
-                handleSubmit(); // Gọi submit form
-                message.success("Tìm kiếm thành công", 1); // Hiển thị thông báo
-              }} />
+              <Button
+                text={"Tìm kiếm"}
+                kind="submit"
+                onClick={() => {
+                  handleSubmit(); // Gọi submit form
+                  message.success("Tìm kiếm thành công", 1); // Hiển thị thông báo
+                }}
+              />
               <Button
                 type="secondary"
                 text={"Hủy"}

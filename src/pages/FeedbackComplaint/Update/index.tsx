@@ -1,29 +1,30 @@
 import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { IWorkProgressInitialState, resetStatus } from "@/services/store/workProgresses/workProgresses.slice";
-import { getWorkProgressById } from "@/services/store/workProgresses/workProgresses.thunk";
+import { resetStatus } from "@/services/store/employee/employee.slice";
+import { IFeedbackComplaint } from "@/services/store/feedback_complaint/feedback_complaint.model";
+import { IFeedbackComplaintInitialState } from "@/services/store/feedback_complaint/feedback_complaint.slice";
+import { getFeedbackComplaintById } from "@/services/store/feedback_complaint/feedback_complaint.thunk";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPageTypes } from "@/shared/enums/page";
 import { FormikProps } from "formik";
 import { useEffect, useRef } from "react";
 import { IoClose, IoSaveOutline } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
-import WorkProgressForm, { IWorkProgressInitialValues } from "../ActionModule";
+import ActionModule from "../ActionModule";
 
-const UpdateWorkProgress = () => {
+const UpdateFeedbackComplaint = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const formikRef = useRef<FormikProps<IWorkProgressInitialValues>>(null);
-  const { state, dispatch } = useArchive<IWorkProgressInitialState>("work_progress");
-
+  const formikRef = useRef<FormikProps<IFeedbackComplaint>>(null);
+  const { state, dispatch } = useArchive<IFeedbackComplaintInitialState>("feedback_complaint");
   useFetchStatus({
-    module: "work_progress",
+    module: "feedback_complaint",
     reset: resetStatus,
     actions: {
       success: {
         message: state.message,
-        navigate: "/work-progresses",
+        navigate: "/feedback_complaints",
       },
       error: {
         message: state.message,
@@ -32,20 +33,20 @@ const UpdateWorkProgress = () => {
   });
 
   useEffect(() => {
-    if (id) dispatch(getWorkProgressById(id));
+    if (id) dispatch(getFeedbackComplaintById(id));
   }, [id]);
   return (
     <>
       <Heading
-        title="Cập nhật tiến độ dự án"
+        title="Cập nhật nhân viên"
         hasBreadcrumb
         buttons={[
           {
             type: "secondary",
-            text: "Quay lại",
+            text: "Hủy",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate(-1);
+              navigate("/feedback_complaints");
             },
           },
           {
@@ -58,9 +59,9 @@ const UpdateWorkProgress = () => {
           },
         ]}
       />
-      {state.workProgress && <WorkProgressForm type={EPageTypes.UPDATE} formikRef={formikRef} workProgress={state.workProgress} />}
+      {state.feedback_complaint && <ActionModule type={EPageTypes.UPDATE} formikRef={formikRef} feedback_complaint={state.feedback_complaint} />}
     </>
   );
 };
 
-export default UpdateWorkProgress;
+export default UpdateFeedbackComplaint;

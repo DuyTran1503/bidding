@@ -7,8 +7,7 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { EPageTypes } from "@/shared/enums/page";
 import { useArchive } from "@/hooks/useArchive";
 import WorkProgressForm, { IWorkProgressInitialValues } from "../ActionModule";
-import { resetStatus } from "@/services/store/account/account.slice";
-import { IWorkProgressInitialState } from "@/services/store/workProgresses/workProgresses.slice";
+import { IWorkProgressInitialState, resetStatus } from "@/services/store/workProgresses/workProgresses.slice";
 import { getWorkProgressById } from "@/services/store/workProgresses/workProgresses.thunk";
 
 const DetailWorkProgress = () => {
@@ -54,7 +53,7 @@ const DetailWorkProgress = () => {
         ]}
       />
       {/* <WorkProgressForm type={EPageTypes.VIEW} formikRef={formikRef} workProgress={data} /> */}
-      {state.workProgress && <WorkProgressForm type={EPageTypes.UPDATE} formikRef={formikRef} workProgress={state.workProgress} />}
+      {state.workProgress && <WorkProgressForm type={EPageTypes.VIEW} formikRef={formikRef} workProgress={state.workProgress} />}
     </>
   );
 };

@@ -17,8 +17,7 @@ export const getProfile = createAsyncThunk("auth/get-profile", async (_, { rejec
 });
 
 // send-mail-forgot-password
-export const sendMailForgotPassword  = 
-createAsyncThunk("sendMailForgotPassword ", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const sendMailForgotPassword = createAsyncThunk("sendMailForgotPassword ", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { data } = await client.post(`${prefix}/send-mail-forgot-password `, payload);
     return data.data;
@@ -27,8 +26,7 @@ createAsyncThunk("sendMailForgotPassword ", async (payload: IThunkPayload, { rej
   }
 });
 // change-password
-export const changePassword  = 
-createAsyncThunk("changePassword ", async (payload: IThunkPayload, { rejectWithValue }) => {
+export const changePassword = createAsyncThunk("changePassword ", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { data } = await client.post(`${prefix}/change-password `, payload);
     return data.data;
@@ -49,6 +47,14 @@ export const login = createAsyncThunk("auth/login", async (payload: IThunkPayloa
 export const logout = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) => {
   try {
     const { response, data } = await client.post(`${prefix}/logout`);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+export const refreshToken = createAsyncThunk("auth/refresh-token", async (_, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.post(`${prefix}/refresh-token`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);

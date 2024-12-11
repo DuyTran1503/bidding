@@ -1,3 +1,4 @@
+import { useTokenMonitor } from "@/hooks/useActivityMonitor";
 import { useArchive } from "@/hooks/useArchive";
 import Loading from "@/pages/Loading/Loading";
 import { IUserProfile } from "@/services/store/auth/auth.model";
@@ -12,10 +13,12 @@ export interface IGlobalMiddlewareContext {
   isLogin: boolean;
 }
 
+// Sử dụng trong GlobalMiddleware
 const GlobalMiddleware = () => {
   const [mounted, setMounted] = useState(false);
-
   const { state, dispatch } = useArchive<IAuthInitialState>("auth");
+
+  useTokenMonitor(dispatch);
 
   useEffect(() => {
     dispatch(getProfile()).then(() => {
@@ -28,9 +31,9 @@ const GlobalMiddleware = () => {
       dispatch(resetStatus());
     }
   }, [state.status]);
+
   if (!mounted) return <Loading />;
 
   return <Outlet context={{ profile: state.profile, isLogin: state.isLogin } as IGlobalMiddlewareContext} />;
 };
-
 export default GlobalMiddleware;

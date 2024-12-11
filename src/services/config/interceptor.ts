@@ -33,7 +33,7 @@ export const interceptor = async <MetaDataType>({
           return await client.send(sendOptions.path, sendOptions.method, sendOptions.payload);
         } else {
           toast.error("Phiên đăng nhập của bạn đã hết hạn, vui lòng đăng nhập lại");
-          window.location.pathname = "/auth/login";
+          // window.location.pathname = "/auth/login";
         }
       }
       data.message = "";
