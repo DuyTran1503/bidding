@@ -173,7 +173,13 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
               })}
             </Row>
             <div className="mt-[12px] flex flex-row items-center justify-center gap-2">
-              <Button text={"Tìm kiếm"} onClick={() => handleSubmit()} />
+              <Button
+                kind="submit"
+                text={"Tìm kiếm"}
+                onClick={() => {
+                  handleSubmit();
+                }}
+              />
               <Button
                 type="secondary"
                 text={"Hủy"}

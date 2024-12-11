@@ -49,7 +49,10 @@ const FormTreeSelect = ({
         <TreeSelect
           allowClear
           disabled={isDisabled}
-          className={clsx("w-full", isDisabled && "opacity-65")}
+          className={clsx(
+            "flex w-full shrink-0 items-center gap-1 overflow-hidden rounded-[4px] border border-gray-100 bg-gray-25",
+            isDisabled && "opacity-65",
+          )}
           value={value}
           onChange={(value) => !isDisabled && handleChange(value)}
           showSearch
@@ -59,18 +62,12 @@ const FormTreeSelect = ({
           fieldNames={{ label: "title", value: "value", children: "children" }}
           multiple={multiple} // Cho phép chọn đơn hoặc nhiều dựa trên prop
           style={{ height }}
-          filterTreeNode={(input, treeNode) =>
-            (treeNode.title && treeNode.title.toString().toLowerCase().includes(input.toLowerCase())) || false
-          }
-        // Tùy chỉnh cách thức tìm kiếm
+          filterTreeNode={(input, treeNode) => (treeNode.title && treeNode.title.toString().toLowerCase().includes(input.toLowerCase())) || false}
+          // Tùy chỉnh cách thức tìm kiếm
         />
       </ConfigProvider>
 
-      {!!error && (
-        <div className={clsx("mt-1 text-red-500")}>
-          {error}
-        </div>
-      )}
+      {!!error && <div className={clsx("mt-1 text-red-500")}>{error}</div>}
     </div>
   );
 };

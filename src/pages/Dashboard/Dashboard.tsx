@@ -28,7 +28,7 @@ import {
   topTendersByProjectTotalAmount,
 } from "@/services/store/chart/chart.thunk";
 import { Col, Row, Select, Spin } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -41,51 +41,86 @@ const Dashboard: React.FC = () => {
   const [selectedYearIndustryProject, setSelectedYearIndustryProject] = useState<string>(yearOptions[0]);
   const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
 
+  const [loadMore, setLoadMore] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
+
+  const observerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    dispatch(projectByIndustry({})),
-      dispatch(projectByFundingsource({})),
-      dispatch(averageProjectPurationByIndustry({})),
-      dispatch(projectByDomestic({})),
-      dispatch(projectByOrganizationType({})),
-      dispatch(projectBySelectionMethod({})),
-      dispatch(projectBySubmissionMethod({})),
-      dispatch(projectByTendererInvestor({})),
-      dispatch(topTendersByProjectCount({})),
-      dispatch(topTendersByProjectTotalAmount({})),
-      dispatch(topInvestorsByProjectPartial({})),
-      dispatch(topInvestorsByProjectFull({})),
+    if (initialLoad) {
+      dispatch(projectByIndustry({}));
+      dispatch(projectByFundingsource({}));
+      setInitialLoad(false);
+    }
+  }, [initialLoad, dispatch]);
+
+  useEffect(() => {
+    if (loadMore) {
+      dispatch(averageProjectPurationByIndustry({}));
+      dispatch(projectByDomestic({}));
+      dispatch(projectByOrganizationType({}));
+      dispatch(projectBySelectionMethod({}));
+      dispatch(projectBySubmissionMethod({}));
+      dispatch(projectByTendererInvestor({}));
+      dispatch(topTendersByProjectCount({}));
+      dispatch(topTendersByProjectTotalAmount({}));
+      dispatch(topInvestorsByProjectPartial({}));
+      dispatch(topInvestorsByProjectFull({}));
       dispatch(topInvestorsByProjectTotalAmount({}));
+      setLoadMore(false);
+    }
+  }, [loadMore, dispatch]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          setLoadMore(true);
+        }
+      },
+      { threshold: 1.0 },
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
   }, []);
+  // useEffect(() => {
+  //   if (selectedYearTimeJoining) {
+  //     dispatch(timeJoiningWebsiteOfEnterprise({ body: { year: selectedYearTimeJoining } }));
+  //   }
+  // }, [selectedYearTimeJoining, dispatch]);
 
-  useEffect(() => {
-    if (selectedYearTimeJoining) {
-      dispatch(timeJoiningWebsiteOfEnterprise({ body: { year: selectedYearTimeJoining } }));
-    }
-  }, [selectedYearTimeJoining, dispatch]);
+  // useEffect(() => {
+  //   if (selectedYearIndustryEnterprise) {
+  //     dispatch(industryHasTheMostEnterprise({ body: { year: selectedYearIndustryEnterprise } }));
+  //   }
+  // }, [selectedYearIndustryEnterprise, dispatch]);
 
-  useEffect(() => {
-    if (selectedYearIndustryEnterprise) {
-      dispatch(industryHasTheMostEnterprise({ body: { year: selectedYearIndustryEnterprise } }));
-    }
-  }, [selectedYearIndustryEnterprise, dispatch]);
+  // useEffect(() => {
+  //   if (selectedYearIndustryProject) {
+  //     dispatch(industryHasTheMostProject({ body: { year: selectedYearIndustryProject } }));
+  //   }
+  // }, [selectedYearIndustryProject, dispatch]);
 
-  useEffect(() => {
-    if (selectedYearIndustryProject) {
-      dispatch(industryHasTheMostProject({ body: { year: selectedYearIndustryProject } }));
-    }
-  }, [selectedYearIndustryProject, dispatch]);
-
-  useEffect(() => {
-    if (selectedYearProjectStatus) {
-      dispatch(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
-    }
-  }, [selectedYearProjectStatus, dispatch]);
+  // useEffect(() => {
+  //   if (selectedYearProjectStatus) {
+  //     dispatch(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
+  //   }
+  // }, [selectedYearProjectStatus, dispatch]);
 
   const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
-
   const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
   const approvedValues = state.projectsStatusPreMonth?.approved?.map((item: number) => Object.values(item)[0]);
   const openedBiddingValues = state.projectsStatusPreMonth?.opened_bidding?.map((item: number) => Object.values(item)[0]);
+
   if (loading) {
     return (
       <div className="flex h-lvh items-center justify-center">
@@ -122,7 +157,7 @@ const Dashboard: React.FC = () => {
               <li>Số gói thầu mới có cập nhật/thay đổi trạng thái trong ngày</li>
             </ul>
           </Col>
-        </Row>  
+        </Row>
       </div>
       <div className="w-full">
         <h2 className="mb-4 text-xl font-semibold">2. Top biểu đồ</h2>

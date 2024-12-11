@@ -1,8 +1,7 @@
 import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { resetStatus } from "@/services/store/employee/employee.slice";
-import { IWorkProgressInitialState } from "@/services/store/workProgresses/workProgresses.slice";
+import { IWorkProgressInitialState, resetStatus } from "@/services/store/workProgresses/workProgresses.slice";
 import { getWorkProgressById } from "@/services/store/workProgresses/workProgresses.thunk";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPageTypes } from "@/shared/enums/page";
