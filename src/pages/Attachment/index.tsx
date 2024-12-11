@@ -23,37 +23,6 @@ const Attachment = () => {
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
 
-  const columns: ColumnsType = [
-    {
-      dataIndex: "index",
-      title: "STT",
-    },
-    {
-      dataIndex: "name",
-      title: "Tên tài liệu",
-    },
-    {
-      dataIndex: "project_id",
-      title: "Dự án ",
-    },
-    {
-      dataIndex: "user_id",
-      title: "Người thực hiện",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "is_active",
-      render(_, record) {
-        return (
-          <CommonSwitch
-            onChange={() => handleChangeStatus(record as ITableData)}
-            checked={!!record.is_active}
-            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
-          />
-        );
-      },
-    },
-  ];
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -77,6 +46,37 @@ const Attachment = () => {
       // permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
     },
   ];
+  const columns: ColumnsType = [
+    {
+      dataIndex: "index",
+      title: "STT",
+    },
+    {
+      dataIndex: "name",
+      title: "Tên tài liệu",
+    },
+    {
+      dataIndex: "project?.name",
+      title: "Dự án ",
+    },
+    {
+      dataIndex: "user_id",
+      title: "Người thực hiện",
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "is_active",
+      render(_, record) {
+        return (
+          <CommonSwitch
+            onChange={() => handleChangeStatus(record as ITableData)}
+            checked={!!record.is_active}
+            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
+          />
+        );
+      },
+    },
+  ];
   const search: ISearchTypeTable[] = [
     {
       id: "name",
@@ -85,18 +85,18 @@ const Attachment = () => {
       type: "text",
     },
   ];
-  const data: ITableData[] = useMemo(() => {
-    return Array.isArray(state.attachments)
+
+  const data: ITableData[] = useMemo(() =>
+    state.attachments && state.attachments.length > 0
       ? state.attachments.map(({ id, name, project_id, user_id, is_active }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          project_id,
-          user_id,
-          is_active,
-        }))
-      : [];
-  }, [JSON.stringify(state.attachments)]);
+        index: index + 1,
+        key: id,
+        name,
+        project_id,
+        user_id,
+        is_active,
+      }))
+      : [], [JSON.stringify(state.attachments)]);
   const handleChangeStatus = (item: ITableData) => {
     setIsModal(true);
     setConfirmItem(item);
@@ -104,7 +104,6 @@ const Attachment = () => {
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
       dispatch(changeStatusAttachment(String(confirmItem.key)));
-      dispatch(getAllAttachment({ query: state.filter }));
     }
   };
   useEffect(() => {
@@ -165,7 +164,7 @@ const Attachment = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        // scroll={{ x: 1600 }}
+      // scroll={{ x: 1600 }}
       />
     </>
   );

@@ -1,23 +1,24 @@
 import ManagementGrid from "@/components/grid/ManagementGrid";
 import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
+import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { IEvaluateInitialState, resetStatus, setFilter } from "@/services/store/evaluate/evaluate.slice";
+import { deleteEvaluate, getAllEvaluates } from "@/services/store/evaluate/evaluate.thunk";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getListProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IEvaluateInitialState, resetStatus, setFilter } from "@/services/store/evaluate/evaluate.slice";
-import { deleteEvaluate, getAllEvaluates } from "@/services/store/evaluate/evaluate.thunk";
+import { convertDataOptions } from "../Project/helper";
 import EvaluateForm from "./EvaluateForm";
-import { EPermissions } from "@/shared/enums/permissions";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
-import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
-import { getListProject } from "@/services/store/project/project.thunk";
 
 const Evaluates = () => {
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
@@ -76,9 +77,41 @@ const Evaluates = () => {
   const search: ISearchTypeTable[] = [
     {
       id: "title",
-      placeholder: "Nhập tên vai trò...",
-      label: "Tên vai trò",
+      placeholder: "Nhập nội dung tiêu đề...",
+      label: "Tên tiêu đề",
       type: "text",
+    },
+    {
+      id: "evaluate",
+      placeholder: "Nhập nội dung đánh giá...",
+      label: "Nội dung đánh giá",
+      type: "text",
+    },
+    {
+      id: "project",
+      placeholder: "Chọn tên dự án...",
+      label: "Tên dự án",
+      type: "select",
+      options: convertDataOptions(stateProject.listProjects || []),
+    },
+    {
+      id: "enterprise",
+      placeholder: "Chọn tên doanh nghiệp...",
+      label: "Tên doanh nghiệp",
+      type: "select",
+      options: convertDataOptions(stateEnterprise.listEnterprise || []),
+    },
+    {
+      id: "score_form",
+      placeholder: "Nhập điểm điểm bắt đầu...",
+      label: "Điểm bắt đầu",
+      type: "number",
+    },
+    {
+      id: "score_to",
+      placeholder: "Nhập điểm kết thúc...",
+      label: "Điểm kết thúc",
+      type: "number",
     },
   ];
 

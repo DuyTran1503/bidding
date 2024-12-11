@@ -26,7 +26,15 @@ const DetailBiddingResult = () => {
     }
   }, [id]);
   const labels = [
-    { label: "Tên dự án", value: data?.project?.name },
+    {
+      label: "Tên dự án", value: (
+        <Tooltip title={"Chi tiết dự án"} color={"#108ee9"}>
+          <span onClick={() => handleRedirectProject(data?.project?.id as number)} className="cursor-pointer text-blue-600 hover:underline">
+            {data?.project?.name}
+          </span>
+        </Tooltip>
+      ),
+    },
     {
       label: "Tên doanh nghiệp trúng thầu",
       value: (
@@ -63,6 +71,9 @@ const DetailBiddingResult = () => {
   ];
   const handleRedirect = (id: string | number) => {
     navigate(`/enterprise/detail/${id}`, { replace: true });
+  };
+  const handleRedirectProject = (id: string | number) => {
+    navigate(`/project/detail/${id}`, { replace: true });
   };
   return (
     <>
