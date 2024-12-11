@@ -6,7 +6,7 @@ import FormSelect from "@/components/form/FormSelect";
 import { useArchive } from "@/hooks/useArchive";
 import { useViewport } from "@/hooks/useViewport";
 import { IEvaluate } from "@/services/store/evaluate/evaluate.model";
-import { IEvaluateInitialState } from "@/services/store/evaluate/evaluate.slice";
+import { IEvaluateInitialState, resetStatus } from "@/services/store/evaluate/evaluate.slice";
 import { createEvaluate, updateEvaluate } from "@/services/store/evaluate/evaluate.thunk";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { Col, Form, Row } from "antd";
@@ -16,6 +16,8 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { convertDataOptions } from "../Project/helper";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import { EPageTypes } from "@/shared/enums/page";
+import useFetchStatus from "@/hooks/useFetchStatus";
+import { object, string } from "yup";
 
 interface IEvaluateFormProps {
   type?: EPageTypes;
@@ -43,11 +45,21 @@ const EvaluateForm = ({
     project_id: item?.project_id || undefined,
     enterprise_id: item?.enterprise_id || undefined,
     title: item?.title || "",
-    score: item?.score || 0,
+    score: item?.score || 10,
     evaluate: item?.evaluate || "",
     project: item?.project || undefined,
     enterprise: item?.enterprise || undefined,
   };
+  const Schema = object().shape({
+    project_id: string().required("Dự án là bắt buộc"),
+    enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
+    score: string().required("Số điểm là bắt buộc")
+      .test("min-max", "Số điểm phải từ 1 đến 10", (value) => {
+        const num = Number(value);
+        return num >= 1 && num <= 10;
+      }),
+    title: string().required("Tiêu đề là bắt buộc"),
+  });
 
   const handleSubmit = (data: IEvaluate, { setErrors }: any) => {
     const body = {
@@ -71,6 +83,15 @@ const EvaluateForm = ({
     }
   }, [state.status]);
   // console.log(state.evaluates.project?.name);
+
+  useFetchStatus({
+    module: "evaluate",
+    reset: resetStatus,
+    actions: {
+      success: { message: state.message },
+      // error: { message: state.message },
+    },
+  });
 
   return (
     <Dialog
@@ -103,10 +124,23 @@ const EvaluateForm = ({
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Dự án">
+                  <FormSelect
+                    isDisabled={type === "view"}
+                    value={values.project?.name}
+                    id="project_id"
+                    placeholder="Nhập tên dự án..."
+                    error={touched.project_id ? errors.project_id : ""}
+                    onChange={(value) => setFieldValue("project_id", value)}
+                    options={convertDataOptions(listProjects)}
+                  />
+                </FormGroup>
+              </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Doanh nghiệp">
                   <FormSelect
@@ -120,19 +154,6 @@ const EvaluateForm = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Dự án">
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    value={values.project?.name}
-                    id="project_id"
-                    placeholder="Nhập tên dự án..."
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(listProjects)}
-                  />
-                </FormGroup>
-              </Col>
-              {/* Các trường khác */}
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tiêu đề">
                   <FormInput
@@ -164,7 +185,7 @@ const EvaluateForm = ({
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Nội dung">
                   <FormCkEditor
-                    id="content"
+                    id="evaluate"
                     direction="vertical"
                     value={values.evaluate}
                     setFieldValue={setFieldValue}

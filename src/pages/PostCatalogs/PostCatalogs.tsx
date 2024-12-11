@@ -87,8 +87,8 @@ const PostCatalogs = () => {
   const search: ISearchTypeTable[] = [
     {
       id: "name",
-      placeholder: "Nhập tên vai trò...",
-      label: "Tên vai trò",
+      placeholder: "Nhập tên danh mục...",
+      label: "Tên danh mục",
       type: "text",
     },
   ];

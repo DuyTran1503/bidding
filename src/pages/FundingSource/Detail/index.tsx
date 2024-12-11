@@ -65,7 +65,7 @@ const DetailFundingSource = () => {
             text: "Quay lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate("/industry");
+              navigate("/funding-sources");
             },
           },
         ]}
