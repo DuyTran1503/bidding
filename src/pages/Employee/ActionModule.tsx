@@ -117,7 +117,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Tên nhân viên" required>
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.name ?? ""}
                     name="name"
                     error={touched.name ? errors.name : ""}
@@ -133,7 +133,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Mã nhân viên">
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.code ?? ""}
                     name="code"
                     error={touched.code ? errors.code : ""}

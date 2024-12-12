@@ -146,6 +146,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
                 <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                   <FormSwitch
                     label="Trạng thái"
+                    isDisabled={type === "view"}
                     checked={values.is_active === "1"}
                     onChange={(value) => {
                       setFieldValue("is_active", value ? "1" : "0");

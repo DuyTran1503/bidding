@@ -25,6 +25,13 @@ const Attachment = () => {
 
   const buttons: IGridButton[] = [
     {
+      type: EButtonTypes.CREATE,
+      onClick(record) {
+        navigate(`/attachment/create/${record?.key}`);
+      },
+      // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
+    },
+    {
       type: EButtonTypes.VIEW,
       onClick(record) {
         navigate(`/attachment/detail/${record?.key}`);

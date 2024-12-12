@@ -76,6 +76,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                 <FormGroup title="Tên nguồn tài trợ" required={true}>
                   <FormInput
                     placeholder="Tên nguồn tài trợ..."
+                    isDisabled={type === EPageTypes.VIEW}
                     name="name"
                     value={values.name}
                     error={touched.name ? errors.name : ""}
@@ -100,6 +101,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Mã nguồn tài trợ" required>
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Mã nguồn tài trợ..."
                     name="code"
                     value={values.code}
@@ -112,6 +114,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Trạng thái hoạt động">
                   <FormSwitch
+                    isDisabled={type === EPageTypes.VIEW}
                     checked={!!values.is_active ? true : false}
                     onChange={(value) => {
                       setFieldValue("is_active", value);
