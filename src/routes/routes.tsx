@@ -652,8 +652,8 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <Instructs />,
-              }
-            ]
+              },
+            ],
           },
           {
             path: "feedback-complaint",

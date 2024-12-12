@@ -1,6 +1,8 @@
 import { ClientReturnType, IFetchOptions, IResponse, IThunkPayload } from "@/shared/utils/shared-interfaces";
-import { interceptor } from "./interceptor";
+import { interceptor } from "./interceptor"; // Giữ nguyên import này
 import { MethodType } from "@/shared/utils/shared-types";
+
+type RequestInterceptor = (options: IFetchOptions) => IFetchOptions | Promise<IFetchOptions>;
 
 export const client = {
   SERVER_URL: import.meta.env.VITE_API_URL,
@@ -22,6 +24,16 @@ export const client = {
     },
   },
 
+  interceptors: {
+    request: [] as RequestInterceptor[], // Mảng để lưu các interceptor
+    use(interceptor: RequestInterceptor) {
+      this.request.push(interceptor); // Thêm interceptor vào mảng
+    },
+    eject(interceptor: RequestInterceptor) {
+      this.request = this.request.filter((fn) => fn !== interceptor); // Xóa interceptor
+    },
+  },
+
   async send<MetaDataType>(
     path: string,
     method: MethodType = "GET",
@@ -33,7 +45,7 @@ export const client = {
       let queryParams = new URLSearchParams(query as Record<string, string>).toString();
       if (queryParams) queryParams = `?${queryParams}`;
 
-      const options: IFetchOptions = {
+      let options: IFetchOptions = {
         method,
       };
 
@@ -45,8 +57,12 @@ export const client = {
         headers["Content-Type"] = "application/json";
         options.body = JSON.stringify(body);
       }
-
       Object.assign(options, { headers });
+
+      // Gọi tất cả các interceptor trước khi gửi yêu cầu
+      for (const interceptor of this.interceptors.request) {
+        options = await interceptor(options); // Gọi từng interceptor
+      }
 
       const response = await fetch(`${this.SERVER_URL}${path}${queryParams}`, options);
 

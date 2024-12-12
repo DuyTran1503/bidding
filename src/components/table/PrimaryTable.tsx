@@ -27,8 +27,8 @@ export interface ISearchTable {
 export interface IAdditionalTab {
   key: string;
   label: string;
-  content: React.ReactNode
-  color?: string
+  content: React.ReactNode;
+  color?: string;
 }
 
 interface IPrimaryTableProps<T extends ISearchParams> extends ISearchProps<T> {
@@ -45,7 +45,7 @@ interface IPrimaryTableProps<T extends ISearchParams> extends ISearchProps<T> {
   };
   fetching?: Function;
   tabLabel?: string;
-  additionalTabs?: IAdditionalTab[]
+  additionalTabs?: IAdditionalTab[];
 }
 
 const PrimaryTable = <T extends ISearchParams>({
@@ -58,7 +58,7 @@ const PrimaryTable = <T extends ISearchParams>({
   filter,
   scroll,
   tabLabel = "Danh sách dữ liệu",
-  additionalTabs = []
+  additionalTabs = [],
   // ...rest
 }: IPrimaryTableProps<T>) => {
   const dispatch = useDispatch();
@@ -86,17 +86,17 @@ const PrimaryTable = <T extends ISearchParams>({
     if (fetching) {
       dispatch(fetching());
     }
-  }
+  };
 
   const newPagination = pagination
     ? {
-      current: pagination.current,
-      pageSize: pagination.pageSize,
-      total: pagination.total,
-      showSizeChanger: pagination.showSideChanger ?? false,
-      showTotal: (total: number, [start, end]: [number, number]) => getShowingText(total, [start, end]),
-      onChange: handleTableChange,
-    }
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+        total: pagination.total,
+        showSizeChanger: pagination.showSideChanger ?? false,
+        showTotal: (total: number, [start, end]: [number, number]) => getShowingText(total, [start, end]),
+        onChange: handleTableChange,
+      }
     : false;
 
   const tabItems = [
@@ -104,16 +104,7 @@ const PrimaryTable = <T extends ISearchParams>({
       key: "table",
       label: tabLabel,
       color: "#0891b2",
-      content: (
-        <Table
-          onChange={newHandleTableChange}
-          columns={columns}
-          dataSource={data}
-          pagination={newPagination}
-          scroll={scroll}
-          rowKey="key"
-        />
-      ),
+      content: <Table onChange={newHandleTableChange} columns={columns} dataSource={data} pagination={newPagination} scroll={scroll} rowKey="key" />,
     },
     ...additionalTabs,
   ];
@@ -126,11 +117,9 @@ const PrimaryTable = <T extends ISearchParams>({
 
   return (
     <div className="primary-table flex w-full flex-col gap-6">
-      {search && (
-        <SearchComponent search={search} setFilter={setFilter} filter={filter} />
-      )}
+      {search && <SearchComponent search={search} setFilter={setFilter} filter={filter} />}
       {additionalTabs.length > 0 ? (
-        <CustomTabs items={tabItems}/>
+        <CustomTabs items={tabItems} />
       ) : (
         <Table
           onChange={newHandleTableChange}

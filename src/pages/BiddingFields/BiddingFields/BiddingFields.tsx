@@ -24,7 +24,7 @@ import { FaPlus } from "react-icons/fa6";
 
 import { useNavigate } from "react-router-dom";
 
-const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
+export const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
   return data.map((item) => ({
     title: item.name,
     value: item.id.toString(),
