@@ -52,7 +52,11 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
         setErrors(apiErrors);
       });
     } else if (type === EButtonTypes.UPDATE) {
-      const newData = item?.path === body.path ? (({...rest }) => rest)(body) : body;
+      const newData = item?.path === body.path ? {
+        ...body,
+        path: ""
+      } : body;
+
       dispatch(updateBanner({ body: newData, param: item?.id }));
     }
   };
