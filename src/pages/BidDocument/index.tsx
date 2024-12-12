@@ -16,10 +16,17 @@ import { IBidDocumentInitialState, resetStatus, setFilter } from "@/services/sto
 import { deleteBidDocument, getAllBidDocument } from "@/services/store/bid_document/bid_document.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { convertDataOptions } from "../Project/helper";
 
 const BidDocument = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBidDocumentInitialState>("bid_document");
+  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -55,21 +62,6 @@ const BidDocument = () => {
         return convertMoney(record?.bid_price);
       },
     },
-    // {
-    //   title: "Trạng thái",
-    //   dataIndex: "status",
-    //   align: "center",
-    //   className: "w-[200px]",
-    //   render(_, record) {
-    //     return (
-    //       <CommonSwitch
-    //         onChange={() => handleChangeStatus(record as ITableData)}
-    //         checked={!!record.is_active}
-    //         title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
-    //       />
-    //     );
-    //   },
-    // },
   ];
   const buttons: IGridButton[] = [
     {
@@ -96,10 +88,30 @@ const BidDocument = () => {
   ];
   const search: ISearchTypeTable[] = [
     {
-      id: "name",
-      placeholder: "Nhập ...",
-      label: "Loại hình doanh nghiệp",
-      type: "text",
+      id: "project_id",
+      placeholder: "Chọn tên dự án...",
+      label: "Tên dự án",
+      type: "select",
+      options: convertDataOptions(stateProject.listProjects || []),
+    },
+    {
+      id: "enterprise_id",
+      placeholder: "Chọn tên doanh nghiệp...",
+      label: "Tên doanh nghiệp",
+      type: "select",
+      options: convertDataOptions(stateEnterprise.listEnterprise || []),
+    },
+    {
+      id: "start_date",
+      placeholder: "Chọn thời gian ...",
+      title: "Thời gian bắt đầu",
+      type: "datetime",
+    },
+    {
+      id: "end_date",
+      placeholder: "Chọn thời gian...",
+      title: "Thời gian kết thúc",
+      type: "datetime",
     },
   ];
   const data: ITableData[] = useMemo(() => {
@@ -143,6 +155,10 @@ const BidDocument = () => {
     }
     return [];
   }, [JSON.stringify(state.bidDocuments)]);
+  useEffect(() => {
+    dispatchEnterprise(getListEnterprise());
+    dispatchProject(getListProject());
+  }, []);
   useEffect(() => {
     dispatch(getAllBidDocument({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
@@ -190,11 +206,9 @@ const BidDocument = () => {
           pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
           number_of_elements: state.number_of_elements && state.number_of_elements,
-          // showSideChanger:true
         }}
         setFilter={setFilter}
         filter={state.filter}
-        // scroll={{ x: 1400 }}
       />
     </>
   );

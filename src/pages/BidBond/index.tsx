@@ -21,6 +21,7 @@ import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa";
 
 import ActionModuleBidBod from "./ActionModule";
+import { convertDataOptions } from "../Project/helper";
 
 const BidBonds = () => {
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
@@ -149,52 +150,37 @@ const BidBonds = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
-
-  const projectOptions: IOption[] =
-    stateProject?.listProjects && stateProject.listProjects.length > 0
-      ? stateProject.listProjects.map((e) => ({
-          value: e.id,
-          label: e.name,
-        }))
-      : [];
-  const enterpriseOption: IOption[] =
-    stateEnterprise?.listEnterprise! && stateEnterprise.listEnterprise.length > 0
-      ? stateEnterprise.listEnterprise.map((e) => ({
-          value: e.id,
-          label: e.name,
-        }))
-      : [];
   const optionType: IOption[] = bidBondEnumArray.map((e) => ({
     label: mappingBidBond[e],
     value: e,
   }));
   const search: ISearchTypeTable[] = [
     {
-      id: "bidbond_number",
+      id: "bond_number",
       placeholder: "Nhập mã bảo lãnh...",
       label: "Mã bảo lãnh dự thầu",
       type: "text",
+    },
+    {
+      id: "bond_type",
+      placeholder: "Nhập loại bảo lãnh...",
+      label: "Loại bảo lãnh",
+      type: "select",
+      options: optionType,
     },
     {
       id: "enterprise_id",
       placeholder: "Nhập tên Người/Tổ chức...",
       label: "Tên Người/Tổ chức bảo lãnh dự thầu",
       type: "select",
-      options: enterpriseOption as { value: string; label: string }[],
-    },
-    {
-      id: "bond_type",
-      placeholder: "Nhập loại bảo lãnh...",
-      label: "Loại bảo lãnh ",
-      type: "select",
-      options: optionType,
+      options: convertDataOptions(stateEnterprise.listEnterprise || []),
     },
     {
       id: "project_id",
       placeholder: "Nhập tên dự án...",
       label: "Tên dự án",
       type: "select",
-      options: projectOptions as { value: string; label: string }[],
+      options: convertDataOptions(stateProject.listProjects || []),
     },
   ];
 

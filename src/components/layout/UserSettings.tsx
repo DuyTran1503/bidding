@@ -31,7 +31,7 @@ const UserSettings = () => {
       label: (
         <Link to="/profile" className="flex items-center gap-1">
           <AiOutlineUser className="text-xl" />
-          <span>Profile</span>
+          <span>Thông tin cá nhân</span>
         </Link>
       ),
       key: "0",
