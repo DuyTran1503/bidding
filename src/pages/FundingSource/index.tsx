@@ -11,10 +11,9 @@ import { changeStatusFundingSource, deleteFundingSources, getAllFundingSources }
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 import { TypeFundingSource } from "@/shared/enums/type_funding_source";
 import { convertEnum } from "@/shared/utils/common/convertEnum";
-import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
+import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -108,10 +107,6 @@ const FundingSources = () => {
       dispatch(changeStatusFundingSource(String(confirmItem.key)));
     }
   };
-  const statusOptions: IOption[] = statusEnumArray.map((e) => ({
-    value: e,
-    label: mappingStatus[e],
-  }));
   const search: ISearchTypeTable[] = [
     {
       id: "name",
@@ -126,14 +121,14 @@ const FundingSources = () => {
       type: "select",
       options: convertEnum(TypeFundingSource),
     },
-    {
-      id: "is_active",
-      placeholder: "Chọn trạng thái ...",
-      label: "Trạng thái",
-      type: "select",
+    // {
+    //   id: "is_active",
+    //   placeholder: "Chọn trạng thái ...",
+    //   label: "Trạng thái",
+    //   type: "select",
 
-      options: statusOptions as { value: string; label: string }[],
-    },
+    //   options: statusOptions as { value: string; label: string }[],
+    // },
   ];
 
   const data: ITableData[] = useMemo(

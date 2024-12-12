@@ -20,11 +20,13 @@ import BiddingResult from "./BiddingResult";
 import ListChildrenProject from "./ChildrenProject";
 import EvaluationCriteria from "./EvaluationCriteria";
 import { IEvaluationCriteria } from "@/services/store/evaluation/evaluation.model";
+import { IAttachment } from "@/services/store/attachment/attachment.model";
 const { Title } = Typography;
 const { Panel } = Collapse;
 interface ProjectDetailsCardProps {
   data?: INewProject | undefined;
   data2?: IBiddingResult;
+  dataAttack?: IAttachment;
   dataBidDoc?: IBidDocument;
   title?: string;
   customDetails?: { label: string; value: any }[];

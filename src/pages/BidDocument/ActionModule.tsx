@@ -77,7 +77,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
     financial_score: bidDocument?.financial_score ?? "",
     totalScore: bidDocument?.totalScore ?? "",
     ranking: bidDocument?.ranking ?? "",
-    status: bidDocument?.status ?? "",
+    status: bidDocument?.status ?? "1",
     note: bidDocument?.note ?? "",
     file: bidDocument?.file || undefined,
   });
@@ -184,9 +184,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Mã bảo lãnh" required>
                   <FormSelect
@@ -201,18 +198,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Ngày nộp hồ sơ">
-                  <FormDate
-                    disabled={type === "view"}
-                    value={values.submission_date ? dayjs(values.submission_date) : null}
-                    onChange={(date) => setFieldValue("submission_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Giá trị đề nghị" required>
                   <FormInput
                     placeholder="Nhập giá trị đề nghị..."
@@ -224,8 +209,8 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Thời gian thực hiện">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+                <FormGroup title="Thời gian thực hiện" required>
                   <FormDate
                     disabled={type === "view"}
                     value={values.implementation_time ? dayjs(values.implementation_time) : null}
@@ -233,10 +218,16 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+                <FormGroup title="Ngày nộp hồ sơ">
+                  <FormDate
+                    disabled={type === "view"}
+                    value={values.submission_date ? dayjs(values.submission_date) : null}
+                    onChange={(date) => setFieldValue("submission_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Thời hạn hiệu lực">
                   <FormDate
                     disabled={type === "view"}
@@ -245,9 +236,6 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tài liệu đính kèm" required>
                   <FormUploadFile

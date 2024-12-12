@@ -9,7 +9,7 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
+import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -19,8 +19,7 @@ import { IEvaluationCriteriaInitialState, resetStatus, setFilter } from "@/servi
 import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/services/store/evaluation/evaluation.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
-import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
-import { IProject } from "@/services/store/project/project.model";
+import { convertDataOptions } from "../Project/helper";
 
 const EvaluationCriteria = () => {
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
@@ -115,7 +114,6 @@ const EvaluationCriteria = () => {
             index: index + 1,
             key: id,
             id,
-            project_id: (project as IProject).id,
             project,
             name,
             weight,
@@ -150,17 +148,6 @@ const EvaluationCriteria = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
-  const statusOptions: IOption[] = statusEnumArray.map((e) => ({
-    value: e,
-    label: mappingStatus[e],
-  }));
-  const projectOptions: IOption[] =
-    stateProject?.listProjects && stateProject.listProjects.length > 0
-      ? stateProject.listProjects.map((e) => ({
-          value: e.id,
-          label: e.name,
-        }))
-      : [];
   const search: ISearchTypeTable[] = [
     {
       id: "name",
@@ -173,23 +160,25 @@ const EvaluationCriteria = () => {
       placeholder: "Chọn dự án ...",
       label: "Loại dự án ",
       type: "select",
-      options: projectOptions as { value: string; label: string }[],
+      options: convertDataOptions(stateProject.listProjects || []),
     },
-    {
-      id: "is_active",
-      placeholder: "Chọn trạng thái ...",
-      label: "Trạng thái",
-      type: "select",
+    // {
+    //   id: "is_active",
+    //   placeholder: "Chọn trạng thái ...",
+    //   label: "Trạng thái",
+    //   type: "select",
 
-      options: statusOptions as { value: string; label: string }[],
-    },
+    //   options: statusOptions as { value: string; label: string }[],
+    // },
   ];
 
   return (
     <>
       <Heading
         title="Tiêu chí đánh giá"
-        ModalContent={(props) => <ActionModule {...(props as any)} />}
+        ModalContent={(props) => <ActionModule {...(props as any)}
+        listProjects={stateProject.listProjects}
+         />}
         hasBreadcrumb
         buttons={[
           {
@@ -221,7 +210,9 @@ const EvaluationCriteria = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => <ActionModule {...(props as any)} />}
+        ModalContent={(props) => <ActionModule {...(props as any)}
+        listProjects={stateProject.listProjects}
+         />}
       />
     </>
   );

@@ -206,7 +206,7 @@ const ProjectPage = () => {
     {
       id: "upload_time_end",
       placeholder: "Chọn thời gian...",
-      title: "Thời gian bắt đầu đăng tải dự án",
+      title: "Thời gian kết thúc đăng tải dự án",
       type: "datetime",
     },
     {

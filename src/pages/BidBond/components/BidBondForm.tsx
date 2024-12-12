@@ -40,21 +40,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Mã bảo lãnh" required>
-                  <FormInput
-                    type="text"
-                    isDisabled={type === "view"}
-                    value={values.bond_number}
-                    name="bond_number"
-                    error={touched.bond_number ? errors.bond_number : ""}
-                    placeholder="Nhập mã bảo lãnh..."
-                    onChange={(value) => setFieldValue("bond_number", value)}
-                    onBlur={handleBlur}
-                  />
-                </FormGroup>
-              </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Người hoặc tổ chức bảo lãnh" required>
+                <FormGroup title="Doanh nghiệp hoặc tổ chức bảo lãnh" required>
                   <FormSelect
                     className="w-100"
                     options={enterpriseOptions}
@@ -80,36 +66,21 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   />
                 </FormGroup>
               </Col>
-
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Số tiền bảo lãnh" required>
+                <FormGroup title="Mã bảo lãnh" required>
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.bond_amount}
-                    error={touched.bond_amount ? errors.bond_amount : ""}
-                    name="bond_amount"
-                    placeholder="Nhập số tiền bảo lãnh..."
-                    onChange={(value) => setFieldValue("bond_amount", value)}
+                    value={values.bond_number}
+                    name="bond_number"
+                    error={touched.bond_number ? errors.bond_number : ""}
+                    placeholder="Nhập mã bảo lãnh..."
+                    onChange={(value) => setFieldValue("bond_number", value)}
                     onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>
-              {/* <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-              <FormGroup title="Số tiền bảo bằng chữ" required>
-                <FormInput
-                  type="text"
-                  isDisabled={type === "view"}
-                  value={values.bond_amount_in_words}
-                  error={touched.bond_amount_in_words ? errors.bond_amount_in_words : ""}
-                  name="bond_amount_in_words"
-                  placeholder="Nhập số tiền bảo lãnh bằng chữ..."
-                  onChange={(value) => setFieldValue("bond_amount_in_words", value)}
-                  onBlur={handleBlur}
-                />
-              </FormGroup>
-            </Col> */}
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Loại bảo lãnh" required>
                   <FormSelect
                     isDisabled={type === "view"}
@@ -123,6 +94,20 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+                <FormGroup title="Số tiền bảo lãnh" required>
+                  <FormInput
+                    type="text"
+                    isDisabled={type === "view"}
+                    value={values.bond_amount}
+                    error={touched.bond_amount ? errors.bond_amount : ""}
+                    name="bond_amount"
+                    placeholder="Nhập số tiền bảo lãnh..."
+                    onChange={(value) => setFieldValue("bond_amount", value)}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
                 <FormGroup title="Ngày phát hành">
                   <FormDate
                     disabled={type === "view"}
@@ -132,7 +117,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Ngày hết hạn">
+                <FormGroup title="Ngày hết hạn" required>
                   <FormDate
                     disabled={type === "view"}
                     minDate={values.issue_date ? dayjs(values.issue_date) : undefined}

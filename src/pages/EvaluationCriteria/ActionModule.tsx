@@ -10,10 +10,8 @@ import { useViewport } from "@/hooks/useViewport";
 import { IEvaluationCriteria } from "@/services/store/evaluation/evaluation.model";
 import { IEvaluationCriteriaInitialState } from "@/services/store/evaluation/evaluation.slice";
 import { createEvaluation, updateEvaluation } from "@/services/store/evaluation/evaluation.thunk";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { getListProject } from "@/services/store/project/project.thunk";
-import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { EPageTypes } from "@/shared/enums/page";
 import { Col, Row } from "antd";
 import { Form, Formik, FormikProps } from "formik";
 import lodash from "lodash";
@@ -22,24 +20,25 @@ import { number, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
 
 interface IEvaluationCriteriaFormProps {
-  type?: EButtonTypes;
+  type?: EPageTypes;
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
   item?: IEvaluationCriteria;
+  listProjects?: any[];
 }
 
-const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEvaluationCriteriaFormProps) => {
+const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listProjects = [], }: IEvaluationCriteriaFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluationCriteria>>(null);
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
-  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
 
   const { screenSize } = useViewport();
   const initialValues: IEvaluationCriteria = {
     id: item?.id || "",
     project_id: item?.project_id || undefined,
-    is_active: item?.is_active ? "1" : "0",
+    is_active: item?.is_active ? "0" : "1",
     name: item?.name || "",
     weight: item?.weight || "",
+    project: item?.project || undefined,
     description: item?.description || "",
   };
 
@@ -48,17 +47,21 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
     project_id: string().trim().required("Vui lòng chọn dự án"),
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên tiêu chí đánh giá"),
     weight: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập trọng số đánh giá"),
-    description: string().trim().required("Vui lòng nhập mô tả"),
-  });
+    });
 
-  const handleSubmit = (data: IEvaluationCriteria) => {
+  const handleSubmit = (data: IEvaluationCriteria, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "key", "index", "id"),
     };
-    if (type === EButtonTypes.CREATE) {
-      return dispatch(createEvaluation({ body: body }));
+    if (type === EPageTypes.CREATE) {
+      return dispatch(createEvaluation({ body: body }))
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });
     }
-    if (type === EButtonTypes.UPDATE && item?.id) {
+    if (type === EPageTypes.UPDATE && item?.id) {
       return dispatch(updateEvaluation({ body: body, param: item?.id }));
     }
   };
@@ -67,11 +70,6 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
       setVisible(false);
     }
   }, [state.status]);
-  useEffect(() => {
-    if (!!visible) {
-      dispatchProject(getListProject());
-    }
-  }, [visible]);
   return (
     <Dialog
       screenSize={screenSize}
@@ -81,16 +79,16 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
       visible={visible}
       setVisible={setVisible}
       title={
-        type === EButtonTypes.CREATE
+        type === EPageTypes.CREATE
           ? "Tạo mới tiêu chi đánh giá"
-          : type === EButtonTypes.UPDATE
+          : type === EPageTypes.UPDATE
             ? "Cập nhật tiêu chi đánh giá"
             : "Chi tiết tiêu chi đánh giá"
       }
       footerContent={
         <div className="flex items-center justify-center gap-2">
           <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
-          {type !== EButtonTypes.VIEW && (
+          {type !== EPageTypes.VIEW && (
             <Button
               key="submit"
               kind="submit"
@@ -104,63 +102,73 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item }: IEv
       }
     >
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
-        {({ values, handleBlur, setFieldValue }) => {
-          return (
-            <Form className="mt-3">
-              <Row gutter={[24, 24]}>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+        {({ values, errors, touched, handleBlur, setFieldValue }) => (
+          <Form className="mt-3">
+            <Row gutter={[24, 24]}>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Tên dự án" required>
                   <FormSelect
                     isDisabled={type === "view"}
-                    label="Tên dự án"
-                    value={values.project_id}
+                    value={values.project?.name}
                     id="project_id"
                     placeholder="Nhập tên dự án..."
+                    error={touched.project_id ? errors.project_id : ""}
                     onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(stateProject.listProjects || [])}
+                    options={convertDataOptions(listProjects)}
                   />
-                </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Tên tiêu chí đánh giá" required>
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    label="Tên tiêu chí đánh giá"
                     value={values.name}
                     name="name"
+                    error={touched.name ? errors.name : ""}
                     placeholder="Nhập tên tiêu chí đánh giá..."
                     onChange={(value) => setFieldValue("name", value)}
                     onBlur={handleBlur}
                   />
-                </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Trọng số đánh giá" required>
                   <FormInput
                     type="number"
                     isDisabled={type === "view"}
-                    label="Trọng số đánh giá"
                     value={values.weight}
                     name="weight"
+                    error={touched.weight ? errors.weight : ""}
                     placeholder="Nhập trọng số đánh giá..."
                     onChange={(value) => setFieldValue("weight", value)}
                     onBlur={handleBlur}
                   />
-                </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                  <FormSwitch
-                    label="Trạng thái"
-                    checked={values.is_active === "1"}
-                    onChange={(value) => {
-                      setFieldValue("is_active", value ? "1" : "0");
-                    }}
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormSwitch
+                  label="Trạng thái"
+                  checked={values.is_active === "0"}
+                  onChange={(value) => {
+                    setFieldValue("is_active", value ? "0" : "1");
+                  }}
+                />
+              </Col>
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <FormGroup title="Mô Tả" required>   
+                  <FormCkEditor
+                    id="description"
+                    direction="vertical"
+                    value={values.description}
+                    setFieldValue={setFieldValue}
+                    disabled={type === EPageTypes.VIEW}
                   />
-                </Col>
-                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                  <FormGroup title="Mô Tả">
-                    <FormCkEditor label="Mô tả" id="description" value={values.description ?? ""} onChange={(e) => setFieldValue("description", e)} />
-                  </FormGroup>
-                </Col>
-              </Row>
-            </Form>
-          );
-        }}
+                </FormGroup>
+              </Col>
+            </Row>
+          </Form>
+        )}
       </Formik>
     </Dialog>
   );

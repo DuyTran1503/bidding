@@ -99,6 +99,7 @@ import Update from "@/pages/Profile/Update";
 import EnterEmail from "@/pages/ForgotPassword/EnterEmail";
 import NewPassword from "@/pages/ForgotPassword/NewPassword";
 import Success from "@/pages/ForgotPassword/Success";
+import DetailAttachment from "@/pages/Attachment/AttachmentDetail";
 
 export interface IRoute {
   path: string;
@@ -498,6 +499,10 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <Attachment />,
+              },
+              {
+                path: "/detail/:id",
+                element: () => <DetailAttachment />,
               },
             ],
           },

@@ -26,3 +26,9 @@
 :-webkit-autofill {
   box-shadow: 0 0 0 999px #f9f9fc inset;
 }
+.ant-select-selection-item{
+  color: black;
+}
+:where(.css-dev-only-do-not-override-1uq9j6g).ant-picker .ant-picker-input >input[disabled] {
+  color: black
+}
