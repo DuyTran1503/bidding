@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IInitialState, IResponse } from "@/shared/utils/shared-interfaces";
-import { changePassword, getProfile, login, logout, sendMailForgotPassword } from "./auth.thunk";
+import { changePassword, getProfile, login, logout, refreshToken, sendMailForgotPassword } from "./auth.thunk";
 import { ILoginResponseData, IUserProfile } from "./auth.model";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
@@ -52,7 +52,8 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, { payload }: PayloadAction<IResponse<ILoginResponseData>>) => {
         localStorage.setItem("accessToken", JSON.stringify(payload.data?.access_token));
         localStorage.setItem("refreshToken", JSON.stringify(payload.data?.refresh_token));
-        state.loginTime = new Date().getTime() / 1000;
+        localStorage.setItem("expiresIn", JSON.stringify(payload.data?.expires_in));
+        state.loginTime = +payload.data?.expires_in;
         state.status = EFetchStatus.FULFILLED;
       })
       .addCase(login.rejected, (state, { payload }: PayloadAction<any>) => {
@@ -60,32 +61,32 @@ const authSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors || payload?.message || "Tài khoản mật khẩu không chính xác");
       });
-      // ? Gửi yêu cầu đổi mật khẩu
+    // ? Gửi yêu cầu đổi mật khẩu
     builder
-    .addCase(sendMailForgotPassword.pending, (state) => {
-      state.status = EFetchStatus.PENDING;
-    })
-    .addCase(sendMailForgotPassword.fulfilled, (state) => {
-      state.status = EFetchStatus.FULFILLED;
-      state.message = "Gửi yêu cầu thành công";
-    })
-    .addCase(sendMailForgotPassword.rejected, (state, { payload }: PayloadAction<IError | any>) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = transformPayloadErrors(payload?.errors);
-    });
-      // ? Mật khẩu mới
+      .addCase(sendMailForgotPassword.pending, (state) => {
+        state.status = EFetchStatus.PENDING;
+      })
+      .addCase(sendMailForgotPassword.fulfilled, (state) => {
+        state.status = EFetchStatus.FULFILLED;
+        state.message = "Gửi yêu cầu thành công";
+      })
+      .addCase(sendMailForgotPassword.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+    // ? Mật khẩu mới
     builder
-    .addCase(changePassword.pending, (state) => {
-      state.status = EFetchStatus.PENDING;
-    })
-    .addCase(changePassword.fulfilled, (state) => {
-      state.status = EFetchStatus.FULFILLED;
-      state.message = "Gửi yêu cầu thành công";
-    })
-    .addCase(changePassword.rejected, (state, { payload }: PayloadAction<IError | any>) => {
-      state.status = EFetchStatus.REJECTED;
-      state.message = transformPayloadErrors(payload?.errors);
-    });
+      .addCase(changePassword.pending, (state) => {
+        state.status = EFetchStatus.PENDING;
+      })
+      .addCase(changePassword.fulfilled, (state) => {
+        state.status = EFetchStatus.FULFILLED;
+        state.message = "Gửi yêu cầu thành công";
+      })
+      .addCase(changePassword.rejected, (state, { payload }: PayloadAction<IError | any>) => {
+        state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
     // ? Logout
     builder
       .addCase(logout.pending, (state) => {
@@ -94,10 +95,26 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        localStorage.removeItem("expiresIn");
         state.isLogin = false;
+        state.loginTime = 0;
         state.status = EFetchStatus.FULFILLED;
       })
       .addCase(logout.rejected, (state, { payload }: PayloadAction<any>) => {
+        state.message = payload?.message;
+        state.status = EFetchStatus.REJECTED;
+      });
+    builder
+      .addCase(refreshToken.pending, (state) => {
+        state.status = EFetchStatus.PENDING;
+      })
+      .addCase(refreshToken.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
+        localStorage.setItem("accessToken", JSON.stringify(payload.data?.access_token));
+        localStorage.setItem("expiresIn", JSON.stringify(payload.data?.expires_in));
+        state.loginTime = +payload.data?.expires_in;
+        state.status = EFetchStatus.FULFILLED;
+      })
+      .addCase(refreshToken.rejected, (state, { payload }: PayloadAction<any>) => {
         state.message = payload?.message;
         state.status = EFetchStatus.REJECTED;
       });

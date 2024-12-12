@@ -4,32 +4,51 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { resetStatus, setFilter } from "@/services/store/employee/employee.slice";
-import { IWorkProgressInitialState } from "@/services/store/workProgresses/workProgresses.slice";
+import { ITaskInitialState } from "@/services/store/task/task.slice";
+import { getListTask } from "@/services/store/task/task.thunk";
+import { IWorkProgressInitialState, resetStatus, setFilter } from "@/services/store/workProgresses/workProgresses.slice";
 import { deleteWorkProgress, getAllWorkProgresses } from "@/services/store/workProgresses/workProgresses.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { mappingTypeFeedback, TypeFeedback } from "@/shared/enums/typeFeedback";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
+import { Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { convertDataOptions } from "../Project/helper";
+import { optionWorkProgress } from "./ActionModule";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { formatTreeData } from "../BiddingFields/BiddingFields/BiddingFields";
 
 const WorkProgresses = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IWorkProgressInitialState>("work_progress");
+  const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
+  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
+  const feedbackColors: { [key in TypeFeedback]: string } = {
+    [TypeFeedback.POOR]: "bg-red-500 text-white", // Màu cho Kém
+    [TypeFeedback.MEDIUM]: "bg-yellow-500 text-black", // Màu cho Trung bình
+    [TypeFeedback.GOOD]: "bg-green-500 text-white", // Màu cho Tốt
+    [TypeFeedback.VERYGOOD]: "bg-blue-500 text-white",
+    [TypeFeedback.EXCELLENT]: "bg-[#009071]",
+  };
   const columns: ColumnsType = [
     {
       dataIndex: "index",
       title: "STT",
-      className: "w-[200px]",
+      className: "w-[80px]",
     },
     {
       dataIndex: "project",
       title: "Dự án",
       className: "w-[200px]",
       render: (_, record) => {
-        return <span>{record.project?.name || "Khong co"}</span>;
+        return <span>{record.project?.name || ""}</span>;
       },
     },
     {
@@ -63,22 +82,26 @@ const WorkProgresses = () => {
       dataIndex: "feedback",
       title: "Nhận xét",
       className: "w-[200px]",
+      render: (_, record) => {
+        const feedback = record.feedback as TypeFeedback;
+        const feedbackText = mappingTypeFeedback[feedback] || "Không xác định";
+        const feedbackClass = feedbackColors[feedback] || "bg-[#009071] text-black";
+
+        return (
+          <Tag color={` ${feedbackClass}`} className={`inline-block rounded-full px-3 py-1 ${feedbackClass}`}>
+            {feedbackText}
+          </Tag>
+        );
+      },
     },
     {
       dataIndex: "expense",
       title: "Chi phí",
       className: "w-[200px]",
+      render: (_, record) => {
+        return convertMoney(record.expense);
+      },
     },
-    // {
-    //   dataIndex: "start_date",
-    //   title: "Ngày bắt đầu",
-    //   className: "w-[200px]",
-    // },
-    // {
-    //   dataIndex: "end_date",
-    //   title: "Ngày kết thúc",
-    //   className: "w-[200px]",
-    // },
   ];
   const buttons: IGridButton[] = [
     {
@@ -103,12 +126,40 @@ const WorkProgresses = () => {
       // permission: EPermissions.DESTROY_EMPLOYEE,
     },
   ];
+  const projectOptions: IOption[] =
+    stateProject?.listProjects && stateProject.listProjects.length > 0
+      ? stateProject.listProjects.map((e) => ({
+          value: e.id,
+          label: e.name,
+        }))
+      : [];
   const search: ISearchTypeTable[] = [
     {
       id: "name",
-      placeholder: "Nhập tên nhân viên...",
-      title: "Tên nhân viên",
+      placeholder: "Nhập tên tiến độ...",
+      label: "Tên tiến độ",
       type: "text",
+    },
+    {
+      id: "project_id",
+      placeholder: "Chọn dự án ...",
+      label: "Loại dự án ",
+      type: "treeSelect",
+      treeData: parentOptions,
+    },
+    {
+      id: "task",
+      placeholder: "Chọn nhiệm vụ...",
+      label: "Nhiệm vụ ",
+      type: "select",
+      options: convertDataOptions(Array.isArray(stateTask?.listTasks) ? stateTask.listTasks : []),
+    },
+    {
+      id: "feedback",
+      placeholder: "Chọn nhận xét...",
+      label: "Nhận xét ",
+      type: "select",
+      options: optionWorkProgress,
     },
   ];
 
@@ -140,11 +191,15 @@ const WorkProgresses = () => {
       error: { message: state.message },
     },
   });
-
   useEffect(() => {
-    dispatch(getAllWorkProgresses({ query: {} })); // Load toàn bộ dữ liệu khi component mount
-  }, []);
-
+    const formattedData = formatTreeData(stateProject?.listProjects || []);
+    setTreeData(formattedData);
+  }, [stateProject?.listProjects]);
+  useEffect(() => {
+    dispatch(getAllWorkProgresses({ query: state.filter }));
+    dispatchTask(getListTask());
+    dispatchProject(getListProject());
+  }, [state.filter]);
   return (
     <>
       <Heading
@@ -152,7 +207,7 @@ const WorkProgresses = () => {
         hasBreadcrumb
         buttons={[
           {
-            text: "Thêm tiến độ dự án",
+            text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
               navigate("/work-progresses/create");

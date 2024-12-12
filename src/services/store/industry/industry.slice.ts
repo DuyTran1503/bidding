@@ -51,6 +51,7 @@ const industrySlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getAllIndustry.fulfilled, (state, { payload }: PayloadAction<IResponse<IIndustry[]> | any>) => {
+        console.log(payload);
         if (payload.data) {
           state.industries = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;
