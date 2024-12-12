@@ -357,6 +357,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                     <FormGroup title="Trạng thái hoạt động">
                       <FormSwitch
                         checked={!!values.account_ban_at ? true : false}
+                        isDisabled={type === "view"}
                         onChange={(value) => {
                           setFieldValue("account_ban_at", value);
                         }}
@@ -366,6 +367,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                     <FormGroup title="Giới tính" className="gap-[6px]">
                       <FormRadio
+                        isDisabled={type === "view"}
                         options={genderOptions}
                         value={values.gender && (genderOptions.find((item) => +item.value === +values.gender)?.value as string)}
                         onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
@@ -386,6 +388,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Ảnh đại diện">
                   <FormUploadFile
+                    disabled={type === "view"}
                     isMultiple={false}
                     value={values.avatar}
                     onChange={(e: any) => {

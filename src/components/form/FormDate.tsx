@@ -14,9 +14,10 @@ interface FormDateProps {
   minDate?: Dayjs;
   maxDate?: Dayjs;
   disabled?: boolean;
+  error?: string;
 }
 
-const FormDate: React.FC<FormDateProps> = ({ label, onChange, defaultValue, value, disabled, minDate, maxDate }: FormDateProps) => {
+const FormDate: React.FC<FormDateProps> = ({ label, onChange, error, defaultValue, value, disabled, minDate, maxDate }: FormDateProps) => {
   const handleChange: DatePickerProps<Dayjs>["onChange"] = (date, dateString) => {
     if (onChange) {
       onChange(date, dateString as string);
@@ -35,6 +36,11 @@ const FormDate: React.FC<FormDateProps> = ({ label, onChange, defaultValue, valu
         disabled={disabled}
         className="custom-datepicker w-full rounded-md bg-gray-25 !h-[35px]"
       />
+      {!!error && (
+        <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white")}>
+          {error}
+        </div>
+      )}
     </div>
   );
 };

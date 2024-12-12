@@ -51,10 +51,10 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
         module: "support",
         reset: resetStatus,
         actions: {
-          success: { message: state.message },
-          error: { message: state.message },
+            success: { message: state.message },
+            error: { message: state.message },
         },
-      });
+    });
     return (
         <div className="max-w-screen-xl mx-auto">
             <div className="flex items-center text-2xl font-semibold mt-5">
@@ -130,17 +130,18 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
                             </Col>
                             <Col xs={24} sm={24} md={24} xl={12}>
                                 <FormGroup title="Nội dung hỗ trợ">
-                                    <FormCkEditor 
-                                    id="description" 
-                                    direction="vertical" 
-                                    value={values.content} 
-                                    setFieldValue={setFieldValue} 
-                                    disabled={type === "view"} />
+                                    <FormCkEditor
+                                        id="description"
+                                        direction="vertical"
+                                        value={values.content}
+                                        setFieldValue={setFieldValue}
+                                        disabled={type === "view"} />
                                 </FormGroup>
                             </Col>
                             <Col xs={24} sm={24} md={24} xl={12}>
                                 <FormGroup title="Hình ảnh hoặc file">
                                     <FormUploadFile
+                                        disabled={type === "view"}
                                         isMultiple={false}
                                         value={values.document}
                                         onChange={(e: any) => setFieldValue("document", e)}

@@ -33,7 +33,7 @@ import { convertDataOptions } from "../Project/helper";
 
 interface IEmployeeFormProps {
   formikRef?: FormikRefType<IEmployee>;
-  type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
+  type: EPageTypes;
   employee?: IEmployee;
 }
 
@@ -60,20 +60,25 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
     status: employee?.status ?? undefined, // Default value
   };
   const validationSchema = object().shape({
-    name: string()
-      .trim()
+    name: string().trim()
       .matches(/^[^\d]*$/, "Họ tên không được chứa số")
       .required("Vui lòng nhập họ tên")
       .max(255, "Số ký tự tối đa là 255 ký tự"),
-    email: string()
-      .trim()
+    code: string().trim().required("Vui lòng nhập mã nhân viên")
+      .max(255, "Số ký tự tối đa là 255 ký tự"),
+    email: string().trim()
       .required("Vui lòng nhập địa chỉ email")
       .email("Địa chỉ email không hợp lệ")
       .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Vui lòng nhập lại! định dạng email chưa đúng")
       .max(255, "Số ký tự tối đa là 255 ký tự"),
     phone: string().trim().required("Vui lòng nhập số điện thoại").matches(phoneRegex, "Số điện thoại không hợp lệ"),
-
+    taxcode: string().trim().required("Vui lòng nhập mã số thuế").max(255, "Số ký tự tối đa là 255 ký tự"),
+    gender: string().required("Vui lòng chọn giới tính"),
+    enterprise_id: string().required("Vui lòng chọn công ty làm việc"),
+    status: string().required("Vui lòng chọn trạng thái làm việc"),
+    education_level: string().required("Vui lòng chọn trình độ học vấn"),
   });
+
   const genderOptions: IOption[] = statusEnumArray.map((key) => ({
     value: key,
     label: mappingGender[key],
@@ -96,12 +101,17 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(data) => {
+      onSubmit={(data, { setErrors }) => {
         const body = {
           ...lodash.omit(data, "id"),
         };
         if (type === EPageTypes.CREATE) {
-          return dispatch(createEmployee(body as any));
+          return dispatch(createEmployee(body as any))
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
         }
         if (type === EPageTypes.UPDATE) {
           const payload = employee?.avatar === body.avatar ? (({ ...rest }) => rest)(body) : body;
@@ -117,7 +127,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Tên nhân viên" required>
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.name ?? ""}
                     name="name"
                     error={touched.name ? errors.name : ""}
@@ -130,10 +140,10 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Mã nhân viên">
+                <FormGroup title="Mã nhân viên" required>
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.code ?? ""}
                     name="code"
                     error={touched.code ? errors.code : ""}
@@ -146,10 +156,12 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title=" Công ty làm việc" >
+                <FormGroup title=" Công ty làm việc" required>
                   <FormSelect
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn công ty..."
                     id="enterprise_id"
+                    error={touched.enterprise_id ? errors.enterprise_id : ""}
                     value={values.enterprise_id || undefined}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}
@@ -160,7 +172,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Email" required>
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.email ?? ""}
                     name="email"
                     error={touched.email ? errors.email : ""}
@@ -176,7 +188,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Số điện thoại" required>
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.phone ?? ""}
                     name="phone"
                     error={touched.phone ? errors.phone : ""}
@@ -192,7 +204,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Mã số thuế" required>
                   <FormInput
                     type="number"
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.taxcode ?? ""}
                     name="taxcode"
                     error={touched.taxcode ? errors.taxcode : ""}
@@ -208,7 +220,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Mức lương">
                   <FormInput
                     type="number"
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.salary ?? ""}
                     name="salary"
                     error={touched.salary ? errors.salary : ""}
@@ -224,6 +236,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Ngày sinh">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
+                    error={touched.birthday ? errors.address : ""}
                     value={values.birthday ? dayjs(values.birthday) : null}
                     onChange={(date) => setFieldValue("birthday", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -233,7 +246,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Địa chỉ">
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.address ?? ""}
                     name="address"
                     error={touched.address ? errors.address : ""}
@@ -246,18 +259,20 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Ngày bắt đầu ">
+                <FormGroup title="Ngày bắt đầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
+                    error={touched.start_date ? errors.start_date : ""}
                     value={values.start_date ? dayjs(values.start_date) : null}
                     onChange={(date) => setFieldValue("start_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Ngày kết thúc ">
+                <FormGroup title="Ngày kết thúc">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
+                    error={touched.start_date ? errors.start_date : ""}
                     minDate={values.start_date ? dayjs(values.start_date) : undefined}
                     value={values.end_date ? dayjs(values.end_date) : null}
                     onChange={(date) => setFieldValue("end_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
@@ -266,11 +281,13 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
               </Col>
 
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Trình độ học vấn" >
+                <FormGroup title="Trình độ học vấn" required>
                   <FormSelect
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.education_level}
+                    defaultValue={values.education_level}
                     options={optionEducation}
+                    error={touched.education_level ? errors.education_level : ""}
                     id="education_level"
                     placeholder="Chọn mức độ..."
                     onChange={(value) => setFieldValue("education_level", value)}
@@ -280,17 +297,20 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Giới tính" className="gap-[6px]" required>
                   <FormRadio
+                    isDisabled={type === EPageTypes.VIEW}
                     options={genderOptions}
+                    error={touched.gender ? errors.gender : ""}
                     value={values.gender && (genderOptions.find((item) => +item.value === +values.gender)?.value as string)}
                     onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
-                <FormGroup title="Trạng thái làm việc">
+                <FormGroup title="Trạng thái làm việc" required>
                   <FormSelect
-                    isDisabled={type === "view"}
+                    isDisabled={type === EPageTypes.VIEW}
                     value={values.status}
+                    error={touched.status ? errors.status : ""}
                     options={optionStatus}
                     id="status"
                     placeholder="Chọn mức độ..."
@@ -302,6 +322,8 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
               <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
                 <FormGroup title="Ảnh đại diện">
                   <FormUploadFile
+                    error={touched.avatar ? errors.avatar : ""}
+                    disabled={type === EPageTypes.VIEW}
                     isMultiple={false}
                     value={values.avatar}
                     onChange={(e: any) => {

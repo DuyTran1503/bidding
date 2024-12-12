@@ -89,7 +89,7 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id, classNameFilMa
             <div key={index} className="relative mx-2 inline-block text-center">
               {renderFileIcon(file)}
               <button onClick={() => handleDeleteImage(file.name)}>
-                <IoIosCloseCircle className="absolute right-1 top-1 h-[24px] w-[24px] rounded-circle text-green-100" />
+                <IoIosCloseCircle className={clsx("absolute right-1 top-1 h-[24px] w-[24px] rounded-circle text-green-100", { "hidden": disabled })} />
               </button>
             </div>
           ))}
@@ -100,7 +100,7 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id, classNameFilMa
             htmlFor={`file-upload-${id}`}
             className={clsx(
               "text-m-medium inline-block cursor-pointer rounded bg-cyan-50 px-[14px] py-[10px] text-cyan-600",
-              { "opacity-50 pointer-events-none": disabled }
+              { "hidden": disabled }
             )}
           >
             Tải file lên

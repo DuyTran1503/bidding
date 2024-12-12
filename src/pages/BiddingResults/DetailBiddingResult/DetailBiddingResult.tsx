@@ -133,7 +133,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.project.name}
+                    value={values.project?.name}
                     name="project.name"
                     placeholder="Nhập tên dự án..."
                     onChange={(value) => setFieldValue("project.name", value)}
@@ -145,7 +145,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.project.location}
+                    value={values.project?.location}
                     name="project.location"
                     placeholder="Nhập địa điểm..."
                     onChange={(value) => setFieldValue("project.location", value)}
@@ -157,7 +157,7 @@ const DetailBiddingResult = ({ visible, type, setVisible, item }: IBiddingResult
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
-                    value={values.project.bid_submission_start}
+                    value={values.project?.bid_submission_start}
                     name="project.bid_submission_start"
                     placeholder="Ngày bắt đầu..."
                     onChange={(value) => setFieldValue("project.bid_submission_start", value)}
