@@ -165,6 +165,7 @@ const SupportForm = ({ visible, type, setVisible, item }: ISupportFormProps) => 
                             <Col xs={24} sm={24} md={24} xl={24}>
                                 <FormGroup title="Hình ảnh">
                                     <FormUploadFile
+                                        disabled={type === "view"}
                                         isMultiple={false}
                                         value={values.document}
                                         onChange={(e: any) => setFieldValue("document", e)}

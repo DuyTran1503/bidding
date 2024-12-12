@@ -50,7 +50,7 @@ const DetailEmployee = () => {
           },
         ]}
       />
-      {state.employee && <ActionModule type={EPageTypes.UPDATE} formikRef={formikRef} employee={state.employee} />}
+      {state.employee && <ActionModule type={EPageTypes.VIEW} formikRef={formikRef} employee={state.employee} />}
     </>
   );
 };

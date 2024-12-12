@@ -20,7 +20,7 @@ const FormUploadFile = ({ value, onChange, isMultiple, disabled, name, error, cl
   return isMultiple ? (
     <MemoizedFormUploadImage onChange={onChange} value={value} id={name} error={error} disabled={disabled} classNameFilMany={classNameFilMany} />
   ) : (
-    <MemoizedFormSingleFile value={value as File} onChange={onChange} id={name} error={error} />
+    <MemoizedFormSingleFile value={value as File} onChange={onChange} id={name} error={error} disabled={disabled} />
   );
 };
 

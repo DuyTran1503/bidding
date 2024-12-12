@@ -88,6 +88,7 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
                             <Col xs={24} sm={24} md={8} xl={8}>
                                 <FormGroup title="Ảnh đại diện">
                                     <FormUploadFile
+                                        disabled={type === "view"}
                                         isMultiple={false}
                                         value={values.avatar}
                                         onChange={(e: any) => setFieldValue("avatar", e)}

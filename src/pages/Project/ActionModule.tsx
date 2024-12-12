@@ -632,6 +632,7 @@ const ActionModule = ({
                 <FormGroup title="Tài liệu đính kèm">
                   <FormUploadFile
                     isMultiple
+                    disabled={type === "view"}
                     name={"files"} // Sử dụng điều kiện để đổi name
                     value={values.files} // Điều kiện chọn giá trị
                     onChange={(e) => {

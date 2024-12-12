@@ -153,6 +153,7 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
               {/* <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Hồ sơ nhân viên">
                   <FormUploadFile
+                    disabled={type === "view"}
                     isMultiple={false}
                     value={values.document}
                     onChange={(e: any) => {

@@ -239,6 +239,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tài liệu đính kèm" required>
                   <FormUploadFile
+                    disabled={type === "view"}
                     name={"file"} // Sử dụng điều kiện để đổi name
                     value={values.file} // Điều kiện chọn giá trị
                     onChange={(e) => {
