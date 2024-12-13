@@ -34,9 +34,18 @@ export const useTokenMonitor = (dispatch: any) => {
 
     logoutTimeout.current = setTimeout(
       () => {
-        navigate("/login");
+        const expiresIn = localStorage.getItem("expiresIn");
+        if (expiresIn) {
+          const expirationTime = Number(expiresIn);
+          const currentTime = Date.now();
+          const timeRemaining = expirationTime - currentTime;
+
+          if (timeRemaining <= 0) {
+            navigate("auth/login");
+          }
+        }
       },
-      5 * 60 * 1000,
+      5 * 60 * 1000, // This can remain as a fallback
     );
   };
 
@@ -50,7 +59,16 @@ export const useTokenMonitor = (dispatch: any) => {
       }
       resetActivityTimer();
     } else {
-      navigate("/login");
+      const expiresIn = localStorage.getItem("expiresIn");
+      if (expiresIn) {
+        const expirationTime = Number(expiresIn);
+        const currentTime = Date.now();
+        const timeRemaining = expirationTime - currentTime;
+
+        if (timeRemaining <= 0) {
+          navigate("auth/login");
+        }
+      }
     }
   };
 

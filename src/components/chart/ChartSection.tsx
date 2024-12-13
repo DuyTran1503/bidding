@@ -80,7 +80,7 @@ const ChartSection: React.FC<ChartSectionProps> = ({
           chartType={chartType}
           title={chartTitle}
           name={data?.map(({ name }) => name)}
-          value={data.map(({ value }) => value)}
+          value={data?.map(({ value }) => value)}
           barWidth={barWidth}
           valueType={valueType}
           colors={colors}
