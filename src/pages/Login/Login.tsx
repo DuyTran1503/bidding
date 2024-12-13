@@ -57,7 +57,7 @@ const Login: React.FC = () => {
     actions: {
       success: {
         message: 'Đăng nhập thành công',
-        navigate: "/admin/dashboard",
+        navigate: "/dashboard",
       },
       error: {
         message: state.message,

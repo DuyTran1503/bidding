@@ -62,31 +62,25 @@ const Evaluates = () => {
       },
     },
     {
+      dataIndex: "enterprise",
+      title: "Tên doanh nghiệp",
+      render: (_, record) => {
+        return <span>{record.enterprise?.user?.name || "Không có tên doanh nghiệp"}</span>;
+      },
+    },
+    {
       dataIndex: "score",
-      title: "Tên danh mục",
+      title: "Điểm",
     },
     {
       dataIndex: "evaluate",
       title: "Nội dung",
-    },
-    {
-      dataIndex: "title",
-      title: "Mô tả",
+      render(_, record) {
+        return <div dangerouslySetInnerHTML={{ __html: record?.evaluate || "" }} className="text-compact-3"></div>;
+      },
     },
   ];
   const search: ISearchTypeTable[] = [
-    {
-      id: "title",
-      placeholder: "Nhập nội dung tiêu đề...",
-      label: "Tên tiêu đề",
-      type: "text",
-    },
-    {
-      id: "evaluate",
-      placeholder: "Nhập nội dung đánh giá...",
-      label: "Nội dung đánh giá",
-      type: "text",
-    },
     {
       id: "project",
       placeholder: "Chọn tên dự án...",
@@ -102,32 +96,31 @@ const Evaluates = () => {
       options: convertDataOptions(stateEnterprise.listEnterprise || []),
     },
     {
-      id: "score_form",
-      placeholder: "Nhập điểm điểm bắt đầu...",
-      label: "Điểm bắt đầu",
-      type: "number",
+      id: "evaluate",
+      placeholder: "Nhập nội dung đánh giá...",
+      label: "Nội dung đánh giá",
+      type: "text",
     },
     {
-      id: "score_to",
-      placeholder: "Nhập điểm kết thúc...",
-      label: "Điểm kết thúc",
-      type: "number",
-    },
+      id: "score_from",
+      type: "numberRange",
+      rangeFields: { minField: "score_from", maxField: "score_to" },
+    }
   ];
 
   const data: ITableData[] = useMemo(
     () =>
       state.evaluates && state.evaluates.length > 0
         ? state.evaluates.map(({ id, title, score, evaluate, project, enterprise }, index) => ({
-            index: index + 1,
-            key: id,
-            id: id,
-            title,
-            score,
-            evaluate,
-            project,
-            enterprise,
-          }))
+          index: index + 1,
+          key: id,
+          id: id,
+          title,
+          score,
+          evaluate,
+          project,
+          enterprise,
+        }))
         : [],
     [JSON.stringify(state.evaluates)],
   );
@@ -156,7 +149,7 @@ const Evaluates = () => {
       <Heading
         title="Đánh giá kết quả dự án"
         hasBreadcrumb
-        ModalContent={(props) => 
+        ModalContent={(props) =>
           <EvaluateForm
             {...(props as any)}
             listEnterprise={stateEnterprise.listEnterprise}
@@ -183,7 +176,7 @@ const Evaluates = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => 
+        ModalContent={(props) =>
           <EvaluateForm
             {...(props as any)}
             listEnterprise={stateEnterprise.listEnterprise}
