@@ -14,16 +14,26 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
-import ActionModule from "./ActionModule";
 import { IEvaluationCriteriaInitialState, resetStatus, setFilter } from "@/services/store/evaluation/evaluation.slice";
 import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/services/store/evaluation/evaluation.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
-import { convertDataOptions } from "../Project/helper";
+import { unwrapResult } from "@reduxjs/toolkit";
+import ActionModule from "./ActionModule";
+
+export const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
+  return data.map((item) => ({
+    title: item.name,
+    value: item.id.toString(),
+    key: item.id.toString(),
+    children: item.children ? formatTreeData(item.children) : [],
+  }));
+};
 
 const EvaluationCriteria = () => {
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
@@ -126,7 +136,13 @@ const EvaluationCriteria = () => {
 
   useEffect(() => {
     dispatch(getAllEvaluations({ query: state.filter }));
-    dispatchProject(getListProject());
+    dispatchProject(getListProject())
+          .then(unwrapResult)
+          .then((result) => {
+            const fields = result.data;
+            const formattedData = formatTreeData(fields);
+            setTreeData(formattedData);
+          });
   }, [JSON.stringify(state.filter)]);
 
   useEffect(() => {
@@ -159,8 +175,8 @@ const EvaluationCriteria = () => {
       id: "project",
       placeholder: "Chọn dự án ...",
       label: "Loại dự án ",
-      type: "select",
-      options: convertDataOptions(stateProject.listProjects || []),
+      type: "treeSelect",
+      treeData: parentOptions,
     },
     // {
     //   id: "is_active",
