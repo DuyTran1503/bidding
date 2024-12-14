@@ -34,23 +34,23 @@ export const useTokenMonitor = (dispatch: any) => {
 
     logoutTimeout.current = setTimeout(
       () => {
-        navigate("/login");
+        navigate("/auth/login");
       },
-      5 * 60 * 1000,
+      60 * 60 * 1000,
     );
   };
 
   const handleRequest = () => {
     const timeSinceLastActivity = Date.now() - lastActivityTime.current;
 
-    if (timeSinceLastActivity < 5 * 60 * 1000) {
+    if (timeSinceLastActivity < 60 * 60 * 1000) {
       if (hasRefreshed.current) {
         setupTokenRefresh();
         hasRefreshed.current = false;
       }
       resetActivityTimer();
     } else {
-      navigate("/login");
+      navigate("/auth/login");
     }
   };
 

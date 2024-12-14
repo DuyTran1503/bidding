@@ -2,6 +2,7 @@ import { Col, Row } from "antd";
 import { FormikErrors, FormikTouched } from "formik";
 import { ForwardedRef, forwardRef, memo, useMemo } from "react";
 import CustomFormikEditor from "../ckfinder/CustomizeCkfinder";
+import clsx from "clsx";
 
 interface Props {
   id: string;
@@ -15,10 +16,11 @@ interface Props {
   errors?: FormikErrors<any>;
   touched?: FormikTouched<any>;
   className?: string;
+  error?: string;
 }
 
 const FormCkEditor = forwardRef(function FormCkEditor(props: Props, ref?: ForwardedRef<any>) {
-  const { id, label, value, setFieldValue, onChange, disabled, direction = "vertical", isRequired, errors, touched, className } = props;
+  const { id, label, value, setFieldValue, onChange, disabled, direction = "vertical", isRequired,error, errors, touched, className } = props;
 
   const Label = () =>
     label ? (
@@ -39,6 +41,11 @@ const FormCkEditor = forwardRef(function FormCkEditor(props: Props, ref?: Forwar
       <Label />
       {Editor}
       <Error />
+      {!!error && (
+        <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white")}>
+          {error}
+        </div>
+      )}
     </div>
   ) : (
     <Row ref={ref} className={`${className || ""}`}>
@@ -49,6 +56,11 @@ const FormCkEditor = forwardRef(function FormCkEditor(props: Props, ref?: Forwar
         {Editor}
         <Error />
       </Col>
+      {!!error && (
+        <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white")}>
+          {error}
+        </div>
+      )}
     </Row>
   );
 });
