@@ -52,7 +52,6 @@ const useFetchStatus = <S extends IInitialState>({ module, reset, actions }: IUs
       }
     }
   };
-
   useEffect(() => {
     if (state.status !== EFetchStatus.IDLE) {
       if (state.status === EFetchStatus.FULFILLED) {

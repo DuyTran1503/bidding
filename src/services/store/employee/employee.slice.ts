@@ -16,16 +16,10 @@ import {
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 
-interface IEmployeeFilter {
-  page: number;
-  size: number;
-  [key: string]: any; // Dự phòng cho các filter khác
-}
 export interface IEmployeeInitialState extends IInitialState {
   employees: IEmployee[];
   employee?: IEmployee | any;
   getListEmployee: IEmployee[];
-  filter: IEmployeeFilter;
 }
 
 const initialState: IEmployeeInitialState = {
@@ -36,9 +30,9 @@ const initialState: IEmployeeInitialState = {
   message: "",
   filter: {
     page: 1,
-    size: 10,
+    size: 1,
   },
-  totalRecords: 50,
+  totalRecords: 1,
 };
 
 const employeeSlice = createSlice({

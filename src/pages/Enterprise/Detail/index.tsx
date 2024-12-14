@@ -11,7 +11,7 @@ import { Card, Descriptions } from "antd";
 import { useEffect, useState } from "react";
 import { IoClose, IoImage } from "react-icons/io5";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import Employee from "./Details/Employee";
+import Employee from "./Details/EmployeeEnterprise";
 import Investor from "./Details/Investor";
 import Tenderer from "./Details/Tenderer";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
@@ -92,8 +92,16 @@ const DetailEnterprise = () => {
             {renderDescriptionItem("Ngày gia nhập", data?.establish_date, 3)}
             {renderDescriptionItem("Ngày đăng ký kinh doanh", data?.registration_date, 3)}
             {renderDescriptionItem("Mã số thuế", data?.taxcode, 3)}
-            {renderDescriptionItem("Quyền trong Website", data?.roles?.map((role: any) => role.name  ), 3)}
-            {renderDescriptionItem("Lĩnh vực kinh doanh", data?.industry_id?.map((industry: any) => industry.name  ), 3)}
+            {renderDescriptionItem(
+              "Quyền trong Website",
+              data?.roles?.map((role: any) => role.name),
+              3,
+            )}
+            {renderDescriptionItem(
+              "Lĩnh vực kinh doanh",
+              data?.industry_id?.map((industry: any) => industry.name),
+              3,
+            )}
             {renderDescriptionItem(
               "Loại hình tổ chức",
               data?.organization_type == 1 ? "Doanh nghiệp nhà nước" : data?.organization_type == 2 ? "Ngoài nhà nước" : "Thông tin không có",
