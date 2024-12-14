@@ -78,6 +78,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
     enterprise_id: string().required("Vui lòng chọn công ty làm việc"),
     status: string().required("Vui lòng chọn trạng thái làm việc"),
     education_level: string().required("Vui lòng chọn trình độ học vấn"),
+    start_date: string().required("Vui lòng chọn ngày bắt đầu làm việc"),
   });
 
   const genderOptions: IOption[] = statusEnumArray.map((key) => ({
@@ -274,7 +275,6 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Ngày kết thúc">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    error={touched.start_date ? errors.start_date : ""}
                     minDate={values.start_date ? dayjs(values.start_date) : undefined}
                     value={values.end_date ? dayjs(values.end_date) : null}
                     onChange={(date) => setFieldValue("end_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}

@@ -11,6 +11,7 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPageTypes } from "@/shared/enums/page";
 import { IEmployeeInitialState, resetStatus } from "@/services/store/employee/employee.slice";
 import { IEmployee } from "@/services/store/employee/employee.model";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const CreateEmployee = () => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const CreateEmployee = () => {
             isLoading: state.status === EFetchStatus.PENDING,
             text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
-            // permission: EPermissions.CREATE_EMPLOYEE,
+            permission: EPermissions.CREATE_EMPLOYEE,
             onClick: () => {
               formikRef && formikRef.current && formikRef.current.handleSubmit();
             },
