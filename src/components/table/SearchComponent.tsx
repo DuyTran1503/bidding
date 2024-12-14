@@ -61,6 +61,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
     return newValues;
   };
+
   return (
     <Formik
       enableReinitialize
@@ -71,6 +72,8 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
       }}
     >
       {({ values, errors, handleBlur, setFieldValue, resetForm, handleSubmit }) => {
+        console.log(values);
+
         return (
           <div className={`${isShow ? "hidden" : ""} row-gap-3 flex flex-col px-4 py-3`}>
             <Row gutter={[24, 24]} className="row-gap-2 row-gap-lg-3 items-center">
@@ -118,7 +121,18 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
                 if (item.type === "select") {
                   const options = item.parentItem ? (values[item.parentItem] ? item.options : []) : item.options;
-                  const value: any = values[item.id] ?? undefined;
+                  const newValue = Object.keys(values).reduce((acc, key) => {
+                    if (key.startsWith(item.id)) {
+                      // @ts-ignore
+                      if (!acc[item.id]) acc[item.id] = [];
+                      // @ts-ignore
+                      acc[item.id].push(values[key]);
+                    }
+                    return acc;
+                  }, []);
+
+                  const value: any = item.isMultiple && newValue.length ? newValue : values[item.id] ?? undefined;
+                  console.log(value);
 
                   return (
                     <Col key={index} xs={24} sm={24} md={12} lg={6}>
