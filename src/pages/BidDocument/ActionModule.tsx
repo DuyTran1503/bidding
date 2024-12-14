@@ -104,9 +104,14 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={Schema}
-      onSubmit={(data) => {
+      onSubmit={(data, { setErrors }: any) => {
         if (type === EPageTypes.CREATE) {
-          dispatch(createBidDocument(data as Omit<IBidDocument, "id">));
+          dispatch(createBidDocument(data as Omit<IBidDocument, "id">))
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
           if (state.status === EFetchStatus.FULFILLED || isCreateFromProject) {
             setInitialValues({
               id: "",
@@ -127,7 +132,12 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
             });
           }
         } else if (type === EPageTypes.UPDATE && bidDocument?.id) {
-          dispatch(updateBidDocument({ body: lodash.omit(data, "id"), param: String(bidDocument.id) }));
+          dispatch(updateBidDocument({ body: lodash.omit(data, "id"), param: String(bidDocument.id) }))
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
         }
       }}
     >
@@ -167,6 +177,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                     value={values.project_id}
                     id="project_id"
                     placeholder="Nhập tên dự án..."
+                    error={touched.project_id ? errors.project_id : ""}
                     onChange={(value) => setFieldValue("project_id", value)}
                     options={convertDataOptions(stateProject.listProjects || [])}
                   />
@@ -176,6 +187,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                 <FormGroup title="Doanh nghiệp" required>
                   <FormSelect
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}
+                    error={touched.enterprise_id ? errors.enterprise_id : ""}
                     isDisabled={type === "view"}
                     placeholder="Doanh nghiệp..."
                     value={values.enterprise_id as string}
@@ -213,6 +225,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                 <FormGroup title="Thời gian thực hiện" required>
                   <FormDate
                     disabled={type === "view"}
+                    error={touched.implementation_time ? errors.implementation_time : ""}
                     value={values.implementation_time ? dayjs(values.implementation_time) : null}
                     onChange={(date) => setFieldValue("implementation_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -222,6 +235,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                 <FormGroup title="Ngày nộp hồ sơ">
                   <FormDate
                     disabled={type === "view"}
+                    error={touched.submission_date ? errors.submission_date : ""}
                     value={values.submission_date ? dayjs(values.submission_date) : null}
                     onChange={(date) => setFieldValue("submission_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -231,17 +245,19 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                 <FormGroup title="Thời hạn hiệu lực">
                   <FormDate
                     disabled={type === "view"}
+                    error={touched.validity_period ? errors.validity_period : ""}
                     value={values.validity_period ? dayjs(values.validity_period) : null}
                     onChange={(date) => setFieldValue("validity_period", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Tài liệu đính kèm" required>
+                <FormGroup title="Tài liệu đính kèm">
                   <FormUploadFile
                     disabled={type === "view"}
                     name={"file"} // Sử dụng điều kiện để đổi name
                     value={values.file} // Điều kiện chọn giá trị
+                    error={touched.file ? errors.file : ""}
                     onChange={(e) => {
                       setFieldValue("file", e); // Cập nhật field tương ứng
                     }}
@@ -250,7 +266,14 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Ghi chú">
-                  <FormCkEditor id="description" direction="vertical" value={values.note} setFieldValue={setFieldValue} disabled={type === "view"} />
+                  <FormCkEditor
+                    id="note"
+                    direction="vertical"
+                    value={values.note}
+                    error={touched.note ? errors.note : ""}
+                    setFieldValue={setFieldValue}
+                    disabled={type === "view"}
+                  />
                 </FormGroup>
               </Col>
             </Row>

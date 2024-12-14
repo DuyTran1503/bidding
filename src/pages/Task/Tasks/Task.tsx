@@ -16,6 +16,7 @@ import { deleteTask, getAllTasks } from "@/services/store/task/task.thunk";
 import { levelTaskEnumArray, mappingLevelTask } from "@/shared/enums/level";
 import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
 import { getListEmployee } from "@/services/store/employee/employee.thunk";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const Tasks = () => {
   const { state, dispatch } = useArchive<ITaskInitialState>("task");
@@ -24,25 +25,20 @@ const Tasks = () => {
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
-      // permission: EPermissions.DETAIL_TASK,
+      permission: EPermissions.DETAIL_TASK,
     },
     {
       type: EButtonTypes.UPDATE,
-      // permission: EPermissions.UPDATE_TASK,
+      permission: EPermissions.UPDATE_TASK,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteTask(record?.key));
       },
-      // permission: EPermissions.DESTROY_TASK,
+      permission: EPermissions.DESTROY_TASK,
     },
   ];
-  const employeeIds = (value: number[]) => {
-    if (stateEmployee?.getListEmployee!.length > 0 && value.length) {
-      return stateEmployee.getListEmployee!.filter((item) => value.includes(+item.id)).map((item) => item.name);
-    }
-  };
   const optionEmployees: IOption[] =
     (stateEmployee?.getListEmployee.length &&
       stateEmployee?.getListEmployee.map((item) => ({
@@ -59,7 +55,6 @@ const Tasks = () => {
     {
       dataIndex: "name",
       title: "Tên công việc",
-      className: "w-[200px]",
     },
     {
       dataIndex: "code",
@@ -68,12 +63,8 @@ const Tasks = () => {
     {
       dataIndex: "employees",
       title: "Nhân viên",
-      render(_, record) {
-        return (
-          <div className="flex flex-col">
-            {(record?.employees as any[])?.map((item: string, index: number) => <div key={index}>{item ? item : ""}</div>)}
-          </div>
-        );
+      render: (_, record) => {
+        return <span>{record.employees?.name || "Không có tên dự án"}</span>;
       },
     },
     {
@@ -124,7 +115,7 @@ const Tasks = () => {
             id: id,
             name,
             document,
-            employees: (employees?.map((item) => item.id).length && employeeIds(employees?.map((item) => +item.id))) || [],
+            employees,
             code,
             difficulty_level: !!difficulty_level && mappingLevelTask[difficulty_level],
           }))
@@ -162,7 +153,7 @@ const Tasks = () => {
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
-            // permission: EPermissions.CREATE_TASK,
+            permission: EPermissions.CREATE_TASK,
             text: "Thêm mới",
           },
         ]}

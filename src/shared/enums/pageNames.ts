@@ -31,5 +31,6 @@ export enum EPageNames {
   "evaluation_criteria" = "Tiêu chí đánh giá",
   "evaluates" = "Đánh giá kết quả dự án",
   "attachment" = "Tài liệu đính kèm",
-  "project-approval" = "Phê duyệt dự án"
+  "project-approval" = "Phê duyệt dự án",
+  "funding-sources" = "Nguồn tài trợ"
 } 

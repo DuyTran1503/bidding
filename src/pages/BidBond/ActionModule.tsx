@@ -55,14 +55,24 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
     bond_amount_in_words: item?.bond_amount_in_words ?? "",
   };
 
-  const handleSubmit = (data: IBidBond) => {
+  const handleSubmit = (data: IBidBond, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id"),
     };
     if (type === EButtonTypes.CREATE) {
-      dispatch(createBidBond({ body: body }));
+      dispatch(createBidBond({ body: body }))
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });
     } else if (type === EButtonTypes.UPDATE && item?.id) {
-      dispatch(updateBidBond({ body: body, param: item?.id }));
+      dispatch(updateBidBond({ body: body, param: item?.id }))
+      .unwrap()
+      .catch((error) => {
+        const apiErrors = error?.errors || {};
+        setErrors(apiErrors);
+      });
     }
   };
   useEffect(() => {
