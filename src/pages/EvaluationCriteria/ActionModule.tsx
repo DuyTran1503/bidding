@@ -3,8 +3,8 @@ import Dialog from "@/components/dialog/Dialog";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect";
 import FormSwitch from "@/components/form/FormSwitch";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 import { useArchive } from "@/hooks/useArchive";
 import { useViewport } from "@/hooks/useViewport";
 import { IEvaluationCriteria } from "@/services/store/evaluation/evaluation.model";
@@ -15,9 +15,8 @@ import { EPageTypes } from "@/shared/enums/page";
 import { Col, Row } from "antd";
 import { Form, Formik, FormikProps } from "formik";
 import lodash from "lodash";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { number, object, string } from "yup";
-import { convertDataOptions } from "../Project/helper";
 
 interface IEvaluationCriteriaFormProps {
   type?: EPageTypes;
@@ -27,9 +26,23 @@ interface IEvaluationCriteriaFormProps {
   listProjects?: any[];
 }
 
+const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
+  return data.map((item) => ({
+    title: item.name,
+    value: item.id.toString(),
+    key: item.id.toString(),
+    children: item.children ? formatTreeData(item.children) : [],
+  }));
+};
+
 const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listProjects = [], }: IEvaluationCriteriaFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluationCriteria>>(null);
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  useEffect(() => {
+    const formattedData = formatTreeData(listProjects);
+    setTreeData(formattedData);
+  }, [listProjects]);
 
   const { screenSize } = useViewport();
   const initialValues: IEvaluationCriteria = {
@@ -108,14 +121,15 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tên dự án" required>
-                  <FormSelect
+                  <FormTreeSelect
                     isDisabled={type === "view"}
-                    value={values.project_id}
-                    id="project_id"
+                    value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id ? errors.project_id : ""}
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(listProjects)}
+                    onChange={(value) => {
+                      setFieldValue("project_id", value as string);
+                    }}
+                    treeData={treeData}
                   />
                 </FormGroup>
               </Col>
@@ -123,7 +137,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
                 <FormGroup title="Tên tiêu chí đánh giá" required>
                   <FormInput
                     type="text"
-                    isDisabled={type === "view" || type === "update"}
+                    isDisabled={type === "view"}
                     value={values.name}
                     name="name"
                     error={touched.name ? errors.name : ""}
