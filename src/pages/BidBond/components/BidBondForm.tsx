@@ -13,7 +13,7 @@ import FormGroup from "@/components/form/FormGroup";
 
 interface IBidBondFormProps {
   initialValues: IBidBond;
-  onSubmit: (data: IBidBond) => void;
+  onSubmit: (data: IBidBond, setErrors: any) => void;
   type: EButtonTypes;
   optionType: IOption[];
   projectOptions: IOption[];
@@ -31,6 +31,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
     bond_amount: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập số tiền"),
     bond_type: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn loại bảo lãnh"),
     bond_number: string().required("Vui lòng nhập mã bảo lãnh"),
+    expiry_date: string().required("Vui lòng chọn ngày hết hạn"),
   });
 
   return (
@@ -44,7 +45,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   <FormSelect
                     className="w-100"
                     options={enterpriseOptions}
-                    isDisabled={type === "view"}
+                    isDisabled={type === "view" || type === "update"}
                     value={values.enterprise_id}
                     id="enterprise_id"
                     error={touched.enterprise_id ? errors.enterprise_id : ""}
@@ -56,7 +57,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tên dự án" required>
                   <FormSelect
-                    isDisabled={type === "view"}
+                    isDisabled={type === "view" || type === "update"}
                     value={values.project_id}
                     id="project_id"
                     placeholder="Tên dự án..."
@@ -111,6 +112,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                 <FormGroup title="Ngày phát hành">
                   <FormDate
                     disabled={type === "view"}
+                    error={touched.issue_date ? errors.issue_date : ""}
                     value={values.issue_date ? dayjs(values.issue_date) : null}
                     onChange={(date) => setFieldValue("issue_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -120,6 +122,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                 <FormGroup title="Ngày hết hạn" required>
                   <FormDate
                     disabled={type === "view"}
+                    error={touched.expiry_date ? errors.expiry_date : ""}
                     minDate={values.issue_date ? dayjs(values.issue_date) : undefined}
                     value={values.expiry_date ? dayjs(values.expiry_date) : null}
                     onChange={(date) => setFieldValue("expiry_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
@@ -132,6 +135,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   <FormCkEditor
                     id="description"
                     direction="vertical"
+                    error={touched.description ? errors.description : ""}
                     value={String(values?.description)}
                     setFieldValue={setFieldValue}
                     disabled={type === EButtonTypes.VIEW}

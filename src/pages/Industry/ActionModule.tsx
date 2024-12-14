@@ -13,38 +13,30 @@ import { IIndustryInitialState, resetMessageError } from "@/services/store/indus
 import FormSelect from "@/components/form/FormSelect";
 import { createIndustry, updateIndustry } from "@/services/store/industry/industry.thunk";
 import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
-import { convertDataOption, selectedData } from "@/shared/utils/common/function";
 import { getListBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
 import FormCkEditor from "@/components/form/FormCkEditor";
+import { IIndustry } from "@/services/store/industry/industry.model";
+import { convertDataOptions } from "../Project/helper";
 
 interface IIndustryFormProps {
-  formikRef?: FormikRefType<IndustryInitialValues>;
+  formikRef?: FormikRefType<IIndustry>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW;
-  industry?: IndustryInitialValues;
-}
-
-export interface IndustryInitialValues {
-  id?: string;
-  name: string;
-  business_activity_type_id: string;
-  description: string;
-  is_active: string;
+  industry?: IIndustry;
 }
 
 const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
   const { dispatch } = useArchive<IIndustryInitialState>("industry");
   const { state: businessState, dispatch: dispatchBusiness } = useArchive<IBusinessActivityInitialState>("business");
 
-  const initialValues: IndustryInitialValues = {
+  const initialValues: IIndustry = {
     id: industry?.id ?? "",
     name: industry?.name ?? "",
     description: industry?.description ?? "",
     is_active: industry?.is_active ?? "",
-    business_activity_type_id: industry?.business_activity_type_id ?? "",
+    business_activity_type_id: industry?.business_activity_type_id || industry?.business_activity_type?.id as any || undefined,
   };
   const tagSchema = object().shape({
     name: string().trim().required("Vui lòng nhập tên ngành kinh doanh"),
-    
   });
   useEffect(() => {
     return () => {
@@ -85,19 +77,15 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Loại hình kinh doanh" required>
+                <FormGroup title="Loại hình kinh doanh">
                   <FormSelect
-                    isDisabled={type === EPageTypes.VIEW}
-                    placeholder="Chọn..."
-                    options={convertDataOption(businessState?.listBusinessActivities!)}
-                    value={
-                      type === EPageTypes.UPDATE || EPageTypes.VIEW
-                        ? selectedData(businessState?.listBusinessActivities, values.business_activity_type_id)?.name
-                        : undefined
-                    }
-                    onChange={(value) => {
-                      setFieldValue("business_activity_type_id", value as string);
-                    }}
+                    isDisabled={type === "view"}
+                    placeholder="Nhập doanh nghiệp"
+                    id="business_activity_type_id"
+                    value={values.business_activity_type_id || values.business_activity_type?.name}
+                    error={touched.business_activity_type_id ? errors.business_activity_type_id : ""}
+                    onChange={(e) => setFieldValue("business_activity_type_id", e)}
+                    options={convertDataOptions(businessState.listBusinessActivities)}
                   />
                 </FormGroup>
               </Col>
