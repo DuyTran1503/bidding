@@ -33,7 +33,7 @@ export const formatTreeData = (data: any[]): { title: string; value: string; key
 const EvaluationCriteria = () => {
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
-  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[] | undefined>(undefined);
 
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
@@ -137,12 +137,12 @@ const EvaluationCriteria = () => {
   useEffect(() => {
     dispatch(getAllEvaluations({ query: state.filter }));
     dispatchProject(getListProject())
-          .then(unwrapResult)
-          .then((result) => {
-            const fields = result.data;
-            const formattedData = formatTreeData(fields);
-            setTreeData(formattedData);
-          });
+      .then(unwrapResult)
+      .then((result) => {
+        const fields = result.data;
+        const formattedData = formatTreeData(fields);
+        setTreeData(formattedData);
+      });
   }, [JSON.stringify(state.filter)]);
 
   useEffect(() => {
@@ -192,9 +192,7 @@ const EvaluationCriteria = () => {
     <>
       <Heading
         title="Tiêu chí đánh giá"
-        ModalContent={(props) => <ActionModule {...(props as any)}
-        listProjects={stateProject.listProjects}
-         />}
+        ModalContent={(props) => <ActionModule {...(props as any)} listProjects={stateProject.listProjects} />}
         hasBreadcrumb
         buttons={[
           {
@@ -226,9 +224,7 @@ const EvaluationCriteria = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => <ActionModule {...(props as any)}
-        listProjects={stateProject.listProjects}
-         />}
+        ModalContent={(props) => <ActionModule {...(props as any)} listProjects={stateProject.listProjects} />}
       />
     </>
   );

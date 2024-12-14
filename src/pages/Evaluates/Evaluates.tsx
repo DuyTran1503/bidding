@@ -15,15 +15,18 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { convertDataOptions } from "../Project/helper";
 import EvaluateForm from "./EvaluateForm";
+import { formatTreeData } from "../EvaluationCriteria";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const Evaluates = () => {
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
   const buttons: IGridButton[] = [
     {
@@ -45,7 +48,13 @@ const Evaluates = () => {
 
   useEffect(() => {
     dispatchEnterprise(getListEnterprise());
-    dispatchProject(getListProject());
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const fields = result.data;
+        const formattedData = formatTreeData(fields);
+        setTreeData(formattedData);
+      });
   }, []);
 
   const columns: ColumnsType = [
@@ -57,6 +66,7 @@ const Evaluates = () => {
     {
       dataIndex: "project",
       title: "Tên dự án",
+      className: "w-[200px]",
       render: (_, record) => {
         return <span>{record.project?.name || "Không có tên dự án"}</span>;
       },
@@ -64,6 +74,7 @@ const Evaluates = () => {
     {
       dataIndex: "enterprise",
       title: "Tên doanh nghiệp",
+      className: "w-[200px]",
       render: (_, record) => {
         return <span>{record.enterprise?.user?.name || "Không có tên doanh nghiệp"}</span>;
       },
@@ -71,10 +82,12 @@ const Evaluates = () => {
     {
       dataIndex: "score",
       title: "Điểm",
+      className: "w-[100px]",
     },
     {
       dataIndex: "evaluate",
       title: "Nội dung",
+      className: "w-[350px]",
       render(_, record) {
         return <div dangerouslySetInnerHTML={{ __html: record?.evaluate || "" }} className="text-compact-3"></div>;
       },
@@ -83,10 +96,11 @@ const Evaluates = () => {
   const search: ISearchTypeTable[] = [
     {
       id: "project",
-      placeholder: "Chọn tên dự án...",
-      label: "Tên dự án",
-      type: "select",
-      options: convertDataOptions(stateProject.listProjects || []),
+      placeholder: "Chọn dự án ...",
+      label: "Loại dự án ",
+      isMultiple: true,
+      type: "treeSelect",
+      treeData: parentOptions,
     },
     {
       id: "enterprise",
@@ -105,22 +119,22 @@ const Evaluates = () => {
       id: "score_from",
       type: "numberRange",
       rangeFields: { minField: "score_from", maxField: "score_to" },
-    }
+    },
   ];
 
   const data: ITableData[] = useMemo(
     () =>
       state.evaluates && state.evaluates.length > 0
         ? state.evaluates.map(({ id, title, score, evaluate, project, enterprise }, index) => ({
-          index: index + 1,
-          key: id,
-          id: id,
-          title,
-          score,
-          evaluate,
-          project,
-          enterprise,
-        }))
+            index: index + 1,
+            key: id,
+            id: id,
+            title,
+            score,
+            evaluate,
+            project,
+            enterprise,
+          }))
         : [],
     [JSON.stringify(state.evaluates)],
   );
@@ -149,13 +163,9 @@ const Evaluates = () => {
       <Heading
         title="Đánh giá kết quả dự án"
         hasBreadcrumb
-        ModalContent={(props) =>
-          <EvaluateForm
-            {...(props as any)}
-            listEnterprise={stateEnterprise.listEnterprise}
-            listProjects={stateProject.listProjects}
-          />
-        }
+        ModalContent={(props) => (
+          <EvaluateForm {...(props as any)} listEnterprise={stateEnterprise.listEnterprise} listProjects={stateProject.listProjects} />
+        )}
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
@@ -176,13 +186,9 @@ const Evaluates = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) =>
-          <EvaluateForm
-            {...(props as any)}
-            listEnterprise={stateEnterprise.listEnterprise}
-            listProjects={stateProject.listProjects}
-          />
-        }
+        ModalContent={(props) => (
+          <EvaluateForm {...(props as any)} listEnterprise={stateEnterprise.listEnterprise} listProjects={stateProject.listProjects} />
+        )}
       />
     </>
   );

@@ -200,12 +200,14 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                 }
 
                 if (item.type === "treeSelect") {
-                  const value = values[item.id] || null;
+                  const value = values[item.id] || undefined;
+
                   return (
                     <Col key={index} xs={24} sm={24} md={12} lg={6}>
                       <FormTreeSelect
                         label={item.label}
                         placeholder={item.placeholder}
+                        multiple={item.isMultiple}
                         treeData={item.treeData!}
                         // @ts-ignore
                         defaultValue={value}
