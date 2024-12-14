@@ -64,18 +64,14 @@ const FundingSources = () => {
     {
       dataIndex: "type",
       title: "Loại nguồn tài trợ",
-      className: "w-[250px]",
     },
     {
       dataIndex: "code",
       title: "Mã",
-      className: "w-[250px]",
     },
     {
       dataIndex: "desciption",
       title: "Mô tả",
-      className: "w-[250px]",
-
       render(_, record) {
         return <div className="text-compact-3" dangerouslySetInnerHTML={{ __html: record?.description || "" }}></div>;
       },
@@ -135,14 +131,14 @@ const FundingSources = () => {
     () =>
       state.fundingSources && state.fundingSources.length > 0
         ? state.fundingSources.map(({ id, name, code, type, description, is_active }, index) => ({
-            index: index + 1,
-            key: id,
-            name,
-            code,
-            type,
-            description,
-            is_active,
-          }))
+          index: index + 1,
+          key: id,
+          name,
+          code,
+          type,
+          description,
+          is_active,
+        }))
         : [],
     [JSON.stringify(state.fundingSources)],
   );

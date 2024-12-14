@@ -73,7 +73,12 @@ const EvaluateForm = ({
           setErrors(apiErrors);
         });
     } else if (type === EPageTypes.UPDATE) {
-      dispatch(updateEvaluate({ body, param: item?.id }));
+      dispatch(updateEvaluate({ body, param: item?.id }))
+      .unwrap()
+      .catch((error) => {
+        const apiErrors = error?.errors || {};
+        setErrors(apiErrors);
+      });
     }
   };
 
@@ -122,7 +127,7 @@ const EvaluateForm = ({
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Dự án" required>
                   <FormSelect
-                    isDisabled={type === "view"}
+                    isDisabled={type === "view" || type==="update"}
                     value={values.project_id}
                     id="project_id"
                     placeholder="Nhập tên dự án..."
@@ -135,7 +140,7 @@ const EvaluateForm = ({
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Doanh nghiệp" required>
                   <FormSelect
-                    isDisabled={type === "view"}
+                    isDisabled={type === "view" || type==="update"}
                     placeholder="Nhập doanh nghiệp"
                     id="enterprise_id"
                     value={values.enterprise_id || values.enterprise?.user?.name}

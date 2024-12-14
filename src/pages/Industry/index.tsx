@@ -28,10 +28,6 @@ const Industry = () => {
 
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  const business = (value: number) => {
-    if (businessState?.listBusinessActivities?.length > 0 && !!value)
-      return businessState?.listBusinessActivities!.find((item) => item.id === value)?.name;
-  };
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -43,9 +39,12 @@ const Industry = () => {
       className: "w-[250px]"
     },
     {
-      dataIndex: "business_activity_type_id",
+      dataIndex: "business_activity_type",
       title: "Loại hình kinh doanh",
-      className: "w-[250px]"
+      className: "w-[250px]",
+      render: (_, record) => {
+        return <span>{record.business_activity_type?.name || "Không có tên dự án"}</span>;
+      },
     },
     {
       dataIndex: "description",
@@ -108,11 +107,12 @@ const Industry = () => {
   ];
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(industryState.industries)
-      ? industryState.industries.map(({ id, name, business_activity_type_id, description, is_active }, index) => ({
+      ? industryState.industries.map(({ id, name, business_activity_type, business_activity_type_id, description, is_active }, index) => ({
           index: index + 1,
           key: id,
           name,
-          business_activity_type_id: business(+business_activity_type_id),
+          business_activity_type,
+          business_activity_type_id,
           description,
           is_active,
         }))
