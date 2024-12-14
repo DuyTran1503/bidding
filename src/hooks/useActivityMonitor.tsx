@@ -34,6 +34,7 @@ export const useTokenMonitor = (dispatch: any) => {
 
     logoutTimeout.current = setTimeout(
       () => {
+<<<<<<< HEAD
         const expiresIn = localStorage.getItem("expiresIn");
         if (expiresIn) {
           const expirationTime = Number(expiresIn);
@@ -46,19 +47,25 @@ export const useTokenMonitor = (dispatch: any) => {
         }
       },
       5 * 60 * 1000, // This can remain as a fallback
+=======
+        navigate("/auth/login");
+      },
+      60 * 60 * 1000,
+>>>>>>> 3ec0bc08b0db9908c1ddebadfac45fd230545b68
     );
   };
 
   const handleRequest = () => {
     const timeSinceLastActivity = Date.now() - lastActivityTime.current;
 
-    if (timeSinceLastActivity < 5 * 60 * 1000) {
+    if (timeSinceLastActivity < 60 * 60 * 1000) {
       if (hasRefreshed.current) {
         setupTokenRefresh();
         hasRefreshed.current = false;
       }
       resetActivityTimer();
     } else {
+<<<<<<< HEAD
       const expiresIn = localStorage.getItem("expiresIn");
       if (expiresIn) {
         const expirationTime = Number(expiresIn);
@@ -69,6 +76,9 @@ export const useTokenMonitor = (dispatch: any) => {
           navigate("auth/login");
         }
       }
+=======
+      navigate("/auth/login");
+>>>>>>> 3ec0bc08b0db9908c1ddebadfac45fd230545b68
     }
   };
 

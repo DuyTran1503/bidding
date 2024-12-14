@@ -15,6 +15,7 @@ import { useViewport } from "@/hooks/useViewport";
 import { IProcurementCategorie } from "@/services/store/procurementCategorie/procurementCategorie.model";
 import { createProcurementCategorie, updateProcurementCategorie } from "@/services/store/procurementCategorie/procurementCategorie.thunk";
 import { IProcurementCategorieInitialState } from "@/services/store/procurementCategorie/procurementCategorie.slice";
+import { EPageTypes } from "@/shared/enums/page";
 
 interface IProcurementCategorieFormProps {
   type?: EButtonTypes;
@@ -106,10 +107,12 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
                 <FormGroup title="Trạng thái">
                   <FormSwitch
                     checked={values.is_active === "1"}
+                    isDisabled={type === "view"}
                     onChange={(value) => {
                       setFieldValue("is_active", value ? "1" : "0");
                     }}
                   />
+                  
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={24} xl={24}>
