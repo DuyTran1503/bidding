@@ -174,6 +174,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                             <Col xs={24} sm={24} md={24} xl={24}>
                                 <FormGroup title="Hình ảnh" required>
                                     <FormUploadFile
+                                        disabled={type === "view"}
                                         isMultiple={false}
                                         value={values.thumbnail}
                                         error={touched.thumbnail ? errors.thumbnail : ""}

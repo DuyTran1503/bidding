@@ -6,6 +6,8 @@ export interface IAttachment {
   project_id: string;
   project: IProject;
   name: string;
+  url: string;
+  type: string;
   path: File | string;
   is_active?: boolean;
 }

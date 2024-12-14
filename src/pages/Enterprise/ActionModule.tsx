@@ -352,6 +352,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Ảnh doanh nghiệp">
                   <FormUploadFile
+                    disabled={type === "view"}
                     isMultiple={false}
                     value={values.avatar}
                     onChange={(e: any) => {

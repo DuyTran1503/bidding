@@ -5,19 +5,18 @@ import Heading from "@/components/layout/Heading";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import { IBannerInitialState, resetStatus, setFilter } from "@/services/store/banner/banner.slice";
+import { changeStatusBanner, deleteBanner, getAllBanners } from "@/services/store/banner/banner.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { IBannerInitialState, resetStatus, setFilter } from "@/services/store/banner/banner.slice";
-import { changeStatusBanner, deleteBanner, getAllBanners } from "@/services/store/banner/banner.thunk";
 
-import BannerForm from "../BannerForm";
-import { EPermissions } from "@/shared/enums/permissions";
 import CustomerAvatar from "@/components/common/CustomerAvatar";
+import { EPermissions } from "@/shared/enums/permissions";
+import BannerForm from "../BannerForm";
 
 const Banners = () => {
   const { state, dispatch } = useArchive<IBannerInitialState>("banner");
@@ -85,14 +84,14 @@ const Banners = () => {
     }
   };
 
-  const search: ISearchTypeTable[] = [
-    {
-      id: "name",
-      placeholder: "Nhập tên Banner...",
-      label: "Tên Banner",
-      type: "text",
-    },
-  ];
+  // const search: ISearchTypeTable[] = [
+  //   {
+  //     id: "name",
+  //     placeholder: "Nhập tên Banner...",
+  //     label: "Tên Banner",
+  //     type: "text",
+  //   },
+  // ];
 
   const data: ITableData[] = useMemo(
     () =>
@@ -152,7 +151,7 @@ const Banners = () => {
       <ManagementGrid
         columns={columns}
         data={data}
-        search={search}
+        // search={search}
         buttons={buttons}
         pagination={{
           current: state.filter.page ?? 1,

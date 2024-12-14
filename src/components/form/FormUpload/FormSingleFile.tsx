@@ -12,9 +12,10 @@ interface IProps {
   onChange: (value: File | null) => void;
   id?: string;
   error?: string;
+  disabled?: boolean;
 }
 
-const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
+const FormSingleFile: React.FC<IProps> = ({ value, onChange, id, disabled }) => {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,7 +85,7 @@ const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
             <div className="relative mx-2 inline-block text-center">
               {renderFileIcon(file)}
               <button onClick={handleDeleteImage}>
-                <IoIosCloseCircle className="absolute right-1 top-1 h-[24px] w-[24px] rounded-circle text-green-100" />
+                <IoIosCloseCircle className={clsx("absolute right-1 top-1 h-[24px] w-[24px] rounded-circle text-green-100",{ "hidden": disabled })} />
               </button>
             </div>
           )}
@@ -93,11 +94,14 @@ const FormSingleFile: React.FC<IProps> = ({ value, onChange, id }) => {
         <div className="mt-4 flex items-center gap-4 sm:flex-col md:justify-center">
           <label
             htmlFor={`file-upload-${id}`}
-            className="text-m-medium inline-block cursor-pointer rounded bg-primary-50 px-[14px] py-[10px] text-cyan-600"
+            className={clsx(
+              "text-m-medium inline-block cursor-pointer rounded bg-cyan-50 px-[14px] py-[10px] text-cyan-600",
+              { "hidden": disabled }
+            )}
           >
             Tải file lên
           </label>
-          <input id={`file-upload-${id}`} type="file" onChange={handleFileChange} className="hidden" />
+          <input id={`file-upload-${id}`} type="file" onChange={handleFileChange} className="hidden" disabled={disabled} />
         </div>
       </div>
       {!!error && (

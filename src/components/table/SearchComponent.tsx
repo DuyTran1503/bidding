@@ -12,7 +12,8 @@ import dayjs from "dayjs";
 import React from "react";
 
 export interface ISearchTypeTable {
-  type: "text" | "select" | "treeSelect" | "datetime" | "number";
+  type: "text" | "select" | "treeSelect" | "datetime" | "number" | "numberRange";
+  rangeFields?: { minField: string; maxField: string };
   value?: string;
   onChange?: (value: string | string[]) => void;
   isMultiple?: boolean;
@@ -112,6 +113,42 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                         }}
                         onBlur={handleBlur}
                       />
+                    </Col>
+                  );
+                }
+
+                if (item.type === "numberRange") {
+                  const minValue: any = values[item.rangeFields?.minField!] || "";
+                  const maxValue: any = values[item.rangeFields?.maxField!] || "";
+
+                  return (
+                    <Col xs={24} sm={24} md={12} lg={12} key={index}>
+                      <div className="flex items-center font-medium text-gray-500 text-base">
+                        <p>Điểm từ</p>
+                        <Col xs={24} sm={24} md={12} lg={6}>
+                          <FormInput
+                            id={item.rangeFields?.minField!}
+                            type="number"
+                            placeholder="Nhập điểm..."
+                            value={minValue}
+                            onChange={(data) => {
+                              setFieldValue(item.rangeFields?.minField!, data);
+                            }}
+                          />
+                        </Col>
+                        <p>đến</p>
+                        <Col xs={24} sm={24} md={12} lg={6}>
+                          <FormInput
+                            id={item.rangeFields?.maxField!}
+                            type="number"
+                            placeholder="Nhập điểm..."
+                            value={maxValue}
+                            onChange={(data) => {
+                              setFieldValue(item.rangeFields?.maxField!, data);
+                            }}
+                          />
+                        </Col>
+                      </div>
                     </Col>
                   );
                 }

@@ -1,58 +1,59 @@
 import Heading from "@/components/layout/Heading";
 
-import { FaPlus } from "react-icons/fa6";
+import IMAGE_ICON from "@/assets/images/customerDefaultAvatar.png";
+import EXCEL from "@/assets/images/excel.png";
+import DEFAULT_FILE from "@/assets/images/file_error.png";
+import PDF from "@/assets/images/pdf.png";
+import WORD from "@/assets/images/word.jpg";
 import ManagementGrid from "@/components/grid/ManagementGrid";
-import { ColumnsType } from "antd/es/table";
 import { ITableData } from "@/components/table/PrimaryTable";
-import { useNavigate } from "react-router-dom";
-import { useArchive } from "@/hooks/useArchive";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
-import { EButtonTypes } from "@/shared/enums/button";
-import { useEffect, useMemo, useState } from "react";
-import ConfirmModal from "@/components/common/CommonModal";
-import CommonSwitch from "@/components/common/CommonSwitch";
-import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { useArchive } from "@/hooks/useArchive";
+import useFetchStatus from "@/hooks/useFetchStatus";
 import { IAttachmentInitialState, resetStatus, setFilter } from "@/services/store/attachment/attachment.slice";
-import { changeStatusAttachment, deleteAttachment, getAllAttachment } from "@/services/store/attachment/attachment.thunk";
+import { getAllAttachment } from "@/services/store/attachment/attachment.thunk";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { Tooltip } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { useEffect, useMemo } from "react";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { convertDataOptions } from "../Project/helper";
 
+export const getFileIcon = (fileType: string | undefined) => {
+  if (!fileType) {
+    return DEFAULT_FILE;
+  }
+
+  const isFullFileName = fileType.includes(".");
+  const extension = isFullFileName ? fileType.split(".").pop()!.toLowerCase() : fileType.toLowerCase(); // Sử dụng '!' để khẳng định rằng pop không trả về undefined
+
+  switch (extension) {
+    case "pdf":
+      return PDF;
+    case "xlsx":
+    case "xls":
+      return EXCEL;
+    case "doc":
+    case "docx":
+      return WORD;
+    case "jpg":
+    case "jpeg":
+    case "png":
+    case "gif":
+      return IMAGE_ICON;
+    default:
+      return DEFAULT_FILE;
+  }
+};
 const Attachment = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { state, dispatch } = useArchive<IAttachmentInitialState>("attachment");
-  const [isModal, setIsModal] = useState(false);
-  const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
 
-  const buttons: IGridButton[] = [
-    {
-      type: EButtonTypes.CREATE,
-      onClick(record) {
-        navigate(`/attachment/create/${record?.key}`);
-      },
-      // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
-    },
-    {
-      type: EButtonTypes.VIEW,
-      onClick(record) {
-        navigate(`/attachment/detail/${record?.key}`);
-      },
-      // permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
-    },
-    {
-      type: EButtonTypes.UPDATE,
-      onClick(record) {
-        navigate(`/attachment/update/${record?.key}`);
-      },
-      // permission: EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE,
-    },
-    {
-      type: EButtonTypes.DESTROY,
-      onClick(record) {
-        dispatch(deleteAttachment(record?.key));
-      },
-      // permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
-    },
-  ];
+  useEffect(() => {
+    dispatchProject(getListProject());
+  }, []);
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -63,56 +64,84 @@ const Attachment = () => {
       title: "Tên tài liệu",
     },
     {
-      dataIndex: "project?.name",
-      title: "Dự án ",
-    },
-    {
-      dataIndex: "user_id",
-      title: "Người thực hiện",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "is_active",
-      render(_, record) {
+      dataIndex: "url",
+      title: "Tài liệu đính kèm",
+      className: "flex justify-center",
+      render: (_, record) => {
         return (
-          <CommonSwitch
-            onChange={() => handleChangeStatus(record as ITableData)}
-            checked={!!record.is_active}
-            title={`Bạn có chắc chắn muốn ${record.is_active ? "bỏ cấm" : "cấm"} tài khoản này?`}
-          />
+          <Tooltip title={record.name} color={"#108ee9"}>
+            <a href={record.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+              {record.type && getFileIcon(record.type) && <img src={getFileIcon(record.type)} alt={record.type} className="h-6 w-6 object-contain" />}
+            </a>
+          </Tooltip>
         );
       },
     },
+    {
+      dataIndex: "project",
+      title: "Dự án ",
+      render: (_, record) => {
+        return <span>{record.project?.name || "Không có tên dự án"}</span>;
+      },
+    },
   ];
+  const typeOption = Object.entries({
+    pdf: "PDF",
+    doc: "Word (.doc)",
+    docx: "Word (.docx)",
+    xls: "Excel (.xls)",
+    xlsx: "Excel (.xlsx)",
+    ppt: "PowerPoint (.ppt)",
+    pptx: "PowerPoint (.pptx)",
+    jpg: "JPEG (.jpg)",
+    jpeg: "JPEG (.jpeg)",
+    png: "PNG",
+    gif: "GIF",
+    mp4: "MP4",
+    avi: "AVI",
+    zip: "ZIP",
+    rar: "RAR",
+    txt: "Text File (.txt)",
+    csv: "CSV",
+  }).map(([value, label]) => ({ value, label }));
+
   const search: ISearchTypeTable[] = [
     {
       id: "name",
-      placeholder: "Nhập ...",
-      label: "Loại hình doanh nghiệp",
+      placeholder: "Nhập tên file...",
+      label: "Tên file",
       type: "text",
+    },
+    {
+      id: "type",
+      placeholder: "Chọn loại file...",
+      label: "Loại file",
+      type: "select",
+      options: typeOption
+    },
+    {
+      id: "project",
+      placeholder: "Chọn tên dự án...",
+      label: "Tên dự án",
+      type: "select",
+      options: convertDataOptions(stateProject.listProjects || []),
     },
   ];
 
   const data: ITableData[] = useMemo(() =>
     state.attachments && state.attachments.length > 0
-      ? state.attachments.map(({ id, name, project_id, user_id, is_active }, index) => ({
+      ? state.attachments.map(({ id, name, project, url, type, project_id, user_id, is_active }, index) => ({
         index: index + 1,
         key: id,
         name,
+        url,
+        type,
         project_id,
+        project,
         user_id,
         is_active,
       }))
       : [], [JSON.stringify(state.attachments)]);
-  const handleChangeStatus = (item: ITableData) => {
-    setIsModal(true);
-    setConfirmItem(item);
-  };
-  const onConfirmStatus = () => {
-    if (confirmItem && confirmItem.key) {
-      dispatch(changeStatusAttachment(String(confirmItem.key)));
-    }
-  };
   useEffect(() => {
     dispatch(getAllAttachment({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);
@@ -140,28 +169,11 @@ const Attachment = () => {
       <Heading
         title="Tài liệu đính kèm"
         hasBreadcrumb
-        buttons={[
-          {
-            text: "Thêm mới",
-            icon: <FaPlus className="text-[18px]" />,
-            onClick: () => {
-              navigate("/attachment/create");
-            },
-          },
-        ]}
-      />
-      <ConfirmModal
-        title={"Xác nhận"}
-        content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
-        visible={isModal}
-        setVisible={setIsModal}
-        onConfirm={onConfirmStatus}
       />
       <ManagementGrid
         columns={columns}
         data={data}
         search={search}
-        buttons={buttons}
         pagination={{
           current: state.filter.page ?? 1,
           pageSize: state.filter.size ?? 10,

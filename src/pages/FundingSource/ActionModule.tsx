@@ -125,7 +125,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
             </Row>
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormGroup title="Mô tả">
+                <FormGroup title="Mô tả" required>
                   <FormInputArea
                     placeholder="Nhập mô tả..."
                     name="description"

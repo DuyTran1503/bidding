@@ -17,9 +17,14 @@ import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ActionModuleBiddingResult from "../ActionModuleBiddingResult/ActionModuleBiddingResult";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { convertDataOptions } from "@/pages/Project/helper";
 
 const BiddingResults = () => {
   const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
+  const { state: stateProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const navigate = useNavigate();
   const buttons: IGridButton[] = [
     {
@@ -74,10 +79,18 @@ const BiddingResults = () => {
 
   const search: ISearchTypeTable[] = [
     {
-      id: "name",
-      placeholder: "Nhập tên lĩnh vực...",
-      label: "Tên lĩnh vực",
-      type: "text",
+      id: "enterprise_id",
+      placeholder: "Nhập tên doanh nghiệp trúng thầu...",
+      label: "Doanh nghiệp trúng thầu",
+      type: "select",
+      options: convertDataOptions(stateEnterprise.listEnterprise || []),
+    },
+    {
+      id: "project_id",
+      placeholder: "Nhập tên dự án...",
+      label: "Tên dự án",
+      type: "select",
+      options: convertDataOptions(stateProject.listProjects || []),
     },
   ];
 
@@ -85,16 +98,16 @@ const BiddingResults = () => {
     () =>
       state.biddingResults && state.biddingResults.length > 0
         ? state.biddingResults.map(({ id, project, enterprise, bid_document, win_amount, decision_number, decision_date, is_active }, index) => ({
-            index: index + 1,
-            key: id,
-            project,
-            enterprise,
-            bid_document,
-            win_amount,
-            decision_number,
-            decision_date,
-            is_active,
-          }))
+          index: index + 1,
+          key: id,
+          project,
+          enterprise,
+          bid_document,
+          win_amount,
+          decision_number,
+          decision_date,
+          is_active,
+        }))
         : [],
     [JSON.stringify(state.biddingResults)],
   );

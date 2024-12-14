@@ -11,6 +11,7 @@ import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { educationLevelEnumArray, mappingEducationLevel } from "@/shared/enums/level";
+import { EPermissions } from "@/shared/enums/permissions";
 import { employeeEnumArray, mappingEmployee } from "@/shared/enums/types";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
@@ -85,21 +86,21 @@ const Employee = () => {
       onClick(record) {
         navigate(`/employees/detail/${record?.key}`);
       },
-      // permission: EPermissions.DETAIL_EMPLOYEE,
+      permission: EPermissions.DETAIL_EMPLOYEE,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`/employees/update/${record?.key}`);
       },
-      // permission: EPermissions.UPDATE_EMPLOYEE,
+      permission: EPermissions.UPDATE_EMPLOYEE,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteEmployee(record?.key));
       },
-      // permission: EPermissions.DESTROY_EMPLOYEE,
+      permission: EPermissions.DESTROY_EMPLOYEE,
     },
   ];
   const search: ISearchTypeTable[] = [
@@ -190,6 +191,7 @@ const Employee = () => {
           {
             text: "Thêm nhân viên",
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_EMPLOYEE,
             onClick: () => {
               navigate("/employees/create");
             },

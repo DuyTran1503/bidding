@@ -3,7 +3,7 @@ import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
 import { Form, Formik, FormikProps } from "formik";
 import lodash from "lodash";
-import { IBannerInitialState } from "@/services/store/banner/banner.slice";
+import { IBannerInitialState, resetStatus } from "@/services/store/banner/banner.slice";
 import { IBanner } from "@/services/store/banner/banner.model";
 import { Col, Row } from "antd";
 import FormSwitch from "@/components/form/FormSwitch";
@@ -15,6 +15,8 @@ import Button from "@/components/common/Button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import { useViewport } from "@/hooks/useViewport";
+import { object, string } from "yup";
+import useFetchStatus from "@/hooks/useFetchStatus";
 
 interface IBannerFormProps {
   type?: EButtonTypes;
@@ -40,23 +42,23 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
     path: item?.path ?? undefined,
     is_active: item?.is_active ? "1" : "0",
   };
-  const handleSubmit = (data: IBanner, {setErrors}: any) => {
+  const Schema = object().shape({
+    name: string().required("Tên là bắt buộc"),
+    path: string().required("Ảnh là bắt buộc"),
+  });
+  const handleSubmit = (data: IBanner, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "key", "index"),
     };
     if (type === EButtonTypes.CREATE) {
       dispatch(createBanner(body as Omit<IBanner, "id">))
-      .unwrap()
-      .catch((error) => {
-        const apiErrors = error?.errors || {};
-        setErrors(apiErrors);
-      });
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });
     } else if (type === EButtonTypes.UPDATE) {
-      const newData = item?.path === body.path ? {
-        ...body,
-        path: ""
-      } : body;
-
+      const newData = item?.path === body.path ? (({ ...rest }) => rest)(body) : body;
       dispatch(updateBanner({ body: newData, param: item?.id }));
     }
   };
@@ -65,6 +67,15 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
       setVisible(false);
     }
   }, [state.status]);
+  
+  useFetchStatus({
+    module: "banner",
+    reset: resetStatus,
+    actions: {
+      success: { message: state.message },
+      // error: { message: state.message },
+    },
+  });
   return (
     <Dialog
       screenSize={screenSize}
@@ -73,7 +84,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
       }}
       visible={visible}
       setVisible={setVisible}
-      title={type === EButtonTypes.CREATE ? "Tạo mới banner" : type === EButtonTypes.UPDATE ? "Cập nhật Tạo mới banner" : "Chi tiết Tạo mới banner"}
+      title={type === EButtonTypes.CREATE ? "Tạo mới banner" : type === EButtonTypes.UPDATE ? "Cập nhật banner" : "Chi tiết banner"}
       footerContent={
         <div className="flex items-center justify-center gap-2">
           <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
@@ -90,47 +101,49 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormInput
-                  type="text"
-                  isDisabled={type === "view"}
-                  label="Tên Banner"
-                  value={values.name}
-                  name="name"
-                  error={touched.name ? errors.name : ""}
-                  placeholder="Nhập tên Banner..."
-                  onChange={(value) => setFieldValue("name", value)}
-                  onBlur={handleBlur}
-                />
+              <Col xs={24} sm={24} md={24} xl={16} className="mb-4">
+                <FormGroup title="Tên Banner" required>
+                  <FormInput
+                    type="text"
+                    isDisabled={type === "view"}
+                    value={values.name}
+                    name="name"
+                    error={touched.name ? errors.name : ""}
+                    placeholder="Nhập tên Banner..."
+                    onChange={(value) => setFieldValue("name", value)}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
               </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormGroup title="Hình ảnh">
-                  <FormUploadFile
-                    isMultiple={false}
-                    value={values.path}
-                    onChange={(e: any) => {
-                      setFieldValue("path", e);
+              <Col xs={24} sm={24} md={24} xl={8} className="mb-4">
+                <FormGroup title="Trạng thái">
+                  <FormSwitch
+                    checked={values.is_active === "1"}
+                    onChange={(value) => {
+                      setFieldValue("is_active", value ? "1" : "0");
                     }}
                   />
                 </FormGroup>
               </Col>
             </Row>
+
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormSwitch
-                  label="Trạng thái"
-                  checked={values.is_active === "1"}
-                  onChange={(value) => {
-                    setFieldValue("is_active", value ? "1" : "0");
-                  }}
-                />
+                <FormGroup title="Hình ảnh" required>
+                  <FormUploadFile
+                    error={touched.path ? errors.path : ""}
+                    isMultiple={false}
+                    value={values.path}
+                    onChange={(e: any) => {
+                      setFieldValue("path", e);
+                    }}
+                    disabled={type === EButtonTypes.VIEW}
+                  />
+                </FormGroup>
               </Col>
             </Row>
           </Form>

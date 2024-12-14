@@ -184,9 +184,10 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12}>
-                <FormGroup title="Ngày quyết định">
+                <FormGroup title="Ngày quyết định" required>
                   <FormDate
                     disabled={type === EButtonTypes.VIEW}
+                    error={touched.decision_date ? errors.decision_date : ""}
                     value={values.decision_date ? dayjs(values.decision_date) : null}
                     onChange={(date) => setFieldValue("decision_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />

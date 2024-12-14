@@ -62,7 +62,6 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
     if (type === EButtonTypes.CREATE) {
       dispatch(createBidBond({ body: body }));
     } else if (type === EButtonTypes.UPDATE && item?.id) {
-      // const newData = item.path === body.path ? (({ ...rest }) => rest)(body) : body;
       dispatch(updateBidBond({ body: body, param: item?.id }));
     }
   };

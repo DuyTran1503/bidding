@@ -82,7 +82,7 @@ const bannerSlice = createSlice({
       })
       .addCase(createBanner.rejected, (state, {payload}: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = payload.message || transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Update Banner
     builder
@@ -96,7 +96,7 @@ const bannerSlice = createSlice({
       })
       .addCase(updateBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = payload.message || transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors);
       });
     // ? Delete Banner
     builder
@@ -110,7 +110,7 @@ const bannerSlice = createSlice({
       })
       .addCase(deleteBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = payload.message || transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors);
       });
       builder
       .addCase(changeStatusBanner.pending, (state) => {
@@ -122,7 +122,7 @@ const bannerSlice = createSlice({
       })
       .addCase(changeStatusBanner.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = payload.message || transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors);
       });
   },
 });
