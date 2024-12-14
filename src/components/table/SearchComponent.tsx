@@ -9,7 +9,8 @@ import FormSelect from "../form/FormSelect";
 import FormDate from "../form/FormDate";
 import FormTreeSelect from "../form/FormTreeSelect"; // Import FormTreeSelect
 import dayjs from "dayjs";
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export interface ISearchTypeTable {
   type: "text" | "select" | "treeSelect" | "datetime" | "number" | "numberRange";
@@ -46,7 +47,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
   const { search, setFilter, filter, isShow } = props;
 
   const dispatch = useDispatch();
-
+  const location = useLocation();
   const transformValues = (values: IValues): IValues => {
     const newValues: IValues = {};
 
@@ -62,7 +63,13 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
     return newValues;
   };
-
+  useEffect(() => {
+    const resetFilter: ISearchParams = {
+      page: 1,
+      size: 10,
+    };
+    dispatch(setFilter(resetFilter));
+  }, [location.pathname, dispatch, setFilter]);
   return (
     <Formik
       enableReinitialize

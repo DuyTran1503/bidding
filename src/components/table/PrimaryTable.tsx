@@ -62,7 +62,7 @@ const PrimaryTable = <T extends ISearchParams>({
   // ...rest
 }: IPrimaryTableProps<T>) => {
   const dispatch = useDispatch();
-  const location = useLocation();
+
   const getShowingText = (total: number, range: [number, number]) => {
     return `Hiển thị ${range[0]}-${range[1]} của ${total}`;
   };
@@ -109,17 +109,6 @@ const PrimaryTable = <T extends ISearchParams>({
     },
     ...additionalTabs,
   ];
-  useLayoutEffect(() => {
-    const resetFilter: ISearchParams = {
-      page: 1,
-      size: 10,
-    };
-    dispatch(setFilter(resetFilter));
-
-    if (fetching) {
-      dispatch(fetching());
-    }
-  }, [location.pathname]);
 
   useEffect(() => {
     if (fetching) {

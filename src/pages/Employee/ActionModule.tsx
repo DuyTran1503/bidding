@@ -60,13 +60,14 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
     status: employee?.status ?? undefined, // Default value
   };
   const validationSchema = object().shape({
-    name: string().trim()
+    name: string()
+      .trim()
       .matches(/^[^\d]*$/, "Họ tên không được chứa số")
       .required("Vui lòng nhập họ tên")
       .max(255, "Số ký tự tối đa là 255 ký tự"),
-    code: string().trim().required("Vui lòng nhập mã nhân viên")
-      .max(255, "Số ký tự tối đa là 255 ký tự"),
-    email: string().trim()
+    code: string().trim().required("Vui lòng nhập mã nhân viên").max(255, "Số ký tự tối đa là 255 ký tự"),
+    email: string()
+      .trim()
       .required("Vui lòng nhập địa chỉ email")
       .email("Địa chỉ email không hợp lệ")
       .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Vui lòng nhập lại! định dạng email chưa đúng")
@@ -114,7 +115,8 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
             });
         }
         if (type === EPageTypes.UPDATE) {
-          const payload = employee?.avatar === body.avatar ? (({ ...rest }) => rest)(body) : body;
+          const payload = employee?.avatar === body.avatar ? (({ avatar, ...rest }) => rest)(body) : body;
+
           return dispatch(updateEmployee({ body: payload, param: String(employee?.id) }));
         }
       }}
