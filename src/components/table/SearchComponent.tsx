@@ -62,6 +62,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
     return newValues;
   };
+
   return (
     <Formik
       enableReinitialize
@@ -123,7 +124,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
                   return (
                     <Col xs={24} sm={24} md={12} lg={12} key={index}>
-                      <div className="flex items-center font-medium text-gray-500 text-base">
+                      <div className="flex items-center text-base font-medium text-gray-500">
                         <p>Điểm từ</p>
                         <Col xs={24} sm={24} md={12} lg={6}>
                           <FormInput
@@ -155,7 +156,23 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
                 if (item.type === "select") {
                   const options = item.parentItem ? (values[item.parentItem] ? item.options : []) : item.options;
-                  const value: any = values[item.id] ?? undefined;
+                  const newValue = Object.keys(values).reduce((acc, key) => {
+                    if (key.startsWith(item.id)) {
+                      // @ts-ignore
+                      if (!acc[item.id]) acc[item.id] = [];
+                      if (Array.isArray(values[key])) {
+                        // @ts-ignore
+                        acc[item.id].push(...values[key]);
+                      } else {
+                        // @ts-ignore
+                        acc[item.id].push(values[key]);
+                      }
+                    }
+                    return acc;
+                  }, {});
+
+                  // @ts-ignore
+                  const value: any = item.isMultiple && newValue[item.id]?.length ? newValue[item.id] : values[item.id] ?? undefined;
 
                   return (
                     <Col key={index} xs={24} sm={24} md={12} lg={6}>
@@ -235,7 +252,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                 kind="submit"
                 onClick={() => {
                   handleSubmit(); // Gọi submit form
-                  message.success("Tìm kiếm thành công", 1); // Hiển thị thông báo
+                  message.success("Tìm kiếm thành công", 1);
                 }}
               />
               <Button
@@ -244,7 +261,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                 onClick={() => {
                   const resetFilter: ISearchParams = {
                     page: 1,
-                    size: 10,
+                    size: filter.size || 10, // Preserve the current page size
                   };
                   dispatch(setFilter(resetFilter));
                   resetForm({ ...resetFilter } as Partial<FormikState<T>>);
