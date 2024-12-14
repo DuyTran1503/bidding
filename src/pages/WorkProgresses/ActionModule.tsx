@@ -6,24 +6,22 @@ import FormSelect from "@/components/form/FormSelect";
 import { useArchive } from "@/hooks/useArchive";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
+import { ITask } from "@/services/store/task/task.model";
 import { ITaskInitialState } from "@/services/store/task/task.slice";
+import { getListTask } from "@/services/store/task/task.thunk";
+import { IWorkProgressInitialState } from "@/services/store/workProgresses/workProgresses.slice";
+import { createWorkProgress, updateWorkProgress } from "@/services/store/workProgresses/workProgresses.thunk";
 import { EPageTypes } from "@/shared/enums/page";
-import { convertEnum } from "@/shared/utils/common/convertEnum";
+import { mappingTypeFeedback, typeTypeFeedbackEnumArray } from "@/shared/enums/typeFeedback";
+import { convertMoney, convertToNumberFromMoney } from "@/shared/utils/common/convertMoney";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, Row } from "antd";
 import dayjs from "dayjs";
 import { Form, Formik } from "formik";
 import lodash from "lodash";
 import { useEffect } from "react";
-import { date, object, string } from "yup";
+import { array, date, number, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
-import { IWorkProgressInitialState } from "@/services/store/workProgresses/workProgresses.slice";
-import { createWorkProgress, updateWorkProgress } from "@/services/store/workProgresses/workProgresses.thunk";
-import { mappingTypeFeedback, TypeFeedback, typeTypeFeedbackEnumArray } from "@/shared/enums/typeFeedback";
-import { getListTask } from "@/services/store/task/task.thunk";
-import { convertMoney, convertToNumber, convertToNumberFromMoney } from "@/shared/utils/common/convertMoney";
-import { ITask } from "@/services/store/task/task.model";
-import { typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
 
 interface IWorkProgressFormProps {
   formikRef?: FormikRefType<IWorkProgressInitialValues>;
@@ -76,7 +74,10 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
     end_date: date().required("Vui lòng chọn ngày kết thúc"),
     description: string().trim().required("Vui lòng không để trống trường này"),
     project_id: string().trim().required("Vui lòng chọn dự án"),
-    // task_ids: string().required("Vui lòng không để trống trường này"),
+    task_ids: array()
+      .of(number().required("Mỗi nhiệm vụ phải là một số hợp lệ"))
+      .min(1, "Vui lòng chọn ít nhất một nhiệm vụ")
+      .required("Nhiệm vụ là bắt buộc"),
   });
 
   const tasks = Array.isArray(stateTask?.listTasks) ? stateTask.listTasks : [];
@@ -97,16 +98,25 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={Schema}
-      onSubmit={(data) => {
+      onSubmit={(data, { setErrors }: any) => {
         const body = {
           ...data,
           expense: +convertToNumberFromMoney(data.expense as string),
         };
         if (type === EPageTypes.CREATE) {
-          console.log(body);
-          dispatchWorkProgress(createWorkProgress({ body: lodash.omit(body, "id") }));
+          dispatchWorkProgress(createWorkProgress({ body: lodash.omit(body, "id") }))
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
         } else if (type === EPageTypes.UPDATE && workProgress?.id) {
-          dispatchWorkProgress(updateWorkProgress({ body: lodash.omit(body, "id"), param: workProgress.id }));
+          dispatchWorkProgress(updateWorkProgress({ body: lodash.omit(body, "id"), param: workProgress.id }))
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
         }
       }}
     >
@@ -130,7 +140,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Dự án" required>
                   <FormSelect
-                    isDisabled={type === EPageTypes.VIEW}
+                    isDisabled={type === EPageTypes.VIEW || type === EPageTypes.UPDATE}
                     placeholder="Chọn dự án..."
                     id="project_id"
                     value={values.project_id}
@@ -140,9 +150,6 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tiến độ" required>
                   <FormInput
@@ -163,6 +170,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     placeholder="Chọn nhiệm vụ..."
                     isMultiple
                     value={values.task_ids}
+                    error={touched.task_ids ? errors.task_ids : ""}
                     id="task_ids"
                     onChange={(e) => {
                       setFieldValue("task_ids", e);
@@ -171,10 +179,21 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-            </Row>
-            <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Chi phí" required>
+                <FormGroup title="Nhận xét" required>
+                  <FormSelect
+                    placeholder="Nhận xét..."
+                    isDisabled={type === EPageTypes.VIEW}
+                    id="feedback"
+                    options={optionWorkProgress}
+                    value={values.feedback || undefined}
+                    error={touched.feedback ? errors.feedback : ""}
+                    onChange={(e) => setFieldValue("feedback", e)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <FormGroup title="Chi phí">
                   <FormInput
                     placeholder="Nhập chi phí..."
                     isDisabled={type === EPageTypes.VIEW}
@@ -195,25 +214,10 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Nhận xét" required>
-                  <FormSelect
-                    placeholder="Nhận xét..."
-                    isDisabled={type === EPageTypes.VIEW}
-                    id="feedback"
-                    options={optionWorkProgress}
-                    value={values.feedback || undefined}
-                    error={touched.feedback ? errors.feedback : ""}
-                    onChange={(e) => setFieldValue("feedback", e)}
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Ngày bắt đâu" required>
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
+                    error={touched.start_date ? errors.start_date : ""}
                     value={values.start_date ? dayjs(values.start_date) : null}
                     onChange={(date) => setFieldValue("start_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -226,18 +230,17 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     minDate={
                       values.start_date ? (dayjs(values.start_date).isValid() ? dayjs(values.start_date).add(1, "day") : undefined) : undefined
                     }
+                    error={touched.end_date ? errors.end_date : ""}
                     value={values.end_date ? dayjs(values.end_date) : null}
                     onChange={(date) => setFieldValue("end_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
                 </FormGroup>
               </Col>
-            </Row>
-
-            <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormGroup title="Mô tả">
                   <FormCkEditor
                     id="description"
+                    error={touched.description ? errors.description : ""}
                     disabled={type === EPageTypes.VIEW}
                     value={values.description ?? ""}
                     onChange={(e) => setFieldValue("description", e)}

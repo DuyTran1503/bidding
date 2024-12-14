@@ -44,11 +44,11 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
 
   const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const Schema = object().shape({
-    // project_id: string().trim().required("Vui lòng chọn dự án"),
+    project_id: string().trim().required("Vui lòng chọn dự án"),
     description: string().trim().required("Vui lòng nhập mô tả"),
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên tiêu chí đánh giá"),
     weight: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập trọng số đánh giá"),
-    });
+  });
 
   const handleSubmit = (data: IEvaluationCriteria, { setErrors }: any) => {
     const body = {
@@ -123,7 +123,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
                 <FormGroup title="Tên tiêu chí đánh giá" required>
                   <FormInput
                     type="text"
-                    isDisabled={type === "view"}
+                    isDisabled={type === "view" || type === "update"}
                     value={values.name}
                     name="name"
                     error={touched.name ? errors.name : ""}
@@ -157,7 +157,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
                 />
               </Col>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
-                <FormGroup title="Mô Tả" required>   
+                <FormGroup title="Mô Tả" required>
                   <FormCkEditor
                     id="description"
                     error={touched.description ? errors.description : ""}

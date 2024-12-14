@@ -22,14 +22,12 @@ interface IBidBondFormProps {
   project_id?: number;
 }
 
-const stringRegex = /^[\p{L}0-9\s._`-]*$/u;
-
 const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik }: IBidBondFormProps) => {
   const Schema = object().shape({
-    project_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn tên dự án"),
-    enterprise_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn người hoặc tổ chức bảo lãnh"),
+    project_id: string().required("Vui lòng chọn tên dự án"),
+    enterprise_id: string().required("Vui lòng chọn người hoặc tổ chức bảo lãnh"),
     bond_amount: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập số tiền"),
-    bond_type: string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng chọn loại bảo lãnh"),
+    bond_type: string().required("Vui lòng chọn loại bảo lãnh"),
     bond_number: string().required("Vui lòng nhập mã bảo lãnh"),
     expiry_date: string().required("Vui lòng chọn ngày hết hạn"),
   });
@@ -57,11 +55,11 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Tên dự án" required>
                   <FormSelect
-                    isDisabled={type === "view" || type === "update"}
+                    isDisabled={type === "view"}
                     value={values.project_id}
                     id="project_id"
                     placeholder="Tên dự án..."
-                    error={touched.project_id ? errors.project_id : ""}
+                    error={touched.project_id && errors.project_id ? errors.project_id : ""}
                     onChange={(value) => setFieldValue("project_id", value)}
                     options={projectOptions}
                   />

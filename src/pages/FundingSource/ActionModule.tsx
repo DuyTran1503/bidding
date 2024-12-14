@@ -48,6 +48,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng tên nguồn tài trợ"),
     type: string().trim().required("Vui lòng chọn loại nguồn tài trợ"),
     code: string().trim().required("Vui lòng nhập mã nguồn tài trợ"),
+    description: string().trim().required("Vui lòng nhập mô tả"),
   });
   useEffect(() => {
     return () => {
@@ -60,11 +61,21 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={tagSchema}
-      onSubmit={(data) => {
+      onSubmit={(data, { setErrors }: any) => {
         if (type === EPageTypes.CREATE) {
-          dispatch(createFundingSource({ body: lodash.omit(data, "id") }));
+          dispatch(createFundingSource({ body: lodash.omit(data, "id") }))
+          .unwrap()
+          .catch((error) => {
+            const apiErrors = error?.errors || {};
+            setErrors(apiErrors);
+          });
         } else if (type === EPageTypes.UPDATE && fundingSource?.id) {
-          dispatch(updateFundingSource({ body: lodash.omit(data, "id"), param: fundingSource.id }));
+          dispatch(updateFundingSource({ body: lodash.omit(data, "id"), param: fundingSource.id }))
+          .unwrap()
+          .catch((error) => {
+            const apiErrors = error?.errors || {};
+            setErrors(apiErrors);
+          });
         }
       }}
     >

@@ -15,7 +15,6 @@ interface IFormSelect {
   id?: string;
   className?: string;
   showLabel?: boolean; // Thêm prop showLabel
-  maxTagCount?: number | "responsive";
 }
 
 const FormSelect = ({
@@ -30,7 +29,6 @@ const FormSelect = ({
   value,
   error,
   showLabel = true, // Mặc định là true nếu không truyền vào
-  maxTagCount,
 }: IFormSelect) => {
   const handleChange = (value: string | string[] | number | number[]) => {
     if (onChange) {
@@ -53,7 +51,7 @@ const FormSelect = ({
       >
         <Select
           allowClear
-          maxTagCount={maxTagCount ? maxTagCount : 1}
+          maxTagCount="responsive"
           disabled={isDisabled}
           className={clsx(
             `text-m-medium !h-[35px] w-full rounded-[4px] border !border-[#e0e2e7] ${className}`,

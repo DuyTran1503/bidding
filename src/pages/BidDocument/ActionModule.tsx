@@ -132,7 +132,12 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
             });
           }
         } else if (type === EPageTypes.UPDATE && bidDocument?.id) {
-          dispatch(updateBidDocument({ body: lodash.omit(data, "id"), param: String(bidDocument.id) }));
+          dispatch(updateBidDocument({ body: lodash.omit(data, "id"), param: String(bidDocument.id) }))
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
         }
       }}
     >
