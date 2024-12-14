@@ -130,6 +130,7 @@ const TaskForm = ({ visible, type, setVisible, item }: ITaskFormProps) => {
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormSelect
                   label="Công ty"
+                  isDisabled={type === "view"}
                   placeholder="Chọn nhân viên..."
                   id="employees"
                   isMultiple

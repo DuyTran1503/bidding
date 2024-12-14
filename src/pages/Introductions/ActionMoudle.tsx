@@ -96,6 +96,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Trạng thái">
                   <FormSwitch
+                    isDisabled={type === "view"}
                     checked={values.is_use === "1"}
                     onChange={(value) => {
                       setFieldValue("is_use", value ? "1" : "0");

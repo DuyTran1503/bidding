@@ -1,22 +1,22 @@
-import { Formik, Form } from "formik";
-import { object, string } from "yup";
-import lodash from "lodash";
+import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import { useArchive } from "@/hooks/useArchive";
-import { FormikRefType } from "@/shared/utils/shared-types";
-import { EPageTypes } from "@/shared/enums/page";
-import FormSwitch from "@/components/form/FormSwitch";
-import { Col, Row } from "antd";
-import { useEffect } from "react";
-import { IIndustryInitialState, resetMessageError } from "@/services/store/industry/industry.slice";
 import FormSelect from "@/components/form/FormSelect";
-import { createIndustry, updateIndustry } from "@/services/store/industry/industry.thunk";
+import FormSwitch from "@/components/form/FormSwitch";
+import { useArchive } from "@/hooks/useArchive";
 import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
 import { getListBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
-import FormCkEditor from "@/components/form/FormCkEditor";
 import { IIndustry } from "@/services/store/industry/industry.model";
-import { convertDataOptions } from "../Project/helper";
+import { IIndustryInitialState, resetMessageError } from "@/services/store/industry/industry.slice";
+import { createIndustry, updateIndustry } from "@/services/store/industry/industry.thunk";
+import { EPageTypes } from "@/shared/enums/page";
+import { convertDataOption, selectedData } from "@/shared/utils/common/function";
+import { FormikRefType } from "@/shared/utils/shared-types";
+import { Col, Row } from "antd";
+import { Form, Formik } from "formik";
+import lodash from "lodash";
+import { useEffect } from "react";
+import { object, string } from "yup";
 
 interface IIndustryFormProps {
   formikRef?: FormikRefType<IIndustry>;
@@ -37,15 +37,19 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
   };
   const tagSchema = object().shape({
     name: string().trim().required("Vui lòng nhập tên ngành kinh doanh"),
+    business_activity_type_id: string().trim().required("Vui lòng chọn loại hình kinh doanh")
   });
+
   useEffect(() => {
     return () => {
       dispatch(resetMessageError());
     };
   }, []);
+
   useEffect(() => {
     dispatchBusiness(getListBusinessActivity());
   }, [dispatchBusiness]);
+  
   return (
     <Formik
       innerRef={formikRef}
@@ -79,13 +83,18 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Loại hình kinh doanh">
                   <FormSelect
-                    isDisabled={type === "view"}
-                    placeholder="Nhập doanh nghiệp"
-                    id="business_activity_type_id"
-                    value={values.business_activity_type_id || values.business_activity_type?.name}
+                    isDisabled={type === EPageTypes.VIEW}
+                    placeholder="Chọn..."
                     error={touched.business_activity_type_id ? errors.business_activity_type_id : ""}
-                    onChange={(e) => setFieldValue("business_activity_type_id", e)}
-                    options={convertDataOptions(businessState.listBusinessActivities)}
+                    options={convertDataOption(businessState?.listBusinessActivities!)}
+                    value={
+                      type === EPageTypes.UPDATE || EPageTypes.VIEW
+                        ? selectedData(businessState?.listBusinessActivities, values.business_activity_type_id)?.name
+                        : undefined
+                    }
+                    onChange={(value) => {
+                      setFieldValue("business_activity_type_id", value as string);
+                    }}
                   />
                 </FormGroup>
               </Col>
