@@ -44,16 +44,19 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
   };
   const tagSchema = object().shape({
     name: string().trim().required("Vui lòng nhập tên ngành kinh doanh"),
-    
+    business_activity_type_id: string().trim().required("Vui lòng chọn loại hình kinh doanh")
   });
+
   useEffect(() => {
     return () => {
       dispatch(resetMessageError());
     };
   }, []);
+
   useEffect(() => {
     dispatchBusiness(getListBusinessActivity());
   }, [dispatchBusiness]);
+  
   return (
     <Formik
       innerRef={formikRef}
@@ -89,6 +92,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."
+                    error={touched.business_activity_type_id ? errors.business_activity_type_id : ""}
                     options={convertDataOption(businessState?.listBusinessActivities!)}
                     value={
                       type === EPageTypes.UPDATE || EPageTypes.VIEW

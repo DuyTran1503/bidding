@@ -101,7 +101,7 @@ const industrySlice = createSlice({
       })
       .addCase(changeStatusIndustry.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
-        state.message = "Trạng thái hoạt động của ngành nghề đã được cập nhật thành công";
+        state.message = "Trạng thái thay đổi thành công";
       })
       .addCase(changeStatusIndustry.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;

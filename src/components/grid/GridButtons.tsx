@@ -12,7 +12,7 @@ import { PiDotsThreeVerticalBold } from "react-icons/pi"; // Thêm import cho bi
 
 interface IGridButtonsProps {
   buttons: IGridButton[];
-  record: { key: string;[key: string]: any };
+  record: { key: string; [key: string]: any };
   onClick?: (item: any, type: EButtonTypes) => void;
   isManyAction?: boolean;
 }
@@ -76,6 +76,36 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record, onClick, is
                   content: "Bạn chắc chắn muốn xóa không?",
                   okText: "Xác nhận",
                   cancelText: "Hủy",
+                  okButtonProps: {
+                    style: {
+                      backgroundColor: "#0891b2", // Màu xanh
+                      color: "#fff",
+                    },
+                    onMouseEnter: (e) => {
+                      const target = e.target as HTMLElement;
+                      target.style.backgroundColor = "#05718e"; // Màu xanh đậm hơn khi hover
+                    },
+                    onMouseLeave: (e) => {
+                      const target = e.target as HTMLElement;
+                      target.style.backgroundColor = "#0891b2"; // Màu gốc
+                    },
+                  },
+                  cancelButtonProps: {
+                    style: {
+                      backgroundColor: "#f0f0f0", // Màu xám nhạt
+                      borderColor: "#d9d9d9",
+                      color: "#000",
+                      transition: "background-color 0.3s ease", // Hiệu ứng hover
+                    },
+                    onMouseEnter: (e) => {
+                      const target = e.target as HTMLElement;
+                      target.style.backgroundColor = "#d9d9d9"; // Màu khi hover
+                    },
+                    onMouseLeave: (e) => {
+                      const target = e.target as HTMLElement;
+                      target.style.backgroundColor = "#f0f0f0"; // Màu gốc
+                    },
+                  },
                   onOk: () => button.onClick && button.onClick(record),
                 });
               }}

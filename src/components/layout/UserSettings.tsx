@@ -29,7 +29,7 @@ const UserSettings = () => {
   const items: MenuProps["items"] = [
     {
       label: (
-        <Link to="/profile" className="flex items-center gap-1">
+        <Link to="/profile" className="flex items-center gap-1 hover:bg-gray-100 rounded px-2 py-1">
           <AiOutlineUser className="text-xl" />
           <span>Thông tin cá nhân</span>
         </Link>
@@ -41,7 +41,7 @@ const UserSettings = () => {
     },
     {
       label: (
-        <div className="flex items-center gap-1 text-red-500">
+        <div className="flex items-center gap-1 text-red-500 hover:bg-red-50 px-2 py-1 rounded">
           <IoLogOutOutline className="text-xl" />
           Đăng xuất
         </div>
@@ -66,13 +66,14 @@ const UserSettings = () => {
       key: "3",
     },
   ];
+
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
       <div className="flex h-full cursor-pointer items-center gap-3">
         {/* Avatar */}
-        <div className="relative h-8 w-8 shrink-0 rounded-circle bg-gray-100">
+        <div className="relative h-8 w-8 shrink-0 rounded-full bg-gray-100 hover:ring-2 hover:ring-blue-400 transition duration-300">
           <CustomerAvatar src={state.profile?.avatar as string} alt={"Avatar"} className="h-full w-full rounded-full" />
-          <div className="absolute bottom-0 right-0 h-[10px] w-[10px] rounded-circle border-2 border-white bg-green-600"></div>
+          <div className="absolute bottom-0 right-0 h-[10px] w-[10px] rounded-full border-2 border-white bg-green-600"></div>
         </div>
         {/* Info */}
         <div className="shrink-0">

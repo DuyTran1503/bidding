@@ -34,11 +34,10 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
     description: item?.description || "",
     is_active: item?.is_active ? "1" : "0",
   };
+
+  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const schema = object().shape({
-    method_name: string()
-      .trim()
-      .matches(/^[\p{L}0-9\s._`-]*$/u, "Không chứa ký tự đặc biệt không hợp lệ")
-      .max(255, "Số ký tự tối đa là 255 ký tự"),
+    method_name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập hình thức đấu thầu"),
   });
   const handleSubmit = (data: ISelectionMethod) => {
     const body = {
@@ -121,6 +120,7 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
                 <FormSwitch
+                  isDisabled={type === "view"}
                   label="Trạng thái"
                   checked={values.is_active === "1"}
                   onChange={(value) => {
