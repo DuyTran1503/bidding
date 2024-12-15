@@ -15,10 +15,11 @@ import { getAllAttachment } from "@/services/store/attachment/attachment.thunk";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
-import { convertDataOptions } from "../Project/helper";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 
 export const getFileIcon = (fileType: string | undefined) => {
   if (!fileType) {
@@ -49,10 +50,17 @@ export const getFileIcon = (fileType: string | undefined) => {
 const Attachment = () => {
   // const navigate = useNavigate();
   const { state, dispatch } = useArchive<IAttachmentInitialState>("attachment");
-  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[] | undefined>(undefined);
 
   useEffect(() => {
-    dispatchProject(getListProject());
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
   }, []);
   const columns: ColumnsType = [
     {
@@ -121,10 +129,10 @@ const Attachment = () => {
     },
     {
       id: "project",
-      placeholder: "Chọn tên dự án...",
+      placeholder: "Chọn dự án ...",
       label: "Tên dự án",
-      type: "select",
-      options: convertDataOptions(stateProject.listProjects || []),
+      type: "treeSelect",
+      treeData: parentOptions,
     },
   ];
 

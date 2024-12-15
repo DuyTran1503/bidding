@@ -10,8 +10,7 @@ import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
-// import { EPermissions } from "@/shared/enums/permissions";
+import { useEffect, useMemo, useState } from "react";
 import { EPermissions } from "@/shared/enums/permissions";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { FaPlus } from "react-icons/fa";
@@ -20,11 +19,27 @@ import ActionModuleBiddingResult from "../ActionModuleBiddingResult/ActionModule
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { convertDataOptions } from "@/pages/Project/helper";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const BiddingResults = () => {
   const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
-  const { state: stateProject } = useArchive<IProjectInitialState>("project");
-  const { state: stateEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+
+  useEffect(() => {
+    dispatchEnterprise(getListEnterprise());
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
+  }, []);
   const navigate = useNavigate();
   const buttons: IGridButton[] = [
     {
@@ -79,18 +94,19 @@ const BiddingResults = () => {
 
   const search: ISearchTypeTable[] = [
     {
+      id: "project",
+      placeholder: "Chọn dự án ...",
+      label: "Tên dự án",
+      isMultiple: true,
+      type: "treeSelect",
+      treeData: treeData,
+    },
+    {
       id: "enterprise_id",
       placeholder: "Nhập tên doanh nghiệp trúng thầu...",
       label: "Doanh nghiệp trúng thầu",
       type: "select",
       options: convertDataOptions(stateEnterprise.listEnterprise || []),
-    },
-    {
-      id: "project_id",
-      placeholder: "Nhập tên dự án...",
-      label: "Tên dự án",
-      type: "select",
-      options: convertDataOptions(stateProject.listProjects || []),
     },
   ];
 

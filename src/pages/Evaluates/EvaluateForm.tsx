@@ -14,9 +14,11 @@ import { EPageTypes } from "@/shared/enums/page";
 import { Col, Form, Row } from "antd";
 import { Formik, FormikProps } from "formik";
 import lodash from "lodash";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 
 interface IEvaluateFormProps {
   type?: EPageTypes;
@@ -38,6 +40,11 @@ const EvaluateForm = ({
   const formikRef = useRef<FormikProps<IEvaluate>>(null);
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
   const { screenSize } = useViewport();
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  useEffect(() => {
+    const formattedData = formatTreeSelect(listProjects);
+    setTreeData(formattedData);
+  }, [listProjects]);
 
   const initialValues: IEvaluate = {
     id: item?.id || "",
@@ -50,8 +57,8 @@ const EvaluateForm = ({
     enterprise: item?.enterprise || undefined,
   };
   const Schema = object().shape({
-    project_id: string().required("Dự án là bắt buộc"),
-    enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
+    // project_id: string().required("Dự án là bắt buộc"),
+    // enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
     score: string().required("Số điểm là bắt buộc")
       .test("min-max", "Số điểm phải từ 1 đến 10", (value) => {
         const num = Number(value);
@@ -74,11 +81,11 @@ const EvaluateForm = ({
         });
     } else if (type === EPageTypes.UPDATE) {
       dispatch(updateEvaluate({ body, param: item?.id }))
-      .unwrap()
-      .catch((error) => {
-        const apiErrors = error?.errors || {};
-        setErrors(apiErrors);
-      });
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });
     }
   };
 
@@ -126,21 +133,22 @@ const EvaluateForm = ({
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Dự án" required>
-                  <FormSelect
-                    isDisabled={type === "view" || type==="update"}
-                    value={values.project_id}
-                    id="project_id"
+                  <FormTreeSelect
+                    isDisabled={type === "view" || type === "update"}
+                    value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id ? errors.project_id : ""}
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(listProjects)}
+                    onChange={(value) => {
+                      setFieldValue("project_id", value as string);
+                    }}
+                    treeData={treeData}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Doanh nghiệp" required>
                   <FormSelect
-                    isDisabled={type === "view" || type==="update"}
+                    isDisabled={type === "view" || type === "update"}
                     placeholder="Nhập doanh nghiệp"
                     id="enterprise_id"
                     value={values.enterprise_id || values.enterprise?.user?.name}
@@ -186,7 +194,7 @@ const EvaluateForm = ({
                     value={values.evaluate}
                     setFieldValue={setFieldValue}
                     disabled={type === EPageTypes.VIEW}
-                    error={touched.evaluate ? errors.evaluate : "" }
+                    error={touched.evaluate ? errors.evaluate : ""}
                   />
                 </FormGroup>
               </Col>

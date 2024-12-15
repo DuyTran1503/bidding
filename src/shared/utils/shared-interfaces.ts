@@ -74,4 +74,5 @@ export interface IGridButton {
 export interface IOption {
   value: string | number;
   label: string;
+  children?: any[]
 }
