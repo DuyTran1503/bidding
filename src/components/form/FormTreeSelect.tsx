@@ -63,11 +63,15 @@ const FormTreeSelect = ({
           multiple={multiple} // Cho phép chọn đơn hoặc nhiều dựa trên prop
           style={{ height }}
           filterTreeNode={(input, treeNode) => (treeNode.title && treeNode.title.toString().toLowerCase().includes(input.toLowerCase())) || false}
-          // Tùy chỉnh cách thức tìm kiếm
+        // Tùy chỉnh cách thức tìm kiếm
         />
       </ConfigProvider>
 
-      {!!error && <div className={clsx("mt-1 text-red-500")}>{error}</div>}
+      {!!error && (
+        <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 mt-[10px] py-[6px] font-normal text-red-500 outline-none focus:bg-white")}>
+          {error}
+        </div>
+      )}
     </div>
   );
 };

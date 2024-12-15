@@ -17,23 +17,18 @@ import { FaPlus } from "react-icons/fa";
 import { IEvaluationCriteriaInitialState, resetStatus, setFilter } from "@/services/store/evaluation/evaluation.slice";
 import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/services/store/evaluation/evaluation.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { getListProject } from "@/services/store/project/project.thunk";
-import { unwrapResult } from "@reduxjs/toolkit";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import ActionModule from "./ActionModule";
-
-export const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
-  return data.map((item) => ({
-    title: item.name,
-    value: item.id.toString(),
-    key: item.id.toString(),
-    children: item.children ? formatTreeData(item.children) : [],
-  }));
-};
 
 const EvaluationCriteria = () => {
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
-  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateProject } = useArchive<IProjectInitialState>("project");
   const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[] | undefined>(undefined);
+
+  useEffect(() => {
+    const formattedData = formatTreeSelect(stateProject.listProjects as any);
+    setTreeData(formattedData);
+  }, [stateProject.listProjects]);
 
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
@@ -121,29 +116,18 @@ const EvaluationCriteria = () => {
     () =>
       state.evaluations && state.evaluations.length > 0
         ? state.evaluations.map(({ id, project, name, weight, description, is_active }, index) => ({
-            index: index + 1,
-            key: id,
-            id,
-            project,
-            name,
-            weight,
-            description,
-            is_active,
-          }))
+          index: index + 1,
+          key: id,
+          id,
+          project,
+          name,
+          weight,
+          description,
+          is_active,
+        }))
         : [],
     [JSON.stringify(state.evaluations), JSON.stringify(stateProject.listProjects)],
   );
-
-  useEffect(() => {
-    dispatch(getAllEvaluations({ query: state.filter }));
-    dispatchProject(getListProject())
-      .then(unwrapResult)
-      .then((result) => {
-        const fields = result.data;
-        const formattedData = formatTreeData(fields);
-        setTreeData(formattedData);
-      });
-  }, [JSON.stringify(state.filter)]);
 
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
@@ -174,7 +158,7 @@ const EvaluationCriteria = () => {
     {
       id: "project",
       placeholder: "Chọn dự án ...",
-      label: "Loại dự án ",
+      label: "Tên dự án",
       type: "treeSelect",
       treeData: parentOptions,
     },

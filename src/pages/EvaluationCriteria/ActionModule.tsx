@@ -11,6 +11,7 @@ import { IEvaluationCriteria } from "@/services/store/evaluation/evaluation.mode
 import { IEvaluationCriteriaInitialState } from "@/services/store/evaluation/evaluation.slice";
 import { createEvaluation, updateEvaluation } from "@/services/store/evaluation/evaluation.thunk";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import { EPageTypes } from "@/shared/enums/page";
 import { Col, Row } from "antd";
 import { Form, Formik, FormikProps } from "formik";
@@ -26,21 +27,12 @@ interface IEvaluationCriteriaFormProps {
   listProjects?: any[];
 }
 
-const formatTreeData = (data: any[]): { title: string; value: string; key: string; children?: any[] }[] => {
-  return data.map((item) => ({
-    title: item.name,
-    value: item.id.toString(),
-    key: item.id.toString(),
-    children: item.children ? formatTreeData(item.children) : [],
-  }));
-};
-
 const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listProjects = [], }: IEvaluationCriteriaFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluationCriteria>>(null);
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
   useEffect(() => {
-    const formattedData = formatTreeData(listProjects);
+    const formattedData = formatTreeSelect(listProjects);
     setTreeData(formattedData);
   }, [listProjects]);
 

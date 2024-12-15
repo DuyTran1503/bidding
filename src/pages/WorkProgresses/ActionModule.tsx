@@ -19,9 +19,11 @@ import { Col, Row } from "antd";
 import dayjs from "dayjs";
 import { Form, Formik } from "formik";
 import lodash from "lodash";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { array, date, number, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 
 interface IWorkProgressFormProps {
   formikRef?: FormikRefType<IWorkProgressInitialValues>;
@@ -50,6 +52,11 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
   const { dispatch: dispatchWorkProgress } = useArchive<IWorkProgressInitialState>("work_progress");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
+    const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+    useEffect(() => {
+      const formattedData = formatTreeSelect(stateProject.listProjects as any);
+      setTreeData(formattedData);
+    }, [stateProject.listProjects]);
 
   const initialValues: IWorkProgressInitialValues = {
     id: workProgress?.id ?? "",
@@ -139,14 +146,15 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Dự án" required>
-                  <FormSelect
-                    isDisabled={type === EPageTypes.VIEW || type === EPageTypes.UPDATE}
-                    placeholder="Chọn dự án..."
-                    id="project_id"
-                    value={values.project_id}
+                  <FormTreeSelect
+                    isDisabled={type === "view" || type === "update"}
+                    value={values?.project_id as any}
+                    placeholder="Nhập tên dự án..."
                     error={touched.project_id ? errors.project_id : ""}
-                    options={convertDataOptions(stateProject?.listProjects || [])}
-                    onChange={(e) => setFieldValue("project_id", e)}
+                    onChange={(value) => {
+                      setFieldValue("project_id", value as string);
+                    }}
+                    treeData={treeData}
                   />
                 </FormGroup>
               </Col>

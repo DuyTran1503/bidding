@@ -19,14 +19,14 @@ import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { convertDataOptions } from "../Project/helper";
 import EvaluateForm from "./EvaluateForm";
-import { formatTreeData } from "../EvaluationCriteria";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 
 const Evaluates = () => {
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
-  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
   const buttons: IGridButton[] = [
     {
@@ -51,8 +51,8 @@ const Evaluates = () => {
     dispatchProject(getListProject())
       .then(unwrapResult)
       .then((result) => {
-        const fields = result.data;
-        const formattedData = formatTreeData(fields);
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
         setTreeData(formattedData);
       });
   }, []);
@@ -97,10 +97,10 @@ const Evaluates = () => {
     {
       id: "project",
       placeholder: "Chọn dự án ...",
-      label: "Loại dự án ",
+      label: "Tên dự án",
       isMultiple: true,
       type: "treeSelect",
-      treeData: parentOptions,
+      treeData: treeData,
     },
     {
       id: "enterprise",
@@ -126,15 +126,15 @@ const Evaluates = () => {
     () =>
       state.evaluates && state.evaluates.length > 0
         ? state.evaluates.map(({ id, title, score, evaluate, project, enterprise }, index) => ({
-            index: index + 1,
-            key: id,
-            id: id,
-            title,
-            score,
-            evaluate,
-            project,
-            enterprise,
-          }))
+          index: index + 1,
+          key: id,
+          id: id,
+          title,
+          score,
+          evaluate,
+          project,
+          enterprise,
+        }))
         : [],
     [JSON.stringify(state.evaluates)],
   );

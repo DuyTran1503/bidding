@@ -134,7 +134,7 @@ const WorkProgresses = () => {
     {
       id: "project_id",
       placeholder: "Chọn dự án ...",
-      label: "Loại dự án ",
+      label: "Tên dự án",
       type: "treeSelect",
       treeData: parentOptions,
     },
