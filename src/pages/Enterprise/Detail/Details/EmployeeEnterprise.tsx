@@ -62,14 +62,13 @@ const EmployeeEnterprise = () => {
     dispatch(
       getAllEmployee({
         query: {
-          ...state.employees,
           page: state.filter.page,
           size: state.filter.size,
           enterprise: id,
         },
       }),
     );
-  }, [JSON.stringify(state.filter), id]);
+  }, []);
 
   const educationLevelMapping: Record<string, string> = {
     after_university: "Sau đại học",

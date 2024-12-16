@@ -19,22 +19,27 @@ import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/s
 import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import ActionModule from "./ActionModule";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const EvaluationCriteria = () => {
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
-  const { state: stateProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[] | undefined>(undefined);
 
   useEffect(() => {
-    const formattedData = formatTreeSelect(stateProject.listProjects as any);
-    setTreeData(formattedData);
-  }, [stateProject.listProjects]);
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
+  }, []);
 
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  // const projectName = (value: number) => {
-  //   if (stateProject?.listProjects!.length > 0 && !!value) return stateProject?.listProjects!.find((item) => item.id === value)?.name;
-  // };
+
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -126,7 +131,7 @@ const EvaluationCriteria = () => {
           is_active,
         }))
         : [],
-    [JSON.stringify(state.evaluations), JSON.stringify(stateProject.listProjects)],
+    [JSON.stringify(state.evaluations)],
   );
 
   useEffect(() => {
@@ -134,6 +139,10 @@ const EvaluationCriteria = () => {
       dispatch(getAllEvaluations({ query: state.filter }));
     }
   }, [JSON.stringify(state.status)]);
+
+  useEffect(() => {
+    dispatch(getAllEvaluations({ query: state.filter }));
+  }, [JSON.stringify(state.filter)]);
 
   useFetchStatus({
     module: "evaluation",

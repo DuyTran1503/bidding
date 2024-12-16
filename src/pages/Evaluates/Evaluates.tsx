@@ -9,18 +9,18 @@ import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk"
 import { IEvaluateInitialState, resetStatus, setFilter } from "@/services/store/evaluate/evaluate.slice";
 import { deleteEvaluate, getAllEvaluates } from "@/services/store/evaluate/evaluate.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { getListProject } from "@/services/store/project/project.thunk";
+import { getListProject, listProjectHasBiddingResult } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { convertDataOptions } from "../Project/helper";
 import EvaluateForm from "./EvaluateForm";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 
 const Evaluates = () => {
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
@@ -48,6 +48,7 @@ const Evaluates = () => {
 
   useEffect(() => {
     dispatchEnterprise(getListEnterprise());
+    dispatchProject(listProjectHasBiddingResult());
     dispatchProject(getListProject())
       .then(unwrapResult)
       .then((result) => {
@@ -164,7 +165,7 @@ const Evaluates = () => {
         title="Đánh giá kết quả dự án"
         hasBreadcrumb
         ModalContent={(props) => (
-          <EvaluateForm {...(props as any)} listEnterprise={stateEnterprise.listEnterprise} listProjects={stateProject.listProjects} />
+          <EvaluateForm {...(props as any)} listProjectHasBiddingResult={stateProject.listProjectHasBiddingResult} />
         )}
         buttons={[
           {
@@ -187,7 +188,7 @@ const Evaluates = () => {
         setFilter={setFilter}
         filter={state.filter}
         ModalContent={(props) => (
-          <EvaluateForm {...(props as any)} listEnterprise={stateEnterprise.listEnterprise} listProjects={stateProject.listProjects} />
+          <EvaluateForm {...(props as any)} listProjectHasBiddingResult={stateProject.listProjectHasBiddingResult} />
         )}
       />
     </>
