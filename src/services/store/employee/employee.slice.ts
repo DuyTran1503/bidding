@@ -30,9 +30,10 @@ const initialState: IEmployeeInitialState = {
   message: "",
   filter: {
     page: 1,
-    size: 1,
+    size: 10,
   },
-  totalRecords: 1,
+  totalRecords: 0,
+  number_of_elements: 0,
 };
 
 const employeeSlice = createSlice({
@@ -52,6 +53,7 @@ const employeeSlice = createSlice({
         if (payload.data) {
           state.employees = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;
+          state.number_of_elements = payload?.data?.number_of_elements;
         }
       })
       .addCase(getAllEmployee.rejected, (state, { payload }: PayloadAction<IError[] | any>) => {

@@ -1,12 +1,13 @@
 import Heading from "@/components/layout/Heading";
 import CustomTabs from "@/components/table/CustomTabs";
+import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
-import { getAllEmployee } from "@/services/store/employee/employee.thunk";
+import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { IEnterpriseInitialState, resetStatus } from "@/services/store/enterprise/enterprise.slice";
 import { getEnterpriseById } from "@/services/store/enterprise/enterprise.thunk";
+import { EPermissions } from "@/shared/enums/permissions";
 import { Card, Descriptions } from "antd";
 import { useEffect, useState } from "react";
 import { IoClose, IoImage } from "react-icons/io5";
@@ -14,15 +15,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Employee from "./Details/EmployeeEnterprise";
 import Investor from "./Details/Investor";
 import Tenderer from "./Details/Tenderer";
-import { IAuthInitialState } from "@/services/store/auth/auth.slice";
-import { checkPermission } from "@/helpers/checkPermission";
-import { EPermissions } from "@/shared/enums/permissions";
 import Win from "./Details/Win";
 const DetailEnterprise = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
   // const { state: wontState, dispatch: wontDispatch } = useArchive<IProjectInitialState>("project");
-  const { state: employeeState, dispatch: employeeDispatch } = useArchive<IEmployeeInitialState>("employee");
   const [data, setData] = useState<IEnterprise>();
   const { id } = useParams();
   const { state: stateAuth } = useArchive<IAuthInitialState>("auth");
@@ -50,18 +47,6 @@ const DetailEnterprise = () => {
       dispatch(getEnterpriseById(id));
     }
   }, [id]);
-  useEffect(() => {
-    employeeDispatch(
-      getAllEmployee({
-        query: {
-          ...employeeState.employees,
-          page: employeeState.filter.page,
-          size: employeeState.filter.size,
-          enterprise: id,
-        },
-      }),
-    );
-  }, [employeeDispatch, employeeState.filter.page, employeeState.filter.size, id]);
   const renderDescriptionItem = (label: string, value: React.ReactNode, span: number = 1) => (
     <Descriptions.Item className="!px-2 !py-3" label={<span className="block !w-32 font-bold">{label}</span>} span={span}>
       <div className="break-words">{value}</div>

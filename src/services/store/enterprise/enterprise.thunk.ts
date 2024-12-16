@@ -7,6 +7,7 @@ import { objectToFormData } from "@/shared/utils/common/formData";
 
 const prefix = "/api/admin/enterprises";
 
+//get-all-enterprises
 export const getAllEnterprise = createAsyncThunk("staff/get-all-enterprises", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IEnterprise[]>(prefix, payload);
@@ -15,6 +16,8 @@ export const getAllEnterprise = createAsyncThunk("staff/get-all-enterprises", as
     return rejectWithValue(error.response.data);
   }
 });
+
+//list-enterprises
 export const getListEnterprise = createAsyncThunk("staff/get-list-enterprises", async (_, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IEnterprise[]>("/api/admin/list-enterprises");
@@ -23,24 +26,26 @@ export const getListEnterprise = createAsyncThunk("staff/get-list-enterprises", 
     return rejectWithValue(error.response.data);
   }
 });
+
+// get-enterprise-of-bidding-result-by-project
 export const getEnterpriseById = createAsyncThunk("enterprises/get-enterprises-by-id", async (id: string, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<IEnterprise>(prefix + `/${id}`);
+    const { response, data } = await client.get<IEnterprise>(`/api/admin/get-enterprise-of-bidding-result-by-project/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }
 });
 
-// export const createEnterprise = createAsyncThunk("enterprises/create-enterprises", async (payload: IThunkPayload, { rejectWithValue }) => {
-//   try {
-//     const { response, data } = await client.post(prefix, payload);
+export const getEnterpriseOfBiddingResultByProject = createAsyncThunk("enterprises/get-enterprise-of-bidding-result-by-project", async (id: string, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<IEnterprise>(`/api/admin/get-enterprise-of-bidding-result-by-project/${id}`);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
 
-//     return response.status >= 400 ? rejectWithValue(data) : data;
-//   } catch (error: any) {
-//     return rejectWithValue(error.response.data as IError);
-//   }
-// });
 export const createEnterprise = createAsyncThunk("enterprises/create-enterprises", async (request: Omit<IEnterprise, "id">, thunkAPI) => {
   try {
     const formData = objectToFormData(request);
