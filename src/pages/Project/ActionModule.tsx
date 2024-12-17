@@ -345,7 +345,7 @@ const ActionModule = ({
           <Form className="mt-4">
             {!isChildren && children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
             <Row gutter={[16, 0]}>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Tên Dự Án">
                   <FormInput
                     isDisabled={type === EPageTypes.VIEW}
@@ -358,7 +358,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Hình thức lựa chọn nhà thầu">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -371,7 +371,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Hình thức tham gia đấu thầu">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -393,7 +393,7 @@ const ActionModule = ({
 
               {/* Chỉ hiện Địa Điểm Nhận Hồ Sơ khi submission_method không phải là online */}
               {values.submission_method !== SUBMIT_METHOD.online && (
-                <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={8}>
                   <FormGroup title="Địa Điểm Nhận Hồ Sơ">
                     <FormInput
                       isDisabled={type === EPageTypes.VIEW}
@@ -407,7 +407,7 @@ const ActionModule = ({
                   </FormGroup>
                 </Col>
               )}
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Địa Điểm">
                   <FormInput
                     isDisabled={type === EPageTypes.VIEW}
@@ -420,7 +420,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title=" Bên Mời Thầu">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -433,7 +433,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title=" Chủ đầu tư">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -445,7 +445,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Nguồn tài trợ">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -459,7 +459,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Người phê duyệt">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -472,7 +472,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title=" Dịch vụ mua sắm đấu thầu công">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -485,7 +485,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title=" Ngành Nghề">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -500,7 +500,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Số quyết định ban hành">
                   <FormInput
                     isDisabled={type === EPageTypes.VIEW || type === EPageTypes.APPROVE}
@@ -513,7 +513,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Dự án hiện tại">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -526,7 +526,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Số Tiền">
                   <FormInput
                     isDisabled={type === EPageTypes.VIEW}
@@ -539,7 +539,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Tổng đầu tư">
                   <FormInput
                     isDisabled={type === EPageTypes.VIEW}
@@ -553,7 +553,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Thời Gian Nộp Hồ Sơ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -563,7 +563,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Ngày kết thúc nộp hồ sơ">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -573,7 +573,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Ngày Mở Thầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -584,7 +584,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Ngày bắt đầu dự án">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -594,7 +594,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Ngày kết thúc dự án">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -605,7 +605,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               {type === EPageTypes.APPROVE && (
-                <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={8}>
                   <FormGroup title="Ngày phê duyệt">
                     <FormDate
                       disabled
@@ -616,7 +616,7 @@ const ActionModule = ({
                 </Col>
               )}
 
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Trạng thái dự án">
                   <FormSelect
                     isDisabled
@@ -628,7 +628,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tài liệu đính kèm">
                   <FormUploadFile
                     isMultiple
@@ -641,7 +641,7 @@ const ActionModule = ({
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Mô Tả">
                   <FormCkEditor
                     disabled={type === EPageTypes.VIEW}

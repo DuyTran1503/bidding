@@ -25,11 +25,6 @@ const Employee = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IEmployeeInitialState>("employee");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
-  const enterpriseName = (value: number) => {
-    if (stateEnterprise?.listEnterprise!.length > 0 && !!value) {
-      return stateEnterprise?.listEnterprise!.find((item) => item.id === value)?.name;
-    }
-  };
   const enterpriseOption: IOption[] =
     stateEnterprise?.listEnterprise! && stateEnterprise.listEnterprise.length > 0
       ? stateEnterprise.listEnterprise.map((e) => ({
@@ -61,9 +56,9 @@ const Employee = () => {
       dataIndex: "avatar",
       title: "Ảnh đại diện",
       render(_, record) {
-        return <CustomerAvatar src={!!record.avatar && record.avatar} alt={"Ảnh đại diện"} />;
+        return <CustomerAvatar size="large" src={!!record.avatar && record.avatar} alt={"Ảnh đại diện"} />;
       },
-      className: "!h-auto",
+      className: "w-[150px]",
     },
     {
       dataIndex: "email",
@@ -79,6 +74,9 @@ const Employee = () => {
       dataIndex: "enterprise",
       title: "Công ty làm việc",
       className: "w-[250px]",
+      render(_, record) {
+        return <>{record?.enterprise}</>;
+      },
     },
   ];
   const buttons: IGridButton[] = [
@@ -150,7 +148,7 @@ const Employee = () => {
       ? state.employees.map((employee, index) => ({
           index: index + 1,
           key: employee.id, // Use employee.id as the unique key
-          enterprise_id: employee.enterprise_id,
+          enterprise_id: employee.enterprise?.id,
           code: employee.code,
           name: employee.name,
           phone: employee.phone,
@@ -162,7 +160,7 @@ const Employee = () => {
           start_date: employee.start_date,
           end_date: employee.end_date,
           salary: employee.salary,
-          enterprise: enterpriseName(+employee?.enterprise?.id!),
+          enterprise: employee.enterprise?.name,
           address: employee.address,
           status: employee.status,
           avatar: employee.avatar,
@@ -208,7 +206,7 @@ const Employee = () => {
         buttons={buttons}
         pagination={{
           current: state.filter.page ?? 1,
-          pageSize: state.filter.size ?? 10,
+          pageSize: state.filter.size ?? 2,
           total: state.totalRecords,
         }}
         setFilter={setFilter}

@@ -50,7 +50,7 @@ const StatisticalEnterprise: React.FC = () => {
   }, [dispatchEnterprise]);
 
   const handleAddToCompare = () => {
-    if (ids.length && id) {    
+    if (ids.length && id) {
       const enterpriseIds = [...new Set([...ids, Number(id)])]; // Combine and remove duplicates
       setSelectedEnterpriseIds(enterpriseIds);
       const selectedYear = year.length ? year : [new Date().getFullYear()];
@@ -273,7 +273,7 @@ const StatisticalEnterprise: React.FC = () => {
           return (
             <Form>
               <Row className="items-center">
-                <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                <Col xs={24} sm={24} md={24} xl={24}>
                   <FormGroup title="Doanh nghiệp" className="bg-[#f9f9fc]">
                     <div className="flex w-full gap-4">
                       <FormSelect

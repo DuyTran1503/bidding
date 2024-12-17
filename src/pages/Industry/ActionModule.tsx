@@ -33,11 +33,11 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
     name: industry?.name ?? "",
     description: industry?.description ?? "",
     is_active: industry?.is_active ?? "",
-    business_activity_type_id: industry?.business_activity_type_id || industry?.business_activity_type?.id as any || undefined,
+    business_activity_type_id: industry?.business_activity_type_id || (industry?.business_activity_type?.id as any) || undefined,
   };
   const tagSchema = object().shape({
     name: string().trim().required("Vui lòng nhập tên ngành kinh doanh"),
-    business_activity_type_id: string().trim().required("Vui lòng chọn loại hình kinh doanh")
+    business_activity_type_id: string().trim().required("Vui lòng chọn loại hình kinh doanh"),
   });
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
   useEffect(() => {
     dispatchBusiness(getListBusinessActivity());
   }, [dispatchBusiness]);
-  
+
   return (
     <Formik
       innerRef={formikRef}
@@ -66,8 +66,8 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
           <Form>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Ngành kinh doanh" required>
                   <FormInput
                     placeholder="Nhập ngành kinh doanh..."
@@ -80,7 +80,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Loại hình kinh doanh">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -99,21 +99,21 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                 </FormGroup>
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Mô tả">
-                <FormCkEditor
-                  id="description"
-                  direction="vertical"
-                  value={values.description}
-                  setFieldValue={setFieldValue}
-                  disabled={type === EPageTypes.VIEW}
-                />
+                  <FormCkEditor
+                    id="description"
+                    direction="vertical"
+                    value={values.description}
+                    setFieldValue={setFieldValue}
+                    disabled={type === EPageTypes.VIEW}
+                  />
                 </FormGroup>
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Trạng thái hoạt động">
                   <FormSwitch
                     checked={!!values.is_active ? true : false}

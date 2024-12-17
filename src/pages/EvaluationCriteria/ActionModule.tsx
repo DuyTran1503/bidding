@@ -27,7 +27,7 @@ interface IEvaluationCriteriaFormProps {
   listProjects?: any[];
 }
 
-const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listProjects = [], }: IEvaluationCriteriaFormProps) => {
+const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listProjects = [] }: IEvaluationCriteriaFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluationCriteria>>(null);
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
@@ -110,14 +110,14 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-0">
                 <FormGroup title="Tên dự án" required>
                   <FormTreeSelect
                     isDisabled={type === "view"}
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
-                    error={touched.project_id ? errors.project_id : ""}
+                    error={touched.project_id || !values?.project_id ? errors.project_id : ""}
                     onChange={(value) => {
                       setFieldValue("project_id", value as string);
                     }}
@@ -125,7 +125,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-0">
                 <FormGroup title="Tên tiêu chí đánh giá" required>
                   <FormInput
                     type="text"
@@ -139,7 +139,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8} className="mb-0">
                 <FormGroup title="Trọng số đánh giá" required>
                   <FormInput
                     type="number"
@@ -153,7 +153,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-0">
                 <FormSwitch
                   label="Trạng thái"
                   checked={values.is_active === "0"}
@@ -162,7 +162,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
                   }}
                 />
               </Col>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={24} className="mb-0">
                 <FormGroup title="Mô Tả" required>
                   <FormCkEditor
                     id="description"

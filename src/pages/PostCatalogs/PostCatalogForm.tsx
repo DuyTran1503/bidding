@@ -35,9 +35,9 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
     is_active: item?.is_active ? "1" : "0",
   };
 
-    const Schema = object().shape({
-        name: string().trim().required("Vui lòng không để trống ô này"),
-    })
+  const Schema = object().shape({
+    name: string().trim().required("Vui lòng không để trống ô này"),
+  });
   const handleSubmit = (data: IPostCatalog, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index"),
@@ -48,7 +48,7 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
         .catch((error) => {
           const apiErrors = error?.errors || {};
           setErrors(apiErrors);
-        });;
+        });
     } else if (type === EButtonTypes.UPDATE) {
       dispatch(updatePostCatalog({ body, param: item?.id }));
     }
@@ -93,7 +93,7 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
+            <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Tên danh mục bài viết">
                   <FormInput

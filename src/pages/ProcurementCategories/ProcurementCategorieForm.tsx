@@ -44,7 +44,7 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
         .catch((error) => {
           const apiErrors = error?.errors || {};
           setErrors(apiErrors);
-        });;;
+        });
     } else if (type === EButtonTypes.UPDATE) {
       dispatch(updateProcurementCategorie({ body, param: item?.id }));
     }
@@ -88,7 +88,7 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
+            <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Tên loại hình MSC">
                   <FormInput
@@ -112,7 +112,6 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
                       setFieldValue("is_active", value ? "1" : "0");
                     }}
                   />
-                  
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={24} xl={24}>

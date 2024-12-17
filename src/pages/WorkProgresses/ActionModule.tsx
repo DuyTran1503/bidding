@@ -52,11 +52,11 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
   const { dispatch: dispatchWorkProgress } = useArchive<IWorkProgressInitialState>("work_progress");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
-    const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
-    useEffect(() => {
-      const formattedData = formatTreeSelect(stateProject.listProjects as any);
-      setTreeData(formattedData);
-    }, [stateProject.listProjects]);
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  useEffect(() => {
+    const formattedData = formatTreeSelect(stateProject.listProjects as any);
+    setTreeData(formattedData);
+  }, [stateProject.listProjects]);
 
   const initialValues: IWorkProgressInitialValues = {
     id: workProgress?.id ?? "",
@@ -130,8 +130,8 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
           <Form>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tên tiến độ" required>
                   <FormInput
                     placeholder="Nhập..."
@@ -144,13 +144,13 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Dự án" required>
                   <FormTreeSelect
                     isDisabled={type === "view" || type === "update"}
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
-                    error={touched.project_id ? errors.project_id : ""}
+                    error={touched.project_id || !values.project_id ? errors.project_id : ""}
                     onChange={(value) => {
                       setFieldValue("project_id", value as string);
                     }}
@@ -158,7 +158,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tiến độ" required>
                   <FormInput
                     placeholder="Nhập..."
@@ -171,14 +171,14 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Nhiệm vụ" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn nhiệm vụ..."
                     isMultiple
                     value={values.task_ids}
-                    error={touched.task_ids ? errors.task_ids : ""}
+                    error={touched.task_ids || values.task_ids?.length === 0 ? errors.task_ids : ""}
                     id="task_ids"
                     onChange={(e) => {
                       setFieldValue("task_ids", e);
@@ -187,7 +187,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Nhận xét" required>
                   <FormSelect
                     placeholder="Nhận xét..."
@@ -200,7 +200,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Chi phí">
                   <FormInput
                     placeholder="Nhập chi phí..."
@@ -221,7 +221,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Ngày bắt đâu" required>
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -231,7 +231,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Ngày kết thúc" required>
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -244,7 +244,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Mô tả">
                   <FormCkEditor
                     id="description"
