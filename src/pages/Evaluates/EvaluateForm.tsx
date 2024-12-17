@@ -14,9 +14,10 @@ import { EPageTypes } from "@/shared/enums/page";
 import { Col, Form, Row } from "antd";
 import { Formik, FormikProps } from "formik";
 import lodash from "lodash";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 
 interface IEvaluateFormProps {
   type?: EPageTypes;
@@ -27,22 +28,16 @@ interface IEvaluateFormProps {
   listProjects?: any[]; // Thay đổi kiểu nếu cần
 }
 
-const EvaluateForm = ({
-  visible,
-  type,
-  setVisible,
-  item,
-  listEnterprise = [],
-  listProjects = [],
-}: IEvaluateFormProps) => {
+const EvaluateForm = ({ visible, type, setVisible, item, listEnterprise = [], listProjects = [] }: IEvaluateFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluate>>(null);
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
   const { screenSize } = useViewport();
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
   const initialValues: IEvaluate = {
     id: item?.id || "",
     project_id: item?.project_id || item?.project?.id || undefined,
-    enterprise_id: item?.enterprise_id || item?.enterprise?.id as any || undefined,
+    enterprise_id: item?.enterprise_id || (item?.enterprise?.id as any) || undefined,
     title: item?.title || "",
     score: item?.score || 10,
     evaluate: item?.evaluate || "",
@@ -52,7 +47,8 @@ const EvaluateForm = ({
   const Schema = object().shape({
     project_id: string().required("Dự án là bắt buộc"),
     enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
-    score: string().required("Số điểm là bắt buộc")
+    score: string()
+      .required("Số điểm là bắt buộc")
       .test("min-max", "Số điểm phải từ 1 đến 10", (value) => {
         const num = Number(value);
         return num >= 1 && num <= 10;
@@ -74,20 +70,24 @@ const EvaluateForm = ({
         });
     } else if (type === EPageTypes.UPDATE) {
       dispatch(updateEvaluate({ body, param: item?.id }))
-      .unwrap()
-      .catch((error) => {
-        const apiErrors = error?.errors || {};
-        setErrors(apiErrors);
-      });
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });
     }
   };
 
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
+      setTreeData(listProjects);
       setVisible(false);
     }
   }, [state.status]);
-  // console.log(state.evaluates.project?.name);
+  useEffect(() => {
+    setTreeData(listProjects);
+  }, [visible]);
+  console.log(treeData);
 
   return (
     <Dialog
@@ -127,7 +127,7 @@ const EvaluateForm = ({
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Dự án" required>
                   <FormSelect
-                    isDisabled={type === "view" || type==="update"}
+                    isDisabled={type === "view" || type === "update"}
                     value={values.project_id}
                     id="project_id"
                     placeholder="Nhập tên dự án..."
@@ -135,12 +135,23 @@ const EvaluateForm = ({
                     onChange={(value) => setFieldValue("project_id", value)}
                     options={convertDataOptions(listProjects)}
                   />
+                  <FormTreeSelect
+                    label="Chọn dự án"
+                    isDisabled={type === EPageTypes.VIEW}
+                    placeholder="Chọn lĩnh vực cha"
+                    treeData={treeData}
+                    value={String(values.project_id)}
+                    defaultValue={(values.project_id as unknown as string) || undefined}
+                    onChange={(value) => {
+                      setFieldValue("parent_id", value as string);
+                    }}
+                  />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Doanh nghiệp" required>
                   <FormSelect
-                    isDisabled={type === "view" || type==="update"}
+                    isDisabled={type === "view" || type === "update"}
                     placeholder="Nhập doanh nghiệp"
                     id="enterprise_id"
                     value={values.enterprise_id || values.enterprise?.user?.name}
@@ -186,7 +197,7 @@ const EvaluateForm = ({
                     value={values.evaluate}
                     setFieldValue={setFieldValue}
                     disabled={type === EPageTypes.VIEW}
-                    error={touched.evaluate ? errors.evaluate : "" }
+                    error={touched.evaluate ? errors.evaluate : ""}
                   />
                 </FormGroup>
               </Col>
