@@ -3,36 +3,41 @@ import Dialog from "@/components/dialog/Dialog";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 import { useArchive } from "@/hooks/useArchive";
 import { useViewport } from "@/hooks/useViewport";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getEnterpriseOfBiddingResultByProject } from "@/services/store/enterprise/enterprise.thunk";
 import { IEvaluate } from "@/services/store/evaluate/evaluate.model";
 import { IEvaluateInitialState } from "@/services/store/evaluate/evaluate.slice";
 import { createEvaluate, updateEvaluate } from "@/services/store/evaluate/evaluate.thunk";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import { EPageTypes } from "@/shared/enums/page";
 import { Col, Form, Row } from "antd";
 import { Formik, FormikProps } from "formik";
 import lodash from "lodash";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { object, string } from "yup";
-import { convertDataOptions } from "../Project/helper";
-import FormTreeSelect from "@/components/form/FormTreeSelect";
 
 interface IEvaluateFormProps {
   type?: EPageTypes;
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
   item?: IEvaluate;
-  listEnterprise?: any[]; // Thay đổi kiểu nếu cần
-  listProjects?: any[]; // Thay đổi kiểu nếu cần
+  listProjectHasBiddingResult?: any[]; // Thay đổi kiểu nếu cần
 }
 
-const EvaluateForm = ({ visible, type, setVisible, item, listEnterprise = [], listProjects = [] }: IEvaluateFormProps) => {
+const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingResult = [] }: IEvaluateFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluate>>(null);
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { screenSize } = useViewport();
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  useEffect(() => {
+    const formattedData = formatTreeSelect(listProjectHasBiddingResult);
+    setTreeData(formattedData);
+  }, [listProjectHasBiddingResult]);
 
   const initialValues: IEvaluate = {
     id: item?.id || "",
@@ -45,8 +50,8 @@ const EvaluateForm = ({ visible, type, setVisible, item, listEnterprise = [], li
     enterprise: item?.enterprise || undefined,
   };
   const Schema = object().shape({
-    project_id: string().required("Dự án là bắt buộc"),
-    enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
+    // project_id: string().required("Dự án là bắt buộc"),
+    // enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
     score: string()
       .required("Số điểm là bắt buộc")
       .test("min-max", "Số điểm phải từ 1 đến 10", (value) => {
@@ -60,6 +65,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listEnterprise = [], li
   const handleSubmit = (data: IEvaluate, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index"),
+      enterprise_id: data.enterprise_id,
     };
     if (type === EPageTypes.CREATE) {
       dispatch(createEvaluate({ body }))
@@ -80,14 +86,10 @@ const EvaluateForm = ({ visible, type, setVisible, item, listEnterprise = [], li
 
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
-      setTreeData(listProjects);
       setVisible(false);
     }
   }, [state.status]);
-  useEffect(() => {
-    setTreeData(listProjects);
-  }, [visible]);
-  console.log(treeData);
+  // console.log(state.evaluates.project?.name);
 
   return (
     <Dialog
@@ -126,38 +128,35 @@ const EvaluateForm = ({ visible, type, setVisible, item, listEnterprise = [], li
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Dự án" required>
-                  <FormSelect
+                  <FormTreeSelect
                     isDisabled={type === "view" || type === "update"}
-                    value={values.project_id}
-                    id="project_id"
+                    value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id ? errors.project_id : ""}
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(listProjects)}
-                  />
-                  <FormTreeSelect
-                    label="Chọn dự án"
-                    isDisabled={type === EPageTypes.VIEW}
-                    placeholder="Chọn lĩnh vực cha"
-                    treeData={treeData}
-                    value={String(values.project_id)}
-                    defaultValue={(values.project_id as unknown as string) || undefined}
                     onChange={(value) => {
-                      setFieldValue("parent_id", value as string);
+                      setFieldValue("project_id", value as string);
+                      dispatchEnterprise(getEnterpriseOfBiddingResultByProject(value as string))
+                        .unwrap()
+                        .then((enterprise) => {
+                          setFieldValue("enterprise_id", enterprise?.data?.id || ""); // Gắn enterprise_id vào form
+                        })
+                        .catch(() => {
+                          setFieldValue("enterprise_id", ""); // Reset nếu thất bại
+                        });
                     }}
+                    treeData={treeData}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Doanh nghiệp" required>
-                  <FormSelect
-                    isDisabled={type === "view" || type === "update"}
-                    placeholder="Nhập doanh nghiệp"
+                  <FormInput
+                    isDisabled={true}
+                    placeholder="Bạn chỉ cần chọn dự án"
                     id="enterprise_id"
-                    value={values.enterprise_id || values.enterprise?.user?.name}
+                    value={values.enterprise?.user?.name || stateEnterprise.getEnterpriseOfBiddingResultByProject?.name}
                     error={touched.enterprise_id ? errors.enterprise_id : ""}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
-                    options={convertDataOptions(listEnterprise)}
                   />
                 </FormGroup>
               </Col>

@@ -25,7 +25,6 @@ import { getListStaff } from "@/services/store/account/account.thunk";
 import { getListProcurement } from "@/services/store/procurement/procurement.thunk";
 import CreateBidDocument from "@/pages/BidDocument/Create";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
-import BidBondForm from "@/pages/BidBond/components/BidBondForm";
 import { EButtonTypes } from "@/shared/enums/button";
 import { convertDataOptions } from "../helper";
 import { optionType } from "@/pages/BidBond/ActionModule";
@@ -35,6 +34,10 @@ import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { Tabs } from "antd";
 import BiddingResultForm from "@/pages/BiddingResults/BiddingResultForm";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
+import BidBondForm from "@/pages/BidBond/components/BidBondForm";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { unwrapResult } from "@reduxjs/toolkit";
 const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
@@ -50,6 +53,8 @@ const CreateProject = () => {
   const { dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
   const [activeTabKey, setActiveTabKey] = useState<string>("1");
   const formikRefBidDoc = useRef<FormikProps<IBiddingResult>>(null);
+  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[] | undefined>(undefined);
+
   useFetchStatus({
     module: "project",
     reset: resetStatus,
@@ -70,7 +75,15 @@ const CreateProject = () => {
     dispatchIndustry(getIndustries());
     dispatchStaff(getListStaff());
     dispatchProcurement(getListProcurement());
+        dispatch(getListProject())
+          .then(unwrapResult)
+          .then((result) => {
+            const data = result.data;
+            const formattedData = formatTreeSelect(data);
+            setTreeData(formattedData);
+          });
   }, []);
+
   const initialValues: IBidBond = {
     id: "",
     project_id: state.project?.id || undefined,
@@ -225,7 +238,7 @@ const CreateProject = () => {
             type={EButtonTypes.CREATE}
             formik={formikBidBondRef as any}
             optionType={optionType}
-            projectOptions={convertDataOptions(state.listProjects || [])}
+            projectOptions={parentOptions as any}
             enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
           />
         </div>

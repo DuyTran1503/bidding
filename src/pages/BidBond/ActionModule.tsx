@@ -15,8 +15,10 @@ import { bidBondEnumArray, mappingBidBond } from "@/shared/enums/types";
 import { IOption } from "@/shared/utils/shared-interfaces";
 import { FormikProps } from "formik";
 import lodash from "lodash";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { convertDataOptions } from "../Project/helper";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import { unwrapResult } from "@reduxjs/toolkit";
 import BidBondForm from "./components/BidBondForm";
 
 interface IBidBondFormProps {
@@ -39,8 +41,9 @@ export const optionType: IOption[] = bidBondEnumArray.map((e) => ({
 const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormProps) => {
   const formikRef = useRef<FormikProps<IBidBond>>(null);
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
-  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const {  dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[] | undefined>(undefined);
   const { screenSize } = useViewport();
   const initialValues: IBidBond = {
     id: item?.id || "",
@@ -84,7 +87,13 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
   useEffect(() => {
     if (!!visible) {
       dispatchEnterprise(getListEnterprise());
-      dispatchProject(getListProject());
+      dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
     }
   }, [visible]);
   return (
@@ -124,7 +133,7 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
         type={type!}
         formik={formikRef as any}
         optionType={optionType}
-        projectOptions={convertDataOptions(stateProject.listProjects || [])}
+        projectOptions={parentOptions as any}
         enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
       />
     </Dialog>

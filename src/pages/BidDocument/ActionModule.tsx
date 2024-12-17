@@ -28,6 +28,9 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { IProject } from "@/services/store/project/project.model";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import { unwrapResult } from "@reduxjs/toolkit";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 
 interface IBidDocumentFormProps {
   formikRef?: FormikRefType<IBidDocumentInitialValues>;
@@ -60,9 +63,10 @@ export interface IBidDocumentInitialValues {
 
 const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFromProject }: IBidDocumentFormProps) => {
   const { state, dispatch } = useArchive<IBidDocumentInitialState>("bid_document");
-  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
   const [initialValues, setInitialValues] = useState<IBidDocumentInitialValues>({
     id: bidDocument?.id ?? "",
@@ -84,7 +88,13 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
 
   const Schema = object().shape({});
   useEffect(() => {
-    dispatchProject(getListProject());
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
     dispatchEnterprise(getListEnterprise());
     dispatchBidBond(getListBidBond());
   }, []);
@@ -172,14 +182,15 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Dự án" required>
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    value={values.project_id}
-                    id="project_id"
+                  <FormTreeSelect
+                    isDisabled={type === "view" || type === "update"}
+                    value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id ? errors.project_id : ""}
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(stateProject.listProjects || [])}
+                    onChange={(value) => {
+                      setFieldValue("project_id", value as string);
+                    }}
+                    treeData={treeData}
                   />
                 </FormGroup>
               </Col>
