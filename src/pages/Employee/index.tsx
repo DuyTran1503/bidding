@@ -10,6 +10,7 @@ import { deleteEmployee, getAllEmployee } from "@/services/store/employee/employ
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { educationLevelEnumArray, mappingEducationLevel } from "@/shared/enums/level";
 import { EPermissions } from "@/shared/enums/permissions";
 import { employeeEnumArray, mappingEmployee } from "@/shared/enums/types";
@@ -117,6 +118,20 @@ const Employee = () => {
       type: "text",
     },
     {
+      id: "enterprise",
+      placeholder: "Chọn tên doanh nghiệp...",
+      title: "Tên doanh nghiệp",
+      type: "select",
+      options: enterpriseOption as { value: string; label: string }[],
+    },
+    {
+      id: "education_level",
+      placeholder: "Chọn trình độ học vấn...",
+      title: "Tên trình độ học vấn",
+      type: "select",
+      options: optionEducation,
+    },
+    {
       id: "address",
       placeholder: "Nhập địa chỉ...",
       title: "Tên địa chỉ",
@@ -128,20 +143,6 @@ const Employee = () => {
       title: "Tên trạng thái làm việc",
       type: "select",
       options: optionStatus,
-    },
-    {
-      id: "status",
-      placeholder: "Chọn trình độ học vấn...",
-      title: "Tên trình độ học vấn",
-      type: "select",
-      options: optionEducation,
-    },
-    {
-      id: "enterprise",
-      placeholder: "Chọn tên doanh nghiệp...",
-      title: "Tên doanh nghiệp",
-      type: "select",
-      options: enterpriseOption as { value: string; label: string }[],
     },
   ];
   const data: ITableData[] = useMemo(() => {
@@ -177,11 +178,13 @@ const Employee = () => {
       error: { message: state.message },
     },
   });
-
+  useEffect(() => {
+    dispatchEnterprise(getListEnterprise());
+  }, []);
   useEffect(() => {
     dispatch(getAllEmployee({ query: state.filter }));
-    dispatchEnterprise(getListEnterprise());
-  }, [JSON.stringify(state.filter)]);
+  }, [JSON.stringify(state.filter), JSON.stringify(state.status === EFetchStatus.FULFILLED)]);
+
   return (
     <>
       <Heading

@@ -4,6 +4,8 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getListProject } from "@/services/store/project/project.thunk";
 import { ITaskInitialState } from "@/services/store/task/task.slice";
 import { getListTask } from "@/services/store/task/task.thunk";
 import { IWorkProgressInitialState, resetStatus, setFilter } from "@/services/store/workProgresses/workProgresses.slice";
@@ -11,17 +13,16 @@ import { deleteWorkProgress, getAllWorkProgresses } from "@/services/store/workP
 import { EButtonTypes } from "@/shared/enums/button";
 import { mappingTypeFeedback, TypeFeedback } from "@/shared/enums/typeFeedback";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
-import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
+import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { formatTreeData } from "../BiddingFields/BiddingFields/BiddingFields";
 import { convertDataOptions } from "../Project/helper";
 import { optionWorkProgress } from "./ActionModule";
-import { getListProject } from "@/services/store/project/project.thunk";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { formatTreeData } from "../BiddingFields/BiddingFields/BiddingFields";
+import { EPermissions } from "@/shared/enums/permissions";
 
 const WorkProgresses = () => {
   const navigate = useNavigate();
@@ -54,7 +55,6 @@ const WorkProgresses = () => {
     {
       dataIndex: "name",
       title: "Tên tiến độ",
-      className: "w-[200px]",
     },
     {
       dataIndex: "progress",
@@ -81,7 +81,6 @@ const WorkProgresses = () => {
     {
       dataIndex: "feedback",
       title: "Nhận xét",
-      className: "w-[200px]",
       render: (_, record) => {
         const feedback = record.feedback as TypeFeedback;
         const feedbackText = mappingTypeFeedback[feedback] || "Không xác định";
@@ -97,7 +96,6 @@ const WorkProgresses = () => {
     {
       dataIndex: "expense",
       title: "Chi phí",
-      className: "w-[200px]",
       render: (_, record) => {
         return convertMoney(record.expense);
       },
@@ -109,30 +107,23 @@ const WorkProgresses = () => {
       onClick(record) {
         navigate(`detail/${record?.key}`);
       },
-      // permission: EPermissions.DETAIL_WORK_PROGRESS,
+      permission: EPermissions.DETAIL_WORK_PROGRESS,
     },
     {
       type: EButtonTypes.UPDATE,
       onClick(record) {
         navigate(`update/${record?.key}`);
       },
-      // permission: EPermissions.UPDATE_EMPLOYEE,
+      permission: EPermissions.UPDATE_WORK_PROGRESS,
     },
     {
       type: EButtonTypes.DESTROY,
       onClick(record) {
         dispatch(deleteWorkProgress(record?.key));
       },
-      // permission: EPermissions.DESTROY_EMPLOYEE,
+      permission: EPermissions.DESTROY_WORK_PROGRESS,
     },
   ];
-  const projectOptions: IOption[] =
-    stateProject?.listProjects && stateProject.listProjects.length > 0
-      ? stateProject.listProjects.map((e) => ({
-          value: e.id,
-          label: e.name,
-        }))
-      : [];
   const search: ISearchTypeTable[] = [
     {
       id: "name",
@@ -143,7 +134,7 @@ const WorkProgresses = () => {
     {
       id: "project_id",
       placeholder: "Chọn dự án ...",
-      label: "Loại dự án ",
+      label: "Tên dự án",
       type: "treeSelect",
       treeData: parentOptions,
     },
@@ -167,18 +158,18 @@ const WorkProgresses = () => {
     () =>
       state.workProgresses && state.workProgresses.length > 0
         ? state.workProgresses.map(({ id, project, name, progress, expense, start_date, end_date, task, feedback, description }, index) => ({
-            index: index + 1,
-            key: id,
-            project,
-            name,
-            progress,
-            expense,
-            start_date,
-            end_date,
-            feedback,
-            description,
-            task,
-          }))
+          index: index + 1,
+          key: id,
+          project,
+          name,
+          progress,
+          expense,
+          start_date,
+          end_date,
+          feedback,
+          description,
+          task,
+        }))
         : [],
     [state.workProgresses],
   );
@@ -209,6 +200,7 @@ const WorkProgresses = () => {
           {
             text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_WORK_PROGRESS,
             onClick: () => {
               navigate("/work-progresses/create");
             },

@@ -35,10 +35,13 @@ export const useTokenMonitor = (dispatch: any) => {
     lastActivityTime.current = Date.now();
   
     if (logoutTimeout.current) clearTimeout(logoutTimeout.current);
-  
-    logoutTimeout.current = setTimeout(() => {
-      navigate("/auth/login");
-    }, timeoutDuration);
+
+    logoutTimeout.current = setTimeout(
+      () => {
+        navigate("/auth/login");
+      },
+      60 * 60 * 1000,
+    );
   };
   
 
@@ -48,8 +51,8 @@ export const useTokenMonitor = (dispatch: any) => {
     const timeoutDuration = expiresIn ? parseInt(expiresIn, 10) * 1000 : 5 * 60 * 1000;
   
     const timeSinceLastActivity = Date.now() - lastActivityTime.current;
-  
-    if (timeSinceLastActivity < timeoutDuration) {
+
+    if (timeSinceLastActivity < 60 * 60 * 1000) {
       if (hasRefreshed.current) {
         setupTokenRefresh();
         hasRefreshed.current = false;

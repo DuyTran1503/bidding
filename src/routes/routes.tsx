@@ -529,18 +529,6 @@ export const routes: IRoute[] = [
                 path: "/",
                 element: () => <BidBonds />,
               },
-              {
-                path: "/create",
-                element: () => <CreateBidDocument />,
-              },
-              {
-                path: "/update/:id",
-                element: () => <UpdateBidDocument />,
-              },
-              {
-                path: "/detail/:id",
-                element: () => <DetailBidDocument />,
-              },
             ],
           },
           {

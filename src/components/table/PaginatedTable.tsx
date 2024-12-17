@@ -3,7 +3,7 @@ import { Table } from "antd";
 
 interface PaginatedTableProps {
   columns: any[]; // Cấu trúc cột của Table
-  dataSource: any[]; // Dữ liệu hiển thị
+  dataSource?: any[]; // Dữ liệu hiển thị
   currentPage: number; // Trang hiện tại
   pageSize: number; // Số bản ghi mỗi trang
   totalRecords: number; // Tổng số bản ghi

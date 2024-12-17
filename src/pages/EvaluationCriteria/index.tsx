@@ -14,22 +14,32 @@ import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
-import ActionModule from "./ActionModule";
 import { IEvaluationCriteriaInitialState, resetStatus, setFilter } from "@/services/store/evaluation/evaluation.slice";
 import { changeStatusEvaluation, deleteEvaluation, getAllEvaluations } from "@/services/store/evaluation/evaluation.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import ActionModule from "./ActionModule";
 import { getListProject } from "@/services/store/project/project.thunk";
-import { convertDataOptions } from "../Project/helper";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const EvaluationCriteria = () => {
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[] | undefined>(undefined);
+
+  useEffect(() => {
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
+  }, []);
 
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
-  // const projectName = (value: number) => {
-  //   if (stateProject?.listProjects!.length > 0 && !!value) return stateProject?.listProjects!.find((item) => item.id === value)?.name;
-  // };
+
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -111,29 +121,28 @@ const EvaluationCriteria = () => {
     () =>
       state.evaluations && state.evaluations.length > 0
         ? state.evaluations.map(({ id, project, name, weight, description, is_active }, index) => ({
-            index: index + 1,
-            key: id,
-            id,
-            project,
-            name,
-            weight,
-            description,
-            is_active,
-          }))
+          index: index + 1,
+          key: id,
+          id,
+          project,
+          name,
+          weight,
+          description,
+          is_active,
+        }))
         : [],
-    [JSON.stringify(state.evaluations), JSON.stringify(stateProject.listProjects)],
+    [JSON.stringify(state.evaluations)],
   );
-
-  useEffect(() => {
-    dispatch(getAllEvaluations({ query: state.filter }));
-    dispatchProject(getListProject());
-  }, [JSON.stringify(state.filter)]);
 
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllEvaluations({ query: state.filter }));
     }
   }, [JSON.stringify(state.status)]);
+
+  useEffect(() => {
+    dispatch(getAllEvaluations({ query: state.filter }));
+  }, [JSON.stringify(state.filter)]);
 
   useFetchStatus({
     module: "evaluation",
@@ -158,9 +167,9 @@ const EvaluationCriteria = () => {
     {
       id: "project",
       placeholder: "Chọn dự án ...",
-      label: "Loại dự án ",
-      type: "select",
-      options: convertDataOptions(stateProject.listProjects || []),
+      label: "Tên dự án",
+      type: "treeSelect",
+      treeData: parentOptions,
     },
     // {
     //   id: "is_active",
@@ -176,9 +185,7 @@ const EvaluationCriteria = () => {
     <>
       <Heading
         title="Tiêu chí đánh giá"
-        ModalContent={(props) => <ActionModule {...(props as any)}
-        listProjects={stateProject.listProjects}
-         />}
+        ModalContent={(props) => <ActionModule {...(props as any)} listProjects={stateProject.listProjects} />}
         hasBreadcrumb
         buttons={[
           {
@@ -210,9 +217,7 @@ const EvaluationCriteria = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => <ActionModule {...(props as any)}
-        listProjects={stateProject.listProjects}
-         />}
+        ModalContent={(props) => <ActionModule {...(props as any)} listProjects={stateProject.listProjects} />}
       />
     </>
   );

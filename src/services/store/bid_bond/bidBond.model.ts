@@ -1,9 +1,12 @@
+import { IEnterprise } from "../enterprise/enterprise.model";
+import { IProject } from "../project/project.model";
+
 export interface IBidBond {
   id: string; // Khóa chính, tự động tăng
-  project_id?: string;
-  enterprise_id?: string;
-  projectName?: string;
-  enterpriseName?: string;
+  project_id?: number;
+  enterprise_id?: number;
+  project?: IProject ;
+  enterprise?: IEnterprise;
   bond_amount?: number; // Số tiền bảo lãnh
   bond_type?: string; // Loại bảo lãnh (ví dụ: bảo lãnh ngân hàng, tiền mặt)
   bond_number: string; // Số bảo lãnh duy nhất

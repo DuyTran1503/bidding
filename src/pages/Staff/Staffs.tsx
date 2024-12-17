@@ -146,12 +146,12 @@ const Staffs = () => {
 
   useEffect(() => {
     dispatch(getAllStaff({ query: state.filter }));
-  }, [JSON.stringify(state.filter)]);
+  }, [state.filter]);
   useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllStaff({ query: state.filter }));
     }
-  }, [JSON.stringify(state.status)]);
+  }, [JSON.stringify(state.status), state.filter]);
   useFetchStatus({
     module: "account",
     reset: resetStatus,

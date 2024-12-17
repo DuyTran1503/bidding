@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
@@ -21,12 +21,26 @@ import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { getListProject } from "@/services/store/project/project.thunk";
 import { convertDataOptions } from "../Project/helper";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const BidDocument = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IBidDocumentInitialState>("bid_document");
-  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+
+  useEffect(() => {
+    dispatchEnterprise(getListEnterprise());
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
+  }, []);
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -88,11 +102,12 @@ const BidDocument = () => {
   ];
   const search: ISearchTypeTable[] = [
     {
-      id: "project_id",
-      placeholder: "Chọn tên dự án...",
+      id: "project",
+      placeholder: "Chọn dự án ...",
       label: "Tên dự án",
-      type: "select",
-      options: convertDataOptions(stateProject.listProjects || []),
+      isMultiple: true,
+      type: "treeSelect",
+      treeData: treeData,
     },
     {
       id: "enterprise_id",
@@ -155,10 +170,6 @@ const BidDocument = () => {
     }
     return [];
   }, [JSON.stringify(state.bidDocuments)]);
-  useEffect(() => {
-    dispatchEnterprise(getListEnterprise());
-    dispatchProject(getListProject());
-  }, []);
   useEffect(() => {
     dispatch(getAllBidDocument({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);

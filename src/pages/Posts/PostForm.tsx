@@ -110,7 +110,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                 }, [loading, state.filter, setFieldValue, dispatch]);
 
                 return (
-                    <Form className="flex flex-col gap-6">
+                    <Form>
                         <Row gutter={[24, 24]}>
                             <Col xs={24} sm={24} md={12} xl={12}>
                                 <FormGroup title="Trạng thái" className="h-full">
@@ -182,7 +182,6 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                                     />
                                 </FormGroup>
                             </Col>
-
                             <Col xs={24} sm={24} md={24} xl={24}>
                                 <FormGroup title="Nội dung" required>
                                     <FormCkEditor

@@ -9,6 +9,7 @@ import {
   deleteEnterprise,
   getAllEnterprise,
   getEnterpriseById,
+  getEnterpriseOfBiddingResultByProject,
   getIndustries,
   getListEnterprise,
   updateEnterprise,
@@ -21,6 +22,7 @@ import { IIndustry } from "../industry/industry.model";
 export interface IEnterpriseInitialState extends IInitialState {
   enterprises: IEnterprise[];
   enterprise?: IEnterprise | any;
+  getEnterpriseOfBiddingResultByProject?: IEnterprise | any;
   industries?: IIndustry[];
   listEnterprise?: IEnterprise[];
 }
@@ -30,6 +32,7 @@ const initialState: IEnterpriseInitialState = {
   enterprises: [],
   listEnterprise: [],
   enterprise: undefined,
+  getEnterpriseOfBiddingResultByProject: undefined,
   industries: [],
   message: "",
   error: undefined,
@@ -51,6 +54,9 @@ const enterpriseSlice = createSlice({
     },
     resetMessageError(state) {
       state.message = "";
+    },
+    resetStatus(state) {
+      state.status = EFetchStatus.IDLE;
     },
   },
 
@@ -76,6 +82,16 @@ const enterpriseSlice = createSlice({
       })
       .addCase(getEnterpriseById.rejected, (state, { payload }: PayloadAction<IEnterprise> | any) => {
         state.enterprise = payload.data;
+        state.message = transformPayloadErrors(payload?.errors);
+        state.loading = true;
+      });
+    builder
+      .addCase(getEnterpriseOfBiddingResultByProject.fulfilled, (state, { payload }: PayloadAction<IEnterprise> | any) => {
+        state.getEnterpriseOfBiddingResultByProject = payload.data;
+        state.loading = false;
+      })
+      .addCase(getEnterpriseOfBiddingResultByProject.rejected, (state, { payload }: PayloadAction<IEnterprise> | any) => {
+        state.getEnterpriseOfBiddingResultByProject = payload.data;
         state.message = transformPayloadErrors(payload?.errors);
         state.loading = true;
       });

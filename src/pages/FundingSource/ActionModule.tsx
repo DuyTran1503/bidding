@@ -48,6 +48,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng tên nguồn tài trợ"),
     type: string().trim().required("Vui lòng chọn loại nguồn tài trợ"),
     code: string().trim().required("Vui lòng nhập mã nguồn tài trợ"),
+    description: string().trim().required("Vui lòng nhập mô tả"),
   });
   useEffect(() => {
     return () => {
@@ -60,11 +61,21 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={tagSchema}
-      onSubmit={(data) => {
+      onSubmit={(data, { setErrors }: any) => {
         if (type === EPageTypes.CREATE) {
-          dispatch(createFundingSource({ body: lodash.omit(data, "id") }));
+          dispatch(createFundingSource({ body: lodash.omit(data, "id") }))
+          .unwrap()
+          .catch((error) => {
+            const apiErrors = error?.errors || {};
+            setErrors(apiErrors);
+          });
         } else if (type === EPageTypes.UPDATE && fundingSource?.id) {
-          dispatch(updateFundingSource({ body: lodash.omit(data, "id"), param: fundingSource.id }));
+          dispatch(updateFundingSource({ body: lodash.omit(data, "id"), param: fundingSource.id }))
+          .unwrap()
+          .catch((error) => {
+            const apiErrors = error?.errors || {};
+            setErrors(apiErrors);
+          });
         }
       }}
     >
@@ -76,6 +87,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                 <FormGroup title="Tên nguồn tài trợ" required={true}>
                   <FormInput
                     placeholder="Tên nguồn tài trợ..."
+                    isDisabled={type === EPageTypes.VIEW}
                     name="name"
                     value={values.name}
                     error={touched.name ? errors.name : ""}
@@ -100,6 +112,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Mã nguồn tài trợ" required>
                   <FormInput
+                    isDisabled={type === EPageTypes.VIEW}
                     placeholder="Mã nguồn tài trợ..."
                     name="code"
                     value={values.code}
@@ -112,6 +125,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
                 <FormGroup title="Trạng thái hoạt động">
                   <FormSwitch
+                    isDisabled={type === EPageTypes.VIEW}
                     checked={!!values.is_active ? true : false}
                     onChange={(value) => {
                       setFieldValue("is_active", value);

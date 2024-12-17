@@ -29,6 +29,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { convertDataOptions } from "./helper";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 
@@ -40,6 +41,11 @@ const ProjectPage = () => {
   const navigate = useNavigate();
   const [isModal, setIsModal] = useState(false);
   const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+    useEffect(() => {
+      const formattedData = formatTreeSelect(stateProject.listProjects as any);
+      setTreeData(formattedData);
+    }, [stateProject.listProjects]);
 
   const columns: ColumnsType = [
     {
@@ -171,10 +177,12 @@ const ProjectPage = () => {
 
   const search: ISearchTypeTable[] = [
     {
-      id: "name",
-      placeholder: "Nhập tên...",
+      id: "project",
+      placeholder: "Chọn dự án ...",
       label: "Tên dự án ",
-      type: "text",
+      isMultiple: true,
+      type: "treeSelect",
+      treeData: treeData,
     },
     {
       id: "staff",

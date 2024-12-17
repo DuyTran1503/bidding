@@ -16,16 +16,10 @@ import {
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 
-interface IEmployeeFilter {
-  page: number;
-  size: number;
-  [key: string]: any; // Dự phòng cho các filter khác
-}
 export interface IEmployeeInitialState extends IInitialState {
   employees: IEmployee[];
   employee?: IEmployee | any;
   getListEmployee: IEmployee[];
-  filter: IEmployeeFilter;
 }
 
 const initialState: IEmployeeInitialState = {
@@ -38,7 +32,8 @@ const initialState: IEmployeeInitialState = {
     page: 1,
     size: 10,
   },
-  totalRecords: 50,
+  totalRecords: 0,
+  number_of_elements: 0,
 };
 
 const employeeSlice = createSlice({
@@ -58,6 +53,7 @@ const employeeSlice = createSlice({
         if (payload.data) {
           state.employees = payload.data.data;
           state.totalRecords = payload?.data?.total_elements;
+          state.number_of_elements = payload?.data?.number_of_elements;
         }
       })
       .addCase(getAllEmployee.rejected, (state, { payload }: PayloadAction<IError[] | any>) => {

@@ -9,10 +9,12 @@ import FormSelect from "../form/FormSelect";
 import FormDate from "../form/FormDate";
 import FormTreeSelect from "../form/FormTreeSelect"; // Import FormTreeSelect
 import dayjs from "dayjs";
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export interface ISearchTypeTable {
-  type: "text" | "select" | "treeSelect" | "datetime" | "number";
+  type: "text" | "select" | "treeSelect" | "datetime" | "number" | "numberRange";
+  rangeFields?: { minField: string; maxField: string };
   value?: string;
   onChange?: (value: string | string[]) => void;
   isMultiple?: boolean;
@@ -45,7 +47,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
   const { search, setFilter, filter, isShow } = props;
 
   const dispatch = useDispatch();
-
+  const location = useLocation();
   const transformValues = (values: IValues): IValues => {
     const newValues: IValues = {};
 
@@ -61,7 +63,13 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
     return newValues;
   };
-
+  useEffect(() => {
+    const resetFilter: ISearchParams = {
+      page: 1,
+      size: 10,
+    };
+    dispatch(setFilter(resetFilter));
+  }, [location.pathname, dispatch, setFilter]);
   return (
     <Formik
       enableReinitialize
@@ -117,21 +125,63 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                   );
                 }
 
+                if (item.type === "numberRange") {
+                  const minValue: any = values[item.rangeFields?.minField!] || "";
+                  const maxValue: any = values[item.rangeFields?.maxField!] || "";
+
+                  return (
+                    <Col xs={24} sm={24} md={12} lg={12} key={index}>
+                      <div className="flex items-center text-base font-medium text-gray-500">
+                        <p>Điểm từ</p>
+                        <Col xs={24} sm={24} md={12} lg={6}>
+                          <FormInput
+                            id={item.rangeFields?.minField!}
+                            type="number"
+                            placeholder="Nhập điểm..."
+                            value={minValue}
+                            onChange={(data) => {
+                              setFieldValue(item.rangeFields?.minField!, data);
+                            }}
+                          />
+                        </Col>
+                        <p>đến</p>
+                        <Col xs={24} sm={24} md={12} lg={6}>
+                          <FormInput
+                            id={item.rangeFields?.maxField!}
+                            type="number"
+                            placeholder="Nhập điểm..."
+                            value={maxValue}
+                            onChange={(data) => {
+                              setFieldValue(item.rangeFields?.maxField!, data);
+                            }}
+                          />
+                        </Col>
+                      </div>
+                    </Col>
+                  );
+                }
+
                 if (item.type === "select") {
                   const options = item.parentItem ? (values[item.parentItem] ? item.options : []) : item.options;
                   const newValue = Object.keys(values).reduce((acc, key) => {
-                    // @ts-ignore
                     if (key.startsWith(item.id)) {
-                      const index = key.match(/\d+/);
-                      if (index) {
+                      // @ts-ignore
+                      if (!acc[item.id]) acc[item.id] = [];
+                      if (Array.isArray(values[key])) {
                         // @ts-ignore
-                        acc.push(values[key]);
+                        acc[item.id].push(...values[key]);
+                      } else {
+                        // @ts-ignore
+                        acc[item.id].push(values[key]);
                       }
                     }
                     return acc;
-                  }, []);
+                  }, {});
 
-                  const value: any = item.isMultiple ? ([...new Set(newValue)].length > 0 ? [...new Set(newValue)] : undefined) : values[item.id] ?? undefined;
+                  // @ts-ignore
+                  const value: any = item.isMultiple && newValue[item.id]?.length ? newValue[item.id] : values[item.id] ?? undefined;
+
+                  // const value: any = item.isMultiple ? ([...new Set(newValue)].length > 0 ? [...new Set(newValue)] : undefined) : values[item.id] ?? undefined;
                   
                   return (
                     <Col key={index} xs={24} sm={24} md={12} lg={6}>
@@ -152,12 +202,14 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                 }
 
                 if (item.type === "treeSelect") {
-                  const value = values[item.id] || null;
+                  const value = values[item.id] || undefined;
+
                   return (
                     <Col key={index} xs={24} sm={24} md={12} lg={6}>
                       <FormTreeSelect
                         label={item.label}
                         placeholder={item.placeholder}
+                        multiple={item.isMultiple}
                         treeData={item.treeData!}
                         // @ts-ignore
                         defaultValue={value}
@@ -211,7 +263,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                 kind="submit"
                 onClick={() => {
                   handleSubmit(); // Gọi submit form
-                  message.success("Tìm kiếm thành công", 1); // Hiển thị thông báo
+                  message.success("Tìm kiếm thành công", 1);
                 }}
               />
               <Button
@@ -220,7 +272,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
                 onClick={() => {
                   const resetFilter: ISearchParams = {
                     page: 1,
-                    size: 10,
+                    size: filter.size || 10, // Preserve the current page size
                   };
                   dispatch(setFilter(resetFilter));
                   resetForm({ ...resetFilter } as Partial<FormikState<T>>);

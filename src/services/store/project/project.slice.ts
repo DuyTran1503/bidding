@@ -13,6 +13,7 @@ import {
   getAllProjectWin,
   getListProject,
   getProjectById,
+  listProjectHasBiddingResult,
   updateProject,
 } from "./project.thunk.ts";
 import { IError } from "@/shared/interface/error";
@@ -30,6 +31,7 @@ export interface IProjectInitialState extends IInitialState {
   tendererProjects: IProject[];
   winProjects: IProject[];
   project?: IProject | any;
+  listProjectHasBiddingResult?: IProject[];
   listProjects?: IProject[];
   id_project?: string;
   filter: IProjectFilter;
@@ -42,6 +44,7 @@ const initialState: IProjectInitialState = {
   tendererProjects: [],
   winProjects: [],
   listProjects: [],
+  listProjectHasBiddingResult: [],
   id_project: "",
   project: undefined,
   dataCreateProject: undefined,
@@ -227,7 +230,7 @@ const projectSlice = createSlice({
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
-
+    //listProjects
     builder
       .addCase(getListProject.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
         if (payload) {
@@ -235,6 +238,16 @@ const projectSlice = createSlice({
         }
       })
       .addCase(getListProject.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        state.message = transformPayloadErrors(payload?.errors || payload?.message);
+      });
+    //listProjectHasBiddingResult
+    builder
+      .addCase(listProjectHasBiddingResult.fulfilled, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
+        if (payload) {
+          state.listProjectHasBiddingResult = payload.data;
+        }
+      })
+      .addCase(listProjectHasBiddingResult.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors || payload?.message);
       });
   },

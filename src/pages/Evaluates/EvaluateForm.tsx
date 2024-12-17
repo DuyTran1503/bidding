@@ -1,22 +1,23 @@
 import Button from "@/components/common/Button";
 import Dialog from "@/components/dialog/Dialog";
+import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 import { useArchive } from "@/hooks/useArchive";
 import { useViewport } from "@/hooks/useViewport";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getEnterpriseOfBiddingResultByProject } from "@/services/store/enterprise/enterprise.thunk";
 import { IEvaluate } from "@/services/store/evaluate/evaluate.model";
-import { IEvaluateInitialState, resetStatus } from "@/services/store/evaluate/evaluate.slice";
+import { IEvaluateInitialState } from "@/services/store/evaluate/evaluate.slice";
 import { createEvaluate, updateEvaluate } from "@/services/store/evaluate/evaluate.thunk";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import { EPageTypes } from "@/shared/enums/page";
 import { Col, Form, Row } from "antd";
 import { Formik, FormikProps } from "formik";
 import lodash from "lodash";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { convertDataOptions } from "../Project/helper";
-import FormCkEditor from "@/components/form/FormCkEditor";
-import { EPageTypes } from "@/shared/enums/page";
-import useFetchStatus from "@/hooks/useFetchStatus";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { object, string } from "yup";
 
 interface IEvaluateFormProps {
@@ -24,8 +25,7 @@ interface IEvaluateFormProps {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
   item?: IEvaluate;
-  listEnterprise?: any[]; // Thay đổi kiểu nếu cần
-  listProjects?: any[]; // Thay đổi kiểu nếu cần
+  listProjectHasBiddingResult?: any[]; // Thay đổi kiểu nếu cần
 }
 
 const EvaluateForm = ({
@@ -33,17 +33,22 @@ const EvaluateForm = ({
   type,
   setVisible,
   item,
-  listEnterprise = [],
-  listProjects = [],
+  listProjectHasBiddingResult = [],
 }: IEvaluateFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluate>>(null);
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { screenSize } = useViewport();
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  useEffect(() => {
+    const formattedData = formatTreeSelect(listProjectHasBiddingResult);
+    setTreeData(formattedData);
+  }, [listProjectHasBiddingResult]);
 
   const initialValues: IEvaluate = {
     id: item?.id || "",
-    project_id: item?.project_id || undefined,
-    enterprise_id: item?.enterprise_id || undefined,
+    project_id: item?.project_id || item?.project?.id || undefined,
+    enterprise_id: item?.enterprise_id || item?.enterprise?.id as any || undefined,
     title: item?.title || "",
     score: item?.score || 10,
     evaluate: item?.evaluate || "",
@@ -51,19 +56,21 @@ const EvaluateForm = ({
     enterprise: item?.enterprise || undefined,
   };
   const Schema = object().shape({
-    project_id: string().required("Dự án là bắt buộc"),
-    enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
+    // project_id: string().required("Dự án là bắt buộc"),
+    // enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
     score: string().required("Số điểm là bắt buộc")
       .test("min-max", "Số điểm phải từ 1 đến 10", (value) => {
         const num = Number(value);
         return num >= 1 && num <= 10;
       }),
     title: string().required("Tiêu đề là bắt buộc"),
+    evaluate: string().required("Nội dung là bắt buộc"),
   });
 
   const handleSubmit = (data: IEvaluate, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index"),
+      enterprise_id: data.enterprise_id,
     };
     if (type === EPageTypes.CREATE) {
       dispatch(createEvaluate({ body }))
@@ -73,7 +80,12 @@ const EvaluateForm = ({
           setErrors(apiErrors);
         });
     } else if (type === EPageTypes.UPDATE) {
-      dispatch(updateEvaluate({ body, param: item?.id }));
+      dispatch(updateEvaluate({ body, param: item?.id }))
+        .unwrap()
+        .catch((error) => {
+          const apiErrors = error?.errors || {};
+          setErrors(apiErrors);
+        });
     }
   };
 
@@ -83,15 +95,6 @@ const EvaluateForm = ({
     }
   }, [state.status]);
   // console.log(state.evaluates.project?.name);
-
-  useFetchStatus({
-    module: "evaluate",
-    reset: resetStatus,
-    actions: {
-      success: { message: state.message },
-      // error: { message: state.message },
-    },
-  });
 
   return (
     <Dialog
@@ -129,33 +132,46 @@ const EvaluateForm = ({
           <Form className="mt-3">
             <Row gutter={[24, 24]}>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Dự án">
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    value={values.project?.name}
-                    id="project_id"
+                <FormGroup title="Dự án" required>
+                  <FormTreeSelect
+                    isDisabled={type === "view" || type === "update"}
+                    value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id ? errors.project_id : ""}
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(listProjects)}
+
+                    onChange={(value) => {
+                      setFieldValue("project_id", value as string);
+                      dispatchEnterprise(getEnterpriseOfBiddingResultByProject(value as string))
+                        .unwrap()
+                        .then((enterprise) => {
+                          setFieldValue("enterprise_id", enterprise?.data?.id || ""); // Gắn enterprise_id vào form
+
+                        })
+                        .catch(() => {
+                          setFieldValue("enterprise_id", ""); // Reset nếu thất bại
+                        });
+                    }}
+                    treeData={treeData}
                   />
+
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Doanh nghiệp">
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    placeholder="Nhập doanh nghiệp"
+                <FormGroup title="Doanh nghiệp" required>
+                  <FormInput
+                    isDisabled={true}
+                    placeholder="Bạn chỉ cần chọn dự án"
                     id="enterprise_id"
-                    value={values.enterprise?.user?.name}
+                    value={
+                      values.enterprise?.user?.name || stateEnterprise.getEnterpriseOfBiddingResultByProject?.name
+                    }
                     error={touched.enterprise_id ? errors.enterprise_id : ""}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
-                    options={convertDataOptions(listEnterprise)}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12}>
-                <FormGroup title="Tiêu đề">
+                <FormGroup title="Tiêu đề" required>
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
@@ -169,7 +185,7 @@ const EvaluateForm = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12}>
-                <FormGroup title="Điểm">
+                <FormGroup title="Điểm" required>
                   <FormInput
                     type="number"
                     isDisabled={type === "view"}
@@ -183,13 +199,14 @@ const EvaluateForm = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={24} xl={24}>
-                <FormGroup title="Nội dung">
+                <FormGroup title="Nội dung" required>
                   <FormCkEditor
                     id="evaluate"
                     direction="vertical"
                     value={values.evaluate}
                     setFieldValue={setFieldValue}
                     disabled={type === EPageTypes.VIEW}
+                    error={touched.evaluate ? errors.evaluate : ""}
                   />
                 </FormGroup>
               </Col>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { Table } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
@@ -6,7 +6,7 @@ import { ISearchParams } from "@/shared/utils/shared-interfaces";
 import { useDispatch } from "react-redux";
 import SearchComponent, { ISearchProps } from "./SearchComponent";
 import CustomTabs from "./CustomTabs";
-
+import { useLocation } from "react-router-dom";
 export interface ITableData {
   key: React.Key;
   [key: string]: unknown;
@@ -77,6 +77,7 @@ const PrimaryTable = <T extends ISearchParams>({
   };
   const newHandleTableChange = (newPagination: TablePaginationConfig) => {
     const newFilter: ISearchParams = {
+      ...filter, // Preserve existing filters
       page: newPagination.current,
       size: newPagination.pageSize,
     };

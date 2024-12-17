@@ -12,7 +12,7 @@ const Greeting = ({ className }: IGreetingProps) => {
         Chào <b>Bạn</b>,
       </p>
       <p>
-        Bạn chưa đăng nhập, vui lòng <Link children="đăng nhập" to="/login" className="font-bold text-blue-500 hover:text-blue-600" /> để sử dụng
+        Bạn chưa đăng nhập, vui lòng <Link children="đăng nhập" to="/auth/login" className="font-bold text-blue-500 hover:text-blue-600" /> để sử dụng
         hết các chức năng dành cho thành viên.
       </p>
       <div className="border-l-4 p-5">Bạn có thể sử dụng tài khoản ở DauThau.info để đăng nhập trên DauThau.Net và ngược lại!</div>

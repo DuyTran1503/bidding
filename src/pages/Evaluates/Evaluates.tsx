@@ -9,13 +9,15 @@ import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk"
 import { IEvaluateInitialState, resetStatus, setFilter } from "@/services/store/evaluate/evaluate.slice";
 import { deleteEvaluate, getAllEvaluates } from "@/services/store/evaluate/evaluate.thunk";
 import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { getListProject } from "@/services/store/project/project.thunk";
+import { getListProject, listProjectHasBiddingResult } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { convertDataOptions } from "../Project/helper";
 import EvaluateForm from "./EvaluateForm";
@@ -24,6 +26,7 @@ const Evaluates = () => {
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
   const buttons: IGridButton[] = [
     {
@@ -45,7 +48,14 @@ const Evaluates = () => {
 
   useEffect(() => {
     dispatchEnterprise(getListEnterprise());
-    dispatchProject(getListProject());
+    dispatchProject(listProjectHasBiddingResult());
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
   }, []);
 
   const columns: ColumnsType = [
@@ -57,42 +67,41 @@ const Evaluates = () => {
     {
       dataIndex: "project",
       title: "Tên dự án",
+      className: "w-[200px]",
       render: (_, record) => {
         return <span>{record.project?.name || "Không có tên dự án"}</span>;
       },
     },
     {
+      dataIndex: "enterprise",
+      title: "Tên doanh nghiệp",
+      className: "w-[200px]",
+      render: (_, record) => {
+        return <span>{record.enterprise?.user?.name || "Không có tên doanh nghiệp"}</span>;
+      },
+    },
+    {
       dataIndex: "score",
-      title: "Tên danh mục",
+      title: "Điểm",
+      className: "w-[100px]",
     },
     {
       dataIndex: "evaluate",
       title: "Nội dung",
-    },
-    {
-      dataIndex: "title",
-      title: "Mô tả",
+      className: "w-[350px]",
+      render(_, record) {
+        return <div dangerouslySetInnerHTML={{ __html: record?.evaluate || "" }} className="text-compact-3"></div>;
+      },
     },
   ];
   const search: ISearchTypeTable[] = [
     {
-      id: "title",
-      placeholder: "Nhập nội dung tiêu đề...",
-      label: "Tên tiêu đề",
-      type: "text",
-    },
-    {
-      id: "evaluate",
-      placeholder: "Nhập nội dung đánh giá...",
-      label: "Nội dung đánh giá",
-      type: "text",
-    },
-    {
       id: "project",
-      placeholder: "Chọn tên dự án...",
+      placeholder: "Chọn dự án ...",
       label: "Tên dự án",
-      type: "select",
-      options: convertDataOptions(stateProject.listProjects || []),
+      isMultiple: true,
+      type: "treeSelect",
+      treeData: treeData,
     },
     {
       id: "enterprise",
@@ -102,16 +111,15 @@ const Evaluates = () => {
       options: convertDataOptions(stateEnterprise.listEnterprise || []),
     },
     {
-      id: "score_form",
-      placeholder: "Nhập điểm điểm bắt đầu...",
-      label: "Điểm bắt đầu",
-      type: "number",
+      id: "evaluate",
+      placeholder: "Nhập nội dung đánh giá...",
+      label: "Nội dung đánh giá",
+      type: "text",
     },
     {
-      id: "score_to",
-      placeholder: "Nhập điểm kết thúc...",
-      label: "Điểm kết thúc",
-      type: "number",
+      id: "score_from",
+      type: "numberRange",
+      rangeFields: { minField: "score_from", maxField: "score_to" },
     },
   ];
 
@@ -119,15 +127,15 @@ const Evaluates = () => {
     () =>
       state.evaluates && state.evaluates.length > 0
         ? state.evaluates.map(({ id, title, score, evaluate, project, enterprise }, index) => ({
-            index: index + 1,
-            key: id,
-            id: id,
-            title,
-            score,
-            evaluate,
-            project,
-            enterprise,
-          }))
+          index: index + 1,
+          key: id,
+          id: id,
+          title,
+          score,
+          evaluate,
+          project,
+          enterprise,
+        }))
         : [],
     [JSON.stringify(state.evaluates)],
   );
@@ -156,13 +164,9 @@ const Evaluates = () => {
       <Heading
         title="Đánh giá kết quả dự án"
         hasBreadcrumb
-        ModalContent={(props) => 
-          <EvaluateForm
-            {...(props as any)}
-            listEnterprise={stateEnterprise.listEnterprise}
-            listProjects={stateProject.listProjects}
-          />
-        }
+        ModalContent={(props) => (
+          <EvaluateForm {...(props as any)} listProjectHasBiddingResult={stateProject.listProjectHasBiddingResult} />
+        )}
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
@@ -183,13 +187,9 @@ const Evaluates = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => 
-          <EvaluateForm
-            {...(props as any)}
-            listEnterprise={stateEnterprise.listEnterprise}
-            listProjects={stateProject.listProjects}
-          />
-        }
+        ModalContent={(props) => (
+          <EvaluateForm {...(props as any)} listProjectHasBiddingResult={stateProject.listProjectHasBiddingResult} />
+        )}
       />
     </>
   );

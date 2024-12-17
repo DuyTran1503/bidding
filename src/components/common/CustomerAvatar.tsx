@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import imageError from "@/assets/images/default-featured-image.png";
 import imgFbDefault from "@/assets/images/customerDefaultAvatar.png";
@@ -8,17 +8,18 @@ interface CustomerAvatarProps {
   alt: string;
   className?: string;
   size?: "large" | "medium";
-  avatar?: boolean; // Add avatar prop
+  avatar?: boolean;
 }
 
-const CustomerAvatar: React.FC<CustomerAvatarProps> = ({
-  src,
-  alt,
-  className,
-  size = "medium",
-  avatar = false, // Default to false if not provided
-}) => {
-  const [imageSrc, setImageSrc] = useState<string>(src && src.trim() !== "" ? src : "");
+const CustomerAvatar: React.FC<CustomerAvatarProps> = ({ src, alt, className, size = "medium", avatar = false }) => {
+  const [imageSrc, setImageSrc] = useState<string>("");
+
+  // Update imageSrc when src prop changes
+  useEffect(() => {
+    if (src && src.trim() !== "") {
+      setImageSrc(src);
+    }
+  }, [src]);
 
   const handleImageError = () => {
     setImageSrc(imageError);
@@ -34,7 +35,7 @@ const CustomerAvatar: React.FC<CustomerAvatarProps> = ({
       className={clsx("object-cover", className, {
         "h-auto w-auto": size === "medium",
         "h-16 w-16": size === "large",
-        "h-15 w-15 rounded-full": avatar, // Apply styles for avatar
+        "h-15 w-15 rounded-full": avatar,
       })}
       onError={handleImageError}
     />
