@@ -6,7 +6,7 @@ import { ColumnsType } from "antd/es/table";
 import { ITableData } from "@/components/table/PrimaryTable";
 import { useNavigate } from "react-router-dom";
 import { useArchive } from "@/hooks/useArchive";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EPermissions } from "@/shared/enums/permissions";
 import { ReactNode, useEffect, useMemo, useState } from "react";
@@ -23,6 +23,7 @@ import { IBusinessActivityInitialState, resetStatus, setFilter } from "@/service
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import DetailBusinessActivity from "./Detail";
 import FormModal from "@/components/form/FormModal";
+import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 
 const BusinessActivities = () => {
   const navigate = useNavigate();
@@ -87,12 +88,23 @@ const BusinessActivities = () => {
       permission: EPermissions.DESTROY_BUSINESS_ACTIVITY_TYPE,
     },
   ];
+  const statusOptions: IOption[] = statusEnumArray.map((e) => ({
+    value: e,
+    label: mappingStatus[e],
+  }));
   const search: ISearchTypeTable[] = [
     {
       id: "name",
       placeholder: "Nhập ...",
       label: "Loại hình kinh doanh",
       type: "text",
+    },
+    {
+      id: "is_active",
+      placeholder: "Chọn trạng thái ...",
+      label: "Trạng thái hoạt động",
+      type: "select",
+      options:statusOptions
     },
   ];
   const data: ITableData[] = useMemo(() => {
@@ -176,7 +188,7 @@ const BusinessActivities = () => {
           pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
           number_of_elements: state.number_of_elements && state.number_of_elements,
-          showSideChanger: true,
+          // showSideChanger: true,
         }}
         setFilter={setFilter}
         filter={state.filter}

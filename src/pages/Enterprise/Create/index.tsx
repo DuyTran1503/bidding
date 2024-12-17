@@ -44,7 +44,7 @@ const CreateEnterprise = () => {
             },
           },
           {
-            isLoading: state.status === EFetchStatus.PENDING,
+            // isLoading: state.status === EFetchStatus.PENDING,
             text: "Tạo mới",
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {

@@ -28,31 +28,38 @@ export const useTokenMonitor = (dispatch: any) => {
   };
 
   const resetActivityTimer = () => {
+    const expiresIn = localStorage.getItem("expiresIn");
+    
+    const timeoutDuration = expiresIn ? parseInt(expiresIn, 10) * 1000 : 5 * 60 * 1000;
+  
     lastActivityTime.current = Date.now();
-
+  
     if (logoutTimeout.current) clearTimeout(logoutTimeout.current);
-
-    logoutTimeout.current = setTimeout(
-      () => {
-        navigate("/login");
-      },
-      5 * 60 * 1000,
-    );
+  
+    logoutTimeout.current = setTimeout(() => {
+      navigate("/auth/login");
+    }, timeoutDuration);
   };
+  
 
   const handleRequest = () => {
+    const expiresIn = localStorage.getItem("expiresIn");
+    // Chuyển đổi expiresIn từ giây sang mili giây, sử dụng giá trị mặc định là 5 phút nếu không hợp lệ
+    const timeoutDuration = expiresIn ? parseInt(expiresIn, 10) * 1000 : 5 * 60 * 1000;
+  
     const timeSinceLastActivity = Date.now() - lastActivityTime.current;
-
-    if (timeSinceLastActivity < 5 * 60 * 1000) {
+  
+    if (timeSinceLastActivity < timeoutDuration) {
       if (hasRefreshed.current) {
         setupTokenRefresh();
         hasRefreshed.current = false;
       }
       resetActivityTimer();
     } else {
-      navigate("/login");
+      navigate("/auth/login");
     }
   };
+  
 
   useEffect(() => {
     setupTokenRefresh();

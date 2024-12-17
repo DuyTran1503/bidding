@@ -61,6 +61,7 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
     return newValues;
   };
+
   return (
     <Formik
       enableReinitialize
@@ -71,13 +72,13 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
       }}
     >
       {({ values, errors, handleBlur, setFieldValue, resetForm, handleSubmit }) => {
+
         return (
           <div className={`${isShow ? "hidden" : ""} row-gap-3 flex flex-col px-4 py-3`}>
             <Row gutter={[24, 24]} className="row-gap-2 row-gap-lg-3 items-center">
               {search.map((item, index) => {
                 if (item.type === "text") {
                   const value: any = values[item.id] || "";
-
                   return (
                     <Col xs={24} sm={24} md={12} lg={6} key={index}>
                       <FormInput
@@ -118,8 +119,20 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
 
                 if (item.type === "select") {
                   const options = item.parentItem ? (values[item.parentItem] ? item.options : []) : item.options;
-                  const value: any = values[item.id] ?? undefined;
+                  const newValue = Object.keys(values).reduce((acc, key) => {
+                    // @ts-ignore
+                    if (key.startsWith(item.id)) {
+                      const index = key.match(/\d+/);
+                      if (index) {
+                        // @ts-ignore
+                        acc.push(values[key]);
+                      }
+                    }
+                    return acc;
+                  }, []);
 
+                  const value: any = item.isMultiple ? ([...new Set(newValue)].length > 0 ? [...new Set(newValue)] : undefined) : values[item.id] ?? undefined;
+                  
                   return (
                     <Col key={index} xs={24} sm={24} md={12} lg={6}>
                       <FormSelect
