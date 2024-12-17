@@ -36,7 +36,7 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
   const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
   const Schema = object().shape({
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên loại hình đấu thầu"),
-  })
+  });
   return (
     <Formik
       validationSchema={Schema}
@@ -67,8 +67,8 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
       {({ values, errors, touched, handleBlur, setFieldValue }) => (
         <div>
           <FormGroup title="Thông tin chung">
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormInput
                   type="text"
                   isDisabled={type === "view"}
@@ -81,7 +81,7 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
                   onBlur={handleBlur}
                 />
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormSwitch
                   label="Trạng thái"
                   checked={values.is_active === "1"}
@@ -91,8 +91,8 @@ const BiddingTypeForm = ({ formikRef, type, biddingType }: IBiddingTypeFormProps
                 />
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormCkEditor
                   id="description"
                   direction="vertical"

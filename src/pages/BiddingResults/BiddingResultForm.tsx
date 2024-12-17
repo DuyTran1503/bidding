@@ -113,7 +113,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
       {({ values, errors, touched, setFieldValue }) => {
         return (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
+            <Row gutter={[16, 16]}>
               {type === EButtonTypes.VIEW && (
                 <>
                   <Col xs={24} sm={24} md={12} xl={12}>

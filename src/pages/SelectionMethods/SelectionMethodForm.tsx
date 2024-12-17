@@ -88,8 +88,8 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
       <Formik innerRef={formikRef} validationSchema={schema} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormInput
                   type="text"
                   isDisabled={type === "view"}
@@ -104,8 +104,8 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
               </Col>
             </Row>
 
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Mô tả">
                   <FormCkEditor
                     id="description"
@@ -117,8 +117,8 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
                 </FormGroup>
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormSwitch
                   isDisabled={type === "view"}
                   label="Trạng thái"

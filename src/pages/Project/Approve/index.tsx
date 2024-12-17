@@ -125,7 +125,7 @@ const ApproveProject = () => {
             return (
               <Form onSubmit={handleSubmit}>
                 <Row gutter={[24, 12]}>
-                  <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                  <Col xs={24} sm={24} md={12} xl={12}>
                     <FormGroup title="Số quyết định phê duyệt">
                       <FormInput
                         label="Số quyết định phê duyệt"
@@ -139,7 +139,7 @@ const ApproveProject = () => {
                       />
                     </FormGroup>
                   </Col>
-                  <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                  <Col xs={24} sm={24} md={12} xl={12}>
                     <FormGroup title="Trạng thái dự án">
                       <FormSelect
                         options={STATUS_PROJECT_ARRAY}
@@ -154,7 +154,7 @@ const ApproveProject = () => {
                       />
                     </FormGroup>
                   </Col>
-                  <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+                  <Col xs={24} sm={24} md={24} xl={24}>
                     <FormGroup title="Ghi chú">
                       <FormCkEditor label="Mô tả" id="notes" value={values.notes ?? ""} onChange={(e) => setFieldValue("notes", e)} />
                     </FormGroup>

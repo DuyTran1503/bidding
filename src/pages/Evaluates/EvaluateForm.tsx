@@ -125,8 +125,8 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
       <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Dự án" required>
                   <FormTreeSelect
                     isDisabled={type === "view" || type === "update"}
@@ -148,7 +148,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Doanh nghiệp" required>
                   <FormInput
                     isDisabled={true}

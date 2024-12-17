@@ -125,8 +125,8 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
           <Form>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Tên nhân viên" required>
                   <FormInput
                     type="text"
@@ -142,7 +142,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Mã nhân viên" required>
                   <FormInput
                     type="text"
@@ -158,7 +158,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title=" Công ty làm việc" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -171,7 +171,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Email" required>
                   <FormInput
                     type="text"
@@ -187,7 +187,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Số điện thoại" required>
                   <FormInput
                     type="text"
@@ -203,7 +203,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Mã số thuế" required>
                   <FormInput
                     type="number"
@@ -219,7 +219,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Mức lương">
                   <FormInput
                     type="number"
@@ -235,7 +235,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Ngày sinh">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -245,7 +245,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Địa chỉ">
                   <FormInput
                     type="text"
@@ -261,7 +261,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Ngày bắt đầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -271,7 +271,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Ngày kết thúc">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -282,7 +282,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Trình độ học vấn" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -296,7 +296,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Giới tính" className="gap-[6px]" required>
                   <FormRadio
                     isDisabled={type === EPageTypes.VIEW}
@@ -307,7 +307,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Trạng thái làm việc" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -321,7 +321,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup title="Ảnh đại diện">
                   <FormUploadFile
                     error={touched.avatar ? errors.avatar : ""}

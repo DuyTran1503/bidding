@@ -21,7 +21,7 @@ interface IBusinessActivityFormProps {
 
 export interface IIBusinessActivityInitialValues {
   id?: string;
-  name: string;  
+  name: string;
   description: string;
   is_active: string;
 }
@@ -58,8 +58,8 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => (
         <Form>
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={12} xl={12}>
               <FormGroup title="Loại hình kinh doanh" required>
                 <FormInput
                   placeholder="Loại hình kinh doanh..."
@@ -71,7 +71,7 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
                 />
               </FormGroup>
             </Col>
-            <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Col xs={24} sm={24} md={12} xl={12}>
               <FormGroup title="Trạng thái hoạt động">
                 <FormSwitch
                   checked={!!values.is_active ? true : false}
@@ -82,8 +82,8 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
               </FormGroup>
             </Col>
           </Row>
-          <Row gutter={[24, 24]}>
-            <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={24} xl={24}>
               <FormGroup title="Mô tả">
                 <FormCkEditor
                   id="description"

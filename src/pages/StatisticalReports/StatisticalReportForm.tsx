@@ -77,8 +77,8 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
               onChange={(value) => setFieldValue("name", value)}
               onBlur={handleBlur}
             />
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormInput
                   type="text"
                   isDisabled={type === EPageTypes.VIEW || type === EPageTypes.UPDATE || type === EPageTypes.CREATE}
@@ -91,7 +91,7 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
                   onBlur={handleBlur}
                 />
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormSwitch
                   label="Trạng thái"
                   checked={values.is_active === "1"}
@@ -102,8 +102,8 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
               </Col>
             </Row>
 
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormInput
                   type="text"
                   isDisabled={type === EPageTypes.VIEW}
@@ -116,7 +116,7 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
                   onBlur={handleBlur}
                 />
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormInput
                   type="text"
                   isDisabled={type === EPageTypes.VIEW}
@@ -130,8 +130,8 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
                 />
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Mô tả">
                   <FormCkEditor
                     id="description"

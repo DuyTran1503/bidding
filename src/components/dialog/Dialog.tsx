@@ -30,11 +30,11 @@ const Dialog = (props: IProps) => {
   // Set height based on screen size
   // const height = screenSize && ['lg', 'xl', 'xxl'].includes(screenSize) ? '100vh' : 'auto';
 
-  const handleOk = (e: React.MouseEvent<HTMLElement>) => {
+  const handleOk = async (e: React.MouseEvent<HTMLElement>) => {
     if (handleSubmit) {
+      // Chỉ đóng modal khi handleSubmit return true
       handleSubmit(e);
     }
-    setVisible(false); // Close modal on submit
   };
 
   return (

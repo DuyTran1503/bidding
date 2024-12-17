@@ -43,7 +43,7 @@ const InstructForm = ({ visible, type, setVisible, item }: IInstructFormProps) =
         .catch((error) => {
           const apiErrors = error?.errors || {};
           setErrors(apiErrors);
-        });;
+        });
     } else if (type === EButtonTypes.UPDATE) {
       dispatch(updateInstruct({ body, param: item?.id }));
     }
@@ -66,13 +66,7 @@ const InstructForm = ({ visible, type, setVisible, item }: IInstructFormProps) =
       }}
       visible={visible}
       setVisible={setVisible}
-      title={
-        type === EButtonTypes.CREATE
-          ? "Tạo mới hướng dẫn"
-          : type === EButtonTypes.UPDATE
-            ? "Cập nhật hướng dẫn"
-            : "Chi tiết hướng dẫn"
-      }
+      title={type === EButtonTypes.CREATE ? "Tạo mới hướng dẫn" : type === EButtonTypes.UPDATE ? "Cập nhật hướng dẫn" : "Chi tiết hướng dẫn"}
       footerContent={
         <div className="flex items-center justify-center gap-2">
           <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
@@ -92,7 +86,7 @@ const InstructForm = ({ visible, type, setVisible, item }: IInstructFormProps) =
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
         {({ values, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
+            <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Trạng thái">
                   <FormSwitch
@@ -103,7 +97,7 @@ const InstructForm = ({ visible, type, setVisible, item }: IInstructFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Hướng dẫn">
                   <FormCkEditor
                     id="instruct"
@@ -115,7 +109,7 @@ const InstructForm = ({ visible, type, setVisible, item }: IInstructFormProps) =
                 </FormGroup>
               </Col>
             </Row>
-        </Form>
+          </Form>
         )}
       </Formik>
     </Dialog>
