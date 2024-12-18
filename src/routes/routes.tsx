@@ -93,6 +93,7 @@ import CreateStatisticalReport from "@/pages/StatisticalReports/CreateStatistica
 import StatisticalReports from "@/pages/StatisticalReports/StatisticalReports/StatisticalReports";
 import UpdateStatisticalReport from "@/pages/StatisticalReports/UpdateStatisticalReport/UpdateStatisticalReport";
 import Supports from "@/pages/Supports/Supports/Supports";
+import Systems from "@/pages/Systems/Systems";
 import Tasks from "@/pages/Task/Tasks/Task";
 import WorkProgresses from "@/pages/WorkProgresses";
 import CreateWorkProgress from "@/pages/WorkProgresses/Create";
@@ -644,6 +645,15 @@ export const routes: IRoute[] = [
               {
                 path: "/",
                 element: () => <FeedbackComplaints />,
+              },
+            ],
+          },
+          {
+            path: "system",
+            pages: [
+              {
+                path: "/",
+                element: () => <Systems />,
               },
             ],
           },

@@ -27,16 +27,17 @@ export const getListEnterprise = createAsyncThunk("staff/get-list-enterprises", 
   }
 });
 
-// get-enterprise-of-bidding-result-by-project
+// get-enterprises-by-id
 export const getEnterpriseById = createAsyncThunk("enterprises/get-enterprises-by-id", async (id: string, { rejectWithValue }) => {
   try {
-    const { response, data } = await client.get<IEnterprise>(`/api/admin/get-enterprise-of-bidding-result-by-project/${id}`);
+    const { response, data } = await client.get<IEnterprise>(prefix + `/${id}`);
     return response.status >= 400 ? rejectWithValue(data) : data;
   } catch (error: any) {
     return rejectWithValue(error.response.data);
   }
 });
 
+// get-enterprise-of-bidding-result-by-project
 export const getEnterpriseOfBiddingResultByProject = createAsyncThunk("enterprises/get-enterprise-of-bidding-result-by-project", async (id: string, { rejectWithValue }) => {
   try {
     const { response, data } = await client.get<IEnterprise>(`/api/admin/get-enterprise-of-bidding-result-by-project/${id}`);

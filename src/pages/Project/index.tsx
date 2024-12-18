@@ -15,7 +15,7 @@ import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { getIndustries } from "@/services/store/industry/industry.thunk";
 import { IProjectInitialState, resetStatus, setFilter } from "@/services/store/project/project.slice";
-import { deleteProject, getAllProject } from "@/services/store/project/project.thunk";
+import { deleteProject, getAllProject, getListProject } from "@/services/store/project/project.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
@@ -30,6 +30,7 @@ import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { convertDataOptions } from "./helper";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 
@@ -42,10 +43,6 @@ const ProjectPage = () => {
   const [isModal, setIsModal] = useState(false);
   const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
-    useEffect(() => {
-      const formattedData = formatTreeSelect(stateProject.listProjects as any);
-      setTreeData(formattedData);
-    }, [stateProject.listProjects]);
 
   const columns: ColumnsType = [
     {
@@ -230,16 +227,16 @@ const ProjectPage = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(stateProject.projects)
       ? stateProject.projects.map(({ id, name, investor, total_amount, upload_time, bid_submission_start, bid_opening_date, status }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          investor,
-          total_amount,
-          upload_time,
-          bid_submission_start,
-          bid_opening_date,
-          status,
-        }))
+        index: index + 1,
+        key: id,
+        name,
+        investor,
+        total_amount,
+        upload_time,
+        bid_submission_start,
+        bid_opening_date,
+        status,
+      }))
       : [];
   }, [JSON.stringify(stateProject.projects)]);
 
@@ -255,6 +252,13 @@ const ProjectPage = () => {
     dispatchIndustry(projectByIndustry({}));
     dispatchEnterprise(getListEnterprise());
     dispatchStaff(getListStaff());
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
   }, [JSON.stringify(stateProject.filter)]);
   useEffect(() => {
     if (stateProject.status === EFetchStatus.FULFILLED) {
@@ -294,7 +298,7 @@ const ProjectPage = () => {
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
         visible={isModal}
         setVisible={setIsModal}
-        // onConfirm={onConfirmStatus}
+      // onConfirm={onConfirmStatus}
       />
       <ManagementGrid
         columns={columns}
