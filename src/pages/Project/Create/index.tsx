@@ -75,13 +75,13 @@ const CreateProject = () => {
     dispatchIndustry(getIndustries());
     dispatchStaff(getListStaff());
     dispatchProcurement(getListProcurement());
-        dispatch(getListProject())
-          .then(unwrapResult)
-          .then((result) => {
-            const data = result.data;
-            const formattedData = formatTreeSelect(data);
-            setTreeData(formattedData);
-          });
+    dispatch(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
   }, []);
 
   const initialValues: IBidBond = {
@@ -154,9 +154,9 @@ const CreateProject = () => {
       ),
     },
     {
-      key: "2",
+      key: "6",
       label: "Tạo gói thầu cho dự án",
-      // disabled: !state.dataCreateProject?.id,
+      disabled: !state.dataCreateProject?.id,
       children: (
         <div>
           <Heading
@@ -200,7 +200,55 @@ const CreateProject = () => {
         </div>
       ),
     },
-
+    {
+      key: "2",
+      label: "Cập nhật gói thầu dự án",
+      disabled: !state.project?.id,
+      children: (
+        <div>
+          <Heading
+            title="Cập nhật dự án"
+            hasBreadcrumb
+            buttons={[
+              {
+                type: "secondary",
+                text: "Quay lại",
+                icon: <IoClose className="text-[18px]" />,
+                onClick: () => {
+                  navigate("/project");
+                },
+              },
+              {
+                isLoading: state.status === EFetchStatus.PENDING,
+                text: "Cập nhật",
+                kind: "submit",
+                icon: <FaPlus className="text-[18px]" />,
+                onClick: () => {
+                  if (formikRef.current) {
+                    formikRef.current.handleSubmit();
+                  }
+                },
+              },
+            ]}
+          />
+          <ActionModule
+            type={EPageTypes.UPDATE}
+            isChildren={true}
+            item={selectedChild!}
+            project={state.project}
+            formikRef={formikRef}
+            activeTabKey={activeTabKey}
+            parent_id={state.project?.id}
+            listIndustry={stateIndustry.listIndustry}
+            listSelectionMethods={stateMethod.listSelectionMethods}
+            listFundingSources={stateFundingSource.listFundingSources}
+            getListStaff={stateStaff.getListStaff}
+            listEnterprise={stateEnterprise.listEnterprise!}
+            listProcurement={stateProcurement.listProcurement}
+          />
+        </div>
+      ),
+    },
     {
       key: "3",
       label: "Bão lãnh dự thầu",
