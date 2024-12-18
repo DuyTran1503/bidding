@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IInitialState } from "@/shared/utils/shared-interfaces";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { ICompareProject } from "./compareProject.model";
+import { ICompareProject, IDifficultyOfProject } from "./compareProject.model";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { commonStaticReducers } from "@/services/shared";
 import {
@@ -11,7 +11,48 @@ import {
   compareConstructionTime,
   comparePieChartTotalAmount,
   detailProjectByIds,
+  getDifficultyOfProject,
 } from "./compareProject.thunk";
+
+// Define thunk actions map for cleaner code
+const thunkActions = {
+  compareBarChartTotalAmount: {
+    action: compareBarChartTotalAmount,
+    key: 'compareBarChartTotalAmount' as const,
+    message: "Thêm dự án so sánh thành công (Bar Chart Total Amount)"
+  },
+  compareConstructionTime: {
+    action: compareConstructionTime,
+    key: 'compareConstructionTime' as const,
+    message: "Thêm dự án so sánh thành công (Construction Time)"
+  },
+  compareBidSubmissionTime: {
+    action: compareBidSubmissionTime,
+    key: 'compareBidSubmissionTime' as const,
+    message: "Thêm dự án so sánh thành công (Bid Submission Time)"
+  },
+  comparePieChartTotalAmount: {
+    action: comparePieChartTotalAmount,
+    key: 'comparePieChartTotalAmount' as const,
+    message: "Thêm dự án so sánh thành công (Pie Chart Total Amount)"
+  },
+  compareBidderCount: {
+    action: compareBidderCount,
+    key: 'compareBidderCount' as const,
+    message: "Thêm dự án so sánh thành công (Bidder Count)"
+  },
+  detailProjectByIds: {
+    action: detailProjectByIds,
+    key: 'detailProjectByIds' as const,
+    message: "Thêm dự án so sánh thành công (Project Details)"
+  },
+  getDifficultyOfProject: {
+    action: getDifficultyOfProject,
+    key: 'getDifficultyOfProject' as const,
+    message: "Thêm dự án so sánh thành công (Project Details)"
+  },
+};
+
 export interface ICompareProjectInitialState extends IInitialState {
   compareBarChartTotalAmount: ICompareProject[];
   compareConstructionTime: ICompareProject[];
@@ -19,6 +60,7 @@ export interface ICompareProjectInitialState extends IInitialState {
   comparePieChartTotalAmount: ICompareProject[];
   compareBidderCount: ICompareProject[];
   detailProjectByIds: ICompareProject[];
+  getDifficultyOfProject: IDifficultyOfProject[];
 }
 
 const initialState: ICompareProjectInitialState = {
@@ -30,6 +72,7 @@ const initialState: ICompareProjectInitialState = {
   comparePieChartTotalAmount: [],
   compareBidderCount: [],
   detailProjectByIds: [],
+  getDifficultyOfProject: [],
   totalRecords: 0,
   filter: {
     size: 10,
@@ -46,9 +89,15 @@ const compareProjectSlice = createSlice({
   extraReducers: (builder) => {
     const pendingReducer = (state: ICompareProjectInitialState) => {
       state.status = EFetchStatus.PENDING;
+      state.loading = true;
     };
 
-    const fulfilledReducer = (state: ICompareProjectInitialState, payload: any, message: string, key: keyof ICompareProjectInitialState) => {
+    const fulfilledReducer = (
+      state: ICompareProjectInitialState,
+      payload: any,
+      message: string,
+      key: keyof ICompareProjectInitialState
+    ) => {
       state.status = EFetchStatus.FULFILLED;
       state.message = message;
       if (payload) {
@@ -60,45 +109,18 @@ const compareProjectSlice = createSlice({
     const rejectedReducer = (state: ICompareProjectInitialState, payload: any) => {
       state.status = EFetchStatus.REJECTED;
       state.message = transformPayloadErrors(payload?.errors);
+      state.loading = false;
     };
 
-    builder
-
-      // compareConstructionTime
-      .addCase(compareBarChartTotalAmount.pending, pendingReducer)
-      .addCase(compareBarChartTotalAmount.fulfilled, (state, { payload }) => 
-        fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Construction Time)", 'compareBarChartTotalAmount'))
-      .addCase(compareBarChartTotalAmount.rejected, (state, { payload }) => rejectedReducer(state, payload))
-
-      // compareConstructionTime
-      .addCase(compareConstructionTime.pending, pendingReducer)
-      .addCase(compareConstructionTime.fulfilled, (state, { payload }) => 
-        fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Construction Time)", 'compareConstructionTime'))
-      .addCase(compareConstructionTime.rejected, (state, { payload }) => rejectedReducer(state, payload))
-
-      // compareBidSubmissionTime
-      .addCase(compareBidSubmissionTime.pending, pendingReducer)
-      .addCase(compareBidSubmissionTime.fulfilled, (state, { payload }) => 
-        fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Bid Submission Time)", 'compareBidSubmissionTime'))
-      .addCase(compareBidSubmissionTime.rejected, (state, { payload }) => rejectedReducer(state, payload))
-
-      // comparePieChartTotalAmount
-      .addCase(comparePieChartTotalAmount.pending, pendingReducer)
-      .addCase(comparePieChartTotalAmount.fulfilled, (state, { payload }) => 
-        fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Pie Chart Total Amount)", 'comparePieChartTotalAmount'))
-      .addCase(comparePieChartTotalAmount.rejected, (state, { payload }) => rejectedReducer(state, payload))
-
-      // compareBidderCount
-      .addCase(compareBidderCount.pending, pendingReducer)
-      .addCase(compareBidderCount.fulfilled, (state, { payload }) => 
-        fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Bidder Count)", 'compareBidderCount'))
-      .addCase(compareBidderCount.rejected, (state, { payload }) => rejectedReducer(state, payload))
-
-      // compareBidderCount
-      .addCase(detailProjectByIds.pending, pendingReducer)
-      .addCase(detailProjectByIds.fulfilled, (state, { payload }) => 
-        fulfilledReducer(state, payload, "Thêm dự án so sánh thành công (Bidder Count)", 'detailProjectByIds'))
-      .addCase(detailProjectByIds.rejected, (state, { payload }) => rejectedReducer(state, payload));
+    // Dynamically add cases for all thunk actions
+    Object.values(thunkActions).forEach(({ action, key, message }) => {
+      builder
+        .addCase(action.pending, pendingReducer)
+        .addCase(action.fulfilled, (state, { payload }) =>
+          fulfilledReducer(state, payload, message, key))
+        .addCase(action.rejected, (state, { payload }) =>
+          rejectedReducer(state, payload));
+    });
   },
 });
 

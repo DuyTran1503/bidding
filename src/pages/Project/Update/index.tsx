@@ -51,6 +51,7 @@ const UpdateProject = () => {
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
   const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+
   useFetchStatus({
     module: "project",
     reset: resetStatusProject,
@@ -134,6 +135,7 @@ const UpdateProject = () => {
               {
                 isLoading: state.status === EFetchStatus.PENDING,
                 text: "Cập nhật",
+                kind:'submit',
                 icon: <FaPlus className="text-[18px]" />,
                 onClick: () => {
                   if (formikRef.current) {
@@ -180,6 +182,7 @@ const UpdateProject = () => {
               {
                 isLoading: state.status === EFetchStatus.PENDING,
                 text: "Cập nhật",
+                kind:'submit',
                 icon: <FaPlus className="text-[18px]" />,
                 onClick: () => {
                   if (formikRef.current) {
@@ -191,10 +194,11 @@ const UpdateProject = () => {
           />
           <ActionModule
             type={EPageTypes.UPDATE}
-            isChildren
+            isChildren={true}
             item={selectedChild!}
             project={state.project}
             formikRef={formikRef}
+            activeTabKey={activeTabKey}
             parent_id={state.project?.id}
             listIndustry={stateIndustry.listIndustry}
             listSelectionMethods={stateMethod.listSelectionMethods}
@@ -268,6 +272,7 @@ const UpdateProject = () => {
       dispatch(resetStatusProject());
     };
   }, []);
+  
   return <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />;
 };
 

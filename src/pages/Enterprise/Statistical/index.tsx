@@ -157,23 +157,7 @@ const StatisticalEnterprise: React.FC = () => {
         />
       ),
     },
-    {
-      key: "4",
-      label: "Biểu đồ độ khó trung bình của nhiệm vụ",
-      content: (
-        <>
-          <GenericChart
-            chartType="bar"
-            grid={120}
-            title="Biểu đồ thể hiện độ khó trung bình của nhiệm vụ mà doanh nghiệp thực hiện"
-            name={stateChartEnterprise.averageDifficultyLevelTasksByEnterprise.map(({ enterprise_name }) => enterprise_name)}
-            value={stateChartEnterprise.averageDifficultyLevelTasksByEnterprise.map((item) => item.average_difficulty)}
-            seriesName="Mức độ khó khăn trung bình"
-          />
-          <ChartLabel value={["Chưa có nhiệm vụ", "Dễ", "Trung bình", "Khó", "Rất khó"]} />
-        </>
-      ),
-    },
+    
     {
       key: "5",
       label: "Biểu đồ điểm uy tín",
