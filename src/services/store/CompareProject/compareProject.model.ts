@@ -40,3 +40,11 @@ export interface ICompareProject {
     decision_number_approve?: string | null;
     status?: string;
 }
+export interface IDifficultyOfProject {
+    project: string;
+    easy: number;
+    medium: number;
+    hard: number;
+    very_hard: number;
+    [key: string]: string | number; 
+}
