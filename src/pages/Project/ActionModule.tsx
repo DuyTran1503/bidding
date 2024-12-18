@@ -28,6 +28,9 @@ import { IFundingSource } from "@/services/store/funding_source/funding_source.m
 import { IStaff } from "@/services/store/account/account.model";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { IProcurement } from "@/services/store/procurement/procurement.model";
+import { convertToFiles } from "@/components/form/FormUpload/FormUploadImage";
+import FormNumber from "@/components/form/FormNumber";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
 interface IPropProject {
   formikRef?: FormikRefType<INewProject>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW | EPageTypes.APPROVE;
@@ -43,6 +46,7 @@ interface IPropProject {
   listProcurement?: IProcurement[];
   item?: INewProject;
   parent_id?: number;
+  activeTabKey?: string
 }
 type FileObject = {
   path: string;
@@ -63,6 +67,7 @@ const ActionModule = ({
   listEnterprise,
   listProcurement,
   parent_id,
+  activeTabKey
 }: IPropProject) => {
   const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const [children, setChildren] = useState<INewProject[]>([]);
@@ -133,13 +138,16 @@ const ActionModule = ({
             ? item.is_domestic
             : project?.is_domestic ?? DOMESTIC.INSIDE,
 
-      amount:
-        isChildren && type === EPageTypes.CREATE
-          ? undefined
-          : item && isChildren && type === EPageTypes.UPDATE
-            ? item.amount
-            : project?.amount ?? undefined,
-
+      amount: (() => {
+        if (isChildren) {
+          if (type === EPageTypes.CREATE) {
+            return undefined;
+          } else if (type === EPageTypes.UPDATE) {
+            return item?.amount !== undefined ? parseFloat(item.amount as unknown as string) : undefined;
+          }
+        }
+        return project?.amount !== undefined ? parseFloat(project.amount as any) : undefined;
+      })(),
       total_amount:
         isChildren && type === EPageTypes.CREATE
           ? undefined
@@ -220,7 +228,7 @@ const ActionModule = ({
       files:
         isChildren && type === EPageTypes.CREATE
           ? []
-          : item && isChildren && type === EPageTypes.UPDATE
+          : item && isChildren && type === EPageTypes.UPDATE && activeTabKey && +activeTabKey === 2
             ? item.attachments
             : project?.attachments ?? [],
 
@@ -275,7 +283,6 @@ const ActionModule = ({
     const newFiles = dataFiles.filter((file) => !projectFiles.some((pFile) => pFile.path === file.path));
     return [...filteredProjectFiles, ...newFiles];
   };
-
   const handleEditChild = (child: INewProject) => {
     onChildSelect && onChildSelect(child);
     setActiveTabKey && setActiveTabKey("2");
@@ -300,8 +307,11 @@ const ActionModule = ({
       ...sanitizedProject,
       children: [newData],
     };
-    if (type === EPageTypes.UPDATE && item) {
-      return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
+
+    if (type === EPageTypes.UPDATE && item && activeTabKey && +activeTabKey === 2) {
+      // return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
+      console.log(newChild);
+
     } else {
       return dispatchProject(createProject(data as Omit<INewProject, "id">));
     }
@@ -334,8 +344,10 @@ const ActionModule = ({
         if (type === EPageTypes.UPDATE && project?.id) {
           const updatedFiles =
             initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
-          const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ ...rest }) => rest)(data);
-          dispatchProject(updateProject({ body: newData, param: String(project.id) }));
+          const newData = convertToFiles(data.files as any)?.length ? { ...data, files: convertToFiles(data.files as any) } : (({ ...rest }) => rest)(data);
+          // dispatchProject(updateProject({ body: newData, param: String(project.id) }));
+          console.log(newData);
+
         }
       }}
       innerRef={formikRef}
@@ -424,7 +436,7 @@ const ActionModule = ({
                 <FormGroup title=" Bên Mời Thầu">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
-                    placeholder="Nhập  bên mời thầu..."
+                    placeholder="Nhập bên mời thầu..."
                     id="tenderer_id"
                     value={values.tenderer_id!}
                     onChange={(e) => setFieldValue("tenderer_id", e)}
@@ -528,15 +540,22 @@ const ActionModule = ({
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Số Tiền">
-                  <FormInput
+                  <FormNumber
+                    placeholder="Nhập số Tiền..."
                     isDisabled={type === EPageTypes.VIEW}
-                    placeholder="Nhập số tiền..."
                     name="amount"
-                    value={values.amount}
+                    value={
+                      type === EPageTypes.VIEW
+                        ? Number(convertMoney(values.amount as unknown as string)) // Ép kiểu về number
+                        : (values.amount as unknown as number) || 0
+                    }
                     error={touched.amount ? errors.amount : ""}
-                    onChange={(e) => setFieldValue("amount", e)}
+                    onChange={(e) => {
+                      setFieldValue("amount", e);
+                    }}
                     onBlur={handleBlur}
                   />
+
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>

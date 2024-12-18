@@ -8,7 +8,11 @@ import WORD from "@/assets/images/word.jpg";
 import React, { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import clsx from "clsx";
-
+interface FileData {
+  type: string;
+  path: string;
+  name: string;
+}
 interface IProps {
   value?: File | File[] | string;
   onChange: (value: File | File[] | null) => void;
@@ -17,14 +21,25 @@ interface IProps {
   classNameFilMany?: string;
   disabled?: boolean;
 }
+export const convertToFiles = (dataArray: FileData[]): File[] => {
+  const currentTime = new Date().getTime();
+
+  return dataArray.map(item => {
+    const fileType = item.type === "pdf" ? "application/pdf" : "application/octet-stream";
+    const blob = new Blob([], { type: fileType });
+
+    return new File([blob], item.name, {
+      type: blob.type,
+      lastModified: currentTime,
+    });
+  });
+};
 const FormUploadImage: React.FC<IProps> = ({ onChange, value, id, classNameFilMany, disabled }) => {
   const [fileList, setFileList] = useState<File[] | any>(value ? value : []);
+  // console.log(convertToFiles(value));
 
   const [error, setError] = useState<string | null>(null);
-  const handleDeleteImage = (uid: string) => {
-    const updatedFileList = fileList.filter((file: File) => file.name !== uid);
-    setFileList(updatedFileList);
-  };
+ 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -46,6 +61,10 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id, classNameFilMa
       onChange(fileList.length > 0 ? fileList : null);
     }
   }, [fileList]);
+  const handleDeleteImage = (index: number) => {
+    const updatedFileList = fileList.filter((file: File, i: number) => i !== index);
+    setFileList(updatedFileList);
+  };
   const renderFileIcon = (file: File) => {
     const validImageExtensions = ["png", "jpg", "jpeg", "gif", "bmp", "tiff", "webp", "svg"];
 
@@ -88,7 +107,7 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id, classNameFilMa
           {fileList.map((file: File, index: number) => (
             <div key={index} className="relative mx-2 inline-block text-center">
               {renderFileIcon(file)}
-              <button onClick={() => handleDeleteImage(file.name)}>
+              <button onClick={() => handleDeleteImage(index)} type="button">
                 <IoIosCloseCircle className={clsx("absolute right-1 top-1 h-[24px] w-[24px] rounded-circle text-green-100", { "hidden": disabled })} />
               </button>
             </div>

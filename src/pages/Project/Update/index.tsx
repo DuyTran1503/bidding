@@ -51,6 +51,8 @@ const UpdateProject = () => {
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
   const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  console.log(activeTabKey);
+  
   useFetchStatus({
     module: "project",
     reset: resetStatusProject,
@@ -195,6 +197,7 @@ const UpdateProject = () => {
             item={selectedChild!}
             project={state.project}
             formikRef={formikRef}
+            activeTabKey={activeTabKey}
             parent_id={state.project?.id}
             listIndustry={stateIndustry.listIndustry}
             listSelectionMethods={stateMethod.listSelectionMethods}

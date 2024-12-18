@@ -24,6 +24,8 @@ import lodash from "lodash";
 import { useEffect } from "react";
 import { date, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
+import FormNumber from "@/components/form/FormNumber";
 
 interface IBiddingResultFormProps {
   formikRef?: any;
@@ -55,7 +57,10 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     enterprise_id: biddingResult?.enterprise.id ?? undefined,
     project_id: biddingResult?.project?.id ?? undefined,
     bid_document: biddingResult?.bid_document as IBidDocument,
-    win_amount: biddingResult?.win_amount || "",
+    win_amount: (() => {
+      const value = parseFloat(biddingResult?.win_amount as unknown as string);
+      return isNaN(value) ? undefined : Math.floor(value); // Ensure this returns a number
+    })(),
     decision_number: biddingResult?.decision_number || "",
     decision_date: biddingResult?.decision_date || "",
     is_active: biddingResult?.is_active ? "1" : "0",
@@ -110,7 +115,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
   });
   return (
     <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
-      {({ values, errors, touched, setFieldValue }) => {
+      {({ values, errors, touched, setFieldValue,handleBlur }) => {
         return (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
@@ -151,7 +156,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
                     isDisabled={type === "view"}
                     value={values.bid_document_id}
                     id="bid_document_id"
-                    placeholder="Nhập tên dự án..."
+                    placeholder="Chọn hồ sơ..."
                     error={touched.bid_document_id ? errors.bid_document_id : ""}
                     onChange={(value) => setFieldValue("bid_document_id", value)}
                   />
@@ -159,14 +164,20 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
               </Col>
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Số tiền thắng thầu" required>
-                  <FormInput
-                    type="text"
-                    isDisabled={type === "view"}
-                    value={values.win_amount}
+                <FormNumber
+                    placeholder="Nhập số Tiền..."
+                    isDisabled={type === EButtonTypes.VIEW}
                     name="win_amount"
+                    value={
+                      type === EButtonTypes.VIEW
+                        ? Number(convertMoney(values.win_amount as unknown as string)) // Ép kiểu về number
+                        : (values.win_amount as unknown as number) || 0
+                    }
                     error={touched.win_amount ? errors.win_amount : ""}
-                    placeholder="Nhập số tiền thắng thầu..."
-                    onChange={(value) => setFieldValue("win_amount", value)}
+                    onChange={(e) => {
+                      setFieldValue("win_amount", e);
+                    }}
+                    onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>
