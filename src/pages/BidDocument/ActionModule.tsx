@@ -1,5 +1,5 @@
 import { Formik, Form } from "formik";
-import { object } from "yup";
+import { date, number, object, string } from "yup";
 import lodash from "lodash";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
@@ -31,6 +31,8 @@ import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import { unwrapResult } from "@reduxjs/toolkit";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
+import FormNumber from "@/components/form/FormNumber";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
 
 interface IBidDocumentFormProps {
   formikRef?: FormikRefType<IBidDocumentInitialValues>;
@@ -46,7 +48,7 @@ export interface IBidDocumentInitialValues {
   enterprise_id?: number | string;
   bid_bond_id?: number | string;
   submission_date?: string;
-  bid_price: string;
+  bid_price?: string;
   implementation_time?: string;
   validity_period?: string;
   technical_score?: string;
@@ -74,7 +76,10 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
     enterprise_id: bidDocument?.enterprise?.id ?? undefined,
     bid_bond_id: bidDocument?.bid_bond?.id || undefined,
     submission_date: bidDocument?.submission_date ?? "",
-    bid_price: bidDocument?.bid_price ?? "",
+    bid_price: (() => {
+      const value = parseFloat(bidDocument?.bid_price as unknown as string);
+      return isNaN(value) ? undefined : Math.floor(value).toString(); // Convert to string
+    })(),
     implementation_time: bidDocument?.implementation_time ?? "",
     validity_period: bidDocument?.validity_period ?? "",
     technical_score: bidDocument?.technical_score ?? "",
@@ -86,7 +91,15 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
     file: bidDocument?.file || undefined,
   });
 
-  const Schema = object().shape({});
+  const Schema = object().shape({
+    validity_period: string().required("Vui lòng không để trống"),
+    implementation_time: string().required("Vui lòng không để trống"),
+    bid_price: number().required("Vui lòng không để trống").positive("Giá thầu phải là số dương"),
+    submission_date: date().required("Vui lòng không để trống").nullable(),
+    bid_bond_id: string().required("Vui lòng không để trống"),
+    project_id: string().required("Vui lòng không để trống"),
+    enterprise_id: string().required("Vui lòng không để trống"),
+  });
   useEffect(() => {
     dispatchProject(getListProject())
       .then(unwrapResult)
@@ -179,14 +192,14 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
         }, [state.status, isCreateFromProject]);
         return (
           <Form>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Dự án" required>
                   <FormTreeSelect
                     isDisabled={type === "view" || type === "update"}
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
-                    error={touched.project_id ? errors.project_id : ""}
+                    error={touched.project_id || !values?.project_id ? errors.project_id : ""}
                     onChange={(value) => {
                       setFieldValue("project_id", value as string);
                     }}
@@ -194,11 +207,11 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Doanh nghiệp" required>
                   <FormSelect
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}
-                    error={touched.enterprise_id ? errors.enterprise_id : ""}
+                    error={touched.enterprise_id || !values?.enterprise_id ? errors.enterprise_id : ""}
                     isDisabled={type === "view"}
                     placeholder="Doanh nghiệp..."
                     value={values.enterprise_id as string}
@@ -207,32 +220,40 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Mã bảo lãnh" required>
                   <FormSelect
                     options={formattedData}
                     isDisabled={type === "view"}
                     placeholder="Chọn mã lãnh đấu thầu..."
                     value={values.bid_bond_id}
-                    error={touched.bid_bond_id ? errors.bid_bond_id : ""}
+                    error={touched.bid_bond_id || !values?.bid_bond_id ? errors.bid_bond_id : ""}
                     id="bid_bond_id"
                     onChange={(e) => setFieldValue("bid_bond_id", e)}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormGroup title="Giá trị đề nghị" required>
-                  <FormInput
-                    placeholder="Nhập giá trị đề nghị..."
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormGroup title="Giá đề nghị" required>
+                  <FormNumber
+                    placeholder="Nhập giá đề nghị..."
+                    isDisabled={type === EPageTypes.VIEW}
                     name="bid_price"
-                    value={values.bid_price}
+                    value={
+                      type === EPageTypes.VIEW
+                        ? Number(convertMoney(values.bid_price as unknown as string)) // Ép kiểu về number
+                        : (values.bid_price as unknown as number) || 0
+                    }
                     error={touched.bid_price ? errors.bid_price : ""}
-                    onChange={(e) => setFieldValue("bid_price", e)}
+                    onChange={(e) => {
+                      console.log(e);
+                      setFieldValue("bid_price", e);
+                    }}
                     onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Thời gian thực hiện" required>
                   <FormDate
                     disabled={type === "view"}
@@ -242,8 +263,8 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Ngày nộp hồ sơ">
+              <Col xs={24} sm={24} md={12} xl={8}>
+                <FormGroup title="Ngày nộp hồ sơ" required>
                   <FormDate
                     disabled={type === "view"}
                     error={touched.submission_date ? errors.submission_date : ""}
@@ -252,8 +273,8 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Thời hạn hiệu lực">
+              <Col xs={24} sm={24} md={12} xl={8}>
+                <FormGroup title="Thời hạn hiệu lực" required>
                   <FormDate
                     disabled={type === "view"}
                     error={touched.validity_period ? errors.validity_period : ""}
@@ -262,7 +283,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tài liệu đính kèm">
                   <FormUploadFile
                     disabled={type === "view"}
@@ -275,7 +296,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Ghi chú">
                   <FormCkEditor
                     id="note"

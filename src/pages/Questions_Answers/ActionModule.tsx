@@ -92,10 +92,10 @@ const ActionModule = ({ visible, type, setVisible, item }: IQuestionsAnswersForm
           return (
             <Form className="mt-3">
               <Row gutter={[16, 16]}>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormInput type="text" isDisabled={true} label="Người hỏi" value={values.asked_by} name="asked_by" />
                 </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
@@ -107,7 +107,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IQuestionsAnswersForm
                     onBlur={handleBlur}
                   />
                 </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormGroup title="Nhập nội dung câu trả lời">
                     <FormCkEditor
                       id="answer_content"
@@ -119,7 +119,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IQuestionsAnswersForm
                     />
                   </FormGroup>
                 </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormGroup title="Nhập nội dung câu trả lời">
                     <FormCkEditor
                       id="answer_content"
@@ -131,7 +131,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IQuestionsAnswersForm
                     />
                   </FormGroup>
                 </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormGroup title="Trạng thái hoạt động">
                     <FormSwitch
                       checked={!!values.is_active ? true : false}

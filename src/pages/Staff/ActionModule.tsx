@@ -237,8 +237,8 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
           <Form>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tên tài khoản">
                   <FormInput
                     type="text"
@@ -254,7 +254,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Email">
                   <FormInput
                     type="text"
@@ -271,8 +271,8 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </FormGroup>
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Số điện thoại">
                   <FormInput
                     type="text"
@@ -290,7 +290,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
               </Col>
 
               {type === EPageTypes.CREATE ? (
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormGroup title="Password">
                     <FormInput
                       type="password"
@@ -306,7 +306,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   </FormGroup>
                 </Col>
               ) : (
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormGroup title="Vai trò">
                     <FormSelect
                       isMultiple={true}
@@ -322,7 +322,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
             </Row>
             <Row gutter={[24, 0]} className="justify-end">
               {type === EPageTypes.CREATE && (
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormGroup title="Vai trò">
                     <FormSelect
                       isMultiple={true}
@@ -334,7 +334,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   </FormGroup>
                 </Col>
               )}
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Mã số thuế">
                   <FormInput
                     type="number"
@@ -351,9 +351,9 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <Row gutter={[12, 0]}>
-                  <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                  <Col xs={24} sm={24} md={12} xl={12}>
                     <FormGroup title="Trạng thái hoạt động">
                       <FormSwitch
                         checked={!!values.account_ban_at ? true : false}
@@ -364,7 +364,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                       />
                     </FormGroup>
                   </Col>
-                  <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                  <Col xs={24} sm={24} md={12} xl={12}>
                     <FormGroup title="Giới tính" className="gap-[6px]">
                       <FormRadio
                         isDisabled={type === "view"}
@@ -376,7 +376,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   </Col>
                 </Row>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Ngày sinh">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -385,7 +385,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Ảnh đại diện">
                   <FormUploadFile
                     disabled={type === "view"}

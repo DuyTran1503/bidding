@@ -2,7 +2,7 @@ import { IEnterprise } from "../enterprise/enterprise.model";
 import { IProject } from "../project/project.model";
 
 export interface IBidBond {
-  id: string; // Khóa chính, tự động tăng
+  id: string | number; // Khóa chính, tự động tăng
   project_id?: number;
   enterprise_id?: number;
   project?: IProject ;

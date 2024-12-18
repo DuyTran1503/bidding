@@ -24,13 +24,23 @@ import ActionModuleBidBod from "./ActionModule";
 import { convertDataOptions } from "../Project/helper";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
 
 const BidBonds = () => {
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const [ treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
-
+  const enterpriseName = (value: number) => {
+    if (stateEnterprise.listEnterprise!.length > 0 && !!value) {
+      return stateEnterprise.listEnterprise!.find((item) => item.id === value)?.name;
+    }
+  };
+  const projectName = (value: number) => {
+    if (stateProject.listProjects!.length > 0 && !!value) {
+      return stateProject.listProjects!.find((item) => item.id === value)?.name;
+    }
+  };
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -59,12 +69,9 @@ const BidBonds = () => {
       title: "Mã bảo lãnh",
     },
     {
-      dataIndex: "enterprise_id",
+      dataIndex: "enterprise",
       title: "Nguời/Tổ chức bảo lãnh",
       className: "w-[250px]",
-      render(_, record) {
-        return <div className="flex flex-col">{record?.enterpriseName}</div>;
-      },
     },
     {
       dataIndex: "bond_type",
@@ -74,15 +81,15 @@ const BidBonds = () => {
       },
     },
     {
-      dataIndex: "project_id",
+      dataIndex: "project",
       title: "Dự án",
-      render(_, record) {
-        return <div className="flex flex-col">{record?.projectName}</div>;
-      },
     },
     {
       dataIndex: "bond_amount",
       title: "Số tiền bảo lãnh",
+       render: (_, record) => {
+              return convertMoney(record.bond_amount);
+            },
     },
   ];
 
@@ -98,12 +105,12 @@ const BidBonds = () => {
             key: id,
             id,
             project_id,
-            project,
+            project:projectName(project_id as number),
             bond_amount,
             bond_type,
             bond_number,
             enterprise_id,
-            enterprise,
+            enterprise:enterpriseName(enterprise_id as number),
             issue_date,
             expiry_date,
             description,

@@ -235,6 +235,10 @@ export enum EPermissions {
   UPDATE_EVALUATE = "update_evaluate",
   DESTROY_EVALUATE = "destroy_evaluate",
 
+  // Cập nhập hệ thống
+  LIST_SYSTEM = "list_system",
+  UPDATE_SYSTEM = "update_system",
+
   DASHBOARD = "dashboard",
   MOVE_TO_BLACKLIST_ENTERPRISE = "move_to_blacklist_enterprise",
   EMPLOYEE_QTY_STATISTIC_BY_ENTERPRISE = "employee_qty_statistic_by_enterprise",

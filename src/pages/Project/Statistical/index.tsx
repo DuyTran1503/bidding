@@ -15,6 +15,7 @@ import {
   compareConstructionTime,
   comparePieChartTotalAmount,
   detailProjectByIds,
+  getDifficultyOfProject,
 } from "@/services/store/CompareProject/compareProject.thunk";
 import Button from "@/components/common/Button";
 import { ICompareProjectInitialState } from "@/services/store/CompareProject/compareProject.slice";
@@ -22,6 +23,8 @@ import { Col, message, Row } from "antd";
 import TableChart from "@/components/chart/TableChart";
 import { ICompareProject } from "@/services/store/CompareProject/compareProject.model";
 import ProjectDetail from "@/components/chart/ProjectTable";
+import ChartLabel from "@/components/chart/ChartLable";
+import LineChartNew from "@/components/chart/LineChartNew";
 
 const Statistical: React.FC = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
@@ -71,6 +74,8 @@ const Statistical: React.FC = () => {
           return dispatchCompare(comparePieChartTotalAmount({ body: { project_ids: projectIds } }));
         case "6":
           return dispatchCompare(compareBidderCount({ body: { project_ids: projectIds } }));
+          case "7":
+            return dispatchCompare(getDifficultyOfProject({ body: { project_ids: projectIds } }));
         default:
           return Promise.resolve();
       }
@@ -244,7 +249,7 @@ const Statistical: React.FC = () => {
             legendPosition="bottom"
             colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
           />
-          <Row gutter={[24, 24]} className="mb-8">
+          <Row gutter={[24, 24]} className="mb-6">
             {childChartData.length > 0 &&
               childChartData.map((childData, index) => (
                 <Col xs={24} sm={24} md={12} xl={12} key={`child-chart-${index}`}>
@@ -301,6 +306,15 @@ const Statistical: React.FC = () => {
         </>
       ),
     },
+    {
+      key: "7",
+      label: "Biểu đồ độ khó trung bình của nhiệm vụ",
+      content: (
+        <>
+          <LineChartNew data={stateCompare.getDifficultyOfProject}/>
+        </>
+      ),
+    },
   ];
 
   return (
@@ -329,7 +343,7 @@ const Statistical: React.FC = () => {
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
-        // isDisabled={selectedIds.length > 20}
+          // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>

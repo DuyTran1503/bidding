@@ -5,6 +5,7 @@ export enum EPageNames {
   "update" = "Cập nhật",
   "detail" = "Chi tiết",
   "create" = "Tạo mới",
+  "statistical" = "So sánh",
   "enterprise" = "Doanh nghiệp",
   "project" = "Dự án",
   "staffs" = "Nhân viên",

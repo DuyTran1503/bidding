@@ -21,184 +21,183 @@ import { EPageTypes } from "@/shared/enums/page";
 import { object, string } from "yup";
 
 interface IPostFormProps {
-    formikRef?: FormikRefType<IPostFormInitialValues>;
-    type: EPageTypes;
-    post?: IPostFormInitialValues;
+  formikRef?: FormikRefType<IPostFormInitialValues>;
+  type: EPageTypes;
+  post?: IPostFormInitialValues;
 }
 
 export interface IPostFormInitialValues {
-    id: string;
-    post_catalog_id: number[];
-    post_catalog_name: string[];
-    short_title: string;
-    title: string;
-    content: string;
-    thumbnail?: File;
-    status: number;
+  id: string;
+  post_catalog_id: number[];
+  post_catalog_name: string[];
+  short_title: string;
+  title: string;
+  content: string;
+  thumbnail?: File;
+  status: number;
 }
 
 const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
-    const [loading, setLoading] = useState(false);
-    const { dispatch, state } = useArchive<IPostInitialState>("post");
-    const postCatalogs = useSelector((state: RootStateType) => state.post_catalog.postCatalogs);
+  const [loading, setLoading] = useState(false);
+  const { dispatch, state } = useArchive<IPostInitialState>("post");
+  const postCatalogs = useSelector((state: RootStateType) => state.post_catalog.postCatalogs);
 
-    const initialValues: IPostFormInitialValues = {
-        id: post?.id || "",
-        post_catalog_id: post?.post_catalog_id || [],
-        post_catalog_name: post?.post_catalog_name || [],
-        short_title: post?.short_title || "",
-        title: post?.title || "",
-        content: post?.content || "",
-        thumbnail: post?.thumbnail || undefined,
-        status: post?.status || POST.SHOW,
-    };
+  const initialValues: IPostFormInitialValues = {
+    id: post?.id || "",
+    post_catalog_id: post?.post_catalog_id || [],
+    post_catalog_name: post?.post_catalog_name || [],
+    short_title: post?.short_title || "",
+    title: post?.title || "",
+    content: post?.content || "",
+    thumbnail: post?.thumbnail || undefined,
+    status: post?.status || POST.SHOW,
+  };
 
-    const Schema = object().shape({
-        short_title: string().trim().required("Vui lòng không để trống ô này"),
-        title: string().trim().required("Vui lòng không để trống ô này"),
-        content: string().trim().required("Vui lòng không để trống ô này"),
-        thumbnail: string().trim().required("Vui lòng không để trống ô này"),
-    })
+  const Schema = object().shape({
+    short_title: string().trim().required("Vui lòng không để trống ô này"),
+    title: string().trim().required("Vui lòng không để trống ô này"),
+    content: string().trim().required("Vui lòng không để trống ô này"),
+    thumbnail: string().trim().required("Vui lòng không để trống ô này"),
+  });
 
-    const statusOptions: IOption[] = statusEnumArray.map((key) => ({
-        value: key.toString(),
-        label: mappingPost[key],
-    }));
+  const statusOptions: IOption[] = statusEnumArray.map((key) => ({
+    value: key.toString(),
+    label: mappingPost[key],
+  }));
 
-    return (
-        <Formik
-            innerRef={formikRef}
-            initialValues={initialValues}
-            enableReinitialize={true}
-            validationSchema={Schema}
-            onSubmit={(data, { setErrors }) => {
-                const body = {
-                    ...lodash.omit(data, "id"),
-                    post_catalog_id: data.post_catalog_id,
-                };
-                if (type === EPageTypes.CREATE) {
-                    dispatch(createPost(body as Omit<IPostFormInitialValues, "id">))
-                        .unwrap()
-                        .catch((error) => {
-                            const apiErrors = error?.errors || {};
-                            setErrors(apiErrors);
-                        });
-                } else if (type === EPageTypes.UPDATE) {
-                    const newData = {
-                        id: data.id,
-                        short_title: data.short_title,
-                        post_catalog_id: data.post_catalog_id,
-                        post_catalog_name: data.post_catalog_name,
-                        title: data.title,
-                        content: data.content,
-                        thumbnail: data.thumbnail,
-                        status: data.status,
-                    };
-                    const { thumbnail, ...rest } = newData;
-                    const payload = post?.thumbnail === thumbnail ? rest : newData;
+  return (
+    <Formik
+      innerRef={formikRef}
+      initialValues={initialValues}
+      enableReinitialize={true}
+      validationSchema={Schema}
+      onSubmit={(data, { setErrors }) => {
+        const body = {
+          ...lodash.omit(data, "id"),
+          post_catalog_id: data.post_catalog_id,
+        };
+        if (type === EPageTypes.CREATE) {
+          dispatch(createPost(body as Omit<IPostFormInitialValues, "id">))
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
+        } else if (type === EPageTypes.UPDATE) {
+          const newData = {
+            id: data.id,
+            short_title: data.short_title,
+            post_catalog_id: data.post_catalog_id,
+            post_catalog_name: data.post_catalog_name,
+            title: data.title,
+            content: data.content,
+            thumbnail: data.thumbnail,
+            status: data.status,
+          };
+          const { thumbnail, ...rest } = newData;
+          const payload = post?.thumbnail === thumbnail ? rest : newData;
 
-                    dispatch(updatePost({ body: payload, param: String(newData?.id) }));
-                }
-            }}
-        >
-            {({ values, errors, touched, handleBlur, setFieldValue }) => {
-                useEffect(() => {
-                    if (!loading) {
-                        dispatch(getAllPostCatalogs({ query: state.filter }));
-                        setLoading(true);
-                    }
-                }, [loading, state.filter, setFieldValue, dispatch]);
+          dispatch(updatePost({ body: payload, param: String(newData?.id) }));
+        }
+      }}
+    >
+      {({ values, errors, touched, handleBlur, setFieldValue }) => {
+        useEffect(() => {
+          if (!loading) {
+            dispatch(getAllPostCatalogs({ query: state.filter }));
+            setLoading(true);
+          }
+        }, [loading, state.filter, setFieldValue, dispatch]);
 
-                return (
-                    <Form>
-                        <Row gutter={[24, 24]}>
-                            <Col xs={24} sm={24} md={12} xl={12}>
-                                <FormGroup title="Trạng thái" className="h-full">
-                                    <FormRadio
-                                        options={statusOptions}
-                                        value={values.status.toString()}
-                                        onChange={(e: RadioChangeEvent) => setFieldValue("status", +e.target.value)}
-                                    />
-                                </FormGroup>
-                            </Col>
+        return (
+          <Form>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormGroup title="Trạng thái" className="h-full">
+                  <FormRadio
+                    options={statusOptions}
+                    value={values.status.toString()}
+                    onChange={(e: RadioChangeEvent) => setFieldValue("status", +e.target.value)}
+                  />
+                </FormGroup>
+              </Col>
 
-                            <Col xs={24} sm={24} md={12} xl={12}>
-                                <FormGroup title="Danh mục bài viết" required>
-                                    <FormSelect
-                                        isMultiple={true}
-                                        isDisabled={type === "view"}
-                                        onChange={(value) => {
-                                            setFieldValue("post_catalog_id", value);
-                                        }}
-                                        options={postCatalogs.map((post_catalog) => ({
-                                            label: post_catalog.name,
-                                            value: post_catalog.id,
-                                        }))}
-                                        defaultValue={!!values.post_catalog_id && values.post_catalog_id}
-                                        placeholder="Chọn danh mục"
-                                    />
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormGroup title="Danh mục bài viết" required>
+                  <FormSelect
+                    isMultiple={true}
+                    isDisabled={type === "view"}
+                    onChange={(value) => {
+                      setFieldValue("post_catalog_id", value);
+                    }}
+                    options={postCatalogs.map((post_catalog) => ({
+                      label: post_catalog.name,
+                      value: post_catalog.id,
+                    }))}
+                    defaultValue={!!values.post_catalog_id && values.post_catalog_id}
+                    placeholder="Chọn danh mục"
+                  />
+                </FormGroup>
+              </Col>
 
-                                </FormGroup>
-                            </Col>
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormGroup title="Tiêu đề" required>
+                  <FormInput
+                    type="text"
+                    isDisabled={type === "view"}
+                    value={values.title}
+                    name="title"
+                    error={touched.title ? errors.title : ""}
+                    placeholder="Nhập tiêu đề..."
+                    onChange={(value) => setFieldValue("title", value)}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
+              </Col>
 
-                            <Col xs={24} sm={24} md={12} xl={12}>
-                                <FormGroup title="Tiêu đề" required>
-                                    <FormInput
-                                        type="text"
-                                        isDisabled={type === "view"}
-                                        value={values.title}
-                                        name="title"
-                                        error={touched.title ? errors.title : ""}
-                                        placeholder="Nhập tiêu đề..."
-                                        onChange={(value) => setFieldValue("title", value)}
-                                        onBlur={handleBlur}
-                                    />
-                                </FormGroup>
-                            </Col>
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormGroup title="Tiêu đề ngắn" required>
+                  <FormInput
+                    type="text"
+                    isDisabled={type === "view"}
+                    value={values.short_title}
+                    name="short_title"
+                    error={touched.short_title ? errors.short_title : ""}
+                    placeholder="Nhập tiêu đề ngắn..."
+                    onChange={(value) => setFieldValue("short_title", value)}
+                    onBlur={handleBlur}
+                  />
+                </FormGroup>
+              </Col>
 
-                            <Col xs={24} sm={24} md={12} xl={12}>
-                                <FormGroup title="Tiêu đề ngắn" required>
-                                    <FormInput
-                                        type="text"
-                                        isDisabled={type === "view"}
-                                        value={values.short_title}
-                                        name="short_title"
-                                        error={touched.short_title ? errors.short_title : ""}
-                                        placeholder="Nhập tiêu đề ngắn..."
-                                        onChange={(value) => setFieldValue("short_title", value)}
-                                        onBlur={handleBlur}
-                                    />
-                                </FormGroup>
-                            </Col>
-
-                            <Col xs={24} sm={24} md={24} xl={24}>
-                                <FormGroup title="Hình ảnh" required>
-                                    <FormUploadFile
-                                        disabled={type === "view"}
-                                        isMultiple={false}
-                                        value={values.thumbnail}
-                                        error={touched.thumbnail ? errors.thumbnail : ""}
-                                        onChange={(e: any) => setFieldValue("thumbnail", e)}
-                                    />
-                                </FormGroup>
-                            </Col>
-                            <Col xs={24} sm={24} md={24} xl={24}>
-                                <FormGroup title="Nội dung" required>
-                                    <FormCkEditor
-                                        id="content"
-                                        direction="vertical"
-                                        value={values.content}
-                                        setFieldValue={setFieldValue}
-                                        disabled={type === EPageTypes.VIEW}
-                                    />
-                                </FormGroup>
-                            </Col>
-                        </Row>
-                    </Form>
-                );
-            }}
-        </Formik>
-    );
+              <Col xs={24} sm={24} md={24} xl={24}>
+                <FormGroup title="Hình ảnh" required>
+                  <FormUploadFile
+                    disabled={type === "view"}
+                    isMultiple={false}
+                    value={values.thumbnail}
+                    error={touched.thumbnail ? errors.thumbnail : ""}
+                    onChange={(e: any) => setFieldValue("thumbnail", e)}
+                  />
+                </FormGroup>
+              </Col>
+              <Col xs={24} sm={24} md={24} xl={24}>
+                <FormGroup title="Nội dung" required>
+                  <FormCkEditor
+                    id="content"
+                    direction="vertical"
+                    value={values.content}
+                    setFieldValue={setFieldValue}
+                    disabled={type === EPageTypes.VIEW}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+          </Form>
+        );
+      }}
+    </Formik>
+  );
 };
 
 export default PostForm;
