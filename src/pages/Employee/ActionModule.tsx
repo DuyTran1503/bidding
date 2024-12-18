@@ -116,7 +116,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
             });
         }
         if (type === EPageTypes.UPDATE) {
-          const payload = employee?.avatar === body.avatar ? (({ avatar, ...rest }) => rest)(body) : body;
+          const payload = employee?.avatar === body.avatar ? (({ ...rest }) => rest)(body) : body;
 
           return dispatch(updateEmployee({ body: payload, param: String(employee?.id) }));
         }
@@ -164,7 +164,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn công ty..."
                     id="enterprise_id"
-                    error={touched.enterprise_id ? errors.enterprise_id : ""}
+                    error={touched.enterprise_id || !values.enterprise_id ? errors.enterprise_id : ""}
                     value={values.enterprise_id || undefined}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}

@@ -95,7 +95,7 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} xl={24}>
-                <FormGroup title="Tên danh mục bài viết">
+                <FormGroup title="Tên danh mục bài viết" required>
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}

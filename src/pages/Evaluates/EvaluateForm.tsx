@@ -50,8 +50,8 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
     enterprise: item?.enterprise || undefined,
   };
   const Schema = object().shape({
-    // project_id: string().required("Dự án là bắt buộc"),
-    // enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
+    project_id: string().required("Dự án là bắt buộc"),
+    enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
     score: string()
       .required("Số điểm là bắt buộc")
       .test("min-max", "Số điểm phải từ 1 đến 10", (value) => {
@@ -132,7 +132,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
                     isDisabled={type === "view" || type === "update"}
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
-                    error={touched.project_id ? errors.project_id : ""}
+                    error={touched.project_id || !values.project_id ? errors.project_id : ""}
                     onChange={(value) => {
                       setFieldValue("project_id", value as string);
                       dispatchEnterprise(getEnterpriseOfBiddingResultByProject(value as string))
@@ -155,7 +155,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
                     placeholder="Bạn chỉ cần chọn dự án"
                     id="enterprise_id"
                     value={values.enterprise?.user?.name || stateEnterprise.getEnterpriseOfBiddingResultByProject?.name}
-                    error={touched.enterprise_id ? errors.enterprise_id : ""}
+                    error={touched.enterprise_id || !values.enterprise_id ? errors.enterprise_id : ""}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
                   />
                 </FormGroup>

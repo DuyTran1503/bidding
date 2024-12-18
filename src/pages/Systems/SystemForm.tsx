@@ -40,7 +40,6 @@ const SystemForm = ({ visible, type, setVisible, systems }: ISystemFormProps) =>
         phone: string().required("Số điện thoại là bắt buộc"),
         email: string().required("Email là bắt buộc"),
         address: string().required("Địa chỉ là bắt buộc"),
-        logo: string().required("Ảnh là bắt buộc"),
     });
     const handleSubmit = (data: ISystem, { setErrors }: any) => {
         const newData = {
@@ -52,8 +51,9 @@ const SystemForm = ({ visible, type, setVisible, systems }: ISystemFormProps) =>
             address: data.address,
         };
         const { logo, ...rest } = newData;
-        const payload = systems?.logo === logo ? rest : newData;
-
+        const payload = (typeof systems?.logo === 'string' && systems.logo === logo)
+            ? { ...rest, logo: (systems.logo as string).replace("https://base.septenarysolution.site/", "") }
+            : newData;
         dispatch(updateSystem({ body: payload, param: String(newData?.id) }))
             .unwrap()
             .catch((error) => {
@@ -72,7 +72,7 @@ const SystemForm = ({ visible, type, setVisible, systems }: ISystemFormProps) =>
         reset: resetStatus,
         actions: {
             success: { message: state.message },
-            // error: { message: state.message },
+            error: { message: state.message },
         },
     });
     return (
@@ -83,7 +83,7 @@ const SystemForm = ({ visible, type, setVisible, systems }: ISystemFormProps) =>
             }}
             visible={visible}
             setVisible={setVisible}
-            title={type === EButtonTypes.CREATE ? "Tạo mới system" : type === EButtonTypes.UPDATE ? "Cập nhật system" : "Chi tiết system"}
+            title={"Cập nhật hệ thống"}
             footerContent={
                 <div className="flex items-center justify-center gap-2">
                     <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
@@ -138,7 +138,7 @@ const SystemForm = ({ visible, type, setVisible, systems }: ISystemFormProps) =>
                                         type="text"
                                         isDisabled={type === "view"}
                                         value={values.phone}
-                                        name="name"
+                                        name="phone"
                                         error={touched.phone ? errors.phone : ""}
                                         placeholder="Nhập số điện thoại công ty..."
                                         onChange={(value) => setFieldValue("phone", value)}
@@ -152,7 +152,7 @@ const SystemForm = ({ visible, type, setVisible, systems }: ISystemFormProps) =>
                                         type="text"
                                         isDisabled={type === "view"}
                                         value={values.address}
-                                        name="name"
+                                        name="address"
                                         error={touched.address ? errors.address : ""}
                                         placeholder="Nhập địa chỉ công ty..."
                                         onChange={(value) => setFieldValue("address", value)}
@@ -164,9 +164,9 @@ const SystemForm = ({ visible, type, setVisible, systems }: ISystemFormProps) =>
                                 <FormGroup title="Ảnh logo hệ thống" required>
                                     <FormUploadFile
                                         error={touched.logo ? errors.logo : ""}
-                                        isMultiple={false}
+                                        name={"logo"}
                                         value={values.logo}
-                                        onChange={(e: any) => {
+                                        onChange={(e) => {
                                             setFieldValue("logo", e);
                                         }}
                                         disabled={type === EButtonTypes.VIEW}

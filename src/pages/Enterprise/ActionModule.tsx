@@ -139,7 +139,6 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(values);
 
         useEffect(() => {
           if (values.industry_id?.some((item: any) => typeof item === "object")) {

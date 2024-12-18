@@ -19,12 +19,14 @@ const initialState: IInstructInitialState = {
   instruct: undefined,
   message: "",
   error: undefined,
+  totalRecords: 0,
+  totalPages: 0,
+  pageSize: 10,
+  currentPage: 1,
   filter: {
     size: 10,
     page: 1,
   },
-  totalRecords: 0,
-  number_of_elements: 0,
 };
 
 const insTructSlice = createSlice({
@@ -42,14 +44,16 @@ const insTructSlice = createSlice({
 
   extraReducers(builder) {
     builder
-      .addCase(getAllInstructs.fulfilled, (state, { payload }: PayloadAction<IResponse<IInstruct[]> | any>) => {
+      .addCase(getAllInstructs.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
         if (payload.data) {
           state.instructs = payload.data.data;
-          state.totalRecords = payload?.data?.total_elements;
-          state.number_of_elements = payload?.data?.number_of_elements;
+          state.totalRecords = payload.data.total_elements;
+          state.totalPages = payload.data.total_pages;
+          state.pageSize = payload.data.page_size;
+          state.currentPage = payload.data.current_page;
         }
       })
-      .addCase(getAllInstructs.rejected, (state, { payload }: PayloadAction<IResponse<IInstruct[]> | any>) => {
+      .addCase(getAllInstructs.rejected, (state, { payload }: PayloadAction<IResponse<IInstruct> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
 

@@ -384,7 +384,7 @@ const ActionModule = ({
                     placeholder="Chọn phương thức..."
                     id="selection_method_id"
                     value={values.selection_method_id as string}
-                    error={touched.selection_method_id ? errors.selection_method_id : ""}
+                    error={touched.selection_method_id  || !values.selection_method_id? errors.selection_method_id : ""}
                     onChange={(e) => setFieldValue("selection_method_id", e)}
                     options={convertDataOptions((listSelectionMethods as any) || [])}
                   />
@@ -473,7 +473,7 @@ const ActionModule = ({
                     placeholder="Chọn nguồn tài trợ..."
                     id="funding_source_id"
                     value={values.funding_source_id as string}
-                    error={touched.funding_source_id ? errors.funding_source_id : ""}
+                    error={touched.funding_source_id || !values.funding_source_id ? errors.funding_source_id : ""}
                     onChange={(e) => setFieldValue("funding_source_id", e)}
                     options={convertDataOptions(listFundingSources || [])}
                   />
@@ -487,7 +487,7 @@ const ActionModule = ({
                     placeholder="Chọn người phê duyệt..."
                     id="staff_id"
                     value={values.staff_id as string}
-                    error={touched.staff_id ? errors.staff_id : ""}
+                    error={touched.staff_id || !values.staff_id ? errors.staff_id : ""}
                     options={convertDataOptions(getListStaff!)}
                     onChange={(e) => setFieldValue("staff_id", e)}
                   />

@@ -5,7 +5,7 @@ export interface IPost {
    id: string;
     // author_id: string;
     post_catalog_id: number[];
-    post_catalog_name: string[];
+    post_catalog_name?: string[];
     author?: IUserProfile[];
     catalog?: IPostCatalog[];
     short_title: string;
