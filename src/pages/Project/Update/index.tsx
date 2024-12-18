@@ -135,7 +135,7 @@ const UpdateProject = () => {
               {
                 isLoading: state.status === EFetchStatus.PENDING,
                 text: "Cập nhật",
-                kind:'submit',
+                kind: "submit",
                 icon: <FaPlus className="text-[18px]" />,
                 onClick: () => {
                   if (formikRef.current) {
@@ -162,6 +162,57 @@ const UpdateProject = () => {
       ),
     },
     {
+      key: "6",
+      label: "Tạo gói thầu cho dự án",
+      // disabled: !state.dataCreateProject?.id,
+      children: (
+        <div>
+          <Heading
+            title="Tạo mới thầu cho dự án"
+            hasBreadcrumb
+            buttons={[
+              {
+                type: "secondary",
+                text: "Quay lại",
+                icon: <IoClose className="text-[18px]" />,
+                onClick: () => {
+                  navigate("/project");
+                },
+              },
+              {
+                isLoading: state.status === EFetchStatus.PENDING,
+                text: "Tạo mới",
+                icon: <FaPlus className="text-[18px]" />,
+                onClick: () => {
+                  if (formikRef.current) {
+                    formikRef.current.handleSubmit();
+                  }
+                },
+              },
+            ]}
+          />
+          <ActionModule
+            type={EPageTypes.UPDATE}
+            isChildren
+            item={selectedChild!}
+            project={state.dataCreateProject}
+            formikRef={formikRef}
+            setActiveTabKey={setActiveTabKey}
+            parent_name={state.project?.name}
+            parent_id={state.project?.id}
+            activeTabKey={activeTabKey}
+            listIndustry={stateIndustry.listIndustry}
+            listSelectionMethods={stateMethod.listSelectionMethods}
+            listFundingSources={stateFundingSource.listFundingSources}
+            getListStaff={stateStaff.getListStaff}
+            listEnterprise={stateEnterprise.listEnterprise!}
+            listProcurement={stateProcurement.listProcurement}
+          />
+        </div>
+      ),
+    },
+
+    {
       key: "2",
       label: "Cập nhật gói thầu dự án",
       disabled: !state.project?.id,
@@ -182,7 +233,7 @@ const UpdateProject = () => {
               {
                 isLoading: state.status === EFetchStatus.PENDING,
                 text: "Cập nhật",
-                kind:'submit',
+                kind: "submit",
                 icon: <FaPlus className="text-[18px]" />,
                 onClick: () => {
                   if (formikRef.current) {
@@ -272,7 +323,7 @@ const UpdateProject = () => {
       dispatch(resetStatusProject());
     };
   }, []);
-  
+
   return <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />;
 };
 

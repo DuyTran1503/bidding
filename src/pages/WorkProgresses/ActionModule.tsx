@@ -108,7 +108,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
       enableReinitialize
       innerRef={formikRef}
       initialValues={initialValues}
-      validationSchema={Schema}
+      // validationSchema={Schema}
       onSubmit={(data, { setErrors }: any) => {
         const body = {
           ...data,
