@@ -85,7 +85,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."
-                    error={touched.business_activity_type_id ? errors.business_activity_type_id : ""}
+                    error={touched.business_activity_type_id || !values.business_activity_type_id ? errors.business_activity_type_id : ""}
                     options={convertDataOption(businessState?.listBusinessActivities!)}
                     value={
                       type === EPageTypes.UPDATE || EPageTypes.VIEW

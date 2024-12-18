@@ -27,7 +27,7 @@ export const getSystem = createAsyncThunk("system/get-system", async (payload: I
 export const updateSystem = createAsyncThunk("system/update-system", async (payload: IThunkPayload, thunkAPI) => {
   try {
     const formData = objectToFormData(payload.body as ISystem);
-    formData.append("_method", "PATCH");
+    formData.append("_method", "PUT");
 
     const accessToken = client.tokens.accessToken();
 

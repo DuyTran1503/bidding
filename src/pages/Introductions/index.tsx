@@ -6,7 +6,7 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
+import { resetStatus, setFilter } from "@/services/store/introduction/introduction.slice";
 import { IIntroductionInitialState } from "@/services/store/introduction/introduction.slice";
 import { changeStatusIntroduction, deleteIntroduction, getAllIntroductions } from "@/services/store/introduction/introduction.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
@@ -17,7 +17,6 @@ import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-
 import IntroductionForm from "./ActionMoudle";
 
 const Introductions = () => {
@@ -101,7 +100,6 @@ const Introductions = () => {
       placeholder: "Chọn trạng thái ...",
       label: "Trạng thái",
       type: "select",
-
       options: statusOptions as { value: string; label: string }[],
     },
   ];
@@ -137,11 +135,6 @@ const Introductions = () => {
       error: { message: state.message },
     },
   });
-  useEffect(() => {
-    return () => {
-      setFilter({ page: 1, size: 10 });
-    };
-  }, []);
 
   return (
     <>
@@ -173,8 +166,6 @@ const Introductions = () => {
           current: state.filter.page ?? 1,
           pageSize: state.filter.size ?? 10,
           total: state.totalRecords,
-          number_of_elements: state.number_of_elements && state.number_of_elements,
-          // showSideChanger: true,
         }}
         setFilter={setFilter}
         filter={state.filter}

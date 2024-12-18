@@ -30,38 +30,33 @@ const Systems = () => {
             />
 
             {state.systems ? (
-                <div className="mt-6 max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+                <div className="p-6 space-y-4 mt-6 max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
                     {/* Logo */}
                     {state.systems?.logo && (
                         <img
                             src={state.systems.logo}
                             alt={state.systems.name}
-                            className="mx-auto h-40 object-cover bg-gray-200"
+                            className="mx-auto h-40 object-cover "
                         />
                     )}
+                    <h3 className="text-2xl font-bold text-gray-800">
+                        {state.systems?.name || "Không có tên"}
+                    </h3>
 
-                    {/* Nội dung */}
-                    <div className="p-6 space-y-4">
-                        {/* Tên hệ thống */}
-                        <h3 className="text-2xl font-bold text-gray-800">
-                            {state.systems?.name || "Không có tên"}
-                        </h3>
-
-                        {/* Thông tin liên hệ */}
-                        <div className="space-y-2 text-gray-600">
-                            <p>
-                                <span className="font-medium text-gray-700">Điện thoại:</span>{" "}
-                                {state.systems?.phone || "Không có"}
-                            </p>
-                            <p>
-                                <span className="font-medium text-gray-700">Email:</span>{" "}
-                                {state.systems?.email || "Không có"}
-                            </p>
-                            <p>
-                                <span className="font-medium text-gray-700">Địa chỉ:</span>{" "}
-                                {state.systems?.address || "Không có"}
-                            </p>
-                        </div>
+                    {/* Thông tin liên hệ */}
+                    <div className="space-y-2 text-gray-600">
+                        <p>
+                            <span className="font-medium text-gray-700">Điện thoại:</span>{" "}
+                            {state.systems?.phone || "Không có"}
+                        </p>
+                        <p>
+                            <span className="font-medium text-gray-700">Email:</span>{" "}
+                            {state.systems?.email || "Không có"}
+                        </p>
+                        <p>
+                            <span className="font-medium text-gray-700">Địa chỉ:</span>{" "}
+                            {state.systems?.address || "Không có"}
+                        </p>
                     </div>
                 </div>
             ) : (

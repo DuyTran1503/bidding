@@ -1,5 +1,6 @@
+/* eslint-disable max-len */
 import lodash from "lodash";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { IconType } from "react-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -7,27 +8,26 @@ import MenuItem from "./MenuItem";
 
 // Keep all existing imports...
 import {
+  IoBookmarkOutline,
+  IoBriefcaseOutline,
   IoBusinessOutline,
-  IoNewspaperOutline,
-  IoHome,
-  IoSettingsOutline,
-  IoInformationCircleOutline,
-  IoHeadsetOutline,
   IoClose,
+  IoFileTrayFullOutline,
+  IoHeadsetOutline,
+  IoHome,
   IoMenu,
   IoPodiumOutline,
   IoReceiptOutline,
-  IoTimerOutline,
-  IoBookmarkOutline,
-  IoFileTrayFullOutline,
-  IoBriefcaseOutline,
+  IoSettingsOutline,
+  IoTimerOutline
 } from "react-icons/io5";
 
-import logo from "@/assets/images/logo.png";
-import { EPermissions } from "@/shared/enums/permissions";
+import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
-import { checkPermission } from "@/helpers/checkPermission";
+import { ISystemInitialState } from "@/services/store/system/system.slice";
+import { getSystems } from "@/services/store/system/system.thunk";
+import { EPermissions } from "@/shared/enums/permissions";
 import { MdOutlineCreditScore } from "react-icons/md";
 
 export interface IMenuItem {
@@ -51,6 +51,11 @@ const Sidebar = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const activePath = lodash.last(lodash.remove(pathname.split("/")));
   const [isSidebarVisible, setSidebarVisible] = useState<boolean>(false);
+  const { state: stateSystem, dispatch } = useArchive<ISystemInitialState>("system");
+
+  useEffect(() => {
+    dispatch(getSystems({}));
+  }, []);
 
   // Helper function to check if menu item should be visible
   const shouldShowMenuItem = (item: IMenuItem) => {
@@ -172,6 +177,20 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       ],
     },
     {
+      id: "5",
+      icon: { component: IoBookmarkOutline },
+      label: "Hình thức lựa chọn nhà thầu",
+      path: "selection-methods",
+      permissions: EPermissions.LIST_SELECTION_METHOD,
+    },
+    {
+      id: "6",
+      icon: { component: IoBriefcaseOutline },
+      label: "Loại hình mua sắm công",
+      path: "procurement-categories",
+      permissions: EPermissions.LIST_PROCUREMENT_CATEGORY,
+    },
+    {
       id: "7",
       label: "Lịch sử đấu thầu",
       icon: { component: IoTimerOutline },
@@ -233,15 +252,21 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "8.7",
-          label: "Cập nhập hệ thông",
-          path: "system",
-          permissions: EPermissions.LIST_SYSTEM,
+          label: "Giới thiệu",
+          path: "introductions",
+          permissions: EPermissions.LIST_INTRODUCTION,
         },
         {
           id: "8.8",
-          label: "Câu hỏi/ Câu trả lời",
-          path: "questions-answers",
-          permissions: EPermissions.LIST_QUESTIONS_ANSWERS,
+          label: "Hướng dẫn",
+          path: "instructs",
+          permissions: EPermissions.LIST_INDUSTRY,
+        },
+        {
+          id: "8.9",
+          label: "Cập nhập hệ thông",
+          path: "system",
+          permissions: EPermissions.LIST_SYSTEM,
         },
       ],
     },
@@ -265,18 +290,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       ],
     },
     {
-      id: "6",
-      icon: { component: IoBriefcaseOutline },
-      label: "Loại hình mua sắm công",
-      path: "procurement-categories",
-      permissions: EPermissions.LIST_PROCUREMENT_CATEGORY,
-    },
-    {
-      id: "5",
-      icon: { component: IoBookmarkOutline },
-      label: "Hình thức lựa chọn nhà thầu",
-      path: "selection-methods",
-      permissions: EPermissions.LIST_SELECTION_METHOD,
+      id: "10.1",
+      label: "Hỗ trợ",
+      path: "supports",
+      permissions: EPermissions.LIST_SUPPORT,
+      icon: { component: IoHeadsetOutline },
+
     },
     // {
     //   id: "10",
@@ -285,27 +304,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
     //   path: "feedback-complaint",
     //   permissions: EPermissions.LIST_FEEDBACK_COMPLAINT,
     // },
-    {
-      id: "11",
-      label: "Hỗ trợ",
-      icon: { component: IoHeadsetOutline },
-      path: "supports",
-      permissions: EPermissions.LIST_SUPPORT,
-    },
-    {
-      id: "12",
-      label: "Giới thiệu",
-      icon: { component: IoInformationCircleOutline },
-      path: "introductions",
-      permissions: EPermissions.LIST_INTRODUCTION,
-    },
-    {
-      id: "13",
-      label: "Hướng dẫn",
-      icon: { component: IoNewspaperOutline },
-      path: "instructs",
-      permissions: EPermissions.LIST_INDUSTRY,
-    },
+
     // {
     //   id: "14",
     //   label: "Components",
@@ -325,13 +324,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
 
       <div className="flex h-dvh select-none bg-gray-25">
         <div
-          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 ${
-            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
-          <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4" onClick={() => navigate("/dashboard")}>
-            <img src={logo} alt="" className="w-20" />
-            <div className="display-m-semibold">Septenary Solution</div>
+          <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4 uppercase" onClick={() => navigate("/dashboard")}>
+            <img src={stateSystem.systems?.logo} alt={stateSystem.systems?.name} className="w-20" />
+            <div className="text-xl font-semibold">{stateSystem.systems?.name}</div>
           </div>
 
           <nav className="no-scrollbar mb-2 flex grow flex-col gap-2 overflow-y-scroll pt-4">

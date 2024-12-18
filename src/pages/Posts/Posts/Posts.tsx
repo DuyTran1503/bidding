@@ -73,7 +73,7 @@ const Posts = () => {
     },
     {
       title: "Tiêu đề",
-      dataIndex: "title",
+      dataIndex: "short_title",
     },
     {
       dataIndex: "thumbnail",
@@ -109,7 +109,7 @@ const Posts = () => {
 
   const search: ISearchTypeTable[] = [
     {
-      id: "title",
+      id: "short_title",
       placeholder: "Nhập tiêu đề bài viết...",
       label: "Tiêu đề bài viết",
       type: "text",
@@ -170,14 +170,14 @@ const Posts = () => {
   // };
 
   useEffect(() => {
+    dispatchCatalog(getAllPostCatalogs({ query: state.filter }));
+    dispatchStaff(getListStaff());
+  }, [])
+  useEffect(() => {
     if (state.status === EFetchStatus.FULFILLED) {
       dispatch(getAllPosts({ query: state.filter }));
     }
   }, [JSON.stringify(state.status)]);
-  useEffect(() => {
-    dispatchCatalog(getAllPostCatalogs({ query: state.filter }));
-    dispatchStaff(getListStaff());
-  }, [])
   useEffect(() => {
     dispatch(getAllPosts({ query: state.filter }));
   }, [JSON.stringify(state.filter)]);

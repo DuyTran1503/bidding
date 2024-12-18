@@ -85,7 +85,7 @@ const StatisticalReportForm = ({ formikRef, type, statisticalReport }: IStatisti
                   label="Tên người tạo báo cáo"
                   value={values.user_id}
                   name="user_id"
-                  error={touched.user_id ? errors.user_id : ""}
+                  error={touched.user_id || !values.user_id ? errors.user_id : ""}
                   placeholder="Nhập tên người tạo"
                   onChange={(value) => setFieldValue("user_id", value)}
                   onBlur={handleBlur}
