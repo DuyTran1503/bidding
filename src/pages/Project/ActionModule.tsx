@@ -148,13 +148,17 @@ const ActionModule = ({
         }
         return project?.amount !== undefined ? parseFloat(project.amount as any) : undefined;
       })(),
-      total_amount:
-        isChildren && type === EPageTypes.CREATE
-          ? undefined
-          : item && isChildren && type === EPageTypes.UPDATE
-            ? item.total_amount
-            : project?.total_amount ?? undefined,
 
+      total_amount: (() => {
+        if (isChildren) {
+          if (type === EPageTypes.CREATE) {
+            return undefined;
+          } else if (type === EPageTypes.UPDATE) {
+            return item?.total_amount !== undefined ? parseFloat(item.total_amount as unknown as string) : undefined;
+          }
+        }
+        return project?.total_amount !== undefined ? parseFloat(project.total_amount as any) : undefined;
+      })(),
       receiving_place:
         isChildren && type === EPageTypes.CREATE
           ? ""
@@ -309,8 +313,7 @@ const ActionModule = ({
     };
 
     if (type === EPageTypes.UPDATE && item && activeTabKey && +activeTabKey === 2) {
-      // return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
-      console.log(newChild);
+      return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
 
     } else {
       return dispatchProject(createProject(data as Omit<INewProject, "id">));
@@ -345,8 +348,7 @@ const ActionModule = ({
           const updatedFiles =
             initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
           const newData = convertToFiles(data.files as any)?.length ? { ...data, files: convertToFiles(data.files as any) } : (({ ...rest }) => rest)(data);
-          // dispatchProject(updateProject({ body: newData, param: String(project.id) }));
-          console.log(newData);
+          dispatchProject(updateProject({ body: newData, param: String(project.id) }));
 
         }
       }}
@@ -555,12 +557,26 @@ const ActionModule = ({
                     }}
                     onBlur={handleBlur}
                   />
-
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Tổng đầu tư">
-                  <FormInput
+                  <FormNumber
+                    placeholder="Nhập số Tiền..."
+                    isDisabled={type === EPageTypes.VIEW}
+                    name="total_amount"
+                    value={
+                      type === EPageTypes.VIEW
+                        ? Number(convertMoney(values.total_amount as unknown as string)) // Ép kiểu về number
+                        : (values.total_amount as unknown as number) || 0
+                    }
+                    error={touched.total_amount ? errors.total_amount : ""}
+                    onChange={(e) => {
+                      setFieldValue("total_amount", e);
+                    }}
+                    onBlur={handleBlur}
+                  />
+                  {/* <FormInput
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập số tiền..."
                     name="total_amount"
@@ -568,7 +584,7 @@ const ActionModule = ({
                     error={touched.total_amount ? errors.total_amount : ""}
                     onChange={(e) => setFieldValue("total_amount", e)}
                     onBlur={handleBlur}
-                  />
+                  /> */}
                 </FormGroup>
               </Col>
 

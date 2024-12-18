@@ -51,7 +51,6 @@ const UpdateProject = () => {
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
   const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
-  console.log(activeTabKey);
   
   useFetchStatus({
     module: "project",
