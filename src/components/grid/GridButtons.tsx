@@ -114,7 +114,7 @@ const GridButtons: React.FC<IGridButtonsProps> = ({ buttons, record, onClick, is
         );
       case EButtonTypes.STATISTICAL:
         return (
-          <Tooltip title="Thống kê" key={index}>
+          <Tooltip title="So sánh" key={index}>
             <MdInsertChart
               className="cursor-pointer text-xl text-green-600"
               onClick={() => {

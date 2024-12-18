@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from 'react';
 import { Table, Tooltip } from 'antd';
 import { ICompareProject } from '@/services/store/CompareProject/compareProject.model';
@@ -37,9 +38,56 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, proje
     const rows: RowType[] = [
         // { key: 'name', title: 'Tên dự án', dataIndex: 'name' },
         { key: 'decision_number_issued', title: 'Số quyết định', dataIndex: 'decision_number_issued' },
-        { key: 'tenderer', title: 'Nhà thầu', dataIndex: 'tenderer', render: (item) => <Link to={`/enterprise/detail/` + item.id}>{item?.name || 'Không có'}</Link> },
+        { key: 'tenderer', title: 'Nhà thầu', dataIndex: 'tenderer', render: (item) => <Link to={`/enterprise/detail/` + item?.id}>{item?.name || 'Không có'}</Link> },
         {
-            key: 'procurement_categories', title: 'Lĩnh vực mua sắm công', dataIndex: 'procurement_categories',
+            key: 'investor', title: 'Nhà đầu tư', dataIndex: 'investor',
+            render: (item) => <Link to={`/enterprise/detail/` + item?.id}>{item?.name || 'Không có'}</Link>
+        },
+        {
+            key: 'bidding_bond', title: 'Mã bảo lãnh', dataIndex: 'bidding_bond', render: (item) => <Link to={`/bid-document/detail/` + item?.id}>{item?.bond_number || 'Không có'}</Link>
+        },
+        {
+            key: 'bidding_document', title: 'Hồ sơ mời thầu', dataIndex: 'bidding_document',
+            render: (bidding_document: { id: number; file: string }[]) => {
+                if (!bidding_document || bidding_document.length === 0) {
+                    return 'Không có';
+                }
+                return (
+                    <>
+                        {bidding_document.map((child) => (
+                            <div key={child.id}>
+                                {child?.file ? (
+                                    <Link to={`/bid-document/detail/${child.id}`}>
+                                        {child.file}
+                                    </Link>
+                                ) : (
+                                    <span>Không có</span>
+                                )}
+                            </div>
+                        ))}
+
+                    </>
+                );
+            },
+        },
+        {
+            key: 'bidding_result',
+            title: 'Kết quả đấu thầu',
+            dataIndex: 'bidding_result',
+            render: (item) =>
+                item?.id ? (
+                    <Link to={`/bidding-results/detail/${item.id}`}>
+                        {item?.name || 'Không có'}
+                    </Link>
+                ) : (
+                    <span>{item?.name || 'Không có'}</span>
+                )
+        },
+        { key: 'tenderer', title: 'Bên mời đầu', dataIndex: 'tenderer', render: (item) => <Link to={`/enterprise/detail/` + item?.id}>{item?.name || 'Không có'}</Link> },
+        // { key: 'evaluation_criteria', title: 'tiêu chí đánh giá', dataIndex: 'evaluation_criteria', 
+        //     render: (item) => <Link to={`/evaluation_criteria/detail/` + item?.id}>{item?.name || 'Không có'}</Link> },
+        {
+            key: 'procurement_categories', title: 'Dịch vụ mua sắm đấu thầu công', dataIndex: 'procurement_categories',
             render: (procurement_categories: { id: number; name: string }[]) => {
                 if (!procurement_categories || procurement_categories.length === 0) {
                     return 'Không có';
@@ -55,8 +103,34 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, proje
                 );
             },
         },
-        { key: 'investor', title: 'Nhà đầu tư', dataIndex: 'investor', render: (item) => <Link to={`/enterprise/detail/` + item.id}>{item?.name || 'Không có'}</Link> },
-        { key: 'staff', title: 'Người phê duyệt', dataIndex: 'staff', render: (item) => <Link to={`/staff/detail/` + item.id}>{item?.name || 'Không có'}</Link> },
+        {
+            key: 'industries', title: 'Ngành nghề', dataIndex: 'industries',
+            render: (industries: { id: number; name: string }[]) => {
+                if (!industries || industries.length === 0) {
+                    return 'Không có';
+                }
+                return (
+                    <>
+                        {industries.map((child) => (
+                            <div key={child.id}>
+                                {child.name || 'Không có'}
+                            </div>
+                        ))}
+                    </>
+                );
+            },
+        },
+        {
+            key: 'staff', title: 'Người phê duyệt', dataIndex: 'staff',
+            render: (item) =>
+                item?.id ? (
+                    <Link to={`/bidding_result/detail/${item.id}`}>
+                        {item?.name || 'Không có'}
+                    </Link>
+                ) : (
+                    <span>{item?.name || 'Không có'}</span>
+                )
+        },
         { key: 'selection_method', title: 'Hình thức lựa chọn', dataIndex: 'selection_method', render: (item) => item?.method_name || 'Không có' },
         {
             key: 'submission_method',
@@ -194,21 +268,6 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, proje
             return rowData;
         });
 
-    // const subTables = [
-    //     {
-    //         title: 'Danh sách Nhà thầu',
-    //         rows: [
-    //             { key: 'tenderer', title: 'Nhà thầu', dataIndex: 'tenderer' as keyof ICompareProject, render: (item: ICompareProject) => item?.name || 'Không có' },
-    //         ],
-    //     },
-    //     {
-    //         title: 'Danh sách Nhà đầu tư',
-    //         rows: [
-    //             { key: 'investor', title: 'Nhà đầu tư', dataIndex: 'investor' as keyof ICompareProject, render: (item: ICompareProject) => item?.name || 'Không có' },
-    //         ],
-    //     },
-    // ];
-
     return (
         <div>
             <h2 className="font-bold text-lg mb-4">Thông tin tổng quan</h2>
@@ -219,18 +278,6 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ detailProjectByIds, proje
                 scroll={{ x: 'max-content' }}
                 bordered
             />
-            {/* {subTables.map((table, index) => (
-                <div key={index}>
-                    <h2 className="font-bold text-lg mt-8 mb-4">{table.title}</h2>
-                    <Table
-                        columns={createColumns()}
-                        dataSource={createDataSource(table.rows)}
-                        pagination={false}
-                        scroll={{ x: 'max-content' }}
-                        bordered
-                    />
-                </div>
-            ))} */}
         </div>
     );
 };
