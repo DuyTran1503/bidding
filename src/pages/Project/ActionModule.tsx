@@ -71,6 +71,7 @@ const ActionModule = ({
 }: IPropProject) => {
   const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const [children, setChildren] = useState<INewProject[]>([]);
+
   const initialValues: INewProject = useMemo(
     () => ({
       id: isChildren && type === EPageTypes.CREATE ? 0 : item && isChildren && type === EPageTypes.UPDATE ? item.id : project?.id ?? 0,
@@ -290,6 +291,7 @@ const ActionModule = ({
   const handleEditChild = (child: INewProject) => {
     onChildSelect && onChildSelect(child);
     setActiveTabKey && setActiveTabKey("2");
+    
   };
   const handleSaveChild = (values: INewProject) => {
     const data = {
@@ -313,7 +315,8 @@ const ActionModule = ({
     };
 
     if (type === EPageTypes.UPDATE && item && activeTabKey && +activeTabKey === 2) {
-      return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
+
+      // return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
 
     } else {
       return dispatchProject(createProject(data as Omit<INewProject, "id">));
@@ -330,10 +333,15 @@ const ActionModule = ({
       enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => {
+
         const data = {
           ...lodash.omit(values, "id", "children", "fileChildren"),
         };
-        if (isChildren) {
+      console.log('sdf');
+      
+        
+        if (isChildren && activeTabKey && +activeTabKey === 2) {
+
           handleSaveChild(values); // Sử dụng lại `handleSaveChild`
           return;
         }
@@ -344,7 +352,7 @@ const ActionModule = ({
         if (type === EPageTypes.APPROVE) {
           return;
         }
-        if (type === EPageTypes.UPDATE && project?.id) {
+        if (type === EPageTypes.UPDATE && project?.id && activeTabKey && +activeTabKey === 1) {
           const updatedFiles =
             initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
           const newData = convertToFiles(data.files as any)?.length ? { ...data, files: convertToFiles(data.files as any) } : (({ ...rest }) => rest)(data);
@@ -355,6 +363,8 @@ const ActionModule = ({
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
+        console.log(errors);
+        
         return (
           <Form className="mt-4">
             {!isChildren && children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
