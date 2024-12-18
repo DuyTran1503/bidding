@@ -133,7 +133,7 @@ const Dashboard: React.FC = () => {
       <Heading title="Tổng quan về đấu thầu" hasBreadcrumb />
       <div className="w-full">
         <h2 className="mb-4 text-xl font-semibold">1. Tổng quan về thị trường đấu thầu</h2>
-        <Row gutter={[24, 24]}>
+        <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} xl={12}>
             <h3 className="mb-4 text-lg font-semibold">Tổng giá trị trúng thầu toàn quốc</h3>
             <ul className="list-inside list-disc">
@@ -161,7 +161,7 @@ const Dashboard: React.FC = () => {
       </div>
       <div className="w-full">
         <h2 className="mb-4 text-xl font-semibold">2. Top biểu đồ</h2>
-        <Row gutter={[24, 24]}>
+        <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} xl={24}>
             <ChartSection
               title="2.1 Top 10 đơn vị mời thầu có tổng gói thầu nhiều nhất theo số lượng"
@@ -236,7 +236,7 @@ const Dashboard: React.FC = () => {
       </div>
       <div className="w-full">
         <h2 className="mb-4 text-xl font-semibold">3. Phân tích chi tiết</h2>
-        <Row gutter={[24, 24]}>
+        <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} xl={24}>
             <ChartSection
               title="3.1 Dự án theo ngành"
@@ -343,7 +343,7 @@ const Dashboard: React.FC = () => {
       </div>
       <div className="w-full">
         <h2 className="mb-4 text-xl font-semibold">4. Bảng xếp hạng Doanh Nghiệp theo năm</h2>
-        <Row gutter={[24, 24]}>
+        <Row gutter={[16, 16]}>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
             <Select
               placeholder="Chọn năm..."

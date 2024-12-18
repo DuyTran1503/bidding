@@ -12,23 +12,23 @@ const Detail: React.FC<DetailActivityLogProps> = ({ record }) => {
   return (
     <div className="bg-white p-6">
       <h2 className="mb-4 text-2xl font-semibold">Chi tiết loại hình hoạt động</h2>
-      <Row gutter={[24, 24]}>
-        <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={24} md={24} xl={24}>
           <FormInput type="text" isDisabled={true} label="Tên nhật ký" value={record?.log_name as string} name="log_name" />
         </Col>
       </Row>
-      <Row gutter={[24, 24]}>
-        <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={24} md={24} xl={24}>
           <FormInput type="text" isDisabled={true} label="Người thực hiện" value={record?.action_performer as string} name="action_performer" />
         </Col>
       </Row>
-      <Row gutter={[24, 24]}>
-        <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={24} md={24} xl={24}>
           <FormInput type="text" isDisabled={true} label="Hành động" value={record?.event as string} name="event" />
         </Col>
       </Row>
-      <Row gutter={[24, 24]}>
-        <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={24} md={24} xl={24}>
           <FormInputArea label="Mô tả" isReadonly value={record?.description as string} />
         </Col>
       </Row>

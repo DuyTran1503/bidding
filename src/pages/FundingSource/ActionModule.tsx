@@ -64,26 +64,26 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
       onSubmit={(data, { setErrors }: any) => {
         if (type === EPageTypes.CREATE) {
           dispatch(createFundingSource({ body: lodash.omit(data, "id") }))
-          .unwrap()
-          .catch((error) => {
-            const apiErrors = error?.errors || {};
-            setErrors(apiErrors);
-          });
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
         } else if (type === EPageTypes.UPDATE && fundingSource?.id) {
           dispatch(updateFundingSource({ body: lodash.omit(data, "id"), param: fundingSource.id }))
-          .unwrap()
-          .catch((error) => {
-            const apiErrors = error?.errors || {};
-            setErrors(apiErrors);
-          });
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
         }
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
           <>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tên nguồn tài trợ" required={true}>
                   <FormInput
                     placeholder="Tên nguồn tài trợ..."
@@ -96,7 +96,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Loại nguồn tài trợ" required>
                   <FormSelect
                     placeholder="Chọn loại nguồn tài trợ..."
@@ -104,12 +104,12 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                     id="type"
                     options={convertEnum(TypeFundingSource)}
                     value={values.type || undefined}
-                    error={touched.type ? errors.type : ""}
+                    error={touched.type || !values.type ? errors.type : ""}
                     onChange={(e) => setFieldValue("type", e)}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Mã nguồn tài trợ" required>
                   <FormInput
                     isDisabled={type === EPageTypes.VIEW}
@@ -122,7 +122,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Trạng thái hoạt động">
                   <FormSwitch
                     isDisabled={type === EPageTypes.VIEW}
@@ -134,8 +134,8 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                 </FormGroup>
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Mô tả" required>
                   <FormInputArea
                     placeholder="Nhập mô tả..."

@@ -2,7 +2,7 @@ import { ETYPEFILE } from "@/shared/enums/fileType";
 import { E_TYPE_ACTIVITY } from "@/shared/enums/typeActivityLog";
 import { PayloadErrors } from "@/shared/interface/error";
 
-export const phoneRegex = /^(?:\+84|0084|0)?[235789][0-9]{8}$/;
+export const phoneRegex = /^(?:\+84|84|0)?[-\s]*(?:\((?:2[48]|[235789]\d|024)\)\s*|\d{2,3})[-\s]*\d{3,4}[-\s]*\d{4}$/;
 //chặn khoảng trắng
 export const removeMultipleSpaces = function (value: any) {
   return Object.keys(value)?.reduce((prev: any, key: string) => {

@@ -244,7 +244,7 @@ const Statistical: React.FC = () => {
             legendPosition="bottom"
             colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
           />
-          <Row gutter={[24, 24]} className="mb-8">
+          <Row gutter={[24, 24]} className="mb-6">
             {childChartData.length > 0 &&
               childChartData.map((childData, index) => (
                 <Col xs={24} sm={24} md={12} xl={12} key={`child-chart-${index}`}>
@@ -329,7 +329,7 @@ const Statistical: React.FC = () => {
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
-        // isDisabled={selectedIds.length > 20}
+          // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>

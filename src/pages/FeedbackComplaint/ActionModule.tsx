@@ -90,13 +90,13 @@ const ActionModule = ({ visible, type, setVisible, item }: IFeedbackComplaintsFo
           return (
             <Form className="mt-3">
               <Row gutter={[16, 16]}>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormInput type="text" isDisabled={true} label="Tên dự án" value={values.project_id} name="project_id" />
                 </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormInput type="text" isDisabled={true} label="Tên người khiếu nại" value={values.user_id} name="user_id" />
                 </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormGroup title="Nội dung khiéu nại">
                     <FormCkEditor
                       id="content"
@@ -107,7 +107,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IFeedbackComplaintsFo
                     />
                   </FormGroup>
                 </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormGroup title="Nhập nội dung phản hồi khiếu nại">
                     <FormCkEditor
                       id="response_content"
@@ -119,7 +119,7 @@ const ActionModule = ({ visible, type, setVisible, item }: IFeedbackComplaintsFo
                     />
                   </FormGroup>
                 </Col>
-                <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+                <Col xs={24} sm={24} md={12} xl={12}>
                   <FormGroup title="Trạng thái hoạt động">
                     <FormSwitch
                       checked={!!values.is_active ? true : false}

@@ -149,8 +149,8 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
         }, [values.industry_id]);
         return (
           <Form>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Tên doanh nghiệp">
                   <FormInput
                     placeholder="Tên loại hình doanh nghiệp..."
@@ -162,7 +162,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Người đại diện">
                   <FormInput
                     placeholder="Nhập đại diện..."
@@ -174,7 +174,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Vai trò">
                   <FormSelect
                     isMultiple={true}
@@ -187,7 +187,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Lĩnh vực kinh doanh">
                   <FormSelect
                     options={optionsIndustry}
@@ -202,7 +202,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Số điện thoại ">
                   <FormInput
                     placeholder="Nhập số điện thoại ..."
@@ -214,7 +214,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Email">
                   <FormInput
                     placeholder="Nhập email..."
@@ -227,7 +227,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Ngày thành lập">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -236,7 +236,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Ngày đăng ký kinh doanh">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
@@ -246,7 +246,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Mã số thuế">
                   <FormInput
                     placeholder="Nhập mã số thuế..."
@@ -258,7 +258,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={8} xl={8}>
                 <FormGroup required title="Loại hình tổ chức">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
@@ -273,7 +273,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 8} xl={type === EPageTypes.CREATE ? 8 : 8} className="mb-4">
+              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 8} xl={type === EPageTypes.CREATE ? 8 : 8}>
                 <FormGroup required title="Số đăng ký kinh doanh">
                   <FormInput
                     placeholder="Nhập số đăng ký kinh doanh..."
@@ -286,7 +286,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
               {type === EPageTypes.CREATE && (
-                <Col xs={24} sm={24} md={8} xl={8} className="mb-4">
+                <Col xs={24} sm={24} md={8} xl={8}>
                   <FormGroup required title="Mật khẩu">
                     <FormInput
                       type="password"
@@ -303,7 +303,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </Col>
               )}
 
-              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
+              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 8}>
                 <FormGroup required title="Địa chỉ">
                   <FormInput
                     placeholder="Nhập địa chỉ..."
@@ -315,7 +315,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
+              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6}>
                 <FormGroup required title="Website">
                   <FormInput
                     placeholder="Nhập website"
@@ -328,7 +328,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
+              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6}>
                 <FormGroup title="Trạng thái cấm">
                   <FormSwitch
                     checked={!!values.account_ban_at ? true : false}
@@ -338,7 +338,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
+              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6}>
                 <FormGroup title="Trạng thái hoạt động">
                   <FormSwitch
                     checked={!!values.is_active ? true : false}
@@ -348,7 +348,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6} className="mb-4">
+              <Col xs={24} sm={24} md={type === EPageTypes.CREATE ? 8 : 6} xl={type === EPageTypes.CREATE ? 8 : 6}>
                 <FormGroup title="Danh sách blacklist">
                   <FormSwitch
                     checked={!!values.is_blacklist ? true : false}
@@ -358,7 +358,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Ảnh doanh nghiệp">
                   <FormUploadFile
                     disabled={type === "view"}
@@ -370,7 +370,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Mô tả">
                   <FormCkEditor id={"description"} value={values.description ?? ""} onChange={(e) => setFieldValue("description", e)} />
                 </FormGroup>

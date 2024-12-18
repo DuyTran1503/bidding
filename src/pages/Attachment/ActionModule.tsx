@@ -99,8 +99,8 @@ const AttachmentForm = ({ visible, type, setVisible, item, OnSaveSuccess }: IAtt
       >
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tên tài liệu ">
                   <FormInput
                     label="Tên tài liệu "
@@ -113,7 +113,7 @@ const AttachmentForm = ({ visible, type, setVisible, item, OnSaveSuccess }: IAtt
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Dự án">
                   <FormSelect
                     label="Chọn dự án"
@@ -128,13 +128,10 @@ const AttachmentForm = ({ visible, type, setVisible, item, OnSaveSuccess }: IAtt
                 </FormGroup>
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tài liệu đính kèm">
-                  <FormUploadFile
-                    disabled={type === "view"}
-                     value={values.path} 
-                     onChange={(e) => setFieldValue("file", e)} />
+                  <FormUploadFile disabled={type === "view"} value={values.path} onChange={(e) => setFieldValue("file", e)} />
                 </FormGroup>
               </Col>
             </Row>

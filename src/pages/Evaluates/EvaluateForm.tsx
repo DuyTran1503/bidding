@@ -28,13 +28,7 @@ interface IEvaluateFormProps {
   listProjectHasBiddingResult?: any[]; // Thay đổi kiểu nếu cần
 }
 
-const EvaluateForm = ({
-  visible,
-  type,
-  setVisible,
-  item,
-  listProjectHasBiddingResult = [],
-}: IEvaluateFormProps) => {
+const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingResult = [] }: IEvaluateFormProps) => {
   const formikRef = useRef<FormikProps<IEvaluate>>(null);
   const { state, dispatch } = useArchive<IEvaluateInitialState>("evaluate");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
@@ -48,7 +42,7 @@ const EvaluateForm = ({
   const initialValues: IEvaluate = {
     id: item?.id || "",
     project_id: item?.project_id || item?.project?.id || undefined,
-    enterprise_id: item?.enterprise_id || item?.enterprise?.id as any || undefined,
+    enterprise_id: item?.enterprise_id || (item?.enterprise?.id as any) || undefined,
     title: item?.title || "",
     score: item?.score || 10,
     evaluate: item?.evaluate || "",
@@ -58,7 +52,8 @@ const EvaluateForm = ({
   const Schema = object().shape({
     // project_id: string().required("Dự án là bắt buộc"),
     // enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
-    score: string().required("Số điểm là bắt buộc")
+    score: string()
+      .required("Số điểm là bắt buộc")
       .test("min-max", "Số điểm phải từ 1 đến 10", (value) => {
         const num = Number(value);
         return num >= 1 && num <= 10;
@@ -130,22 +125,20 @@ const EvaluateForm = ({
       <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Dự án" required>
                   <FormTreeSelect
                     isDisabled={type === "view" || type === "update"}
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id ? errors.project_id : ""}
-
                     onChange={(value) => {
                       setFieldValue("project_id", value as string);
                       dispatchEnterprise(getEnterpriseOfBiddingResultByProject(value as string))
                         .unwrap()
                         .then((enterprise) => {
                           setFieldValue("enterprise_id", enterprise?.data?.id || ""); // Gắn enterprise_id vào form
-
                         })
                         .catch(() => {
                           setFieldValue("enterprise_id", ""); // Reset nếu thất bại
@@ -153,18 +146,15 @@ const EvaluateForm = ({
                     }}
                     treeData={treeData}
                   />
-
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Doanh nghiệp" required>
                   <FormInput
                     isDisabled={true}
                     placeholder="Bạn chỉ cần chọn dự án"
                     id="enterprise_id"
-                    value={
-                      values.enterprise?.user?.name || stateEnterprise.getEnterpriseOfBiddingResultByProject?.name
-                    }
+                    value={values.enterprise?.user?.name || stateEnterprise.getEnterpriseOfBiddingResultByProject?.name}
                     error={touched.enterprise_id ? errors.enterprise_id : ""}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
                   />
