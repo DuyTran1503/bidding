@@ -1,14 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
-import logo from "@/assets/images/logo.png"; // Ảnh đã xóa nền
-import { useSelector } from "react-redux";
 import { RootStateType } from "@/services/reducers";
 import { Image } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { FaCaretDown, FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaCaretDown, FaTimes } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import ChildMenuItem from "./ChildMenuItem";
 import { menu } from "./menu";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  systemData: any;  // Thêm kiểu dữ liệu cho props
+}
+const Header: React.FC<HeaderProps> = ({ systemData }) => {
   const isLoggedIn = useSelector((state: RootStateType) => state.auth.isLogin);
   const userProfile = useSelector((state: RootStateType) => state.auth.profile);
   const navigate = useNavigate();
@@ -33,8 +35,8 @@ const Header: React.FC = () => {
     <div className="h-11">
       <header className="fixed top-0 left-0 w-full shadow-md p-2 z-50 bg-cyan-600">
         <div className="flex w-full max-w-screen-xl mx-4 xl:mx-auto items-center justify-between">
-          <Link to="/" className="flex justify-center items-center font-medium text-white gap-2 hover:text-gray-200">
-            <Image src={logo} preview={false} alt="Logo" className="!w-10" /> SEPTENARY SOLUTION
+          <Link to="/" className="flex justify-center items-center font-medium text-white gap-2 hover:text-gray-200 uppercase">
+            <Image src={systemData?.logo} preview={false} alt="Logo" className="!w-10" /> {systemData?.name}
           </Link>
 
           {/* Mobile menu toggle button */}

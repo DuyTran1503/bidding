@@ -84,7 +84,7 @@ const InstructForm = ({ visible, type, setVisible, item }: IInstructFormProps) =
       }
     >
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
-        {({ values, setFieldValue }) => (
+        {({ values, setFieldValue, errors, touched }) => (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} xl={24}>
@@ -98,13 +98,14 @@ const InstructForm = ({ visible, type, setVisible, item }: IInstructFormProps) =
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={24} xl={24}>
-                <FormGroup title="Hướng dẫn">
+                <FormGroup title="Hướng dẫn" required>
                   <FormCkEditor
                     id="instruct"
                     direction="vertical"
                     value={values.instruct}
                     setFieldValue={setFieldValue}
                     disabled={type === EButtonTypes.VIEW}
+                    error={touched.instruct ? errors.instruct : ""}
                   />
                 </FormGroup>
               </Col>

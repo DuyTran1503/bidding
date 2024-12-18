@@ -18,6 +18,7 @@ import { IGridButton } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import ActionModule from "./ActionModule";
+import { FaPlus } from "react-icons/fa";
 
 const QuestionsAnswers = () => {
   const { state, dispatch } = useArchive<IQuestionsAnswersInitialState>("questions_answers");
@@ -161,18 +162,13 @@ const QuestionsAnswers = () => {
         title="Câu hỏi / Câu trả lời"
         ModalContent={(props) => <ActionModule {...(props as any)} />}
         hasBreadcrumb
-        // buttons={[
-        //   {
-        //     text: "Export",
-        //     type: "ghost",
-        //     icon: <GoDownload className="text-[18px]" />,
-        //   },
-        //   {
-        //     icon: <FaPlus className="text-[18px]" />,
-        //     permission: EPermissions.CREATE_EVALUATION,
-        //     text: "Thêm mới",
-        //   },
-        // ]}
+        buttons={[
+          {
+            icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_QUESTIONS_ANSWERS,
+            text: "Thêm mới",
+          },
+        ]}
       />
 
       <ConfirmModal

@@ -84,7 +84,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
       }
     >
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
-        {({ values, setFieldValue }) => (
+        {({ values, setFieldValue, errors, touched }) => (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} xl={24}>
@@ -99,13 +99,14 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={24} xl={24}>
-                <FormGroup title="Giới thiệu">
+                <FormGroup title="Nội dung giới thiệu" required>
                   <FormCkEditor
                     id="introduction"
                     direction="vertical"
                     value={values.introduction}
                     setFieldValue={setFieldValue}
                     disabled={type === EButtonTypes.VIEW}
+                    error={touched.introduction ? errors.introduction : ""}
                   />
                 </FormGroup>
               </Col>

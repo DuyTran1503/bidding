@@ -1,17 +1,19 @@
-import logo from "@/assets/images/logo.png";
 import logoVietFuture from "@/assets/images/logoVietFuture.png";
 import { Image } from "antd";
 import { FaFacebookF } from "react-icons/fa";
 import { SiZalo } from "react-icons/si";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
-const Footer = () => {
+interface FooterProps {
+    systemData: any;  // Thêm kiểu dữ liệu cho props
+  }
+  const Footer: React.FC<FooterProps> = ({ systemData }) => {
     return <footer className=" bg-gray-800 text-gray-300 mt-8 py-4">
         <div className=" max-w-screen-xl mx-4 xl:mx-auto space-y-4">
             <div className="flex gap-x-4">
-                <Link to="/" className="text-center font-bold text-xl gap-2 hover:text-gray-200">
-                    <Image src={logo} preview={false} alt="Logo" className="!w-16" />
-                    <p className="text-nowrap">SEPTENARY SOLUTION</p>
+                <Link to="/" className="text-center font-bold text-xl gap-2 hover:text-gray-200 uppercase">
+                    <Image src={systemData?.logo} preview={false} alt="Logo" className="!w-16" />
+                    <p className="text-nowrap">{systemData?.name}</p>
                 </Link>
                 <div>
                     <h1 className="text-xl font-bold">Website biểu đồ hóa dữ liệu đấu thầu mua sắm công</h1>
@@ -80,14 +82,14 @@ const Footer = () => {
                     </ul>
                 </div>
                 <div className="max-w-[350px] space-y-1">
-                    <Link to="/" className="mb-2 flex items-center gap-2 font-medium text-white hover:text-gray-200">
-                        <Image src={logo} preview={false} alt="Logo" className="!w-12" />
-                        <strong>SEPTENARY SOLUTION</strong>
+                    <Link to="/" className="mb-2 flex items-center gap-2 font-medium text-white hover:text-gray-200 uppercase">
+                        <Image src={systemData?.logo} preview={false} alt="Logo" className="!w-12" />
+                        <strong>{systemData?.name}</strong>
                     </Link>
-                    <p>Thực hiện bởi nhóm: <strong>SEPTENARY SOLUTION</strong></p>
-                    <p>Địa chỉ: Tòa nhà FPT Polytechnic., Cổng số 2, 13 P. Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội</p>
+                    <p>Thực hiện bởi nhóm: <strong>{systemData?.name}</strong></p>
+                    <p>Địa chỉ: {systemData?.address}</p>
                     <p>Hotline: 0702208708 hoặc 0338475943</p>
-                    <p>Email: septenarysolution@gmail.com</p>
+                    <p>Email: {systemData?.email}</p>
                 </div>
                 <div className="w-56">
                     <Link
@@ -110,7 +112,7 @@ const Footer = () => {
             </ul>
         </div> */}
             {/* <div>
-            <h3>@SEPTENARY SOLUTION</h3>
+            <h3>@{systemData?.name}</h3>
         </div> */}
         </div>
     </footer>

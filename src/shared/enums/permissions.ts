@@ -191,6 +191,7 @@ export enum EPermissions {
   // Câu hỏi / Câu trả lời
   LIST_QUESTIONS_ANSWERS = "list_questions_answers",
   DETAIL_QUESTIONS_ANSWERS = "detail_questions_answers",
+  CREATE_QUESTIONS_ANSWERS = "create_questions_answers",
   UPDATE_QUESTIONS_ANSWERS = "update_questions_answers",
   DESTROY_QUESTIONS_ANSWERS = "destroy_questions_answers",
 

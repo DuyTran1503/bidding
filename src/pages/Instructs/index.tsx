@@ -6,7 +6,7 @@ import { ITableData } from "@/components/table/PrimaryTable";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
-import { resetStatus, setFilter } from "@/services/store/funding_source/funding_source.slice";
+import { resetStatus, setFilter } from "@/services/store/instruct/instruct.slice";
 import { IInstructInitialState } from "@/services/store/instruct/instruct.slice";
 import { changeStatusInstruct, deleteInstruct, getAllInstructs } from "@/services/store/instruct/instruct.thunk";
 import { EButtonTypes } from "@/shared/enums/button";

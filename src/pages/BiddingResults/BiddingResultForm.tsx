@@ -67,6 +67,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     bid_document_id: isDialog ? (biddingResult?.bid_document.id as number) : biddingResult?.bid_document_id || undefined,
   };
   const Schema = object().shape({
+    project_id: string().required("Vui lòng chọn tên dự án"),
     bid_document_id: string().required("Hồ sơ trúng thầu là bắt buộc"),
     win_amount: string()
       .required("Số tiền thắng thầu là bắt buộc")
@@ -142,7 +143,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
                         value={values.project_id}
                         id="project_id"
                         placeholder="Nhập tên dự án..."
-                        error={touched.project_id ? errors.project_id : ""}
+                        error={touched.project_id || !values.project_id ? errors.project_id : ""}
                         onChange={(value) => setFieldValue("project_id", value)}
                       />
                     </FormGroup>
@@ -157,7 +158,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
                     value={values.bid_document_id}
                     id="bid_document_id"
                     placeholder="Chọn hồ sơ..."
-                    error={touched.bid_document_id ? errors.bid_document_id : ""}
+                    error={touched.bid_document_id || !values.bid_document_id ? errors.bid_document_id : ""}
                     onChange={(value) => setFieldValue("bid_document_id", value)}
                   />
                 </FormGroup>
