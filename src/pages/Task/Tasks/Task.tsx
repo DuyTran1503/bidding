@@ -7,7 +7,7 @@ import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import TaskForm from "../TaskForm";
@@ -17,11 +17,22 @@ import { levelTaskEnumArray, mappingLevelTask } from "@/shared/enums/level";
 import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
 import { getListEmployee } from "@/services/store/employee/employee.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getListProject } from "@/services/store/project/project.thunk";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 
+interface TreeNode {
+  title: string;
+  value: string;
+  key: string;
+  children?: TreeNode[];
+}
 const Tasks = () => {
   const { state, dispatch } = useArchive<ITaskInitialState>("task");
   const { state: stateEmployee, dispatch: dispatchEmployee } = useArchive<IEmployeeInitialState>("employee");
-
+  const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const [treeData, setTreeData] = useState<TreeNode[]>([]);
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -61,14 +72,29 @@ const Tasks = () => {
       title: "Mã công việc",
     },
     {
+      dataIndex: "project",
+      title: "Dự án thực hiện",
+      render: (_, record) => <>{record.project.name}</>,
+    },
+    {
       dataIndex: "employees",
       title: "Nhân viên",
       render: (_, record) => {
-        return <span>{record.employees?.name || "Không có tên dự án"}</span>;
+        console.log(record.employees);
+
+        return (
+          <>
+            {record.employees?.length > 0 ? (
+              record.employees.map((item: any) => <div key={item.id}>{item?.name}</div>)
+            ) : (
+              <div>Không có nhân viên</div>
+            )}
+          </>
+        );
       },
     },
     {
-      dataIndex: "difficulty_level",
+      dataIndex: "level_task",
       title: "Mức độ",
     },
   ];
@@ -89,7 +115,14 @@ const Tasks = () => {
       label: "Tên công việc",
       type: "text",
     },
-
+    {
+      id: "project",
+      placeholder: "Chọn dự án ...",
+      label: "Tên dự án",
+      isMultiple: true,
+      type: "treeSelect",
+      treeData: treeData,
+    },
     {
       id: "employee_id",
       placeholder: "Chọn nhân viên ...",
@@ -109,20 +142,22 @@ const Tasks = () => {
   const data: ITableData[] = useMemo(
     () =>
       state.tasks && state.tasks.length > 0
-        ? state.tasks.map(({ id, name, document, code, difficulty_level, employees }, index) => ({
+        ? state.tasks.map(({ id, name, description, code, difficulty_level, employees, level_task, project_id, project }, index) => ({
             index: index + 1,
             key: id,
             id: id,
             name,
-            document,
+            description,
             employees,
             code,
-            difficulty_level: !!difficulty_level && mappingLevelTask[difficulty_level],
+            level_task: !!difficulty_level && mappingLevelTask[difficulty_level],
+            difficulty_level,
+            project_id,
+            project,
           }))
         : [],
     [JSON.stringify(state.tasks)],
   );
-
   useFetchStatus({
     module: "task",
     reset: resetStatus,
@@ -131,25 +166,36 @@ const Tasks = () => {
       error: { message: state.message },
     },
   });
-
   useEffect(() => {
-    if (state.status === EFetchStatus.FULFILLED) {
+    // Tránh fetch dư thừa bằng cách chỉ fetch khi thực sự cần
+    if (state.status === EFetchStatus.FULFILLED || state.filter) {
       dispatch(getAllTasks({ query: state.filter }));
     }
-  }, [JSON.stringify(state.status)]);
+  }, [state.status, state.filter]);
 
   useEffect(() => {
-    dispatch(getAllTasks({ query: state.filter }));
-  }, [JSON.stringify(state.filter)]);
-  useEffect(() => {
     dispatchEmployee(getListEmployee());
-  }, [dispatchEmployee]);
+  }, []);
+
+  const fetchProjects = useCallback(async () => {
+    try {
+      const result = await dispatchProject(getListProject()).then(unwrapResult);
+      const formattedData = formatTreeSelect(result.data);
+      setTreeData(formattedData);
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+    }
+  }, [dispatchProject]);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
   return (
     <>
       <Heading
         title="Công việc"
         hasBreadcrumb
-        ModalContent={(props) => <TaskForm {...(props as any)} />}
+        ModalContent={(props) => <TaskForm {...(props as any)} treeData={treeData} />}
         buttons={[
           {
             icon: <FaPlus className="text-[18px]" />,
@@ -170,7 +216,7 @@ const Tasks = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => <TaskForm {...(props as any)} />}
+        ModalContent={(props) => <TaskForm {...(props as any)} treeData={treeData} />}
       />
     </>
   );

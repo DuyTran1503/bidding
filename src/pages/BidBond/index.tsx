@@ -17,27 +17,20 @@ import { EPermissions } from "@/shared/enums/permissions";
 import { bidBondEnumArray, mappingBidBond, TypeBidBond } from "@/shared/enums/types";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
 import ActionModuleBidBod from "./ActionModule";
 import { convertDataOptions } from "../Project/helper";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 
 const BidBonds = () => {
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
-  const { state: stateProject } = useArchive<IProjectInitialState>("project");
-  const { state: stateEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+  const [ treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
-  const projectName = (value: number) => {
-    if (stateProject?.listProjects!.length > 0 && !!value) {
-      return stateProject?.listProjects!.find((item) => item.id === value)?.name;
-    }
-  };
-  const enterpriseName = (value: number) => {
-    if (stateEnterprise?.listEnterprise!.length > 0 && !!value) {
-      return stateEnterprise?.listEnterprise!.find((item) => item.id === value)?.name;
-    }
-  };
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
@@ -97,26 +90,26 @@ const BidBonds = () => {
     () =>
       state.bidBonds && state.bidBonds.length > 0
         ? state.bidBonds.map(
-            (
-              { id, project_id, bond_amount, bond_type, bond_number, enterprise_id, issue_date, expiry_date, description, bond_amount_in_words },
-              index,
-            ) => ({
-              index: index + 1,
-              key: id,
-              id,
-              project_id,
-              projectName: projectName(+project_id!),
-              bond_amount,
-              bond_type,
-              bond_number,
-              enterprise_id,
-              enterpriseName: enterpriseName(+enterprise_id!),
-              issue_date,
-              expiry_date,
-              description,
-              bond_amount_in_words,
-            }),
-          )
+          (
+            { id, project_id, bond_amount, bond_type, project, enterprise, bond_number, enterprise_id, issue_date, expiry_date, description, bond_amount_in_words },
+            index,
+          ) => ({
+            index: index + 1,
+            key: id,
+            id,
+            project_id,
+            project,
+            bond_amount,
+            bond_type,
+            bond_number,
+            enterprise_id,
+            enterprise,
+            issue_date,
+            expiry_date,
+            description,
+            bond_amount_in_words,
+          }),
+        )
         : [],
     [JSON.stringify(state.bidBonds), JSON.stringify(stateEnterprise?.listEnterprise)],
   );
@@ -130,12 +123,17 @@ const BidBonds = () => {
       dispatch(getAllBidBonds({ query: state.filter }));
     }
   }, [JSON.stringify(state.status)]);
+ 
   useEffect(() => {
-    dispatch(getListProject());
-  }, [dispatch]);
-  useEffect(() => {
-    dispatch(getListEnterprise());
-  }, [dispatch]);
+    dispatchEnterprise(getListEnterprise());
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
+  }, []);
 
   useFetchStatus({
     module: "bid_bond",
@@ -179,8 +177,8 @@ const BidBonds = () => {
       id: "project_id",
       placeholder: "Nhập tên dự án...",
       label: "Tên dự án",
-      type: "select",
-      options: convertDataOptions(stateProject.listProjects || []),
+      type: "treeSelect",
+      treeData: treeData,
     },
   ];
 
@@ -188,7 +186,12 @@ const BidBonds = () => {
     <>
       <Heading
         title="Bảo lãnh dự thầu"
-        ModalContent={(props) => <ActionModuleBidBod {...(props as any)} />}
+        ModalContent={(props) =>
+          <ActionModuleBidBod
+            {...(props as any)}
+            listEnterprise={stateEnterprise.listEnterprise}
+            listProjects={stateProject.listProjects}
+          />}
         hasBreadcrumb
         buttons={[
           {
@@ -211,7 +214,12 @@ const BidBonds = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) => <ActionModuleBidBod {...(props as any)} />}
+        ModalContent={(props) =>
+          <ActionModuleBidBod
+            {...(props as any)}
+            listEnterprise={stateEnterprise.listEnterprise}
+            listProjects={stateProject.listProjects}
+          />}
       />
     </>
   );

@@ -10,6 +10,7 @@ import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { EButtonTypes } from "@/shared/enums/button";
 import { IOption } from "@/shared/utils/shared-interfaces";
 import FormGroup from "@/components/form/FormGroup";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 
 interface IBidBondFormProps {
   initialValues: IBidBond;
@@ -30,6 +31,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
     bond_type: string().required("Vui lòng chọn loại bảo lãnh"),
     bond_number: string().required("Vui lòng nhập mã bảo lãnh"),
     expiry_date: string().required("Vui lòng chọn ngày hết hạn"),
+    issue_date: string().required("Vui lòng chọn ngày phát hành"),
   });
 
   return (
@@ -38,7 +40,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
         return (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Doanh nghiệp hoặc tổ chức bảo lãnh" required>
                   <FormSelect
                     className="w-100"
@@ -46,26 +48,27 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                     isDisabled={type === "view" || type === "update"}
                     value={values.enterprise_id}
                     id="enterprise_id"
-                    error={touched.enterprise_id ? errors.enterprise_id : ""}
+                    error={touched.enterprise_id || !values.enterprise_id ? errors.enterprise_id : ""}
                     placeholder="Chọn người hoặc tổ chức bảo lãnh"
                     onChange={(value) => setFieldValue("enterprise_id", value)}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tên dự án" required>
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    value={values.project_id}
-                    id="project_id"
-                    placeholder="Tên dự án..."
-                    error={touched.project_id && errors.project_id ? errors.project_id : ""}
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={projectOptions}
+                  <FormTreeSelect
+                    isDisabled={type === "view" || type === "update"}
+                    value={values?.project_id as any}
+                    placeholder="Nhập tên dự án..."
+                    error={touched.project_id || !values?.project_id ? errors.project_id : ""}
+                    onChange={(value) => {
+                      setFieldValue("project_id", value as string);
+                    }}
+                    treeData={projectOptions as any}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Mã bảo lãnh" required>
                   <FormInput
                     type="text"
@@ -79,12 +82,12 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Loại bảo lãnh" required>
                   <FormSelect
                     isDisabled={type === "view"}
                     value={values.bond_type}
-                    error={touched.bond_type ? errors.bond_type : ""}
+                    error={touched.bond_type || !values.bond_type ? errors.bond_type : ""}
                     id="bond_type"
                     options={optionType}
                     placeholder="Nhập loại bảo lãnh..."
@@ -92,7 +95,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Số tiền bảo lãnh" required>
                   <FormInput
                     type="text"
@@ -106,8 +109,8 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
-                <FormGroup title="Ngày phát hành">
+              <Col xs={24} sm={24} md={12} xl={8}>
+                <FormGroup title="Ngày phát hành" required>
                   <FormDate
                     disabled={type === "view"}
                     error={touched.issue_date ? errors.issue_date : ""}
@@ -116,7 +119,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Ngày hết hạn" required>
                   <FormDate
                     disabled={type === "view"}
@@ -128,7 +131,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Ghi chú">
                   <FormCkEditor
                     id="description"
@@ -142,8 +145,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
               </Col>
             </Row>
           </Form>
-        )
-
+        );
       }}
     </Formik>
   );

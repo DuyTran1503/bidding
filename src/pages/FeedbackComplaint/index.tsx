@@ -145,13 +145,6 @@ const FeedbackComplaints = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
-  //   const projectOptions: IOption[] =
-  //     stateProject?.listProjects && stateProject.listProjects.length > 0
-  //       ? stateProject.listProjects.map((e) => ({
-  //           value: e.id,
-  //           label: e.name,
-  //         }))
-  //       : [];
   const search: ISearchTypeTable[] = [];
 
   return (

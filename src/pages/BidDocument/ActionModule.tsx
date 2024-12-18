@@ -1,5 +1,5 @@
 import { Formik, Form } from "formik";
-import { object } from "yup";
+import { date, number, object, string } from "yup";
 import lodash from "lodash";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
@@ -28,6 +28,9 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import { IProject } from "@/services/store/project/project.model";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import { unwrapResult } from "@reduxjs/toolkit";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 
 interface IBidDocumentFormProps {
   formikRef?: FormikRefType<IBidDocumentInitialValues>;
@@ -60,9 +63,10 @@ export interface IBidDocumentInitialValues {
 
 const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFromProject }: IBidDocumentFormProps) => {
   const { state, dispatch } = useArchive<IBidDocumentInitialState>("bid_document");
-  const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
   const [initialValues, setInitialValues] = useState<IBidDocumentInitialValues>({
     id: bidDocument?.id ?? "",
@@ -82,9 +86,23 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
     file: bidDocument?.file || undefined,
   });
 
-  const Schema = object().shape({});
+  const Schema = object().shape({
+    validity_period: string().required("Vui lòng không để trống"),
+    implementation_time: string().required("Vui lòng không để trống"),
+    bid_price: number().required("Vui lòng không để trống").positive("Giá thầu phải là số dương"),
+    submission_date: date().required("Vui lòng không để trống").nullable(),
+    bid_bond_id: string().required("Vui lòng không để trống"),
+    project_id: string().required("Vui lòng không để trống"),
+    enterprise_id: string().required("Vui lòng không để trống"),
+  });
   useEffect(() => {
-    dispatchProject(getListProject());
+    dispatchProject(getListProject())
+      .then(unwrapResult)
+      .then((result) => {
+        const data = result.data;
+        const formattedData = formatTreeSelect(data);
+        setTreeData(formattedData);
+      });
     dispatchEnterprise(getListEnterprise());
     dispatchBidBond(getListBidBond());
   }, []);
@@ -169,25 +187,26 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
         }, [state.status, isCreateFromProject]);
         return (
           <Form>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Dự án" required>
-                  <FormSelect
-                    isDisabled={type === "view"}
-                    value={values.project_id}
-                    id="project_id"
+                  <FormTreeSelect
+                    isDisabled={type === "view" || type === "update"}
+                    value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
-                    error={touched.project_id ? errors.project_id : ""}
-                    onChange={(value) => setFieldValue("project_id", value)}
-                    options={convertDataOptions(stateProject.listProjects || [])}
+                    error={touched.project_id || !values?.project_id ? errors.project_id : ""}
+                    onChange={(value) => {
+                      setFieldValue("project_id", value as string);
+                    }}
+                    treeData={treeData}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Doanh nghiệp" required>
                   <FormSelect
                     options={convertDataOptions(stateEnterprise.listEnterprise || [])}
-                    error={touched.enterprise_id ? errors.enterprise_id : ""}
+                    error={touched.enterprise_id || !values?.enterprise_id ? errors.enterprise_id : ""}
                     isDisabled={type === "view"}
                     placeholder="Doanh nghiệp..."
                     value={values.enterprise_id as string}
@@ -196,20 +215,20 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Mã bảo lãnh" required>
                   <FormSelect
                     options={formattedData}
                     isDisabled={type === "view"}
                     placeholder="Chọn mã lãnh đấu thầu..."
                     value={values.bid_bond_id}
-                    error={touched.bid_bond_id ? errors.bid_bond_id : ""}
+                    error={touched.bid_bond_id || !values?.bid_bond_id ? errors.bid_bond_id : ""}
                     id="bid_bond_id"
                     onChange={(e) => setFieldValue("bid_bond_id", e)}
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Giá trị đề nghị" required>
                   <FormInput
                     placeholder="Nhập giá trị đề nghị..."
@@ -221,7 +240,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Thời gian thực hiện" required>
                   <FormDate
                     disabled={type === "view"}
@@ -231,7 +250,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Ngày nộp hồ sơ">
                   <FormDate
                     disabled={type === "view"}
@@ -241,7 +260,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Thời hạn hiệu lực">
                   <FormDate
                     disabled={type === "view"}
@@ -251,7 +270,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tài liệu đính kèm">
                   <FormUploadFile
                     disabled={type === "view"}
@@ -264,7 +283,7 @@ const BidDocumentForm = ({ formikRef, type, bidDocument, project_id, isCreateFro
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Ghi chú">
                   <FormCkEditor
                     id="note"

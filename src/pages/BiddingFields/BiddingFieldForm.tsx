@@ -59,8 +59,7 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
   const Schema = object().shape({
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng tên lĩnh vực đấu thầu "),
     code: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập mã cho lĩnh vực đấu thầu"),
-
-  })
+  });
 
   useEffect(() => {
     dispatch(getBiddingFieldAllIds())
@@ -103,9 +102,9 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
       {({ values, errors, touched, handleBlur, setFieldValue }) => (
         <div>
           <FormGroup title="Thông tin chung">
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
-                <FormInput 
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
+                <FormInput
                   type="text"
                   isDisabled={type === EPageTypes.VIEW}
                   label="Tên của lĩnh vực đấu thầu"
@@ -117,7 +116,7 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                   onBlur={handleBlur}
                 />
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormTreeSelect
                   label="Lĩnh vực cha"
                   isDisabled={type === EPageTypes.VIEW}
@@ -130,8 +129,8 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                 />
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormInput
                   type="number"
                   isDisabled={type === EPageTypes.VIEW}
@@ -143,7 +142,7 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                   error={touched.code ? errors.code : ""}
                 />
               </Col>
-              <Col xs={24} sm={24} md={12} xl={12} className="mb-4">
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormSwitch
                   isDisabled={type === EPageTypes.VIEW}
                   label="Trạng thái"
@@ -154,8 +153,8 @@ const BiddingFieldForm = ({ formikRef, type, biddingField }: IBiddingFieldFormPr
                 />
               </Col>
             </Row>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormInputArea
                   isReadonly={type === EPageTypes.VIEW}
                   label="Mô tả"

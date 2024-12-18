@@ -53,14 +53,11 @@ const FormSelect = ({
           allowClear
           maxTagCount="responsive"
           disabled={isDisabled}
-          className={clsx(
-            `text-m-medium !h-[35px] w-full rounded-[4px] border !border-[#e0e2e7] ${className}`,
-            {
-              " !text-black-900": isDisabled,
-              "border-red-500": !!error,
-              "select-none !bg-gray-50 !text-black-300": error,
-            }
-          )}
+          className={clsx(`text-m-medium !h-[35px] w-full rounded-[4px] border !border-[#e0e2e7] ${className}`, {
+            "!text-black-900": isDisabled,
+            "border-red-500": !!error,
+            "select-none !bg-gray-50 !text-black-300": error,
+          })}
           mode={isMultiple ? "multiple" : undefined}
           defaultValue={defaultValue}
           value={value}

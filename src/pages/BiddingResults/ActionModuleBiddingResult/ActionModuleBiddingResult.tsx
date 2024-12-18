@@ -87,7 +87,7 @@ const ActionModuleBiddingResult = ({ visible, type, setVisible, item }: IBidding
       {/* <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
+             <Row gutter={[16 ,16]}>
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Đại diện doanh nghiệp">
                   <FormInput

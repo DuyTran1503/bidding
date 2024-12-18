@@ -43,7 +43,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
         .catch((error) => {
           const apiErrors = error?.errors || {};
           setErrors(apiErrors);
-        });;
+        });
     } else if (type === EButtonTypes.UPDATE) {
       dispatch(updateIntroduction({ body, param: item?.id }));
     }
@@ -66,13 +66,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
       }}
       visible={visible}
       setVisible={setVisible}
-      title={
-        type === EButtonTypes.CREATE
-          ? "Tạo mới giới thiệu"
-          : type === EButtonTypes.UPDATE
-            ? "Cập nhật giới thiệu"
-            : "Chi tiết giới thiệu"
-      }
+      title={type === EButtonTypes.CREATE ? "Tạo mới giới thiệu" : type === EButtonTypes.UPDATE ? "Cập nhật giới thiệu" : "Chi tiết giới thiệu"}
       footerContent={
         <div className="flex items-center justify-center gap-2">
           <Button key="cancel" text={"Hủy"} type="secondary" onClick={() => setVisible(false)} />
@@ -92,7 +86,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
       <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit} validationSchema={Schema}>
         {({ values, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
+            <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Trạng thái">
                   <FormSwitch
@@ -104,7 +98,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Giới thiệu">
                   <FormCkEditor
                     id="introduction"
@@ -116,7 +110,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
                 </FormGroup>
               </Col>
             </Row>
-        </Form>
+          </Form>
         )}
       </Formik>
     </Dialog>

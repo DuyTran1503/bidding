@@ -67,7 +67,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
       setVisible(false);
     }
   }, [state.status]);
-  
+
   useFetchStatus({
     module: "banner",
     reset: resetStatus,
@@ -104,8 +104,8 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
       <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={16} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={16}>
                 <FormGroup title="Tên Banner" required>
                   <FormInput
                     type="text"
@@ -119,7 +119,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
                   />
                 </FormGroup>
               </Col>
-              <Col xs={24} sm={24} md={24} xl={8} className="mb-4">
+              <Col xs={24} sm={24} md={24} xl={8}>
                 <FormGroup title="Trạng thái">
                   <FormSwitch
                     checked={values.is_active === "1"}
@@ -131,8 +131,8 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
               </Col>
             </Row>
 
-            <Row gutter={[24, 24]}>
-              <Col xs={24} sm={24} md={24} xl={24} className="mb-4">
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Hình ảnh" required>
                   <FormUploadFile
                     error={touched.path ? errors.path : ""}
