@@ -233,6 +233,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "8.7",
+          label: "Cập nhập hệ thông",
+          path: "system",
+          permissions: EPermissions.LIST_SYSTEM,
+        },
+        {
+          id: "8.8",
           label: "Câu hỏi/ Câu trả lời",
           path: "questions-answers",
           permissions: EPermissions.LIST_QUESTIONS_ANSWERS,

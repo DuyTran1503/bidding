@@ -19,6 +19,8 @@ const Breadcrumb = () => {
       return arr.slice(0, arr.indexOf("detail") + 1);
     } else if (arr.includes("update")) {
       return arr.slice(0, arr.indexOf("update") + 1);
+    } else if (arr.includes("statistical")) {
+      return arr.slice(0, arr.indexOf("statistical") + 1);
     }
     return arr;
   }, [pathname]);
