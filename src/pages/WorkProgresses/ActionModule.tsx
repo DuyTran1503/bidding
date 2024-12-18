@@ -24,6 +24,7 @@ import { array, date, number, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
+import FormNumber from "@/components/form/FormNumber";
 
 interface IWorkProgressFormProps {
   formikRef?: FormikRefType<IWorkProgressInitialValues>;
@@ -36,7 +37,7 @@ export interface IWorkProgressInitialValues {
   project_id?: string;
   task_ids?: number[];
   name: string;
-  expense: number | string;
+  expense?: number | string;
   progress: string;
   start_date: string | Date;
   end_date: string | Date;
@@ -61,7 +62,10 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
   const initialValues: IWorkProgressInitialValues = {
     id: workProgress?.id ?? "",
     name: workProgress?.name ?? "",
-    expense: new Intl.NumberFormat("en-US").format(Math.floor(parseFloat(workProgress?.expense as string))) ?? "",
+    expense: (() => {
+      const expenseValue = parseFloat(workProgress?.expense as string);
+      return isNaN(expenseValue) ? undefined : new Intl.NumberFormat("en-US").format(Math.floor(expenseValue));
+    })(),
     progress: workProgress?.progress ?? "",
     start_date: workProgress?.start_date ?? "",
     end_date: workProgress?.end_date ?? "",
@@ -201,21 +205,20 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12}>
-                <FormGroup title="Chi phí">
-                  <FormInput
+                <FormGroup title="Chi phí" required>
+                  <FormNumber
                     placeholder="Nhập chi phí..."
                     isDisabled={type === EPageTypes.VIEW}
                     name="expense"
-                    value={type === EPageTypes.VIEW ? convertMoney(values.expense as string) : values.expense || ""}
+                    value={
+                      type === EPageTypes.VIEW
+                        ? Number(convertMoney(values.expense as string)) // Ép kiểu về number
+                        : (values.expense as number) || 0
+                    }
                     error={touched.expense ? errors.expense : ""}
                     onChange={(e) => {
-                      const rawValue = e.toString().replace(/[^0-9]/g, "");
-
-                      const numericValue = Number(rawValue) || 0;
-
-                      const formattedValue = new Intl.NumberFormat("en-US").format(numericValue);
-
-                      setFieldValue("expense", formattedValue);
+                      console.log(e);
+                      setFieldValue("expense", e);
                     }}
                     onBlur={handleBlur}
                   />

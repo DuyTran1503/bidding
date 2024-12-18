@@ -67,12 +67,10 @@ const FormSingleFile: React.FC<IProps> = ({ value, onChange, id, disabled }) => 
         <img src={imageFile} alt={file.name} className="h-[100px] rounded-lg object-cover" />
       );
     } else if (typeof file === "string") {
-      // Kiểm tra nếu file là URL đầy đủ (bắt đầu với https://)
-      const imageUrl = file.startsWith("https://") || file.startsWith("http://") ? file : `${import.meta.env.VITE_API_URL}/${file}`; // Nếu là đường dẫn tương đối, thêm VITE_API_URL
+      const imageUrl = file.startsWith("https://") || file.startsWith("http://") ? file : `${import.meta.env.VITE_API_URL}/${file}`; 
 
       return <img src={imageUrl} alt={file} className="h-[100px] rounded-lg object-cover" />;
     } else {
-      // Handle cases where file is neither a File nor a string
       return null;
     }
   };

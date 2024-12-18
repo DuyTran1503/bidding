@@ -11,6 +11,8 @@ import { EButtonTypes } from "@/shared/enums/button";
 import { IOption } from "@/shared/utils/shared-interfaces";
 import FormGroup from "@/components/form/FormGroup";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
+import FormNumber from "@/components/form/FormNumber";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
 
 interface IBidBondFormProps {
   initialValues: IBidBond;
@@ -97,14 +99,20 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
                 <FormGroup title="Số tiền bảo lãnh" required>
-                  <FormInput
-                    type="text"
-                    isDisabled={type === "view"}
-                    value={values.bond_amount}
-                    error={touched.bond_amount ? errors.bond_amount : ""}
-                    name="bond_amount"
+                  <FormNumber
                     placeholder="Nhập số tiền bảo lãnh..."
-                    onChange={(value) => setFieldValue("bond_amount", value)}
+                    isDisabled={type === EButtonTypes.VIEW}
+                    name="bond_amount"
+                    value={
+                      type === EButtonTypes.VIEW
+                        ? Number(convertMoney(values.bond_amount as unknown as string)) // Ép kiểu về number
+                        : (values.bond_amount as number) || 0
+                    }
+                    error={touched.bond_amount ? errors.bond_amount : ""}
+                    onChange={(e) => {
+                      console.log(e);
+                      setFieldValue("bond_amount", e);
+                    }}
                     onBlur={handleBlur}
                   />
                 </FormGroup>

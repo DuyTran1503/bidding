@@ -49,7 +49,11 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
     id: item?.id || "",
     project_id: item?.project_id || undefined,
     enterprise_id: item?.enterprise_id ?? undefined,
-    bond_amount: item?.bond_amount ?? undefined,
+    // bond_amount: item?.bond_amount ?? undefined,
+    bond_amount: (() => {
+      const value = parseFloat(item?.bond_amount as unknown as string);
+      return isNaN(value) ? 0 : Math.floor(value); // Ensure this returns a number
+    })(),
     bond_type: item?.bond_type ?? undefined,
     bond_number: item?.bond_number ?? "",
     issue_date: item?.issue_date ?? "",
@@ -70,7 +74,7 @@ const ActionModuleBidBod = ({ visible, type, setVisible, item }: IBidBondFormPro
           setErrors(apiErrors);
         });
     } else if (type === EButtonTypes.UPDATE && item?.id) {
-      dispatch(updateBidBond({ body: body, param: item?.id }))
+      dispatch(updateBidBond({ body: body, param: String(item?.id) }))
       .unwrap()
       .catch((error) => {
         const apiErrors = error?.errors || {};

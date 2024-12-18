@@ -11,7 +11,7 @@ export interface IBiddingResult {
   is_active: string;
   bid_document: IBidDocument;
   bid_document_id?: number;
-  win_amount: string;
+  win_amount?: string | number;
   project_id?: number;
   enterprise_id?: number | string;
 }

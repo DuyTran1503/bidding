@@ -1,6 +1,5 @@
 import { INewProject } from "@/services/store/project/project.model";
 import { Card, Modal, Tooltip } from "antd";
-import { FormikProps } from "formik";
 import { HiOutlinePencil } from "react-icons/hi2";
 import { IoTrashBinOutline } from "react-icons/io5";
 
@@ -8,7 +7,6 @@ const { confirm } = Modal;
 
 interface ProjectCardProps {
   children: INewProject[]; // Truyền trực tiếp children
-  formikRef?: React.RefObject<FormikProps<any>>;
   onEdit?: (child: INewProject) => void;
   isRemove?: boolean;
 }
@@ -47,7 +45,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit }) => {
 
               <div className="ml-4 flex gap-2">
                 <Tooltip title="Cập nhật">
-                  <button className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100" onClick={() => handleEdit(child)}>
+                  <button type="button" className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100" onClick={() => handleEdit(child)}>
                     <HiOutlinePencil className="text-xl text-yellow-500" />
                   </button>
                 </Tooltip>

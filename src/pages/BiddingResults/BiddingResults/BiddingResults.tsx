@@ -68,13 +68,7 @@ const BiddingResults = () => {
         return <span>{record.project?.name || "Không có tên dự án"}</span>;
       },
     },
-    {
-      dataIndex: "total_amount",
-      title: "Tổng chi phí",
-      render: (_, record) => {
-        return <span>{convertMoney(record.project?.total_amount)}</span>;
-      },
-    },
+   
     {
       dataIndex: "enterprise",
       title: "Doanh nghiệp trúng thầu",
@@ -82,6 +76,14 @@ const BiddingResults = () => {
         return <span>{record.enterprise?.user?.name}</span>;
       },
     },
+    {
+      dataIndex: "total_amount",
+      title: "Tổng giá trị gói thầu",
+      render: (_, record) => {
+        return <span>{convertMoney(record.project?.total_amount)}</span>;
+      },
+    },
+    
     {
       dataIndex: "decision_number",
       title: "Số quyết đinh",

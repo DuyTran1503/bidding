@@ -72,3 +72,11 @@ export const detailProjectByIds = createAsyncThunk("compareProject/detailProject
     return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
   }
 });
+export const getDifficultyOfProject = createAsyncThunk("compareProject/get-difficulty-of-project", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { data } = await client.post(`${prefix}/get-difficulty-of-project`, payload);
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+  }
+});
