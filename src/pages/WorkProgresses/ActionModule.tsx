@@ -132,8 +132,6 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(errors);
-        
         return (
           <Form>
             <Row gutter={[16, 16]}>

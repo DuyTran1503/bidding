@@ -52,7 +52,11 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
     project_id: string().trim().required("Vui lòng chọn dự án"),
     description: string().trim().required("Vui lòng nhập mô tả"),
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên tiêu chí đánh giá"),
-    weight: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập trọng số đánh giá"),
+    weight: string()
+      .required("Vui lòng nhập trọng số đánh giá")
+      .matches(/^\d+(\.\d+)?$/, "Trường này phải là số")
+      .transform((value) => (value ? Number(value) : value)) // Chuyển đổi chuỗi sang số
+      .typeError("Chỉ chấp nhận là số"),
   });
 
   const handleSubmit = (data: IEvaluationCriteria, { setErrors }: any) => {
@@ -142,7 +146,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
               <Col xs={24} sm={24} md={8} xl={8} className="mb-0">
                 <FormGroup title="Trọng số đánh giá" required>
                   <FormInput
-                    type="number"
+                    type="text"
                     isDisabled={type === "view"}
                     value={values.weight}
                     name="weight"
