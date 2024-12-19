@@ -83,7 +83,7 @@ export const createPost = createAsyncThunk("post/create-post", async (request: O
 export const updatePost = createAsyncThunk("post/update-post", async (payload: IThunkPayload, thunkAPI) => {
   try {
     const formData = objectToFormData(payload.body as IPost);
-    formData.append("_method", "PUT");
+    formData.append("_method", "PATCH");
 
     const accessToken = client.tokens.accessToken();
 

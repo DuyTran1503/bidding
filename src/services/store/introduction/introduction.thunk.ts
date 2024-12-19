@@ -1,6 +1,6 @@
 import { client } from "@/services/config/client";
-import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { IThunkPayload } from "@/shared/utils/shared-interfaces";
 import { IError } from "@/shared/interface/error";
 import { IIntroduction } from "./introduction.moldel";
 

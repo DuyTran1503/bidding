@@ -9,7 +9,6 @@ import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, Row } from "antd";
 import { Form, Formik } from "formik";
 import { useEffect, useMemo, useState } from "react";
-import { array, date, number, object, string } from "yup";
 import dayjs from "dayjs";
 import { STATUS_PROJECT, STATUS_PROJECT_ARRAY } from "@/shared/enums/statusProject";
 import FormSelect from "@/components/form/FormSelect";
@@ -47,7 +46,8 @@ interface IPropProject {
   listProcurement?: IProcurement[];
   item?: INewProject;
   parent_id?: number;
-  activeTabKey?: string
+  parent_name?: string;
+  activeTabKey?: string;
 }
 type FileObject = {
   path: string;
@@ -68,7 +68,8 @@ const ActionModule = ({
   listEnterprise,
   listProcurement,
   parent_id,
-  activeTabKey
+  parent_name,
+  activeTabKey,
 }: IPropProject) => {
   const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const [children, setChildren] = useState<INewProject[]>([]);
@@ -130,8 +131,8 @@ const ActionModule = ({
         isChildren && type === EPageTypes.CREATE
           ? []
           : item && isChildren && type === EPageTypes.UPDATE
-            ? item.industry_id?.map((item: any) => item.id)
-            : project?.industry_id ?? [],
+            ? item.industries?.map((item: any) => item.id)
+            : project?.industries ?? [],
 
       is_domestic:
         isChildren && type === EPageTypes.CREATE
@@ -250,7 +251,6 @@ const ActionModule = ({
     [project],
   );
 
-
   const optionDomestic = domesticEnumArray.map((item) => ({
     value: item,
     label: mappingDOMESTIC[item],
@@ -264,57 +264,51 @@ const ActionModule = ({
   const handleEditChild = (child: INewProject) => {
     onChildSelect && onChildSelect(child);
     setActiveTabKey && setActiveTabKey("2");
-    
   };
   const handleSaveChild = (values: INewProject) => {
     const data = {
-      ...lodash.omit(values, "children"),
-      files: values.fileChildren,
+      ...lodash.omit(values, "children", "id"),
+      files: values.files,
       parent_id: item && type === EPageTypes.UPDATE ? parent_id : project?.id,
     };
-    const sanitizedProject = {
-      ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
-      funding_source_id: project?.funding_source || undefined,
-      industry_id: project?.industry_id || [],
-      procurement_id: project?.procurement_categories || [],
-      investor_id: project?.investor || undefined,
-      tenderer_id: project?.tenderer || undefined,
-    };
-    const updatedFiles = initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
-    const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ ...rest }) => rest)(data);
-    const newChild = {
-      ...sanitizedProject,
-      children: [newData],
-    };
-
+    // const sanitizedProject = {
+    //   ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
+    //   funding_source_id: project?.funding_source || undefined,
+    //   industry_id: project?.industry_id || [],
+    //   procurement_id: project?.procurement_categories || [],
+    //   investor_id: project?.investor || undefined,
+    //   tenderer_id: project?.tenderer || undefined,
+    // };
+    // const updatedFiles = initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
+    const newData = convertToFiles(data.files as any)?.length ? { ...data, files: convertToFiles(data.files as any) } : (({ ...rest }) => rest)(data);
+    // const newChild = {
+    //   ...sanitizedProject,
+    //   children: [newData],
+    // };
     if (type === EPageTypes.UPDATE && item && activeTabKey && +activeTabKey === 2) {
-
-      // return dispatchProject(updateProject({ body: newChild, param: String(parent_id) }));
-
+      return dispatchProject(updateProject({ body: newData, param: String(values.id) }));
     } else {
-      return dispatchProject(createProject(data as Omit<INewProject, "id">));
+      return dispatchProject(createProject({ ...data, parent_id: parent_id } as Omit<INewProject, "id">));
     }
   };
+
   useEffect(() => {
     if (project?.children) {
       setChildren(project.children);
     }
   }, [project?.children]);
+
   return (
     <Formik
       validationSchema={schemaProject}
       enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => {
-
         const data = {
           ...lodash.omit(values, "id", "children", "fileChildren"),
         };
-      console.log('sdf');
-      
-        
-        if (isChildren && activeTabKey && +activeTabKey === 2) {
 
+        if (isChildren) {
           handleSaveChild(values); // Sử dụng lại `handleSaveChild`
           return;
         }
@@ -328,22 +322,21 @@ const ActionModule = ({
         if (type === EPageTypes.UPDATE && project?.id && activeTabKey && +activeTabKey === 1) {
           const updatedFiles =
             initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
-          const newData = convertToFiles(data.files as any)?.length ? { ...data, files: convertToFiles(data.files as any) } : (({ ...rest }) => rest)(data);
+          const newData = convertToFiles(data.files as any)?.length
+            ? { ...data, files: convertToFiles(data.files as any) }
+            : (({ ...rest }) => rest)(data);
           dispatchProject(updateProject({ body: newData, param: String(project.id) }));
-
         }
       }}
       innerRef={formikRef}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(errors);
-        
         return (
           <Form className="mt-4">
             {!isChildren && children && children.length > 0 && <ProjectCard children={children} onEdit={handleEditChild} />}
             <Row gutter={[16, 0]}>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Tên Dự Án">
+                <FormGroup title="Tên Dự Án" required>
                   <FormInput
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập tên dự án..."
@@ -356,20 +349,20 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Hình thức lựa chọn nhà thầu">
+                <FormGroup title="Hình thức lựa chọn nhà thầu" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn phương thức..."
                     id="selection_method_id"
                     value={values.selection_method_id as string}
-                    // error={touched.selection_method_id || !values.selection_method_id ? errors.selection_method_id : ""}
+                    error={touched.selection_method_id  || !values.selection_method_id? errors.selection_method_id : ""}
                     onChange={(e) => setFieldValue("selection_method_id", e)}
                     options={convertDataOptions((listSelectionMethods as any) || [])}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Hình thức tham gia đấu thầu">
+                <FormGroup title="Hình thức tham gia đấu thầu" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn hình thức..."
@@ -405,7 +398,7 @@ const ActionModule = ({
                 </Col>
               )}
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Địa Điểm">
+                <FormGroup title="Địa Điểm" required>
                   <FormInput
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập địa điểm..."
@@ -418,13 +411,14 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title=" Bên Mời Thầu">
+                <FormGroup title=" Bên Mời Thầu" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập bên mời thầu..."
                     id="tenderer_id"
+                    error={touched.tenderer_id ? errors.tenderer_id : ""}
                     value={values.tenderer_id!}
-                    error={touched.tenderer_id || !values.tenderer_id ? errors.tenderer_id : ""}
+                    // error={touched.tenderer_id || !values.tenderer_id ? errors.tenderer_id : ""}
                     onChange={(e) => setFieldValue("tenderer_id", e)}
                     options={convertDataOptions(listEnterprise || [])}
                   />
@@ -432,20 +426,21 @@ const ActionModule = ({
               </Col>
 
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title=" Chủ đầu tư">
+                <FormGroup title=" Chủ đầu tư" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Nhập chủ đầu tư..."
                     id="investor_id"
+                    error={touched.investor_id ? errors.investor_id : ""}
                     value={values.investor_id!}
-                    error={touched.investor_id || !values.investor_id ? errors.investor_id : ""}
+                    // error={touched.investor_id || !values.investor_id ? errors.investor_id : ""}
                     options={convertDataOptions(listEnterprise || [])}
                     onChange={(e) => setFieldValue("investor_id", e)}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Nguồn tài trợ">
+                <FormGroup title="Nguồn tài trợ" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn nguồn tài trợ..."
@@ -459,7 +454,7 @@ const ActionModule = ({
               </Col>
 
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Người phê duyệt">
+                <FormGroup title="Người phê duyệt" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn người phê duyệt..."
@@ -479,21 +474,21 @@ const ActionModule = ({
                     placeholder="Chọn..."
                     id="procurement_id"
                     value={values.procurement_id}
-                    error={touched.procurement_id || !values.procurement_id ? errors.procurement_id : ""}
+                    error={touched.procurement_id ? errors.procurement_id : ""}
                     onChange={(e) => setFieldValue("procurement_id", e)}
                     options={convertDataOptions(listProcurement || [])}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title=" Ngành Nghề">
+                <FormGroup title=" Ngành Nghề" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     isMultiple
                     placeholder="Chọn ngành nghề..."
                     id="industry_id"
                     value={values.industry_id}
-                    error={touched.industry_id || !values.industry_id ? errors.industry_id : ""}
+                    error={touched.industry_id || values.industry_id?.length === 0 ? errors.industry_id : ""}
                     onChange={(e) => {
                       setFieldValue("industry_id", e);
                     }}
@@ -528,11 +523,11 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Số Tiền">
+                <FormGroup title="Số Tiền" required>
                   <FormNumber
                     placeholder="Nhập số Tiền..."
                     isDisabled={type === EPageTypes.VIEW}
-                    name="amount"
+                    name=""
                     value={
                       type === EPageTypes.VIEW
                         ? Number(convertMoney(values.amount as unknown as string)) // Ép kiểu về number
@@ -547,7 +542,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Tổng đầu tư">
+                <FormGroup title="Tổng đầu tư" required>
                   <FormNumber
                     placeholder="Nhập số Tiền..."
                     isDisabled={type === EPageTypes.VIEW}
@@ -600,7 +595,7 @@ const ActionModule = ({
               </Col>
 
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Ngày bắt đầu dự án">
+                <FormGroup title="Ngày bắt đầu dự án" required>
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     minDate={values.bid_submission_end ? dayjs(values.bid_submission_end) : undefined}
@@ -610,7 +605,7 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Ngày kết thúc dự án">
+                <FormGroup title="Ngày kết thúc dự án" required>
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     minDate={values.start_time ? dayjs(values.bid_submission_end) : undefined}
@@ -648,7 +643,8 @@ const ActionModule = ({
                   <FormUploadFile
                     isMultiple
                     disabled={type === "view"}
-                    name={"files"} // Sử dụng điều kiện để đổi name
+                    // name={"files"}
+                    name={isChildren ? `child_files_${item?.id}` : "parent_files"}
                     value={values.files} // Điều kiện chọn giá trị
                     onChange={(e) => {
                       setFieldValue("files", e); // Cập nhật field tương ứng

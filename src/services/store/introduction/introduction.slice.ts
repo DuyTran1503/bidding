@@ -17,7 +17,7 @@ import {
 
 export interface IIntroductionInitialState extends IInitialState {
   introductions: IIntroduction[];
-  introduction?: IIntroduction | any;
+  introduction?: IIntroduction | undefined;
 }
 
 const initialState: IIntroductionInitialState = {
@@ -25,13 +25,14 @@ const initialState: IIntroductionInitialState = {
   introductions: [],
   introduction: undefined,
   message: "",
-  error: undefined,
+  totalRecords: 0,
+  totalPages: 0,
+  pageSize: 10,
+  currentPage: 1,
   filter: {
     size: 10,
     page: 1,
   },
-  totalRecords: 0,
-  number_of_elements: 0,
 };
 
 const introductionSlice = createSlice({
@@ -39,26 +40,19 @@ const introductionSlice = createSlice({
   initialState,
   reducers: {
     ...commonStaticReducers<IIntroductionInitialState>(),
-    fetching(state) {
-      state.loading = true;
-    },
-    resetMessageError(state) {
-      state.message = "";
-    },
   },
 
   extraReducers(builder) {
     builder
-      .addCase(getAllIntroductions.fulfilled, (state, { payload }: PayloadAction<IResponse<IIntroduction[]> | any>) => {
+      .addCase(getAllIntroductions.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
         if (payload.data) {
           state.introductions = payload.data.data;
-          state.totalRecords = payload?.data?.total_elements;
-          state.number_of_elements = payload?.data?.number_of_elements;
+          state.totalRecords = payload.data.total_elements;
+          state.totalPages = payload.data.total_pages;
+          state.pageSize = payload.data.page_size;
+          state.currentPage = payload.data.current_page;
         }
       })
-      .addCase(getAllIntroductions.rejected, (state, { payload }: PayloadAction<IResponse<IIntroduction[]> | any>) => {
-        state.message = transformPayloadErrors(payload?.errors);
-      });
 
     builder
       .addCase(getIntroduction.fulfilled, (state, { payload }: PayloadAction<IResponse<any>>) => {
@@ -129,5 +123,5 @@ const introductionSlice = createSlice({
   },
 });
 
-export const { resetStatus, setFilter, fetching, resetMessageError } = introductionSlice.actions;
+export const { resetStatus, setFilter } = introductionSlice.actions;
 export { introductionSlice };

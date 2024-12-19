@@ -97,7 +97,12 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
           const { thumbnail, ...rest } = newData;
           const payload = post?.thumbnail === thumbnail ? rest : newData;
 
-          dispatch(updatePost({ body: payload, param: String(newData?.id) }));
+          dispatch(updatePost({ body: payload, param: String(newData?.id) }))
+            .unwrap()
+            .catch((error) => {
+              const apiErrors = error?.errors || {};
+              setErrors(apiErrors);
+            });
         }
       }}
     >
@@ -134,7 +139,8 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                       label: post_catalog.name,
                       value: post_catalog.id,
                     }))}
-                    defaultValue={!!values.post_catalog_id && values.post_catalog_id}
+                    error={touched.post_catalog_id || !values.post_catalog_id ? errors.post_catalog_id : ""}
+                    value={values.post_catalog_name && values.post_catalog_id}
                     placeholder="Chọn danh mục"
                     error={touched.post_catalog_id || !values.post_catalog_id  ? errors.post_catalog_id : ""}
                   />

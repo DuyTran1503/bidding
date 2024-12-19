@@ -94,8 +94,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
             });
         }
         if (type === EPageTypes.UPDATE) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const payload = employee?.avatar === body.avatar ? (({ avatar, ...rest }) => rest)(body) : body;
+          const payload = employee?.avatar === body.avatar ? (({ ...rest }) => rest)(body) : body;
 
           return dispatch(updateEmployee({ body: payload, param: String(employee?.id) }));
         }
