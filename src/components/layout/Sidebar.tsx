@@ -264,7 +264,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
         },
         {
           id: "8.9",
-          label: "Cập nhập hệ thông",
+          label: "Cập nhập hệ thống",
           path: "system",
           permissions: EPermissions.LIST_SYSTEM,
         },

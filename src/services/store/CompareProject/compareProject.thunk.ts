@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // compareProject.thunks.ts
 import { client } from "@/services/config/client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -63,6 +64,26 @@ export const compareBidderCount = createAsyncThunk("compareProject/compareBidder
   }
 });
 
+// Biểu đồ so sánh số lượng tiêu chí đánh giá theo từng dự án
+export const compareEvaluationCriteriaQuantity = createAsyncThunk("compareProject/compareEvaluationCriteriaQuantity", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { data } = await client.post(`${prefix}/compare-evaluation-criteria-quantity`, payload);
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+  }
+});
+
+// Biểu đồ thể hiện trọng số của các tiêu chí đánh giá theo dự án
+export const getWeightOfEvaliationCriteriByProject = createAsyncThunk("compareProject/getWeightOfEvaliationCriteriByProject", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { data } = await client.post(`${prefix}/get-weight-of-evaliation-criteria-by-project`, payload);
+    return data.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
+  }
+});
+
 // detail-project-by-ids
 export const detailProjectByIds = createAsyncThunk("compareProject/detailProjectByIds", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
@@ -72,6 +93,7 @@ export const detailProjectByIds = createAsyncThunk("compareProject/detailProject
     return rejectWithValue(error.response?.data || "Có lỗi xảy ra khi gọi API");
   }
 });
+
 export const getDifficultyOfProject = createAsyncThunk("compareProject/get-difficulty-of-project", async (payload: IThunkPayload, { rejectWithValue }) => {
   try {
     const { data } = await client.post(`${prefix}/get-difficulty-of-project`, payload);

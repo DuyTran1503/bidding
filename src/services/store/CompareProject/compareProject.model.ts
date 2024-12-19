@@ -29,7 +29,7 @@ export interface ICompareProject {
     procurement_categories?: IProcurementCategorie[];
     attachments?: IAttachment;
     children: ICompareProject[];
-    evaluation_criterias?: IEvaluationCriteria[];
+    evaluation_criterias: IEvaluationCriteria[];
     decision_number_issued?: string;
     is_domestic?: string;
     location?: string;
@@ -44,6 +44,7 @@ export interface ICompareProject {
     end_time?: string;
     approve_at?: string | null;
     decision_number_approve?: string | null;
+    evaluation_criterias_count: number ;
     status?: string;
 }
 export interface IDifficultyOfProject {
