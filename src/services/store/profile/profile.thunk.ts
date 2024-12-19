@@ -19,7 +19,7 @@ export const updateEditProfile = createAsyncThunk("edit_profile/update-edit-prof
     const formData = objectToFormData(payload.body as IEditProfile);
 
     // Thêm trường _method với giá trị "PUT" vào formData
-    // formData.append("_method", "POST");
+    formData.append("_method", "POST");
 
     const accessToken = client.tokens.accessToken();
 

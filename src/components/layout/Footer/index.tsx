@@ -54,21 +54,21 @@ interface FooterProps {
                 <div>
                     <h1 className="text-xl font-bold text-nowrap mb-4">Dành cho doanh nghiệp</h1>
                     <ul className="space-y-1">
-                        <li><Link to={`/`} className="hover:text-gray-400">Thông báo mời thầu</Link></li>
-                        <li><Link to={`/introduce`} className="hover:text-gray-400">Kết quả đấu thầu</Link></li>
-                        <li><Link to={`/news`} className="hover:text-gray-400">So sánh thông tin dự án</Link></li>
-                        <li><Link to={`/`} className="hover:text-gray-400">So sánh thông tin doanh nghiệp</Link></li>
-                        <li><Link to={`/`} className="hover:text-gray-400">Tìm kiếm thông tin dự án</Link></li>
+                        {/* <li><Link to={`/`} className="hover:text-gray-400">Thông báo mời thầu</Link></li> */}
+                        <li><Link to={`/bidding-results`} className="hover:text-gray-400">Kết quả đấu thầu</Link></li>
+                        <li><Link to={`/project`} className="hover:text-gray-400">So sánh thông tin dự án</Link></li>
+                        <li><Link to={`/enterprise`} className="hover:text-gray-400">So sánh thông tin doanh nghiệp</Link></li>
+                        <li><Link to={`/project`} className="hover:text-gray-400">Tìm kiếm thông tin dự án</Link></li>
                     </ul>
                 </div>
                 <div>
                     <h1 className="text-xl font-bold text-nowrap mb-4">Dịch vụ của chúng tôi</h1>
                     <ul className="space-y-1">
-                        <li><Link to={`/`} className="hover:text-gray-400">Phân tích quan hệ thầu</Link></li>
-                        <li><Link to={`/`} className="hover:text-gray-400">Phân tích tình trạng thầu</Link></li>
-                        <li><Link to={`/introduce`} className="hover:text-gray-400">Biểu đồ hóa</Link></li>
-                        <li><Link to={`/news`} className="hover:text-gray-400">Tra cứu thông tin thầu</Link></li>
-                        <li><Link to={`/`} className="hover:text-gray-400">Quản lý bộ lọc</Link></li>
+                        <li className="hover:text-gray-400">Phân tích quan hệ thầu</li>
+                        <li className="hover:text-gray-400">Phân tích tình trạng thầu</li>
+                        <li><Link to={`/dashboard`} className="hover:text-gray-400">Biểu đồ hóa</Link></li>
+                        <li><Link to={`/project`} className="hover:text-gray-400">Tra cứu thông tin thầu</Link></li>
+                        <li className="hover:text-gray-400">Quản lý bộ lọc</li>
                     </ul>
                 </div>
                 <div>

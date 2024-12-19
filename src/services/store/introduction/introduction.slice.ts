@@ -17,7 +17,7 @@ import {
 
 export interface IIntroductionInitialState extends IInitialState {
   introductions: IIntroduction[];
-  introduction?: IIntroduction | undefined;
+  introduction?: IIntroduction | any;
 }
 
 const initialState: IIntroductionInitialState = {

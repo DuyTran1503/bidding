@@ -28,7 +28,6 @@ const transformData = (rawData: (DataItem | string[])[]) => {
 
   transformedData.push(mappedHeaders);
 
-  
   for (let i = 1; i < rawData.length; i++) {
     const item = rawData[i] as DataItem;
     const row = [

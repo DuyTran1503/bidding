@@ -57,6 +57,30 @@ const CustomFormikEditor = (props: ICustomEditorProps) => {
         "highlight",
       ],
     },
+    fontSize: {
+      options: [
+        'tiny',
+        'small',
+        'default',
+        'big',
+        'huge',
+        '8px',
+        '10px',
+        '12px',
+        '14px',
+        '16px',
+        '18px',
+        '20px',
+        '24px',
+        '30px',
+        '36px',
+        '48px',
+        '60px',
+        '72px',
+        '96px'
+      ],
+      supportAllValues: true, // Cho phép các giá trị kích thước tùy chỉnh
+    },
 
     image: {
       toolbar: ["imageTextAlternative", "toggleImageCaption", "imageStyle:inline", "imageStyle:block", "imageStyle:side", "linkImage"],
