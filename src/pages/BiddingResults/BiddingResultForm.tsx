@@ -35,6 +35,7 @@ interface IBiddingResultFormProps {
   listEnterprises?: IEnterprise[];
   isDialog?: boolean;
   setVisible?: () => void;
+  optionDocs?: any[];
 }
 
 export interface IBiddingResultFormInitialValues {
@@ -45,7 +46,16 @@ export interface IBiddingResultFormInitialValues {
   is_active: string;
 }
 
-const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnterprises, isDialog, setVisible }: IBiddingResultFormProps) => {
+const BiddingResultForm = ({
+  formikRef,
+  type,
+  biddingResult,
+  isOutSide,
+  listEnterprises,
+  isDialog,
+  setVisible,
+  optionDocs,
+}: IBiddingResultFormProps) => {
   const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
   const { dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
@@ -66,7 +76,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     is_active: biddingResult?.is_active ? "1" : "0",
     bid_document_id: isDialog ? (biddingResult?.bid_document.id as number) : biddingResult?.bid_document_id || undefined,
   };
-  
+
   const handleSubmit = (data: IBiddingResult, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index", "project", "enterprise", "bid_document", "project_id", "enterprise_id"),
@@ -102,8 +112,14 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     },
   });
   return (
-    <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={schemaBiddingResults} enableReinitialize={true} onSubmit={handleSubmit}>
-      {({ values, errors, touched, setFieldValue,handleBlur }) => {
+    <Formik
+      innerRef={formikRef}
+      initialValues={initialValues}
+      validationSchema={schemaBiddingResults}
+      enableReinitialize={true}
+      onSubmit={handleSubmit}
+    >
+      {({ values, errors, touched, setFieldValue, handleBlur }) => {
         return (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
@@ -140,7 +156,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Hồ sơ trúng thầu" required>
                   <FormSelect
-                    options={convertDataOptions((stateBidDoc.listDocuments as { id: string; name: string }[]) || [])}
+                    options={convertDataOptions((stateBidDoc.listDocuments as { id: string; name: string }[]) || []) || optionDocs}
                     isDisabled={type === "view"}
                     value={values.bid_document_id}
                     id="bid_document_id"
@@ -152,7 +168,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
               </Col>
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Số tiền thắng thầu" required>
-                <FormNumber
+                  <FormNumber
                     placeholder="Nhập số Tiền..."
                     isDisabled={type === EButtonTypes.VIEW}
                     name="win_amount"

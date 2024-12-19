@@ -80,8 +80,6 @@ const Tasks = () => {
       dataIndex: "employees",
       title: "Nhân viên",
       render: (_, record) => {
-        console.log(record.employees);
-
         return (
           <>
             {record.employees?.length > 0 ? (

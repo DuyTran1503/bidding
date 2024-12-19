@@ -22,7 +22,8 @@ import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import { IRoleInitialState } from "@/services/store/role/role.slice";
 import { getAllRoles } from "@/services/store/role/role.thunk";
-import { schemaEnterprice } from "@/shared/Schema/schema";
+import { getSchemaEnterprise } from "@/shared/Schema/schema";
+import { IProjectInitialState, resetStatus } from "@/services/store/project/project.slice";
 
 interface IEnterpriseFormProps {
   formikRef?: FormikRefType<IEnterpriseInitialValues>;
@@ -58,6 +59,8 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
   const { dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const { state: industryState, dispatch: dispatchIndustry } = useArchive<IIndustryInitialState>("industry");
   const { state: roleState, dispatch: dispatchRole } = useArchive<IRoleInitialState>("role");
+  const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+
   // const roles = useSelector((state: RootStateType) => state.role.roles);
   const [processedIndustryIds, setProcessedIndustryIds] = useState<string[]>([]);
   const initialValues: IEnterpriseInitialValues = {
@@ -86,6 +89,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
   useEffect(() => {
     return () => {
       dispatchEnterprise(resetMessageError());
+      dispatchProject(resetStatus());
     };
   }, []);
   useEffect(() => {
@@ -113,11 +117,12 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
       value: e.id,
       label: e.name,
     }));
+  const validationSchema = getSchemaEnterprise(type);
   return (
     <Formik
       innerRef={formikRef}
       initialValues={type === EPageTypes.CREATE ? initialValues : { ...initialValues }}
-      validationSchema={schemaEnterprice}
+      validationSchema={validationSchema}
       enableReinitialize
       onSubmit={(data) => {
         const body = {
@@ -140,6 +145,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
             setFieldValue("industry_id", ids);
           }
         }, [values.industry_id]);
+
         return (
           <Form>
             <Row gutter={[16, 16]}>
@@ -182,7 +188,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
               </Col>
 
               <Col xs={24} sm={24} md={8} xl={8}>
-                <FormGroup  title="Lĩnh vực kinh doanh">
+                <FormGroup title="Lĩnh vực kinh doanh">
                   <FormSelect
                     options={optionsIndustry}
                     isDisabled={type === EPageTypes.VIEW}
@@ -222,7 +228,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
               </Col>
 
               <Col xs={24} sm={24} md={8} xl={8}>
-                <FormGroup  title="Ngày thành lập">
+                <FormGroup title="Ngày thành lập">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     value={values.establish_date ? dayjs(values.establish_date) : null}
@@ -231,7 +237,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8}>
-                <FormGroup  title="Ngày đăng ký kinh doanh">
+                <FormGroup title="Ngày đăng ký kinh doanh">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     value={values.registration_date ? dayjs(values.registration_date) : null}
@@ -253,7 +259,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8}>
-                <FormGroup  title="Loại hình tổ chức">
+                <FormGroup title="Loại hình tổ chức">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."

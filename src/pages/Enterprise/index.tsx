@@ -370,6 +370,7 @@ const Enterprise = () => {
   });
   useEffect(() => {
     return () => {
+      enterpriseDispatch(resetStatus());
       setFilter({ page: 1, size: 10 });
     };
   }, []);

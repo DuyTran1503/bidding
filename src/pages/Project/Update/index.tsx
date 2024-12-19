@@ -35,10 +35,17 @@ import { IBidBondInitialState } from "@/services/store/bid_bond/bidBond.slice";
 import { EButtonTypes } from "@/shared/enums/button";
 import { convertDataOptions } from "../helper";
 import { resetStatus as resetStatusBidBond } from "@/services/store/bid_bond/bidBond.slice";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import BiddingResultForm from "@/pages/BiddingResults/BiddingResultForm";
+import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
+import { resetStatus } from "@/services/store/biddingResult/biddingResult.slice";
+import { IBidDocumentInitialState } from "@/services/store/bid_document/bid_document.slice";
+import { getListBidDocument } from "@/services/store/bid_document/bid_document.thunk";
 const UpdateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
   const formikBidBondRef = useRef<FormikProps<IBidBond>>(null);
+  const formikBidResultRef = useRef<FormikProps<IBiddingResult>>(null);
   const { state, dispatch } = useArchive<IProjectInitialState>("project");
   const [data, setData] = useState<INewProject>();
   const { id } = useParams();
@@ -51,6 +58,7 @@ const UpdateProject = () => {
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
   const { state: stateBidBond, dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  const { state: stateBidDoc, dispatch: dispatchBidDoc } = useArchive<IBidDocumentInitialState>("bid_document");
 
   useFetchStatus({
     module: "project",
@@ -77,6 +85,14 @@ const UpdateProject = () => {
       },
     },
   });
+  useFetchStatus({
+    module: "bidding_result",
+    reset: resetStatus,
+    actions: {
+      success: { message: state.message },
+      error: { message: state.message },
+    },
+  });
   useEffect(() => {
     if (id) {
       dispatch(getProjectById(id));
@@ -95,7 +111,9 @@ const UpdateProject = () => {
     dispatchStaff(getListStaff());
     dispatchProcurement(getListProcurement());
   }, []);
-
+  useEffect(() => {
+    +activeTabKey === 6 && dispatchBidDoc(getListBidDocument());
+  }, [activeTabKey]);
   const initialValues: IBidBond = {
     id: "",
     project_id: state.project?.id,
@@ -114,6 +132,7 @@ const UpdateProject = () => {
     };
     dispatchBidBond(createBidBond({ body: body }));
   };
+
   const tabItems = [
     {
       key: "1",
@@ -149,7 +168,9 @@ const UpdateProject = () => {
             type={EPageTypes.UPDATE}
             formikRef={formikRef}
             project={data}
+            item={data}
             setActiveTabKey={setActiveTabKey}
+            activeTabKey={activeTabKey}
             onChildSelect={setSelectedChild}
             listIndustry={stateIndustry.listIndustry}
             listSelectionMethods={stateMethod.listSelectionMethods}
@@ -264,12 +285,12 @@ const UpdateProject = () => {
 
     {
       key: "3",
-      label: "Bão lãnh dự thầu",
+      label: "Bảo lãnh dự thầu",
       disabled: !state.project?.id,
       children: (
         <>
           <Heading
-            title="Tạo mới "
+            title="Tạo mới bảo lãnh dự thầu"
             hasBreadcrumb
             buttons={[
               {
@@ -277,7 +298,7 @@ const UpdateProject = () => {
                 text: "Quay lại",
                 icon: <IoClose className="text-[18px]" />,
                 onClick: () => {
-                  navigate("/bid-document");
+                  navigate("/project");
                 },
               },
               {
@@ -299,7 +320,7 @@ const UpdateProject = () => {
             type={EButtonTypes.CREATE}
             formik={formikBidBondRef as any}
             optionType={optionType}
-            projectOptions={convertDataOptions(state.listProjects || [])}
+            projectOptions={formatTreeSelect(state.listProjects || [])}
             enterpriseOptions={convertDataOptions(stateEnterprise.listEnterprise || [])}
           />
         </>
@@ -315,7 +336,38 @@ const UpdateProject = () => {
       key: "5",
       label: "Kết quả đấu thầu",
       // disabled: !state.project?.id,
-      children: <>hdsfd</>,
+      children: (
+        <>
+          <Heading
+            title="Tạo mới kết quả đấu thầu"
+            hasBreadcrumb
+            buttons={[
+              {
+                type: "secondary",
+                text: "Quay lại",
+                icon: <IoClose className="text-[18px]" />,
+                onClick: () => {
+                  navigate("/project");
+                },
+              },
+              {
+                isLoading: state.status === EFetchStatus.PENDING,
+                text: "Tạo mới",
+                icon: <FaPlus className="text-[18px]" />,
+                onClick: () => {
+                  if (formikBidResultRef.current) {
+                    formikBidResultRef.current.handleSubmit();
+                  }
+                },
+              },
+            ]}
+          />
+          <BiddingResultForm
+            formikRef={formikBidResultRef}
+            optionDocs={convertDataOptions((stateBidDoc.listDocuments as { id: string; name: string }[]) || [])}
+          />
+        </>
+      ),
     },
   ];
   useEffect(() => {

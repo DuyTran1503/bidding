@@ -13,20 +13,21 @@ import FormTreeSelect from "@/components/form/FormTreeSelect";
 import FormNumber from "@/components/form/FormNumber";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { schemaBidBond } from "@/shared/Schema/schema";
+import { useEffect, useState } from "react";
+import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 
 interface IBidBondFormProps {
   initialValues: IBidBond;
   onSubmit: (data: IBidBond, setErrors: any) => void;
   type: EButtonTypes;
   optionType: IOption[];
-  projectOptions: IOption[];
+  projectOptions: any[];
   enterpriseOptions: IOption[];
   formik?: FormikProps<IBidBond>;
   project_id?: number;
 }
 
-const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik }: IBidBondFormProps) => {
-
+const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik, project_id }: IBidBondFormProps) => {
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={schemaBidBond} innerRef={formik as any}>
       {({ values, handleBlur, errors, touched, setFieldValue }: FormikProps<IBidBond>) => {
@@ -50,14 +51,14 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tên dự án" required>
                   <FormTreeSelect
-                    isDisabled={type === "view" }
+                    isDisabled={type === "view"}
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id || !values?.project_id ? errors.project_id : ""}
                     onChange={(value) => {
                       setFieldValue("project_id", value as string);
                     }}
-                    treeData={projectOptions as any}
+                    treeData={projectOptions}
                   />
                 </FormGroup>
               </Col>

@@ -34,8 +34,6 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
     gender: item?.gender || state.editProfiles?.profile?.gender,
   };
   const handleSubmit = (data: IEditProfile) => {
-    // console.log(data);
-
     const newData = {
       id: data.id,
       account_type: data.account_type,

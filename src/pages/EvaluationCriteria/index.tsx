@@ -9,7 +9,7 @@ import useFetchStatus from "@/hooks/useFetchStatus";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
-import { IGridButton } from "@/shared/utils/shared-interfaces";
+import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useMemo, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -21,6 +21,7 @@ import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import ActionModule from "./ActionModule";
 import { getListProject } from "@/services/store/project/project.thunk";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { mappingStatus, statusEnumArray } from "@/shared/enums/statusActive";
 
 const EvaluationCriteria = () => {
   const { state, dispatch } = useArchive<IEvaluationCriteriaInitialState>("evaluation");
@@ -121,15 +122,15 @@ const EvaluationCriteria = () => {
     () =>
       state.evaluations && state.evaluations.length > 0
         ? state.evaluations.map(({ id, project, name, weight, description, is_active }, index) => ({
-          index: index + 1,
-          key: id,
-          id,
-          project,
-          name,
-          weight,
-          description,
-          is_active,
-        }))
+            index: index + 1,
+            key: id,
+            id,
+            project,
+            name,
+            weight,
+            description,
+            is_active,
+          }))
         : [],
     [JSON.stringify(state.evaluations)],
   );
@@ -157,6 +158,10 @@ const EvaluationCriteria = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
+  const statusOptions: IOption[] = statusEnumArray.map((e) => ({
+    value: e,
+    label: mappingStatus[e],
+  }));
   const search: ISearchTypeTable[] = [
     {
       id: "name",
@@ -171,14 +176,14 @@ const EvaluationCriteria = () => {
       type: "treeSelect",
       treeData: parentOptions,
     },
-    // {
-    //   id: "is_active",
-    //   placeholder: "Chọn trạng thái ...",
-    //   label: "Trạng thái",
-    //   type: "select",
+    {
+      id: "is_active",
+      placeholder: "Chọn trạng thái ...",
+      label: "Trạng thái",
+      type: "select",
 
-    //   options: statusOptions as { value: string; label: string }[],
-    // },
+      options: statusOptions as { value: string; label: string }[],
+    },
   ];
 
   return (

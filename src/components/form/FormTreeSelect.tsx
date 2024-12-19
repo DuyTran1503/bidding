@@ -33,7 +33,6 @@ const FormTreeSelect = ({
       onChange(newValue);
     }
   };
-
   return (
     <div style={{ width }}>
       {label && <div className="text-m-medium mb-1 text-black-300">{label}</div>}
@@ -63,12 +62,16 @@ const FormTreeSelect = ({
           multiple={multiple} // Cho phép chọn đơn hoặc nhiều dựa trên prop
           style={{ height }}
           filterTreeNode={(input, treeNode) => (treeNode.title && treeNode.title.toString().toLowerCase().includes(input.toLowerCase())) || false}
-        // Tùy chỉnh cách thức tìm kiếm
+          // Tùy chỉnh cách thức tìm kiếm
         />
       </ConfigProvider>
 
       {!!error && (
-        <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 mt-[10px] py-[6px] font-normal text-red-500 outline-none focus:bg-white")}>
+        <div
+          className={clsx(
+            "placeholder:text-m-medium mt-[10px] flex-1 grow border-red-500 py-[6px] font-normal text-red-500 outline-none focus:bg-white",
+          )}
+        >
           {error}
         </div>
       )}

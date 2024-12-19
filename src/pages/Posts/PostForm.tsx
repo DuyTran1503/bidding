@@ -142,7 +142,6 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                     error={touched.post_catalog_id || !values.post_catalog_id ? errors.post_catalog_id : ""}
                     value={values.post_catalog_name && values.post_catalog_id}
                     placeholder="Chọn danh mục"
-                    error={touched.post_catalog_id || !values.post_catalog_id  ? errors.post_catalog_id : ""}
                   />
                 </FormGroup>
               </Col>
@@ -154,7 +153,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                     isDisabled={type === "view"}
                     value={values.title}
                     name="title"
-                    error={touched.title || !values.title  ? errors.title : ""}
+                    error={touched.title || !values.title ? errors.title : ""}
                     placeholder="Nhập tiêu đề..."
                     onChange={(value) => setFieldValue("title", value)}
                     onBlur={handleBlur}
