@@ -1,5 +1,4 @@
 import { Formik, Form } from "formik";
-import { object, string } from "yup";
 import lodash from "lodash";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
@@ -23,6 +22,7 @@ import { IEnterprise } from "@/services/store/enterprise/enterprise.model";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import { IRoleInitialState } from "@/services/store/role/role.slice";
 import { getAllRoles } from "@/services/store/role/role.thunk";
+import { schemaEnterprice } from "@/shared/Schema/schema";
 
 interface IEnterpriseFormProps {
   formikRef?: FormikRefType<IEnterpriseInitialValues>;
@@ -83,11 +83,6 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     roles: enterprise?.roles?.map((item: any) => item.id) || [],
   };
 
-  const phoneRegExp = /^(?:\+84|84|0)?[-\s]*(?:\((?:2[48]|[235789]\d|024)\)\s*|\d{2,3})[-\s]*\d{3,4}[-\s]*\d{4}$/;
-  const Schema = object().shape({
-    name: string().trim().required("Vui lòng không để trống trường này"),
-    phone: string().matches(phoneRegExp, "Số điện thoại không hợp lệ").required("Vui lòng không để trống số điện thoại"),
-  });
   useEffect(() => {
     return () => {
       dispatchEnterprise(resetMessageError());
@@ -122,7 +117,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
     <Formik
       innerRef={formikRef}
       initialValues={type === EPageTypes.CREATE ? initialValues : { ...initialValues }}
-      validationSchema={Schema}
+      validationSchema={schemaEnterprice}
       enableReinitialize
       onSubmit={(data) => {
         const body = {
@@ -139,7 +134,6 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-
         useEffect(() => {
           if (values.industry_id?.some((item: any) => typeof item === "object")) {
             const ids = values.industry_id.map((item: any) => item.id || item);
@@ -155,7 +149,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     placeholder="Tên loại hình doanh nghiệp..."
                     name="name"
                     value={values.name}
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     onChange={(e) => setFieldValue("name", e)}
                     onBlur={handleBlur}
                   />
@@ -167,7 +161,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     placeholder="Nhập đại diện..."
                     name="representative"
                     value={values.representative}
-                    error={touched.representative ? errors.representative : ""}
+                    error={touched.representative || !values.representative ? errors.representative : ""}
                     onChange={(e) => setFieldValue("representative", e)}
                     onBlur={handleBlur}
                   />
@@ -180,14 +174,15 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     onChange={(value) => setFieldValue("roles", value)}
                     options={optionRole}
                     value={values.roles}
-                    defaultValue={!!values.roles && (values.roles as any)}
+                    error={touched.roles || !values.roles ? errors.roles : ""}
+                    defaultValue={!values.roles && (values.roles as any)}
                     placeholder="Chọn vai trò "
                   />
                 </FormGroup>
               </Col>
 
               <Col xs={24} sm={24} md={8} xl={8}>
-                <FormGroup required title="Lĩnh vực kinh doanh">
+                <FormGroup  title="Lĩnh vực kinh doanh">
                   <FormSelect
                     options={optionsIndustry}
                     isDisabled={type === EPageTypes.VIEW}
@@ -207,7 +202,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     placeholder="Nhập số điện thoại ..."
                     name="phone"
                     value={values.phone}
-                    error={touched.phone ? errors.phone : ""}
+                    error={touched.phone || !values.phone ? errors.phone : ""}
                     onChange={(e) => setFieldValue("phone", e)}
                     onBlur={handleBlur}
                   />
@@ -219,7 +214,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     placeholder="Nhập email..."
                     name="email"
                     value={values.email}
-                    error={touched.email ? errors.email : ""}
+                    error={touched.email || !values.email ? errors.email : ""}
                     onChange={(e) => setFieldValue("email", e)}
                     onBlur={handleBlur}
                   />
@@ -227,7 +222,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
               </Col>
 
               <Col xs={24} sm={24} md={8} xl={8}>
-                <FormGroup required title="Ngày thành lập">
+                <FormGroup  title="Ngày thành lập">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     value={values.establish_date ? dayjs(values.establish_date) : null}
@@ -236,7 +231,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8}>
-                <FormGroup required title="Ngày đăng ký kinh doanh">
+                <FormGroup  title="Ngày đăng ký kinh doanh">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     value={values.registration_date ? dayjs(values.registration_date) : null}
@@ -251,14 +246,14 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     placeholder="Nhập mã số thuế..."
                     name="taxcode"
                     value={values.taxcode}
-                    error={touched.taxcode ? errors.taxcode : ""}
+                    error={touched.taxcode || !values.taxcode ? errors.taxcode : ""}
                     onChange={(e) => setFieldValue("taxcode", e)}
                     onBlur={handleBlur}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8}>
-                <FormGroup required title="Loại hình tổ chức">
+                <FormGroup  title="Loại hình tổ chức">
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."
@@ -278,7 +273,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     placeholder="Nhập số đăng ký kinh doanh..."
                     name="registration_number"
                     value={values.registration_number}
-                    error={touched.registration_number ? errors.registration_number : ""}
+                    error={touched.registration_number || !values.registration_number ? errors.registration_number : ""}
                     onChange={(e) => setFieldValue("registration_number", e)}
                     onBlur={handleBlur}
                   />
@@ -291,7 +286,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                       type="password"
                       value={values.password ?? ""}
                       name="password"
-                      error={touched.password ? errors.password : ""}
+                      error={touched.password || !values.password ? errors.password : ""}
                       placeholder="Nhập mật khẩu..."
                       onChange={(value) => {
                         setFieldValue("password", value);
@@ -308,7 +303,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     placeholder="Nhập địa chỉ..."
                     name="address"
                     value={values.address}
-                    error={touched.address ? errors.address : ""}
+                    error={touched.address || !values.address ? errors.address : ""}
                     onChange={(e) => setFieldValue("address", e)}
                     onBlur={handleBlur}
                   />
@@ -320,7 +315,7 @@ const EnterpriseForm = ({ formikRef, type, enterprise }: IEnterpriseFormProps) =
                     placeholder="Nhập website"
                     name="website"
                     value={values.website}
-                    error={touched.website ? errors.website : ""}
+                    error={touched.website || !values.website ? errors.website : ""}
                     onChange={(e) => setFieldValue("website", e)}
                     onBlur={handleBlur}
                   />

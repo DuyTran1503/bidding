@@ -59,7 +59,7 @@ const RoleForm = ({ formikRef, type, role }: IRoleFormProps) => {
   };
 
   const validationSchema = object().shape({
-    name: string().required("Vui lòng không để trống trường này"),
+    name: string().required("Tên là bắt buộc"),
   });
 
   useEffect(() => {

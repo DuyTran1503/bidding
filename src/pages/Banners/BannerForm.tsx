@@ -15,8 +15,8 @@ import Button from "@/components/common/Button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
 import { useViewport } from "@/hooks/useViewport";
-import { object, string } from "yup";
 import useFetchStatus from "@/hooks/useFetchStatus";
+import { schemaBanner } from "@/shared/Schema/schema";
 
 interface IBannerFormProps {
   type?: EButtonTypes;
@@ -42,10 +42,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
     path: item?.path ?? undefined,
     is_active: item?.is_active ? "1" : "0",
   };
-  const Schema = object().shape({
-    name: string().required("Tên là bắt buộc"),
-    path: string().required("Ảnh là bắt buộc"),
-  });
+  
   const handleSubmit = (data: IBanner, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "key", "index"),
@@ -101,7 +98,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={schemaBanner} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
@@ -112,7 +109,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
                     isDisabled={type === "view"}
                     value={values.name}
                     name="name"
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     placeholder="Nhập tên Banner..."
                     onChange={(value) => setFieldValue("name", value)}
                     onBlur={handleBlur}
@@ -135,7 +132,7 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Hình ảnh" required>
                   <FormUploadFile
-                    error={touched.path ? errors.path : ""}
+                    error={touched.path || !values.path ? errors.path : ""}
                     isMultiple={false}
                     value={values.path}
                     onChange={(e: any) => {

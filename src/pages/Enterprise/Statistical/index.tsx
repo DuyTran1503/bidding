@@ -1,6 +1,4 @@
 import AbleBarChart from "@/components/chart/Axis";
-import ChartLabel from "@/components/chart/ChartLable";
-import GenericChart from "@/components/chart/GenericChart";
 import Button from "@/components/common/Button";
 import FormGroup from "@/components/form/FormGroup";
 import FormSelect from "@/components/form/FormSelect";

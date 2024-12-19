@@ -7,7 +7,6 @@ import { FormikRefType } from "@/shared/utils/shared-types";
 import FormSwitch from "@/components/form/FormSwitch";
 import FormInputArea from "@/components/form/FormInputArea";
 import { Formik } from "formik";
-import { object, string } from "yup";
 import lodash from "lodash";
 import { Col, Row } from "antd";
 import { useEffect } from "react";
@@ -15,6 +14,7 @@ import { EPageTypes } from "@/shared/enums/page";
 import FormSelect from "@/components/form/FormSelect";
 import { TypeFundingSource } from "@/shared/enums/type_funding_source";
 import { convertEnum } from "@/shared/utils/common/convertEnum";
+import { schemaFundingSource } from "@/shared/Schema/schema";
 
 interface IFundingSourceFormProps {
   formikRef?: FormikRefType<IFundingSourceInitialValues>;
@@ -43,13 +43,6 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
     is_active: fundingSource?.is_active ?? "",
   };
 
-  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
-  const tagSchema = object().shape({
-    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng tên nguồn tài trợ"),
-    type: string().trim().required("Vui lòng chọn loại nguồn tài trợ"),
-    code: string().trim().required("Vui lòng nhập mã nguồn tài trợ"),
-    description: string().trim().required("Vui lòng nhập mô tả"),
-  });
   useEffect(() => {
     return () => {
       dispatch(resetMessageError());
@@ -60,7 +53,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
     <Formik
       innerRef={formikRef}
       initialValues={initialValues}
-      validationSchema={tagSchema}
+      validationSchema={schemaFundingSource}
       onSubmit={(data, { setErrors }: any) => {
         if (type === EPageTypes.CREATE) {
           dispatch(createFundingSource({ body: lodash.omit(data, "id") }))
@@ -90,7 +83,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                     isDisabled={type === EPageTypes.VIEW}
                     name="name"
                     value={values.name}
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     onChange={(e) => setFieldValue("name", e)}
                     onBlur={handleBlur}
                   />
@@ -116,7 +109,7 @@ const FundingSourceForm = ({ formikRef, type, fundingSource }: IFundingSourceFor
                     placeholder="Mã nguồn tài trợ..."
                     name="code"
                     value={values.code}
-                    error={touched.code ? errors.code : ""}
+                    error={touched.code || !values.code ? errors.code : ""}
                     onChange={(e) => setFieldValue("code", e)}
                     onBlur={handleBlur}
                   />

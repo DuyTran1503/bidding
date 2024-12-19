@@ -22,10 +22,10 @@ import dayjs from "dayjs";
 import { Formik } from "formik";
 import lodash from "lodash";
 import { useEffect } from "react";
-import { date, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import FormNumber from "@/components/form/FormNumber";
+import { schemaBiddingResults } from "@/shared/Schema/schema";
 
 interface IBiddingResultFormProps {
   formikRef?: any;
@@ -66,20 +66,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     is_active: biddingResult?.is_active ? "1" : "0",
     bid_document_id: isDialog ? (biddingResult?.bid_document.id as number) : biddingResult?.bid_document_id || undefined,
   };
-  const Schema = object().shape({
-    project_id: string().required("Vui lòng chọn tên dự án"),
-    bid_document_id: string().required("Hồ sơ trúng thầu là bắt buộc"),
-    win_amount: string()
-      .required("Số tiền thắng thầu là bắt buộc")
-      .matches(/^\d+(\.\d{1,2})?$/, "Số tiền phải là một số hợp lệ"),
-    decision_number: string()
-      .required("Số quyết định là bắt buộc")
-      .matches(
-        /^[\da-zA-ZÀÁẢÃẠÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘÙÚỦŨỤÝỲỶỸỴĐđ/._-]+$/,
-        "Số quyết định chỉ được chứa số, chữ cái (cả in hoa và in thường, có dấu) và các ký tự / - _ .",
-      ),
-    decision_date: date().nullable().required("Ngày quyết định là bắt buộc"), // Adjust if necessary
-  });
+  
   const handleSubmit = (data: IBiddingResult, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index", "project", "enterprise", "bid_document", "project_id", "enterprise_id"),
@@ -115,7 +102,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
     },
   });
   return (
-    <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
+    <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={schemaBiddingResults} enableReinitialize={true} onSubmit={handleSubmit}>
       {({ values, errors, touched, setFieldValue,handleBlur }) => {
         return (
           <Form className="mt-3">
@@ -174,7 +161,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
                         ? Number(convertMoney(values.win_amount as unknown as string)) // Ép kiểu về number
                         : (values.win_amount as unknown as number) || 0
                     }
-                    error={touched.win_amount ? errors.win_amount : ""}
+                    error={touched.win_amount || !values.win_amount ? errors.win_amount : ""}
                     onChange={(e) => {
                       setFieldValue("win_amount", e);
                     }}
@@ -189,7 +176,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
                     isDisabled={type === "view"}
                     value={values.decision_number}
                     name="decision_number"
-                    error={touched.decision_number ? errors.decision_number : ""}
+                    error={touched.decision_number || !values.decision_number ? errors.decision_number : ""}
                     placeholder="Nhập số quyết định..."
                     onChange={(value) => setFieldValue("decision_number", value)}
                   />
@@ -199,7 +186,7 @@ const BiddingResultForm = ({ formikRef, type, biddingResult, isOutSide, listEnte
                 <FormGroup title="Ngày quyết định" required>
                   <FormDate
                     disabled={type === EButtonTypes.VIEW}
-                    error={touched.decision_date ? errors.decision_date : ""}
+                    error={touched.decision_date || !values.decision_date ? errors.decision_date : ""}
                     value={values.decision_date ? dayjs(values.decision_date) : null}
                     onChange={(date) => setFieldValue("decision_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
