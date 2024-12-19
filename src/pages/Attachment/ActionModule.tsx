@@ -46,7 +46,8 @@ const AttachmentForm = ({ visible, type, setVisible, item, OnSaveSuccess }: IAtt
     path: item?.path ?? "",
   };
   const tagSchema = object().shape({
-    name: string().trim().required("Vui lòng không để trống trường này"),
+    name: string().trim().required("Vui lòng nhập tên tài liệu"),
+    project_id: string().trim().required("Vui lòng chọn dự ánán"),
   });
   useEffect(() => {
     return () => {
@@ -107,7 +108,7 @@ const AttachmentForm = ({ visible, type, setVisible, item, OnSaveSuccess }: IAtt
                     placeholder="Tên loại hình tài liệu ..."
                     name="name"
                     value={values.name}
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ?  errors.name : ""}
                     onChange={(e) => setFieldValue("name", e)}
                     onBlur={handleBlur}
                   />
@@ -120,6 +121,7 @@ const AttachmentForm = ({ visible, type, setVisible, item, OnSaveSuccess }: IAtt
                     isDisabled={type === EButtonTypes.VIEW}
                     placeholder="Chọn..."
                     value={undefined}
+                    error={touched.project_id || !values.project_id ?  errors.project_id : ""}
                     onChange={(value) => {
                       setFieldValue("project_id", value as string);
                     }}

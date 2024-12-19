@@ -13,18 +13,17 @@ import { IWorkProgressInitialState } from "@/services/store/workProgresses/workP
 import { createWorkProgress, updateWorkProgress } from "@/services/store/workProgresses/workProgresses.thunk";
 import { EPageTypes } from "@/shared/enums/page";
 import { mappingTypeFeedback, typeTypeFeedbackEnumArray } from "@/shared/enums/typeFeedback";
-import { convertMoney, convertToNumberFromMoney } from "@/shared/utils/common/convertMoney";
+import { convertToNumberFromMoney } from "@/shared/utils/common/convertMoney";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, Row } from "antd";
 import dayjs from "dayjs";
 import { Form, Formik } from "formik";
 import lodash from "lodash";
 import { useEffect, useState } from "react";
-import { array, date, number, object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
-import FormNumber from "@/components/form/FormNumber";
+import { schemaWorkProgresses } from "@/shared/Schema/schema";
 
 interface IWorkProgressFormProps {
   formikRef?: FormikRefType<IWorkProgressInitialValues>;
@@ -75,29 +74,8 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
     task_ids: workProgress?.task?.map((item) => +item.id) ?? [],
   };
 
-  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
-  const Schema = object().shape({
-    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên tiến độ"),
-    expense: string().trim().required("Vui lòng nhập chi phí"),
-    progress: string().trim().required("Vui lòng nhập tiến độ "),
-    start_date: date().required("Vui lòng chọn ngày bắt đầu"),
-    feedback: string().trim().required("Vui lòng chọn nhận xét"),
-    end_date: date().required("Vui lòng chọn ngày kết thúc"),
-    description: string().trim().required("Vui lòng không để trống trường này"),
-    project_id: string().trim().required("Vui lòng chọn dự án"),
-    task_ids: array()
-      .of(number().required("Mỗi nhiệm vụ phải là một số hợp lệ"))
-      .min(1, "Vui lòng chọn ít nhất một nhiệm vụ")
-      .required("Nhiệm vụ là bắt buộc"),
-  });
-
   const tasks = Array.isArray(stateTask?.listTasks) ? stateTask.listTasks : [];
 
-  // useEffect(() => {
-  //   return () => {
-  //     dispatchWorkProgress(resetMessageError());
-  //   };
-  // }, []);
   useEffect(() => {
     dispatchProject(getListProject());
     dispatchTask(getListTask());
@@ -108,7 +86,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
       enableReinitialize
       innerRef={formikRef}
       initialValues={initialValues}
-      validationSchema={Schema}
+      validationSchema={schemaWorkProgresses}
       onSubmit={(data, { setErrors }: any) => {
         const body = {
           ...data,
@@ -132,8 +110,6 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
       }}
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
-        console.log(errors);
-        
         return (
           <Form>
             <Row gutter={[16, 16]}>
@@ -144,7 +120,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     name="name"
                     isDisabled={type === EPageTypes.VIEW}
                     value={values.name}
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     onChange={(e) => setFieldValue("name", e)}
                     onBlur={handleBlur}
                   />
@@ -153,7 +129,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Dự án" required>
                   <FormTreeSelect
-                    isDisabled={type === "view" || type === "update"}
+                    isDisabled={type === "view"}
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id || !values.project_id ? errors.project_id : ""}
@@ -171,7 +147,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     name="progress"
                     isDisabled={type === EPageTypes.VIEW}
                     value={values.progress}
-                    error={touched.progress ? errors.progress : ""}
+                    error={touched.progress || !values.progress ? errors.progress : ""}
                     onChange={(e) => setFieldValue("progress", e)}
                     onBlur={handleBlur}
                   />
@@ -201,25 +177,21 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     id="feedback"
                     options={optionWorkProgress}
                     value={values.feedback || undefined}
-                    error={touched.feedback ? errors.feedback : ""}
+                    error={touched.feedback || !values.feedback ? errors.feedback : ""}
                     onChange={(e) => setFieldValue("feedback", e)}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Chi phí" required>
-                  <FormNumber
+                  <FormInput
+                    type="text"
                     placeholder="Nhập chi phí..."
                     isDisabled={type === EPageTypes.VIEW}
                     name="expense"
-                    value={
-                      type === EPageTypes.VIEW
-                        ? Number(convertMoney(values.expense as string)) // Ép kiểu về number
-                        : (values.expense as number) || 0
-                    }
-                    error={touched.expense ? errors.expense : ""}
+                    value={values.expense}
+                    error={touched.expense || !values.expense ? errors.expense : ""}
                     onChange={(e) => {
-                      console.log(e);
                       setFieldValue("expense", e);
                     }}
                     onBlur={handleBlur}
@@ -253,7 +225,6 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                 <FormGroup title="Mô tả">
                   <FormCkEditor
                     id="description"
-                    error={touched.description ? errors.description : ""}
                     disabled={type === EPageTypes.VIEW}
                     value={values.description ?? ""}
                     onChange={(e) => setFieldValue("description", e)}

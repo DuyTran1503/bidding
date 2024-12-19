@@ -14,11 +14,11 @@ import { createEvaluate, updateEvaluate } from "@/services/store/evaluate/evalua
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import { EPageTypes } from "@/shared/enums/page";
+import { schemaEvaluates } from "@/shared/Schema/schema";
 import { Col, Form, Row } from "antd";
 import { Formik, FormikProps } from "formik";
 import lodash from "lodash";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { object, string } from "yup";
 
 interface IEvaluateFormProps {
   type?: EPageTypes;
@@ -49,18 +49,6 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
     project: item?.project || undefined,
     enterprise: item?.enterprise || undefined,
   };
-  const Schema = object().shape({
-    // project_id: string().required("Dự án là bắt buộc"),
-    // enterprise_id: string().required("Doanh nghiệp là bắt buộc"),
-    score: string()
-      .required("Số điểm là bắt buộc")
-      .test("min-max", "Số điểm phải từ 1 đến 10", (value) => {
-        const num = Number(value);
-        return num >= 1 && num <= 10;
-      }),
-    title: string().required("Tiêu đề là bắt buộc"),
-    evaluate: string().required("Nội dung là bắt buộc"),
-  });
 
   const handleSubmit = (data: IEvaluate, { setErrors }: any) => {
     const body = {
@@ -122,17 +110,19 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={Schema} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} initialValues={initialValues}
+       validationSchema={schemaEvaluates} 
+       enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Dự án" required>
                   <FormTreeSelect
-                    isDisabled={type === "view" || type === "update"}
+                    isDisabled={type === "view"}
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
-                    error={touched.project_id ? errors.project_id : ""}
+                    error={touched.project_id || !values.project_id ? errors.project_id : ""}
                     onChange={(value) => {
                       setFieldValue("project_id", value as string);
                       dispatchEnterprise(getEnterpriseOfBiddingResultByProject(value as string))
@@ -151,11 +141,11 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Doanh nghiệp" required>
                   <FormInput
-                    isDisabled={true}
+                    isDisabled={type === "view"}
                     placeholder="Bạn chỉ cần chọn dự án"
                     id="enterprise_id"
                     value={values.enterprise?.user?.name || stateEnterprise.getEnterpriseOfBiddingResultByProject?.name}
-                    error={touched.enterprise_id ? errors.enterprise_id : ""}
+                    error={touched.enterprise_id || !values.enterprise_id ? errors.enterprise_id : ""}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
                   />
                 </FormGroup>
@@ -167,7 +157,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
                     isDisabled={type === "view"}
                     value={values.title}
                     name="title"
-                    error={touched.title ? errors.title : ""}
+                    error={touched.title || !values.title ? errors.title : ""}
                     placeholder="Nhập tiêu đề..."
                     onChange={(value) => setFieldValue("title", value)}
                     onBlur={handleBlur}
@@ -181,7 +171,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
                     isDisabled={type === "view"}
                     value={values.score}
                     name="score"
-                    error={touched.score ? errors.score : ""}
+                    error={touched.score || !values.score ? errors.score : ""}
                     placeholder="Nhập điểm..."
                     onChange={(value) => setFieldValue("score", value)}
                     onBlur={handleBlur}
@@ -196,7 +186,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
                     value={values.evaluate}
                     setFieldValue={setFieldValue}
                     disabled={type === EPageTypes.VIEW}
-                    error={touched.evaluate ? errors.evaluate : ""}
+                    error={touched.evaluate || !values.evaluate ? errors.evaluate : ""}
                   />
                 </FormGroup>
               </Col>

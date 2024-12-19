@@ -54,10 +54,10 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
   };
 
   const Schema = object().shape({
-    short_title: string().trim().required("Vui lòng không để trống ô này"),
-    title: string().trim().required("Vui lòng không để trống ô này"),
-    content: string().trim().required("Vui lòng không để trống ô này"),
-    thumbnail: string().trim().required("Vui lòng không để trống ô này"),
+    short_title: string().trim().required("Tiêu đề ngắn là bắt buộc "),
+    title: string().trim().required("Tiêu đề là bắt buộc "),
+    content: string().trim().required("Dang mục bài viêt là bắt buộc"),
+    thumbnail: string().trim().required("Chọn ảnh"),
   });
 
   const statusOptions: IOption[] = statusEnumArray.map((key) => ({
@@ -136,6 +136,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                     }))}
                     defaultValue={!!values.post_catalog_id && values.post_catalog_id}
                     placeholder="Chọn danh mục"
+                    error={touched.post_catalog_id || !values.post_catalog_id  ? errors.post_catalog_id : ""}
                   />
                 </FormGroup>
               </Col>
@@ -147,7 +148,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                     isDisabled={type === "view"}
                     value={values.title}
                     name="title"
-                    error={touched.title ? errors.title : ""}
+                    error={touched.title || !values.title  ? errors.title : ""}
                     placeholder="Nhập tiêu đề..."
                     onChange={(value) => setFieldValue("title", value)}
                     onBlur={handleBlur}
@@ -162,7 +163,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                     isDisabled={type === "view"}
                     value={values.short_title}
                     name="short_title"
-                    error={touched.short_title ? errors.short_title : ""}
+                    error={touched.short_title || !values.short_title ? errors.short_title : ""}
                     placeholder="Nhập tiêu đề ngắn..."
                     onChange={(value) => setFieldValue("short_title", value)}
                     onBlur={handleBlur}

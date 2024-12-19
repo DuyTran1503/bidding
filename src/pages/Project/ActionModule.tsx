@@ -31,6 +31,7 @@ import { IProcurement } from "@/services/store/procurement/procurement.model";
 import { convertToFiles } from "@/components/form/FormUpload/FormUploadImage";
 import FormNumber from "@/components/form/FormNumber";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
+import { schemaProject } from "@/shared/Schema/schema";
 interface IPropProject {
   formikRef?: FormikRefType<INewProject>;
   type: EPageTypes.CREATE | EPageTypes.UPDATE | EPageTypes.VIEW | EPageTypes.APPROVE;
@@ -249,35 +250,7 @@ const ActionModule = ({
     [project],
   );
 
-  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
-  const numberRegex = /^[0-9]+$/;
-  const Schema = object().shape({
-    parent_id: number().nullable(),
-    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
-    staff_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống ô này"),
-    industry_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống ô này"),
-    selection_method_id: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng không để trống ô này"),
-    location: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
-    funding_source_id: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống ô này"),
-    attached_documents: array().min(1, "Vui lòng chọn ít nhất một tài liệu đính kèm"),
-    start_time: date().required("Vui lòng không để trống trường này"),
-    end_time: date().required("Vui lòng không để trống trường này"),
-    status: string().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng không để trống trường này"),
-    total_amount: string()
-      .matches(numberRegex, "Trường này chỉ cho phép là số")
-      .required("Vui lòng không để trống trường này")
-      .test("is-positive", "Phải lớn hơn 0", (value) => {
-        const num = Number(value);
-        return num > 0;
-      }),
-    amount: string()
-      .matches(numberRegex, "Trường này chỉ cho phép là số")
-      .required("Vui lòng không để trống trường này")
-      .test("is-positive", "Phải lớn hơn 0", (value) => {
-        const num = Number(value);
-        return num > 0;
-      }),
-  });
+
   const optionDomestic = domesticEnumArray.map((item) => ({
     value: item,
     label: mappingDOMESTIC[item],
@@ -329,7 +302,7 @@ const ActionModule = ({
   }, [project?.children]);
   return (
     <Formik
-      validationSchema={Schema}
+      validationSchema={schemaProject}
       enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => {
@@ -376,7 +349,7 @@ const ActionModule = ({
                     placeholder="Nhập tên dự án..."
                     name="name"
                     value={values.name}
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     onChange={(e) => setFieldValue("name", e)}
                     onBlur={handleBlur}
                   />
@@ -389,7 +362,7 @@ const ActionModule = ({
                     placeholder="Chọn phương thức..."
                     id="selection_method_id"
                     value={values.selection_method_id as string}
-                    error={touched.selection_method_id ? errors.selection_method_id : ""}
+                    // error={touched.selection_method_id || !values.selection_method_id ? errors.selection_method_id : ""}
                     onChange={(e) => setFieldValue("selection_method_id", e)}
                     options={convertDataOptions((listSelectionMethods as any) || [])}
                   />
@@ -402,7 +375,7 @@ const ActionModule = ({
                     placeholder="Chọn hình thức..."
                     id="submission_method"
                     value={values.submission_method as string}
-                    error={touched.submission_method ? errors.submission_method : ""}
+                    error={touched.submission_method || !values.selection_method ? errors.submission_method : ""}
                     onChange={(e) => {
                       setFieldValue("submission_method", e);
                       // Nếu là online, xóa giá trị Địa Điểm Nhận Hồ Sơ
@@ -424,7 +397,7 @@ const ActionModule = ({
                       placeholder="Nhập địa điểm nhận hồ sơ..."
                       name="receiving_place"
                       value={values.receiving_place}
-                      error={touched.receiving_place ? errors.receiving_place : ""}
+                      // error={touched.receiving_place || !values.receiving_place ? errors.receiving_place : ""}
                       onChange={(e) => setFieldValue("receiving_place", e)}
                       onBlur={handleBlur}
                     />
@@ -438,7 +411,7 @@ const ActionModule = ({
                     placeholder="Nhập địa điểm..."
                     name="location"
                     value={values.location}
-                    error={touched.location ? errors.location : ""}
+                    error={touched.location || !values.location ? errors.location : ""}
                     onChange={(e) => setFieldValue("location", e)}
                     onBlur={handleBlur}
                   />
@@ -451,6 +424,7 @@ const ActionModule = ({
                     placeholder="Nhập bên mời thầu..."
                     id="tenderer_id"
                     value={values.tenderer_id!}
+                    error={touched.tenderer_id || !values.tenderer_id ? errors.tenderer_id : ""}
                     onChange={(e) => setFieldValue("tenderer_id", e)}
                     options={convertDataOptions(listEnterprise || [])}
                   />
@@ -464,6 +438,7 @@ const ActionModule = ({
                     placeholder="Nhập chủ đầu tư..."
                     id="investor_id"
                     value={values.investor_id!}
+                    error={touched.investor_id || !values.investor_id ? errors.investor_id : ""}
                     options={convertDataOptions(listEnterprise || [])}
                     onChange={(e) => setFieldValue("investor_id", e)}
                   />
@@ -476,7 +451,7 @@ const ActionModule = ({
                     placeholder="Chọn nguồn tài trợ..."
                     id="funding_source_id"
                     value={values.funding_source_id as string}
-                    error={touched.funding_source_id ? errors.funding_source_id : ""}
+                    error={touched.funding_source_id || !values.funding_source_id ? errors.funding_source_id : ""}
                     onChange={(e) => setFieldValue("funding_source_id", e)}
                     options={convertDataOptions(listFundingSources || [])}
                   />
@@ -490,7 +465,7 @@ const ActionModule = ({
                     placeholder="Chọn người phê duyệt..."
                     id="staff_id"
                     value={values.staff_id as string}
-                    error={touched.staff_id ? errors.staff_id : ""}
+                    error={touched.staff_id || !values.staff_id ? errors.staff_id : ""}
                     options={convertDataOptions(getListStaff!)}
                     onChange={(e) => setFieldValue("staff_id", e)}
                   />
@@ -504,6 +479,7 @@ const ActionModule = ({
                     placeholder="Chọn..."
                     id="procurement_id"
                     value={values.procurement_id}
+                    error={touched.procurement_id || !values.procurement_id ? errors.procurement_id : ""}
                     onChange={(e) => setFieldValue("procurement_id", e)}
                     options={convertDataOptions(listProcurement || [])}
                   />
@@ -517,6 +493,7 @@ const ActionModule = ({
                     placeholder="Chọn ngành nghề..."
                     id="industry_id"
                     value={values.industry_id}
+                    error={touched.industry_id || !values.industry_id ? errors.industry_id : ""}
                     onChange={(e) => {
                       setFieldValue("industry_id", e);
                     }}
@@ -531,7 +508,7 @@ const ActionModule = ({
                     placeholder="Nhập số quyết định ban hành..."
                     name="decision_number_issued"
                     value={values.decision_number_issued || ""}
-                    error={touched.decision_number_issued ? errors.decision_number_issued : ""}
+                    error={touched.decision_number_issued || !values.decision_number_issued ? errors.decision_number_issued : ""}
                     onChange={(e) => setFieldValue("decision_number_issued", e)}
                     onBlur={handleBlur}
                   />
@@ -561,7 +538,7 @@ const ActionModule = ({
                         ? Number(convertMoney(values.amount as unknown as string)) // Ép kiểu về number
                         : (values.amount as unknown as number) || 0
                     }
-                    error={touched.amount ? errors.amount : ""}
+                    error={touched.amount || !values.amount ? errors.amount : ""}
                     onChange={(e) => {
                       setFieldValue("amount", e);
                     }}
@@ -580,21 +557,12 @@ const ActionModule = ({
                         ? Number(convertMoney(values.total_amount as unknown as string)) // Ép kiểu về number
                         : (values.total_amount as unknown as number) || 0
                     }
-                    error={touched.total_amount ? errors.total_amount : ""}
+                    error={touched.total_amount || !values.total_amount ? errors.total_amount : ""}
                     onChange={(e) => {
                       setFieldValue("total_amount", e);
                     }}
                     onBlur={handleBlur}
                   />
-                  {/* <FormInput
-                    isDisabled={type === EPageTypes.VIEW}
-                    placeholder="Nhập số tiền..."
-                    name="total_amount"
-                    value={values.total_amount}
-                    error={touched.total_amount ? errors.total_amount : ""}
-                    onChange={(e) => setFieldValue("total_amount", e)}
-                    onBlur={handleBlur}
-                  /> */}
                 </FormGroup>
               </Col>
 
@@ -603,6 +571,7 @@ const ActionModule = ({
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     value={values.bid_submission_start ? dayjs(values.bid_submission_start) : null}
+                    error={touched.bid_submission_start || !values.bid_submission_start ? errors.bid_submission_start : ""}
                     onChange={(date) => setFieldValue("bid_submission_start", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
                 </FormGroup>
@@ -614,6 +583,7 @@ const ActionModule = ({
                     disabled={type === EPageTypes.VIEW}
                     minDate={values.bid_submission_start ? dayjs(values.bid_submission_start) : undefined}
                     value={values.bid_submission_end ? dayjs(values.bid_submission_end) : null}
+                    error={touched.bid_submission_end || !values.bid_submission_end ? errors.bid_submission_end : ""}
                     onChange={(date) => setFieldValue("bid_submission_end", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
                 </FormGroup>

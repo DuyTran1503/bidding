@@ -36,7 +36,7 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
   };
 
   const Schema = object().shape({
-    name: string().trim().required("Vui lòng không để trống ô này"),
+    name: string().trim().required("Tên là bắt buộc "),
   });
   const handleSubmit = (data: IPostCatalog, { setErrors }: any) => {
     const body = {
@@ -101,7 +101,7 @@ const PostCatalogForm = ({ visible, type, setVisible, item }: IPostCatalogFormPr
                     isDisabled={type === "view"}
                     value={values.name}
                     name="name"
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     placeholder="Nhập tên danh mục bài viết..."
                     onChange={(value) => setFieldValue("name", value)}
                     onBlur={handleBlur}

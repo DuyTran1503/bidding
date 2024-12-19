@@ -10,13 +10,13 @@ import { IIndustry } from "@/services/store/industry/industry.model";
 import { IIndustryInitialState, resetMessageError } from "@/services/store/industry/industry.slice";
 import { createIndustry, updateIndustry } from "@/services/store/industry/industry.thunk";
 import { EPageTypes } from "@/shared/enums/page";
+import { schemaIndustry } from "@/shared/Schema/schema";
 import { convertDataOption, selectedData } from "@/shared/utils/common/function";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, Row } from "antd";
 import { Form, Formik } from "formik";
 import lodash from "lodash";
 import { useEffect } from "react";
-import { object, string } from "yup";
 
 interface IIndustryFormProps {
   formikRef?: FormikRefType<IIndustry>;
@@ -35,10 +35,6 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
     is_active: industry?.is_active ?? "",
     business_activity_type_id: industry?.business_activity_type_id || (industry?.business_activity_type?.id as any) || undefined,
   };
-  const tagSchema = object().shape({
-    name: string().trim().required("Vui lòng nhập tên ngành kinh doanh"),
-    business_activity_type_id: string().trim().required("Vui lòng chọn loại hình kinh doanh"),
-  });
 
   useEffect(() => {
     return () => {
@@ -54,7 +50,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
     <Formik
       innerRef={formikRef}
       initialValues={initialValues}
-      validationSchema={tagSchema}
+      validationSchema={schemaIndustry}
       onSubmit={(data) => {
         if (type === EPageTypes.CREATE) {
           dispatch(createIndustry({ body: lodash.omit(data, "id") }));
@@ -74,7 +70,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                     name="name"
                     value={values.name}
                     isDisabled={type === EPageTypes.VIEW}
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     onChange={(e) => setFieldValue("name", e)}
                     onBlur={handleBlur}
                   />
@@ -85,7 +81,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     placeholder="Chọn..."
-                    error={touched.business_activity_type_id ? errors.business_activity_type_id : ""}
+                    error={touched.business_activity_type_id || !values.business_activity_type_id ? errors.business_activity_type_id : ""}
                     options={convertDataOption(businessState?.listBusinessActivities!)}
                     value={
                       type === EPageTypes.UPDATE || EPageTypes.VIEW
@@ -98,8 +94,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                   />
                 </FormGroup>
               </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
+
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Mô tả">
                   <FormCkEditor
@@ -111,8 +106,7 @@ const IndustryForm = ({ formikRef, type, industry }: IIndustryFormProps) => {
                   />
                 </FormGroup>
               </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
+
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Trạng thái hoạt động">
                   <FormSwitch

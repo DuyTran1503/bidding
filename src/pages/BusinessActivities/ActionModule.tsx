@@ -6,12 +6,12 @@ import { useArchive } from "@/hooks/useArchive";
 import { IBusinessActivityInitialState, resetMessageError } from "@/services/store/business-activity/business-activity.slice";
 import { createBusinessActivity, updateBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
 import { EPageTypes } from "@/shared/enums/page";
+import { schemaBusinessActivity } from "@/shared/Schema/schema";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, Row } from "antd";
 import { Form, Formik } from "formik";
 import lodash from "lodash";
 import { useEffect } from "react";
-import { object, string } from "yup";
 
 interface IBusinessActivityFormProps {
   formikRef?: FormikRefType<IIBusinessActivityInitialValues>;
@@ -34,10 +34,7 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
     description: businessActivity?.description ?? "",
     is_active: businessActivity?.is_active ?? "",
   };
-  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
-  const tagSchema = object().shape({
-    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên loại hình kinh doanh"),
-  });
+ 
   useEffect(() => {
     return () => {
       dispatch(resetMessageError());
@@ -47,7 +44,7 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
     <Formik
       innerRef={formikRef}
       initialValues={initialValues}
-      validationSchema={tagSchema}
+      validationSchema={schemaBusinessActivity}
       onSubmit={(data) => {
         if (type === EPageTypes.CREATE) {
           dispatch(createBusinessActivity({ body: lodash.omit(data, "id") }));
@@ -65,7 +62,7 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
                   placeholder="Loại hình kinh doanh..."
                   name="name"
                   value={values.name}
-                  error={touched.name ? errors.name : ""}
+                  error={touched.name || !values.name ? errors.name : ""}
                   onChange={(e) => setFieldValue("name", e)}
                   onBlur={handleBlur}
                 />
@@ -81,8 +78,7 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
                 />
               </FormGroup>
             </Col>
-          </Row>
-          <Row gutter={[16, 16]}>
+
             <Col xs={24} sm={24} md={24} xl={24}>
               <FormGroup title="Mô tả">
                 <FormCkEditor
@@ -95,6 +91,7 @@ const BusinessActivityForm = ({ formikRef, type, businessActivity }: IBusinessAc
               </FormGroup>
             </Col>
           </Row>
+    
         </Form>
       )}
     </Formik>

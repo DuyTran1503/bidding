@@ -74,15 +74,15 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
     name: string()
       .trim()
       .matches(/^[^\d]*$/, "Họ tên không được chứa số")
-      .required("Vui lòng nhập họ tên")
+      .required("Họ tên là bắt buộc")
       .max(255, "Số ký tự tối đa là 255 ký tự"),
     email: string()
       .trim()
-      .required("Vui lòng nhập địa chỉ email")
+      .required("Email là bắt buộc")
       .email("Địa chỉ email không hợp lệ")
       .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Vui lòng nhập lại! định dạng email chưa đúng")
       .max(255, "Số ký tự tối đa là 255 ký tự"),
-    phone: string().trim().required("Vui lòng nhập số điện thoại").matches(phoneRegex, "Số điện thoại không hợp lệ"),
+    phone: string().trim().required("Số điện thoại là bắt buộc").matches(phoneRegex, "Số điện thoại không hợp lệ"),
     password: string().when("type", {
       is: "create",
       then: (schema) =>
@@ -148,7 +148,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
             }
             return true;
           })
-          .required("Mật khẩu không được để trống"),
+          .required("Mật khẩu là bắt buộc"),
       otherwise: (schema) => schema,
     }),
   });
@@ -239,13 +239,13 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
           <Form>
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={12} xl={12}>
-                <FormGroup title="Tên tài khoản">
+                <FormGroup title="Tên tài khoản" required>
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
                     value={values.name ?? ""}
                     name="name"
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     placeholder="Nhập tên tài khoản..."
                     onChange={(value) => {
                       setFieldValue("name", value);
@@ -255,13 +255,13 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={12}>
-                <FormGroup title="Email">
+                <FormGroup title="Email" required>
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
                     value={values.email ?? ""}
                     name="email"
-                    error={touched.email ? errors.email : ""}
+                    error={touched.email || !values.email ? errors.email : ""}
                     placeholder="Nhập email..."
                     onChange={(value) => {
                       setFieldValue("email", value);
@@ -270,16 +270,17 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   />
                 </FormGroup>
               </Col>
-            </Row>
+            </Row>  
+            <br />
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={12} xl={12}>
-                <FormGroup title="Số điện thoại">
+                <FormGroup title="Số điện thoại" required>
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}
                     value={values.phone ?? ""}
                     name="phone"
-                    error={touched.phone ? errors.phone : ""}
+                    error={touched.phone || !values.phone ? errors.phone : ""}
                     placeholder="Nhập số điện thoại..."
                     onChange={(value) => {
                       setFieldValue("phone", value);
@@ -291,12 +292,12 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
 
               {type === EPageTypes.CREATE ? (
                 <Col xs={24} sm={24} md={12} xl={12}>
-                  <FormGroup title="Password">
+                  <FormGroup title="Password" required>
                     <FormInput
                       type="password"
                       value={values.password ?? ""}
                       name="password"
-                      error={touched.password ? errors.password : ""}
+                      error={touched.password || !values.password ? errors.password : ""}
                       placeholder="Nhập mật khẩu..."
                       onChange={(value) => {
                         setFieldValue("password", value);
@@ -313,6 +314,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                       isDisabled={type === "view"}
                       onChange={(value) => setFieldValue("id_role", value)}
                       options={roles.map((role) => ({ label: role.name, value: role.id }))}
+                      error={touched.id_role || !values.id_role ? errors.id_role : ""}
                       defaultValue={!!values.id_role && values.id_role}
                       placeholder="Chọn vai trò "
                     />
@@ -320,14 +322,16 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </Col>
               )}
             </Row>
+            <br />
             <Row gutter={[24, 0]} className="justify-end">
               {type === EPageTypes.CREATE && (
                 <Col xs={24} sm={24} md={12} xl={12}>
-                  <FormGroup title="Vai trò">
+                  <FormGroup title="Vai trò" required>
                     <FormSelect
                       isMultiple={true}
                       onChange={(value) => setFieldValue("id_role", value)}
                       options={roles.map((role) => ({ label: role.name, value: role.id }))}
+                      error={touched.id_role || !values.id_role ? errors.id_role : ""}
                       defaultValue={!!values.id_role && values.id_role}
                       placeholder="Chọn vai trò "
                     />
@@ -335,13 +339,13 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                 </Col>
               )}
               <Col xs={24} sm={24} md={12} xl={12}>
-                <FormGroup title="Mã số thuế">
+                <FormGroup title="Mã số thuế" required>
                   <FormInput
                     type="number"
                     isDisabled={type === "view"}
                     value={values.taxcode ?? ""}
                     name="taxcode"
-                    error={touched.taxcode ? errors.taxcode : ""}
+                    error={touched.taxcode || !values.taxcode ? errors.taxcode : ""}
                     placeholder="Nhập mã số thuế..."
                     onChange={(value) => {
                       setFieldValue("taxcode", value);
@@ -370,6 +374,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                         isDisabled={type === "view"}
                         options={genderOptions}
                         value={values.gender && (genderOptions.find((item) => +item.value === +values.gender)?.value as string)}
+                        error={touched.gender || !values.gender ? errors.gender : ""}
                         onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
                       />
                     </FormGroup>
@@ -381,6 +386,7 @@ const ActionModule = ({ formikRef, type, account }: IAccountFormProps) => {
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
                     value={values.birthday ? dayjs(values.birthday) : null}
+                    error={touched.birthday || !values.birthday ? errors.birthday : ""}
                     onChange={(date) => setFieldValue("birthday", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
                 </FormGroup>
