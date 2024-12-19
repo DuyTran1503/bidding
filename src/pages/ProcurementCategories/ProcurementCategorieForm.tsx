@@ -16,6 +16,7 @@ import { IProcurementCategorie } from "@/services/store/procurementCategorie/pro
 import { createProcurementCategorie, updateProcurementCategorie } from "@/services/store/procurementCategorie/procurementCategorie.thunk";
 import { IProcurementCategorieInitialState } from "@/services/store/procurementCategorie/procurementCategorie.slice";
 import { EPageTypes } from "@/shared/enums/page";
+import { object, string } from "yup";
 
 interface IProcurementCategorieFormProps {
   type?: EButtonTypes;
@@ -34,6 +35,11 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
     description: item?.description || "",
     is_active: item?.is_active ? "1" : "0",
   };
+
+    const Schema = object().shape({
+      name: string().trim().required("Tên là bắt buộc "),
+    });
+
   const handleSubmit = (data: IProcurementCategorie, { setErrors }: any) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index"),
@@ -85,7 +91,7 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} validationSchema={Schema} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
@@ -96,7 +102,7 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
                     isDisabled={type === "view"}
                     value={values.name}
                     name="name"
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     placeholder="Nhập tên loại hình MSC..."
                     onChange={(value) => setFieldValue("name", value)}
                     onBlur={handleBlur}

@@ -14,7 +14,7 @@ import { mappingGender, statusEnumArray } from "@/shared/enums/gender";
 import { educationLevelEnumArray, mappingEducationLevel } from "@/shared/enums/level";
 import { EPageTypes } from "@/shared/enums/page";
 import { employeeEnumArray, mappingEmployee } from "@/shared/enums/types";
-import { phoneRegex } from "@/shared/utils/common/function";
+import { schemaEmployees } from "@/shared/Schema/schema";
 import { IOption } from "@/shared/utils/shared-interfaces";
 import { FormikRefType } from "@/shared/utils/shared-types";
 import { Col, RadioChangeEvent, Row } from "antd";
@@ -22,7 +22,6 @@ import dayjs from "dayjs";
 import { Form, Formik } from "formik";
 import lodash from "lodash";
 import { useEffect } from "react";
-import { object, string } from "yup";
 import { convertDataOptions } from "../Project/helper";
 // interface TreeNode {
 //   title: string;
@@ -59,27 +58,6 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
     address: employee?.address ?? "",
     status: employee?.status ?? undefined, // Default value
   };
-  const validationSchema = object().shape({
-    name: string()
-      .trim()
-      .matches(/^[^\d]*$/, "Họ tên không được chứa số")
-      .required("Vui lòng nhập họ tên")
-      .max(255, "Số ký tự tối đa là 255 ký tự"),
-    code: string().trim().required("Vui lòng nhập mã nhân viên").max(255, "Số ký tự tối đa là 255 ký tự"),
-    email: string()
-      .trim()
-      .required("Vui lòng nhập địa chỉ email")
-      .email("Địa chỉ email không hợp lệ")
-      .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Vui lòng nhập lại! định dạng email chưa đúng")
-      .max(255, "Số ký tự tối đa là 255 ký tự"),
-    phone: string().trim().required("Vui lòng nhập số điện thoại").matches(phoneRegex, "Số điện thoại không hợp lệ"),
-    taxcode: string().trim().required("Vui lòng nhập mã số thuế").max(255, "Số ký tự tối đa là 255 ký tự"),
-    gender: string().required("Vui lòng chọn giới tính"),
-    enterprise_id: string().required("Vui lòng chọn công ty làm việc"),
-    status: string().required("Vui lòng chọn trạng thái làm việc"),
-    education_level: string().required("Vui lòng chọn trình độ học vấn"),
-    start_date: string().required("Vui lòng chọn ngày bắt đầu làm việc"),
-  });
 
   const genderOptions: IOption[] = statusEnumArray.map((key) => ({
     value: key,
@@ -102,7 +80,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
       enableReinitialize
       innerRef={formikRef}
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      validationSchema={schemaEmployees}
       onSubmit={(data, { setErrors }) => {
         const body = {
           ...lodash.omit(data, "id"),
@@ -133,7 +111,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                     isDisabled={type === EPageTypes.VIEW}
                     value={values.name ?? ""}
                     name="name"
-                    error={touched.name ? errors.name : ""}
+                    error={touched.name || !values.name ? errors.name : ""}
                     placeholder="Nhập tên nhân viên..."
                     onChange={(value) => {
                       setFieldValue("name", value);
@@ -149,7 +127,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                     isDisabled={type === EPageTypes.VIEW}
                     value={values.code ?? ""}
                     name="code"
-                    error={touched.code ? errors.code : ""}
+                    error={touched.code || !values.code ? errors.code : ""}
                     placeholder="Nhập mã nhân viên..."
                     onChange={(value) => {
                       setFieldValue("code", value);
@@ -178,7 +156,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                     isDisabled={type === EPageTypes.VIEW}
                     value={values.email ?? ""}
                     name="email"
-                    error={touched.email ? errors.email : ""}
+                    error={touched.email || !values.email ? errors.email : ""}
                     placeholder="Nhập email..."
                     onChange={(value) => {
                       setFieldValue("email", value);
@@ -194,7 +172,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                     isDisabled={type === EPageTypes.VIEW}
                     value={values.phone ?? ""}
                     name="phone"
-                    error={touched.phone ? errors.phone : ""}
+                    error={touched.phone || !values.phone ? errors.phone : ""}
                     placeholder="Nhập số điện thoại..."
                     onChange={(value) => {
                       setFieldValue("phone", value);
@@ -204,13 +182,13 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={8} xl={8}>
-                <FormGroup title="Mã số thuế" required>
+                <FormGroup title="Mã số thuế">
                   <FormInput
-                    type="number"
+                    type="text"
                     isDisabled={type === EPageTypes.VIEW}
                     value={values.taxcode ?? ""}
                     name="taxcode"
-                    error={touched.taxcode ? errors.taxcode : ""}
+                    // error={touched.taxcode || !values.taxcode ? errors.taxcode : ""}
                     placeholder="Nhập mã số thuế..."
                     onChange={(value) => {
                       setFieldValue("taxcode", value);
@@ -265,7 +243,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Ngày bắt đầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    error={touched.start_date ? errors.start_date : ""}
+                    error={touched.start_date || !values.start_date? errors.start_date : ""}
                     value={values.start_date ? dayjs(values.start_date) : null}
                     onChange={(date) => setFieldValue("start_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
@@ -289,7 +267,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                     value={values.education_level}
                     defaultValue={values.education_level}
                     options={optionEducation}
-                    error={touched.education_level ? errors.education_level : ""}
+                    error={touched.education_level || !values.education_level ? errors.education_level : ""}
                     id="education_level"
                     placeholder="Chọn mức độ..."
                     onChange={(value) => setFieldValue("education_level", value)}
@@ -301,7 +279,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   <FormRadio
                     isDisabled={type === EPageTypes.VIEW}
                     options={genderOptions}
-                    error={touched.gender ? errors.gender : ""}
+                    error={touched.gender || !values.gender ? errors.gender : ""}
                     value={values.gender && (genderOptions.find((item) => +item.value === +values.gender)?.value as string)}
                     onChange={(e: RadioChangeEvent) => setFieldValue("gender", e.target.value)}
                   />
@@ -312,7 +290,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     value={values.status}
-                    error={touched.status ? errors.status : ""}
+                    error={touched.status || !values.status ? errors.status : ""}
                     options={optionStatus}
                     id="status"
                     placeholder="Chọn mức độ..."

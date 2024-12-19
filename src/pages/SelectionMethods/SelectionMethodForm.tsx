@@ -14,8 +14,8 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { EButtonTypes } from "@/shared/enums/button";
 import Button from "@/components/common/Button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { object, string } from "yup";
 import { useViewport } from "@/hooks/useViewport";
+import { schemaSelectMethod } from "@/shared/Schema/schema";
 
 interface ISelectionMethodFormProps {
   type?: EButtonTypes;
@@ -34,11 +34,7 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
     description: item?.description || "",
     is_active: item?.is_active ? "1" : "0",
   };
-
-  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
-  const schema = object().shape({
-    method_name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập hình thức đấu thầu"),
-  });
+  
   const handleSubmit = (data: ISelectionMethod) => {
     const body = {
       ...lodash.omit(data, "id", "key", "index"),
@@ -85,7 +81,7 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
         </div>
       }
     >
-      <Formik innerRef={formikRef} validationSchema={schema} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} validationSchema={schemaSelectMethod} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
@@ -96,14 +92,14 @@ const SelectionMethodForm = ({ visible, type, setVisible, item }: ISelectionMeth
                   label="Tên hình thức đấu thầu"
                   value={values.method_name}
                   name="method_name"
-                  error={touched.method_name ? errors.method_name : ""}
+                  error={touched.method_name || !values.method_name ? errors.method_name : ""}
                   placeholder="Nhập tên hình thức đấu thầu..."
                   onChange={(value) => setFieldValue("method_name", value)}
                   onBlur={handleBlur}
                 />
               </Col>
             </Row>
-
+             <br />
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Mô tả">

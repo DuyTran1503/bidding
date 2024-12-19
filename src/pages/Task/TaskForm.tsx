@@ -1,27 +1,27 @@
-import { useArchive } from "@/hooks/useArchive";
-import FormInput from "@/components/form/FormInput";
-import { Form, Formik, FormikProps } from "formik";
-import lodash from "lodash";
-import { Col, Row } from "antd";
-import Dialog from "@/components/dialog/Dialog";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { EButtonTypes } from "@/shared/enums/button";
 import Button from "@/components/common/Button";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { useViewport } from "@/hooks/useViewport";
-import { ITask } from "@/services/store/task/task.model";
-import { ITaskInitialState } from "@/services/store/task/task.slice";
-import { levelTaskEnumArray, mappingLevelTask } from "@/shared/enums/level";
-import { createTask, updateTask } from "@/services/store/task/task.thunk";
+import Dialog from "@/components/dialog/Dialog";
+import FormCkEditor from "@/components/form/FormCkEditor";
+import FormGroup from "@/components/form/FormGroup";
+import FormInput from "@/components/form/FormInput";
 import FormSelect from "@/components/form/FormSelect";
-import { IOption } from "@/shared/utils/shared-interfaces";
-import { convertDataOptions } from "../Project/helper";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
+import { useArchive } from "@/hooks/useArchive";
+import { useViewport } from "@/hooks/useViewport";
 import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
 import { getListEmployee } from "@/services/store/employee/employee.thunk";
-import { array, object, string } from "yup";
-import FormGroup from "@/components/form/FormGroup";
-import FormTreeSelect from "@/components/form/FormTreeSelect";
-import FormCkEditor from "@/components/form/FormCkEditor";
+import { ITask } from "@/services/store/task/task.model";
+import { ITaskInitialState } from "@/services/store/task/task.slice";
+import { createTask, updateTask } from "@/services/store/task/task.thunk";
+import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { levelTaskEnumArray, mappingLevelTask } from "@/shared/enums/level";
+import { IOption } from "@/shared/utils/shared-interfaces";
+import { Col, Row } from "antd";
+import { Form, Formik, FormikProps } from "formik";
+import lodash from "lodash";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { convertDataOptions } from "../Project/helper";
+import { schemaTask } from "@/shared/Schema/schema";
 
 interface ITaskFormProps {
   type?: EButtonTypes;
@@ -45,15 +45,6 @@ const TaskForm = ({ visible, type, setVisible, item, treeData }: ITaskFormProps)
     difficulty_level: item?.difficulty_level || undefined,
     code: item?.code || "",
   };
-
-  const stringRegex = /^[\p{L}0-9\s._,`-]*$/u;
-  const Schema = object().shape({
-    name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Vui lòng không để trống ô này"),
-    code: string().trim().required("Vui lòng nhập mã công việc"),
-    employee_id: array().min(1, "Vui lòng chọn ít nhất 1 nhân viên").required("Vui lòng chọn 1 hoặc nhiều nhân viên"),
-    project_id: string().trim().required("Vui lòng không để trống trường này"),
-    difficulty_level: string().trim().required("Vui lòng chọn mức độ làm việc"),
-  });
 
   const handleSubmit = async (data: ITask) => {
     try {
@@ -111,7 +102,7 @@ const TaskForm = ({ visible, type, setVisible, item, treeData }: ITaskFormProps)
               text={"Lưu"}
               onClick={() => {
                 if (formikRef.current) {
-                  formikRef.current.validateForm().then((errors) => {
+                  formikRef.current.validateForm().then((errors) => {O
                     if (Object.keys(errors).length === 0) {
                       formikRef.current?.handleSubmit();
                     }
@@ -123,7 +114,7 @@ const TaskForm = ({ visible, type, setVisible, item, treeData }: ITaskFormProps)
         </div>
       }
     >
-      <Formik validationSchema={Schema} innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik validationSchema={schemaTask} innerRef={formikRef} initialValues={initialValues} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, handleBlur, setFieldValue, touched, errors }) => {
           return (
             <Form className="mt-3">
@@ -159,7 +150,7 @@ const TaskForm = ({ visible, type, setVisible, item, treeData }: ITaskFormProps)
                 <Col xs={24} sm={24} md={12} xl={12} className="mb-2">
                   <FormGroup title="Dự án" required>
                     <FormTreeSelect
-                      isDisabled={type !== "create"}
+                      isDisabled={type === "view"}
                       value={values?.project_id as any}
                       placeholder="Nhập tên dự án..."
                       error={touched.project_id || !values?.project_id ? errors.project_id : ""}

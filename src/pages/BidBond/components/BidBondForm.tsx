@@ -5,7 +5,6 @@ import FormSelect from "@/components/form/FormSelect";
 import FormDate from "@/components/form/FormDate";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import dayjs from "dayjs";
-import { object, string, number } from "yup";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { EButtonTypes } from "@/shared/enums/button";
 import { IOption } from "@/shared/utils/shared-interfaces";
@@ -13,6 +12,7 @@ import FormGroup from "@/components/form/FormGroup";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
 import FormNumber from "@/components/form/FormNumber";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
+import { schemaBidBond } from "@/shared/Schema/schema";
 
 interface IBidBondFormProps {
   initialValues: IBidBond;
@@ -26,18 +26,9 @@ interface IBidBondFormProps {
 }
 
 const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik }: IBidBondFormProps) => {
-  const Schema = object().shape({
-    project_id: string().required("Vui lòng chọn tên dự án"),
-    enterprise_id: string().required("Vui lòng chọn người hoặc tổ chức bảo lãnh"),
-    bond_amount: number().moreThan(0, "Giá trị phải lớn hơn 0").required("Vui lòng nhập số tiền"),
-    bond_type: string().required("Vui lòng chọn loại bảo lãnh"),
-    bond_number: string().required("Vui lòng nhập mã bảo lãnh"),
-    expiry_date: string().required("Vui lòng chọn ngày hết hạn"),
-    issue_date: string().required("Vui lòng chọn ngày phát hành"),
-  });
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={Schema} innerRef={formik as any}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={schemaBidBond} innerRef={formik as any}>
       {({ values, handleBlur, errors, touched, setFieldValue }: FormikProps<IBidBond>) => {
         return (
           <Form className="mt-3">
@@ -47,7 +38,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                   <FormSelect
                     className="w-100"
                     options={enterpriseOptions}
-                    isDisabled={type === "view" || type === "update"}
+                    isDisabled={type === "view"}
                     value={values.enterprise_id}
                     id="enterprise_id"
                     error={touched.enterprise_id || !values.enterprise_id ? errors.enterprise_id : ""}
@@ -59,7 +50,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tên dự án" required>
                   <FormTreeSelect
-                    isDisabled={type === "view" || type === "update"}
+                    isDisabled={type === "view" }
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id || !values?.project_id ? errors.project_id : ""}
@@ -77,7 +68,7 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                     isDisabled={type === "view"}
                     value={values.bond_number}
                     name="bond_number"
-                    error={touched.bond_number ? errors.bond_number : ""}
+                    error={touched.bond_number || !values.bond_number ? errors.bond_number : ""}
                     placeholder="Nhập mã bảo lãnh..."
                     onChange={(value) => setFieldValue("bond_number", value)}
                     onBlur={handleBlur}
@@ -108,9 +99,8 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
                         ? Number(convertMoney(values.bond_amount as unknown as string)) // Ép kiểu về number
                         : (values.bond_amount as number) || 0
                     }
-                    error={touched.bond_amount ? errors.bond_amount : ""}
+                    error={touched.bond_amount || !values.bond_amount ? errors.bond_amount : ""}
                     onChange={(e) => {
-                      console.log(e);
                       setFieldValue("bond_amount", e);
                     }}
                     onBlur={handleBlur}
