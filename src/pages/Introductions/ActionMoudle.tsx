@@ -2,7 +2,6 @@ import Button from "@/components/common/Button";
 import Dialog from "@/components/dialog/Dialog";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
-import FormSwitch from "@/components/form/FormSwitch";
 import { useArchive } from "@/hooks/useArchive";
 import { useViewport } from "@/hooks/useViewport";
 import { IIntroduction } from "@/services/store/introduction/introduction.moldel";
@@ -87,7 +86,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
         {({ values, setFieldValue, errors, touched }) => (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
-              <Col xs={24} sm={24} md={24} xl={24}>
+              {/* <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Trạng thái">
                   <FormSwitch
                     isDisabled={type === "view"}
@@ -97,7 +96,7 @@ const IntroductionForm = ({ visible, type, setVisible, item }: IIntroductionForm
                     }}
                   />
                 </FormGroup>
-              </Col>
+              </Col> */}
               <Col xs={24} sm={24} md={24} xl={24}>
                 <FormGroup title="Nội dung giới thiệu" required>
                   <FormCkEditor

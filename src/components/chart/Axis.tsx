@@ -33,7 +33,7 @@ type BarLabelOption = NonNullable<echarts.BarSeriesOption["label"]>;
 const AbleBarChart: React.FC<AbleBarChartProps> = ({ data, title, xAxisData }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
-  const computedBarWidth = data.map((item) => item.name) && data.map((item) => item.name).length < 10 ? 45 : 0;
+  const computedBarWidth = data.map((item) => item.name) && data.map((item) => item.name).length < 3 ? 45 : 0;
   const [config, setConfig] = useState({
     rotate: 90,
     align: "left" as AlignOptions,
@@ -64,7 +64,7 @@ const AbleBarChart: React.FC<AbleBarChartProps> = ({ data, title, xAxisData }) =
       fontSize: 13,
       formatter: (params) => {
         // Dùng toán tử optional chaining và thay thế undefined bằng chuỗi rỗng
-        const truncatedName = (params.seriesName ?? "").length > 30 ? (params.seriesName ?? "").substring(0, 30) + "..." : params.seriesName ?? ""; // Nếu seriesName là undefined, trả về chuỗi rỗng
+        const truncatedName = (params.seriesName ?? "").length > 30 ? (params.seriesName ?? "").substring(0, 30) + "..." : params.seriesName ?? ""; 
         return `${params.value}  ${truncatedName}`; // Hiển thị giá trị và tên đã cắt ngắn
       },
       rich: { name: {} },

@@ -92,29 +92,29 @@ const Dashboard: React.FC = () => {
       }
     };
   }, []);
-  // useEffect(() => {
-  //   if (selectedYearTimeJoining) {
-  //     dispatch(timeJoiningWebsiteOfEnterprise({ body: { year: selectedYearTimeJoining } }));
-  //   }
-  // }, [selectedYearTimeJoining, dispatch]);
+  useEffect(() => {
+    if (selectedYearTimeJoining) {
+      dispatch(timeJoiningWebsiteOfEnterprise({ body: { year: selectedYearTimeJoining } }));
+    }
+  }, [selectedYearTimeJoining, dispatch]);
 
-  // useEffect(() => {
-  //   if (selectedYearIndustryEnterprise) {
-  //     dispatch(industryHasTheMostEnterprise({ body: { year: selectedYearIndustryEnterprise } }));
-  //   }
-  // }, [selectedYearIndustryEnterprise, dispatch]);
+  useEffect(() => {
+    if (selectedYearIndustryEnterprise) {
+      dispatch(industryHasTheMostEnterprise({ body: { year: selectedYearIndustryEnterprise } }));
+    }
+  }, [selectedYearIndustryEnterprise, dispatch]);
 
-  // useEffect(() => {
-  //   if (selectedYearIndustryProject) {
-  //     dispatch(industryHasTheMostProject({ body: { year: selectedYearIndustryProject } }));
-  //   }
-  // }, [selectedYearIndustryProject, dispatch]);
+  useEffect(() => {
+    if (selectedYearIndustryProject) {
+      dispatch(industryHasTheMostProject({ body: { year: selectedYearIndustryProject } }));
+    }
+  }, [selectedYearIndustryProject, dispatch]);
 
-  // useEffect(() => {
-  //   if (selectedYearProjectStatus) {
-  //     dispatch(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
-  //   }
-  // }, [selectedYearProjectStatus, dispatch]);
+  useEffect(() => {
+    if (selectedYearProjectStatus) {
+      dispatch(projectsStatusPreMonth({ body: { year: selectedYearProjectStatus } }));
+    }
+  }, [selectedYearProjectStatus, dispatch]);
 
   const names = state.projectsStatusPreMonth?.completed?.map((item: string) => Object.keys(item)[0]) || [];
   const completedValues = state.projectsStatusPreMonth?.completed?.map((item: number) => Object.values(item)[0]);
