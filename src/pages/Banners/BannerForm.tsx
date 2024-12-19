@@ -1,22 +1,21 @@
-import { useArchive } from "@/hooks/useArchive";
+import Button from "@/components/common/Button";
+import Dialog from "@/components/dialog/Dialog";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
+import FormSwitch from "@/components/form/FormSwitch";
+import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
+import { useArchive } from "@/hooks/useArchive";
+import { useViewport } from "@/hooks/useViewport";
+import { IBanner } from "@/services/store/banner/banner.model";
+import { IBannerInitialState } from "@/services/store/banner/banner.slice";
+import { createBanner, updateBanner } from "@/services/store/banner/banner.thunk";
+import { EButtonTypes } from "@/shared/enums/button";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { schemaBanner } from "@/shared/Schema/schema";
+import { Col, Row } from "antd";
 import { Form, Formik, FormikProps } from "formik";
 import lodash from "lodash";
-import { IBannerInitialState, resetStatus } from "@/services/store/banner/banner.slice";
-import { IBanner } from "@/services/store/banner/banner.model";
-import { Col, Row } from "antd";
-import FormSwitch from "@/components/form/FormSwitch";
-import { createBanner, updateBanner } from "@/services/store/banner/banner.thunk";
-import Dialog from "@/components/dialog/Dialog";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { EButtonTypes } from "@/shared/enums/button";
-import Button from "@/components/common/Button";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
-import { useViewport } from "@/hooks/useViewport";
-import useFetchStatus from "@/hooks/useFetchStatus";
-import { schemaBanner } from "@/shared/Schema/schema";
 
 interface IBannerFormProps {
   type?: EButtonTypes;
@@ -65,14 +64,14 @@ const BannerForm = ({ visible, type, setVisible, item }: IBannerFormProps) => {
     }
   }, [state.status]);
 
-  useFetchStatus({
-    module: "banner",
-    reset: resetStatus,
-    actions: {
-      success: { message: state.message },
-      // error: { message: state.message },
-    },
-  });
+  // useFetchStatus({
+  //   module: "banner",
+  //   reset: resetStatus,
+  //   actions: {
+  //     success: { message: state.message },
+  //     // error: { message: state.message },
+  //   },
+  // });
   return (
     <Dialog
       screenSize={screenSize}

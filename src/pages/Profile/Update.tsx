@@ -34,21 +34,23 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
     gender: item?.gender || state.editProfiles?.profile?.gender,
   };
   const handleSubmit = (data: IEditProfile) => {
-    // console.log(data);
 
     const newData = {
       id: data.id,
-      account_type: data.account_type,
+      email: state.editProfiles?.email,
+      taxcode: state.editProfiles?.taxcode,
+      account_type: state.editProfiles?.account_type,
       name: data.name,
       phone: data.phone,
       avatar: data.avatar,
       birthday: data.birthday,
       gender: data.gender,
     };
-    const { avatar, ...rest } = newData;
-    const payload = item?.avatar === avatar ? rest : newData;
-
-    dispatch(updateEditProfile({ body: payload, param: String(newData?.id) }));
+    if (data.avatar !== item?.avatar) {
+      // Nếu có thay đổi ảnh thì thêm avatar vào payload
+      newData.avatar = data.avatar;
+    }
+    dispatch(updateEditProfile({ body: newData, param: String(newData?.id) }));
   };
 
   useEffect(() => {
@@ -58,7 +60,10 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
     module: "edit_profile",
     reset: resetStatus,
     actions: {
-      success: { message: state.message },
+      success: {
+        message: state.message,
+        navigate: "/profile",
+      },
       error: { message: state.message },
     },
   });
@@ -70,7 +75,7 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
             <div className="flex items-center justify-between">
               <div className="mt-5 flex items-center text-2xl font-semibold">Cập nhập thông tin cá nhân</div>
               <div className="flex items-center justify-center gap-4">
-                <Link to={`/profile`} className="font-semiboldy rounded-lg border border-cyan-600 px-4 py-1.5 text-cyan-600">
+                <Link to={`/profile`} className="font-semiboldy rounded-lg border border-red-400 px-4 py-1 text-red-400">
                   Quay lại
                 </Link>
                 <Button text="Cập nhật" isLoading={state.status === EFetchStatus.PENDING} />
@@ -130,7 +135,10 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Giới tính" required>
                   <FormRadio
-                    onChange={(value) => setFieldValue("type", Number(value))}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFieldValue("gender", Number(value));
+                    }}
                     options={[
                       { value: 1, label: "Nam" },
                       { value: 2, label: "Nữ" },

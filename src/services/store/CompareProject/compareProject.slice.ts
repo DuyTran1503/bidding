@@ -1,17 +1,19 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IInitialState } from "@/shared/utils/shared-interfaces";
-import { EFetchStatus } from "@/shared/enums/fetchStatus";
-import { ICompareProject, IDifficultyOfProject } from "./compareProject.model";
-import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { commonStaticReducers } from "@/services/shared";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { transformPayloadErrors } from "@/shared/utils/common/function";
+import { IInitialState } from "@/shared/utils/shared-interfaces";
+import { createSlice } from "@reduxjs/toolkit";
+import { ICompareProject, IDifficultyOfProject } from "./compareProject.model";
 import {
   compareBarChartTotalAmount,
   compareBidderCount,
   compareBidSubmissionTime,
   compareConstructionTime,
+  compareEvaluationCriteriaQuantity,
   comparePieChartTotalAmount,
   detailProjectByIds,
   getDifficultyOfProject,
+  getWeightOfEvaliationCriteriByProject,
 } from "./compareProject.thunk";
 
 // Define thunk actions map for cleaner code
@@ -51,6 +53,16 @@ const thunkActions = {
     key: 'getDifficultyOfProject' as const,
     message: "Thêm dự án so sánh thành công (Project Details)"
   },
+  getWeightOfEvaliationCriteriByProject: {
+    action: getWeightOfEvaliationCriteriByProject,
+    key: 'getWeightOfEvaliationCriteriByProject' as const,
+    message: "Thêm dự án so sánh thành công (Project Details)"
+  },
+  compareEvaluationCriteriaQuantity: {
+    action: compareEvaluationCriteriaQuantity,
+    key: 'compareEvaluationCriteriaQuantity' as const,
+    message: "Thêm dự án so sánh thành công (Project Details)"
+  },
 };
 
 export interface ICompareProjectInitialState extends IInitialState {
@@ -58,6 +70,8 @@ export interface ICompareProjectInitialState extends IInitialState {
   compareConstructionTime: ICompareProject[];
   compareBidSubmissionTime: ICompareProject[];
   comparePieChartTotalAmount: ICompareProject[];
+  compareEvaluationCriteriaQuantity: ICompareProject[];
+  getWeightOfEvaliationCriteriByProject: ICompareProject[];
   compareBidderCount: ICompareProject[];
   detailProjectByIds: ICompareProject[];
   getDifficultyOfProject: IDifficultyOfProject[];
@@ -70,6 +84,8 @@ const initialState: ICompareProjectInitialState = {
   compareConstructionTime: [],
   compareBidSubmissionTime: [],
   comparePieChartTotalAmount: [],
+  compareEvaluationCriteriaQuantity: [],
+  getWeightOfEvaliationCriteriByProject: [],
   compareBidderCount: [],
   detailProjectByIds: [],
   getDifficultyOfProject: [],

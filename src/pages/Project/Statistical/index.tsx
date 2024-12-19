@@ -1,30 +1,32 @@
-import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
-import { useArchive } from "@/hooks/useArchive";
 import GenericChart from "@/components/chart/GenericChart";
-import CustomTabs from "@/components/table/CustomTabs";
-import Heading from "@/components/layout/Heading";
-import { IoClose } from "react-icons/io5";
-import { useNavigate, useParams } from "react-router-dom";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
-import { getListProject, getProjectById } from "@/services/store/project/project.thunk";
+import LineChartNew from "@/components/chart/LineChartNew";
+import ProjectDetail from "@/components/chart/ProjectTable";
+import TableChart from "@/components/chart/TableChart";
+import Button from "@/components/common/Button";
 import FormTreeSelect from "@/components/form/FormTreeSelect";
+import Heading from "@/components/layout/Heading";
+import CustomTabs from "@/components/table/CustomTabs";
+import { useArchive } from "@/hooks/useArchive";
+import { ICompareProject } from "@/services/store/CompareProject/compareProject.model";
+import { ICompareProjectInitialState } from "@/services/store/CompareProject/compareProject.slice";
 import {
   compareBarChartTotalAmount,
   compareBidderCount,
   compareBidSubmissionTime,
   compareConstructionTime,
+  compareEvaluationCriteriaQuantity,
   comparePieChartTotalAmount,
   detailProjectByIds,
   getDifficultyOfProject,
+  getWeightOfEvaliationCriteriByProject,
 } from "@/services/store/CompareProject/compareProject.thunk";
-import Button from "@/components/common/Button";
-import { ICompareProjectInitialState } from "@/services/store/CompareProject/compareProject.slice";
+import { IEvaluationCriteria } from "@/services/store/evaluation/evaluation.model";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { getListProject, getProjectById } from "@/services/store/project/project.thunk";
 import { Col, message, Row } from "antd";
-import TableChart from "@/components/chart/TableChart";
-import { ICompareProject } from "@/services/store/CompareProject/compareProject.model";
-import ProjectDetail from "@/components/chart/ProjectTable";
-import ChartLabel from "@/components/chart/ChartLable";
-import LineChartNew from "@/components/chart/LineChartNew";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { IoClose } from "react-icons/io5";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Statistical: React.FC = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
@@ -44,14 +46,19 @@ const Statistical: React.FC = () => {
       dispatchProject(getProjectById(id));
     }
   }, [id, dispatchProject]);
-
   useEffect(() => {
     if (stateProject.listProjects) {
       const formattedData = formatTreeData(stateProject.listProjects);
       setTreeData(formattedData);
-    }
-  }, [stateProject.listProjects]);
 
+      const currentProjectId = stateProject.project?.id;
+      if (currentProjectId) {
+        const initialSelectedIds = Array.from(new Set([currentProjectId, ...treeSelectIdsRef.current]));
+        setSelectedIds(initialSelectedIds);
+        treeSelectIdsRef.current = initialSelectedIds;
+      }
+    }
+  }, [stateProject.listProjects, stateProject.project]);
   // useEffect(() => {
   //     const investor = stateProject.project?.investor?.id;
   //     if (investor && !stateChart.employeeEducationLevelStatisticByEnterprise) {
@@ -74,8 +81,12 @@ const Statistical: React.FC = () => {
           return dispatchCompare(comparePieChartTotalAmount({ body: { project_ids: projectIds } }));
         case "6":
           return dispatchCompare(compareBidderCount({ body: { project_ids: projectIds } }));
-          case "7":
-            return dispatchCompare(getDifficultyOfProject({ body: { project_ids: projectIds } }));
+        case "7":
+          return dispatchCompare(getDifficultyOfProject({ body: { project_ids: projectIds } }));
+        case "8":
+          return dispatchCompare(compareEvaluationCriteriaQuantity({ body: { project_ids: projectIds } }));
+        case "9":
+          return dispatchCompare(getWeightOfEvaliationCriteriByProject({ body: { project_ids: projectIds } }));
         default:
           return Promise.resolve();
       }
@@ -139,6 +150,19 @@ const Statistical: React.FC = () => {
           id: child.id,
           name: child.name,
           value: child.value,
+        })),
+      }));
+  }, [stateCompare.comparePieChartTotalAmount]);
+
+  const evaluationCriteriasChartData = useMemo(() => {
+    return stateCompare.getWeightOfEvaliationCriteriByProject
+      .filter((item: ICompareProject) => Array.isArray(item.evaluation_criterias) && item.evaluation_criterias.length > 0)
+      .map((item: ICompareProject) => ({
+        parentId: item.name,
+        evaluation_criterias: item.evaluation_criterias!.map((child: IEvaluationCriteria) => ({
+          project_id: child.project_id,
+          name: child.name,
+          weight: child.weight,
         })),
       }));
   }, [stateCompare.comparePieChartTotalAmount]);
@@ -247,7 +271,7 @@ const Statistical: React.FC = () => {
             value={stateCompare.comparePieChartTotalAmount.map((item) => item.value)}
             valueType="currency"
             legendPosition="bottom"
-            colors={stateCompare.compareBidSubmissionTime.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
+            colors={stateCompare.comparePieChartTotalAmount.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
           />
           <Row gutter={[24, 24]} className="mb-6">
             {childChartData.length > 0 &&
@@ -310,9 +334,58 @@ const Statistical: React.FC = () => {
       key: "7",
       label: "Biểu đồ độ khó trung bình của nhiệm vụ",
       content: (
+        <LineChartNew data={stateCompare.getDifficultyOfProject} />
+      ),
+    },
+    {
+      key: "8",
+      label: "Biểu đồ so sánh số lượng tiêu chí đánh giá theo từng dự án",
+      content: (
         <>
-          <LineChartNew data={stateCompare.getDifficultyOfProject}/>
+          <GenericChart
+            chartType="bar"
+            title="Biểu đồ so sánh số lượng tiêu chí đánh giá theo từng dự án"
+            name={stateCompare.compareEvaluationCriteriaQuantity.map((item) => item.name)}
+            value={stateCompare.compareEvaluationCriteriaQuantity.map((item) => item.evaluation_criterias_count)}
+            seriesName="Số lượng tiêu chí đánh giá"
+            grid={120}
+            valueType="quantity"
+            colors={stateCompare.compareEvaluationCriteriaQuantity.map((item) => (item.id === projectId ? "red" : "#5470C6"))}
+          />
+          <TableChart
+            compareData={stateCompare.compareEvaluationCriteriaQuantity.map((item) => ({
+              id: String(item.id || ""),
+              name: item.name,
+              value: item.evaluation_criterias_count,
+            }))}
+            projectId={projectId}
+            valueType="quantity"
+          />
         </>
+      ),
+    },
+    {
+      key: "9",
+      label: "Biểu đồ thể hiện trọng số của các tiêu chí đánh giá theo dự án",
+      content: (
+        <Row gutter={[24, 24]} className="mb-6">
+          {evaluationCriteriasChartData.length > 0 &&
+            evaluationCriteriasChartData.map((childData, index) => (
+              <Col xs={24} sm={24} md={12} xl={12} key={`child-chart-${index}`}>
+                <GenericChart
+                  chartType="pie"
+                  title={`${index + 1} - Biểu đồ thể hiện trọng số của các tiêu chí đánh giá của dự án (${childData.parentId})`}
+                  name={childData.evaluation_criterias.map((child) => child.name)}
+                  value={childData.evaluation_criterias.map((child) => parseFloat(child.weight))}
+                  valueType="currency"
+                  legendPosition="bottom"
+                  rotate={100}
+                  titleFontSize={14}
+                />
+              </Col>
+            ))}
+        </Row>
+
       ),
     },
   ];
@@ -338,12 +411,13 @@ const Statistical: React.FC = () => {
           width="400px"
           multiple
           value={selectedIds}
+          // defaultValue={[...selectedIds, stateProject.project?.id].filter(Boolean)}
           onChange={(value) => {
             const updatedValues = Array.isArray(value) ? value : [value];
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
-          // isDisabled={selectedIds.length > 20}
+        // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>
