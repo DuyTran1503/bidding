@@ -35,22 +35,23 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
   };
   const handleSubmit = (data: IEditProfile) => {
 
-    const newData = {
+    const newData: IEditProfile = {
       id: data.id,
       email: state.editProfiles?.email,
       taxcode: state.editProfiles?.taxcode,
       account_type: state.editProfiles?.account_type,
       name: data.name,
       phone: data.phone,
-      avatar: data.avatar,
       birthday: data.birthday,
       gender: data.gender,
     };
-    if (data.avatar !== item?.avatar) {
-      // Nếu có thay đổi ảnh thì thêm avatar vào payload
+
+    if (data.avatar !== state.editProfiles?.profile?.avatar) {
       newData.avatar = data.avatar;
     }
+
     dispatch(updateEditProfile({ body: newData, param: String(newData?.id) }));
+
   };
 
   useEffect(() => {
