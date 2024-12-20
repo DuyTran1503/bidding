@@ -34,5 +34,6 @@ export enum EPageNames {
   "attachment" = "Tài liệu đính kèm",
   "project-approval" = "Phê duyệt dự án",
   "funding-sources" = "Nguồn tài trợ",
-  "employees" = "Nhân viên"
+  "employees" = "Nhân viên",
+  "roles" = "Vai trò"
 } 

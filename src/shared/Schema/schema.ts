@@ -88,7 +88,15 @@ export const schemaFundingSource = Yup.object().shape({
 // Work Progresses
 export const schemaWorkProgresses = Yup.object().shape({
   name: Yup.string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Tên tiến độ là bắt buộc"),
-  expense: Yup.number().typeError("Phải là số").moreThan(0, "Giá trị phải lớn hơn 0").required("Chi phí là bắt buộc"),
+  expense: Yup.number()
+  .transform((value, originalValue) => {
+    if (typeof originalValue === "string") {
+      return Number(originalValue.replace(/,/g, "")); // Loại bỏ dấu phẩy và chuyển sang số
+    }
+    return value;
+  })
+  .moreThan(0, "Giá trị phải lớn hơn 0")
+  .required("Chi phí là bắt buộc"),
   progress: Yup.string().trim().required("Tiến độ là bắt buộc"),
   start_date: Yup.date().required("Ngày bắt đầu là bắt buộc"),
   feedback: Yup.string().trim().required("Nhận xét là bắt buộc"),

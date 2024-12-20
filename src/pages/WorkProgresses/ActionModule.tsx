@@ -190,7 +190,7 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     isDisabled={type === EPageTypes.VIEW}
                     name="expense"
                     value={values.expense}
-                    error={touched.expense || !values.expense ? errors.expense : ""}
+                    error={touched.expense ? errors.expense : ""}
                     onChange={(e) => {
                       setFieldValue("expense", e);
                     }}
