@@ -17,7 +17,7 @@ import { Col, Row } from "antd";
 import { Form, Formik, FormikProps } from "formik";
 import lodash from "lodash";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { number, object, string } from "yup";
+import { object, string } from "yup";
 
 interface IEvaluationCriteriaFormProps {
   type?: EPageTypes;

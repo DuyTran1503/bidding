@@ -5,7 +5,7 @@ import { ISearchTypeTable } from "@/components/table/SearchComponent";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IBiddingResultInitialState, resetStatus, setFilter } from "@/services/store/biddingResult/biddingResult.slice";
-import { getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
+import { deleteBiddingResult, getAllBiddingResults } from "@/services/store/biddingResult/biddingResult.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { IGridButton } from "@/shared/utils/shared-interfaces";
@@ -54,6 +54,13 @@ const BiddingResults = () => {
       type: EButtonTypes.UPDATE,
       permission: EPermissions.UPDATE_BIDDING_RESULT,
     },
+        {
+          type: EButtonTypes.DESTROY,
+          onClick(record) {
+            dispatch(deleteBiddingResult(record?.key));
+          },
+          permission: EPermissions.DESTROY_BIDDING_RESULT,
+        },
   ];
 
   const columns: ColumnsType = [

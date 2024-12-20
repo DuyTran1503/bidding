@@ -141,7 +141,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
                     isDisabled={type === "view"}
                     placeholder="Bạn chỉ cần chọn dự án"
                     id="enterprise_id"
-                    value={values.enterprise?.user?.name || stateEnterprise.getEnterpriseOfBiddingResultByProject?.name}
+                    value={stateEnterprise.getEnterpriseOfBiddingResultByProject?.name ?? values.enterprise?.user?.name }
                     error={touched.enterprise_id || !values.enterprise_id ? errors.enterprise_id : ""}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
                   />
