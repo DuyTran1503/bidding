@@ -297,7 +297,8 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
                       isDisabled={type === EButtonTypes.VIEW}
                       placeholder="Chọn..."
                       isMultiple
-                      value={state.editProfiles?.profile.industries?.map((item: any) => item.id)}
+                      value={values.profile?.industries?.map((item) => item.id)}
+                      defaultValue={state.editProfiles?.profile.industries?.map((item: any) => item.id)}
                       id="industry_id"
                       onChange={(value) => {
                         setFieldValue("industry_id", value);

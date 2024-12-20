@@ -81,10 +81,11 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
       innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={schemaEmployees}
-      onSubmit={(data, { setErrors }) => {
+      onSubmit={(data: IEmployee, { setErrors }) => {
         const body = {
-          ...lodash.omit(data, "id"),
+          ...lodash.omit(data, "id"), 
         };
+
         if (type === EPageTypes.CREATE) {
           return dispatch(createEmployee(body as any))
             .unwrap()
@@ -93,12 +94,22 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
               setErrors(apiErrors);
             });
         }
+
         if (type === EPageTypes.UPDATE) {
-          const payload = employee?.avatar === body.avatar ? (({ ...rest }) => rest)(body) : body;
+          if (data.avatar !== employee?.avatar) {
+            body.avatar = data.avatar; 
+          } else {
+            delete body.avatar;
+          }
+
+          const payload = employee?.avatar === body.avatar
+            ? { ...body }
+            : { ...body, avatar: body.avatar };
 
           return dispatch(updateEmployee({ body: payload, param: String(employee?.id) }));
         }
       }}
+
     >
       {({ values, errors, touched, handleBlur, setFieldValue }) => {
         return (
@@ -243,7 +254,7 @@ const ActionModule = ({ formikRef, type, employee }: IEmployeeFormProps) => {
                 <FormGroup title="Ngày bắt đầu">
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
-                    error={touched.start_date || !values.start_date? errors.start_date : ""}
+                    error={touched.start_date || !values.start_date ? errors.start_date : ""}
                     value={values.start_date ? dayjs(values.start_date) : null}
                     onChange={(date) => setFieldValue("start_date", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
                   />
