@@ -32,6 +32,7 @@ import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { EPermissions } from "@/shared/enums/permissions";
 import { mappingStatus, STATUS, statusEnumArray } from "@/shared/enums/statusActive";
 import { mappingTypeEnterprise, typeEnterpriseEnumArray } from "@/shared/enums/typeEnterprise";
+import Loading from "../Loading/Loading";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Enterprise = () => {
@@ -116,22 +117,22 @@ const Enterprise = () => {
     {
       dataIndex: "index",
       title: "STT",
-      className: "w-[100px]",
+      className: "w-[60px]",
     },
     {
       dataIndex: "name",
       title: "Tên doanh nghiệp",
-      className: "w-[250px]",
+      className: "w-[200px]",
     },
     {
       dataIndex: "representative",
       title: "Tên người đại diện",
-      className: "w-[250px]",
+      className: "w-[170px]",
     },
     {
       dataIndex: "organization_type",
       title: "Loại hình doanh nghiệp",
-      className: "w-[250px]",
+      className: "w-[200px]",
       render(_, record, index) {
         const organization_type = typeOptions.find((e) => +e.value === +record?.organization_type)?.label;
         return <Fragment key={index}>{organization_type}</Fragment>;
@@ -140,17 +141,17 @@ const Enterprise = () => {
     {
       dataIndex: "phone",
       title: "Điện thoại",
-      className: "w-[250px]",
+      className: "w-[100px]",
     },
     {
       dataIndex: "email",
       title: "Email",
-      className: "w-[200px]",
+      className: "w-[100px]",
     },
     {
       dataIndex: "address",
       title: "Địa chỉ",
-      className: "w-[250px]",
+      className: "w-[200px]",
     },
     {
       dataIndex: "industries",
@@ -168,7 +169,7 @@ const Enterprise = () => {
     {
       title: "Trạng thái",
       dataIndex: "is_active",
-      className: "w-[105px]",
+      className: "w-[80px]",
       render(_, record, index) {
         return (
           <div key={index} className="flex flex-col gap-2">
@@ -374,7 +375,9 @@ const Enterprise = () => {
       setFilter({ page: 1, size: 10 });
     };
   }, []);
-
+  if (data.length <= 0) {
+    return <Loading />;
+  }
   return (
     <>
       <Heading
@@ -411,7 +414,7 @@ const Enterprise = () => {
         }}
         setFilter={setFilter}
         filter={enterpriseState.filter}
-        scroll={{ x: 3000 }}
+        scroll={{ x: "max-content" }}
         tabLabel="Danh sách"
         additionalTabs={additionalTabs}
       />

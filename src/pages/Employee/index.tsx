@@ -20,6 +20,7 @@ import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
 
 import { useNavigate } from "react-router-dom";
+import Loading from "../Loading/Loading";
 
 const Employee = () => {
   const navigate = useNavigate();
@@ -182,7 +183,9 @@ const Employee = () => {
   useEffect(() => {
     dispatch(getAllEmployee({ query: state.filter }));
   }, [JSON.stringify(state.filter), JSON.stringify(state.status === EFetchStatus.FULFILLED)]);
-
+  if (data.length <= 0) {
+    return <Loading />;
+  }
   return (
     <>
       <Heading

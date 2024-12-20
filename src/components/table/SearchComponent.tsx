@@ -70,6 +70,8 @@ const SearchComponent = <T extends ISearchParams>(props: ISearchProps<T>) => {
     };
     dispatch(setFilter(resetFilter));
   }, [location.pathname, dispatch, setFilter]);
+  console.log(filter);
+
   return (
     <Formik
       enableReinitialize
