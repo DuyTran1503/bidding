@@ -41,6 +41,7 @@ import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.mod
 import { resetStatus } from "@/services/store/biddingResult/biddingResult.slice";
 import { IBidDocumentInitialState } from "@/services/store/bid_document/bid_document.slice";
 import { getListBidDocument } from "@/services/store/bid_document/bid_document.thunk";
+import Loading from "@/pages/Loading/Loading";
 const UpdateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
@@ -164,21 +165,23 @@ const UpdateProject = () => {
               },
             ]}
           />
-          <ActionModule
-            type={EPageTypes.UPDATE}
-            formikRef={formikRef}
-            project={data}
-            item={data}
-            setActiveTabKey={setActiveTabKey}
-            activeTabKey={activeTabKey}
-            onChildSelect={setSelectedChild}
-            listIndustry={stateIndustry.listIndustry}
-            listSelectionMethods={stateMethod.listSelectionMethods}
-            listFundingSources={stateFundingSource.listFundingSources}
-            getListStaff={stateStaff.getListStaff}
-            listEnterprise={stateEnterprise.listEnterprise!}
-            listProcurement={stateProcurement.listProcurement}
-          />
+          {state?.project?.id && (
+            <ActionModule
+              type={EPageTypes.UPDATE}
+              formikRef={formikRef}
+              project={data}
+              item={data}
+              setActiveTabKey={setActiveTabKey}
+              activeTabKey={activeTabKey}
+              onChildSelect={setSelectedChild}
+              listIndustry={stateIndustry.listIndustry}
+              listSelectionMethods={stateMethod.listSelectionMethods}
+              listFundingSources={stateFundingSource.listFundingSources}
+              getListStaff={stateStaff.getListStaff}
+              listEnterprise={stateEnterprise.listEnterprise!}
+              listProcurement={stateProcurement.listProcurement}
+            />
+          )}
         </div>
       ),
     },
@@ -264,21 +267,23 @@ const UpdateProject = () => {
               },
             ]}
           />
-          <ActionModule
-            type={EPageTypes.UPDATE}
-            isChildren={true}
-            item={selectedChild!}
-            project={state.project}
-            formikRef={formikRef}
-            activeTabKey={activeTabKey}
-            parent_id={state.project?.id}
-            listIndustry={stateIndustry.listIndustry}
-            listSelectionMethods={stateMethod.listSelectionMethods}
-            listFundingSources={stateFundingSource.listFundingSources}
-            getListStaff={stateStaff.getListStaff}
-            listEnterprise={stateEnterprise.listEnterprise!}
-            listProcurement={stateProcurement.listProcurement}
-          />
+          {state?.project?.id && (
+            <ActionModule
+              type={EPageTypes.UPDATE}
+              isChildren={true}
+              item={selectedChild!}
+              project={state.project}
+              formikRef={formikRef}
+              activeTabKey={activeTabKey}
+              parent_id={state.project?.id}
+              listIndustry={stateIndustry.listIndustry}
+              listSelectionMethods={stateMethod.listSelectionMethods}
+              listFundingSources={stateFundingSource.listFundingSources}
+              getListStaff={stateStaff.getListStaff}
+              listEnterprise={stateEnterprise.listEnterprise!}
+              listProcurement={stateProcurement.listProcurement}
+            />
+          )}
         </div>
       ),
     },
@@ -351,7 +356,7 @@ const UpdateProject = () => {
                 },
               },
               {
-                isLoading: state.status === EFetchStatus.PENDING,
+                isLoading: stateBidDoc.status === EFetchStatus.PENDING,
                 text: "Tạo mới",
                 icon: <FaPlus className="text-[18px]" />,
                 onClick: () => {
@@ -363,6 +368,7 @@ const UpdateProject = () => {
             ]}
           />
           <BiddingResultForm
+            isCreateBiddingResult
             formikRef={formikBidResultRef}
             optionDocs={convertDataOptions((stateBidDoc.listDocuments as { id: string; name: string }[]) || [])}
           />
@@ -376,7 +382,12 @@ const UpdateProject = () => {
     };
   }, []);
 
-  return <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />;
+  return (
+    <>
+      {!state?.project?.id && <Loading />}
+      <Tabs items={tabItems} activeKey={activeTabKey} onChange={(key) => setActiveTabKey(key)} />
+    </>
+  );
 };
 
 export default UpdateProject;

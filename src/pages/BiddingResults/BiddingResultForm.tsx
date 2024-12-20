@@ -36,6 +36,7 @@ interface IBiddingResultFormProps {
   isDialog?: boolean;
   setVisible?: () => void;
   optionDocs?: any[];
+  isCreateBiddingResult?: boolean;
 }
 
 export interface IBiddingResultFormInitialValues {
@@ -55,6 +56,7 @@ const BiddingResultForm = ({
   isDialog,
   setVisible,
   optionDocs,
+  isCreateBiddingResult,
 }: IBiddingResultFormProps) => {
   const { state, dispatch } = useArchive<IBiddingResultInitialState>("bidding_result");
   const { dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
@@ -81,7 +83,8 @@ const BiddingResultForm = ({
     const body = {
       ...lodash.omit(data, "id", "key", "index", "project", "enterprise", "bid_document", "project_id", "enterprise_id"),
     };
-    if (type === EButtonTypes.CREATE) {
+    if (isCreateBiddingResult) return dispatch(createBiddingResult({ body }));
+    if (type === EButtonTypes.CREATE || isCreateBiddingResult) {
       dispatch(createBiddingResult({ body }))
         .unwrap()
         .then(() => {

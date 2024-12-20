@@ -184,8 +184,8 @@ export const schemaIndustry = Yup.object().shape({
 export const schemaBiddingResults = Yup.object().shape({
   bid_document_id: Yup.string().required("Hồ sơ trúng thầu là bắt buộc"),
   win_amount: Yup.string()
-    .required("Số tiền thắng thầu là bắt buộc")
-    .matches(/^\d+(\.\d{1,2})?$/, "Số tiền phải là một số hợp lệ"),
+    .matches(/^\d+(\.\d{1,2})?$/, "Số tiền phải là một số hợp lệ")
+    .required("Số tiền thắng thầu là bắt buộc"),
   decision_number: Yup.string()
     .required("Số quyết định là bắt buộc")
     .matches(
