@@ -74,6 +74,7 @@ const projectSlice = createSlice({
     },
     resetMessageError(state) {
       state.message = "";
+      state.status = EFetchStatus.IDLE;
     },
     resetStatus(state) {
       state.status = EFetchStatus.IDLE;
@@ -87,6 +88,14 @@ const projectSlice = createSlice({
     setFilter(state, action: PayloadAction<{ page: number; size: number }>) {
       state.filter.page = action.payload.page;
       state.filter.size = action.payload.size;
+    },
+    resetChildren(state) {
+      state.status = EFetchStatus.IDLE;
+      state.message = "";
+      state.projects = [];
+      state.listProjects = [];
+      state.id_project = "";
+      state.project = undefined;
     },
   },
 
@@ -109,7 +118,7 @@ const projectSlice = createSlice({
           state.totalRecordInvestor = payload?.data?.total_elements;
           state.number_of_elementInvestor = payload?.data?.number_of_elements;
         }
-      })  
+      })
       .addCase(getAllProjectInvestor.rejected, (state, { payload }: PayloadAction<IResponse<IProject[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
@@ -256,5 +265,5 @@ const projectSlice = createSlice({
       });
   },
 });
-export const { fetching, setFilter, resetStatus, resetMessageError } = projectSlice.actions;
+export const { fetching, setFilter, resetStatus, resetMessageError, resetChildren } = projectSlice.actions;
 export { projectSlice };

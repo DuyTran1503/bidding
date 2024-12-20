@@ -26,7 +26,7 @@ import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { ISystemInitialState } from "@/services/store/system/system.slice";
-import { getSystems } from "@/services/store/system/system.thunk";
+import { getSystem } from "@/services/store/system/system.thunk";
 import { EPermissions } from "@/shared/enums/permissions";
 import { MdOutlineCreditScore } from "react-icons/md";
 
@@ -54,7 +54,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
   const { state: stateSystem, dispatch } = useArchive<ISystemInitialState>("system");
 
   useEffect(() => {
-    dispatch(getSystems({}));
+    dispatch(getSystem({}));
   }, []);
 
   // Helper function to check if menu item should be visible
@@ -328,8 +328,8 @@ const Sidebar = ({ children }: PropsWithChildren) => {
             }`}
         >
           <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4 uppercase" onClick={() => navigate("/dashboard")}>
-            <img src={stateSystem.systems?.logo} alt={stateSystem.systems?.name} className="w-20" />
-            <div className="text-xl font-semibold">{stateSystem.systems?.name}</div>
+            <img src={stateSystem.system?.logo} alt={stateSystem.system?.name} className="w-20" />
+            <div className="text-xl font-semibold">{stateSystem.system?.name}</div>
           </div>
 
           <nav className="no-scrollbar mb-2 flex grow flex-col gap-2 overflow-y-scroll pt-4">

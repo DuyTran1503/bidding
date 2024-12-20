@@ -16,13 +16,20 @@ export const schemaProject = Yup.object().shape({
   parent_id: Yup.number().nullable(),
   name: Yup.string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Tên dự án là bắt buộc"),
   staff_id: Yup.number().moreThan(0, "Giá trị phải lớn hơn 0").required("Người phê duyệt là bắt buộc"),
-  industry_id: Yup.number().moreThan(0, "Giá trị phải lớn hơn 0").required("Nghành nghề là bắt buộc"),
-  selection_method_id: Yup.number().moreThan(0, "Giá trị phải lớn hơn 0").required("Phương pháp chọn lựa là bắt buộc"),
+  industry_id: Yup.array().min(1, "Vui lòng chọn ít nhất một ngành nghề").required("Vui lòng không để trống trường này"),
+  investor_id: Yup.string().required("Vui lòng không để trống trường này"),
+  procurement_id: Yup.array().min(1, "Vui lòng chọn ít nhất một dịch vụ").required("Vui lòng không để trống trường này"),
+  tenderer_id: Yup.string().required("Vui lòng không để trống trường này"),
+  selection_method_id: Yup.string().required("Vui lòng không để trống trường này"),
+  submission_method: Yup.string().required("Vui lòng không để trống trường này"),
   location: Yup.string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Địa điểm là bắt buộc"),
-  funding_source_id: Yup.string().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Nguồn vốn là bắt buộc"),
+  funding_source_id: Yup.string().required("Vui lòng không để trống trường này"),
+  decision_number_issued: Yup.string().required("Vui lòng không để trống trường này"),
   // attached_documents: Yup.array().min(1, "Vui lòng chọn ít nhất một tài liệu đính kèm"),
-  // start_time: Yup.date().required("Thời gian bắt đầu là bắt buộc"),
-  // end_time: Yup.date().required("Thời gian kết thúc là bắt buộc"),
+  start_time: Yup.date().required("Thời gian bắt đầu là bắt buộc"),
+  end_time: Yup.date().required("Thời gian kết thúc là bắt buộc"),
+  bid_submission_start: Yup.date().required("Thời gian kết thúc là bắt buộc"),
+  bid_submission_end: Yup.date().required("Thời gian kết thúc là bắt buộc"),
   // status: Yup.string()
   //     .matches(stringRegex, "Không được chứa ký tự đặc biệt")
   //     .required("Trạng thái là bắt buộc"),
@@ -96,22 +103,32 @@ export const schemaWorkProgresses = Yup.object().shape({
 // ===========> Enterprice
 
 //Enterprice
-export const schemaEnterprice = Yup.object().shape({
-  name: Yup.string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Tên doanh nghiệp là bắt buộc"),
-  address: Yup.string().trim().required("Địa chỉ là bắt buộc."),
-  email: Yup.string().email("Email không hợp lệ.").required("Email là bắt buộc."),
-  establish_date: Yup.date().required("Ngày thành lập là bắt buộc."),
-  industry_id: Yup.string().required("Ngành nghề là bắt buộc."),
-  organization_type: Yup.string().required("Loại hình doanh nghiệp là bắt buộc."),
-  password: Yup.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự.").required("Mật khẩu là bắt buộc."),
-  phone: Yup.string().matches(phoneRegExp, "Số điện thoại không hợp lệ.").required("Số điện thoại là bắt buộc."),
-  registration_date: Yup.date().required("Ngày đăng ký kinh doanh là bắt buộc."),
-  registration_number: Yup.string().required("Số đăng ký kinh doanh là bắt buộc."),
-  representative: Yup.string().required("Người đại diện là bắt buộc."),
-  roles: Yup.array().min(1, "Roles là bắt buộc.").required("Roles là bắt buộc."),
-  taxcode: Yup.string().required("Mã số thuế là bắt buộc."),
-  website: Yup.string().url("Website không hợp lệ.").required("Website là bắt buộc."),
-});
+export const getSchemaEnterprise = (type: string) => {
+  const baseSchema = {
+    name: Yup.string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt").required("Tên doanh nghiệp là bắt buộc"),
+    address: Yup.string().trim().required("Địa chỉ là bắt buộc."),
+    email: Yup.string().email("Email không hợp lệ.").required("Email là bắt buộc."),
+    establish_date: Yup.date().required("Ngày thành lập là bắt buộc."),
+    industry_id: Yup.array().min(1, "Vui lòng chọn ít nhất một lĩnh vực").required("Vui lòng không để trống trường này"),
+    organization_type: Yup.string().required("Loại hình doanh nghiệp là bắt buộc."),
+    phone: Yup.string().matches(phoneRegExp, "Số điện thoại không hợp lệ.").required("Số điện thoại là bắt buộc."),
+    registration_date: Yup.date().required("Ngày đăng ký kinh doanh là bắt buộc."),
+    registration_number: Yup.string().required("Số đăng ký kinh doanh là bắt buộc."),
+    representative: Yup.string().required("Người đại diện là bắt buộc."),
+    roles: Yup.array().min(1, "Vui lòng chọn ít nhất 1 vai trò.").required("Vai trò là bắt buộc."),
+    taxcode: Yup.string().required("Mã số thuế là bắt buộc."),
+    website: Yup.string().url("Website không hợp lệ.").required("Website là bắt buộc."),
+  };
+
+  if (type === "CREATE") {
+    return Yup.object().shape({
+      ...baseSchema,
+      password: Yup.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự.").required("Mật khẩu là bắt buộc."),
+    });
+  }
+
+  return Yup.object().shape(baseSchema);
+};
 
 // Employees
 export const schemaEmployees = Yup.object().shape({
@@ -167,8 +184,8 @@ export const schemaIndustry = Yup.object().shape({
 export const schemaBiddingResults = Yup.object().shape({
   bid_document_id: Yup.string().required("Hồ sơ trúng thầu là bắt buộc"),
   win_amount: Yup.string()
-    .required("Số tiền thắng thầu là bắt buộc")
-    .matches(/^\d+(\.\d{1,2})?$/, "Số tiền phải là một số hợp lệ"),
+    .matches(/^\d+(\.\d{1,2})?$/, "Số tiền phải là một số hợp lệ")
+    .required("Số tiền thắng thầu là bắt buộc"),
   decision_number: Yup.string()
     .required("Số quyết định là bắt buộc")
     .matches(
@@ -194,6 +211,6 @@ export const schemaEvaluates = Yup.object().shape({
 });
 
 //Selection Methods
- export const schemaSelectMethod = Yup.object().shape({
-    method_name: Yup.string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Hình thức đấu thầu là bắt buộc"),
-  });
+export const schemaSelectMethod = Yup.object().shape({
+  method_name: Yup.string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Hình thức đấu thầu là bắt buộc"),
+});

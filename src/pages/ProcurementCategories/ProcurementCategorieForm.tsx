@@ -15,7 +15,6 @@ import { useViewport } from "@/hooks/useViewport";
 import { IProcurementCategorie } from "@/services/store/procurementCategorie/procurementCategorie.model";
 import { createProcurementCategorie, updateProcurementCategorie } from "@/services/store/procurementCategorie/procurementCategorie.thunk";
 import { IProcurementCategorieInitialState } from "@/services/store/procurementCategorie/procurementCategorie.slice";
-import { EPageTypes } from "@/shared/enums/page";
 import { object, string } from "yup";
 
 interface IProcurementCategorieFormProps {
@@ -36,9 +35,9 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
     is_active: item?.is_active ? "1" : "0",
   };
 
-    const Schema = object().shape({
-      name: string().trim().required("Tên là bắt buộc "),
-    });
+  const Schema = object().shape({
+    name: string().trim().required("Tên là bắt buộc "),
+  });
 
   const handleSubmit = (data: IProcurementCategorie, { setErrors }: any) => {
     const body = {
@@ -96,7 +95,7 @@ const ProcurementCategorieForm = ({ visible, type, setVisible, item }: IProcurem
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={24} md={24} xl={24}>
-                <FormGroup title="Tên loại hình MSC">
+                <FormGroup title="Tên loại hình MSC" required>
                   <FormInput
                     type="text"
                     isDisabled={type === "view"}

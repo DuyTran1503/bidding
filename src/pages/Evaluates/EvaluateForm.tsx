@@ -77,7 +77,6 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
       setVisible(false);
     }
   }, [state.status]);
-  // console.log(state.evaluates.project?.name);
 
   return (
     <Dialog
@@ -110,9 +109,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
         </div>
       }
     >
-      <Formik innerRef={formikRef} initialValues={initialValues}
-       validationSchema={schemaEvaluates} 
-       enableReinitialize={true} onSubmit={handleSubmit}>
+      <Formik innerRef={formikRef} initialValues={initialValues} validationSchema={schemaEvaluates} enableReinitialize={true} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleBlur, setFieldValue }) => (
           <Form className="mt-3">
             <Row gutter={[16, 16]}>
@@ -144,7 +141,7 @@ const EvaluateForm = ({ visible, type, setVisible, item, listProjectHasBiddingRe
                     isDisabled={type === "view"}
                     placeholder="Bạn chỉ cần chọn dự án"
                     id="enterprise_id"
-                    value={values.enterprise?.user?.name || stateEnterprise.getEnterpriseOfBiddingResultByProject?.name}
+                    value={stateEnterprise.getEnterpriseOfBiddingResultByProject?.name ?? values.enterprise?.user?.name }
                     error={touched.enterprise_id || !values.enterprise_id ? errors.enterprise_id : ""}
                     onChange={(e) => setFieldValue("enterprise_id", e)}
                   />

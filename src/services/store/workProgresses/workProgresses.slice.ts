@@ -6,7 +6,14 @@ import { commonStaticReducers } from "@/services/shared";
 import { IError } from "@/shared/interface/error";
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IWorkProgress } from "./workProgresses.model";
-import { createWorkProgress, deleteWorkProgress, getAllWorkProgresses, getListWorkProgresses, getWorkProgressById, updateWorkProgress } from "./workProgresses.thunk";
+import {
+  createWorkProgress,
+  deleteWorkProgress,
+  getAllWorkProgresses,
+  getListWorkProgresses,
+  getWorkProgressById,
+  updateWorkProgress,
+} from "./workProgresses.thunk";
 
 export interface IWorkProgressInitialState extends IInitialState {
   workProgresses: IWorkProgress[];
@@ -77,12 +84,10 @@ const workProgressSlice = createSlice({
       .addCase(createWorkProgress.fulfilled, (state) => {
         state.status = EFetchStatus.FULFILLED;
         state.message = "Tạo mới thành công ";
-        
       })
       .addCase(createWorkProgress.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = payload.message;
-
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
     builder
       .addCase(updateWorkProgress.pending, (state) => {
@@ -94,9 +99,9 @@ const workProgressSlice = createSlice({
       })
       .addCase(updateWorkProgress.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
-        state.message = transformPayloadErrors(payload?.errors);
+        state.message = transformPayloadErrors(payload?.errors || payload.message);
       });
-  
+
     // ? Delete tag
     builder
       .addCase(deleteWorkProgress.pending, (state) => {

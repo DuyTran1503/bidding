@@ -1,32 +1,31 @@
-import { Formik, Form, FormikProps } from "formik";
-import { Row, Col } from "antd";
-import FormInput from "@/components/form/FormInput";
-import FormSelect from "@/components/form/FormSelect";
-import FormDate from "@/components/form/FormDate";
 import FormCkEditor from "@/components/form/FormCkEditor";
-import dayjs from "dayjs";
+import FormDate from "@/components/form/FormDate";
+import FormGroup from "@/components/form/FormGroup";
+import FormInput from "@/components/form/FormInput";
+import FormNumber from "@/components/form/FormNumber";
+import FormSelect from "@/components/form/FormSelect";
+import FormTreeSelect from "@/components/form/FormTreeSelect";
 import { IBidBond } from "@/services/store/bid_bond/bidBond.model";
 import { EButtonTypes } from "@/shared/enums/button";
-import { IOption } from "@/shared/utils/shared-interfaces";
-import FormGroup from "@/components/form/FormGroup";
-import FormTreeSelect from "@/components/form/FormTreeSelect";
-import FormNumber from "@/components/form/FormNumber";
-import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { schemaBidBond } from "@/shared/Schema/schema";
+import { convertMoney } from "@/shared/utils/common/convertMoney";
+import { IOption } from "@/shared/utils/shared-interfaces";
+import { Col, Row } from "antd";
+import dayjs from "dayjs";
+import { Form, Formik, FormikProps } from "formik";
 
 interface IBidBondFormProps {
   initialValues: IBidBond;
   onSubmit: (data: IBidBond, setErrors: any) => void;
   type: EButtonTypes;
   optionType: IOption[];
-  projectOptions: IOption[];
+  projectOptions: any[];
   enterpriseOptions: IOption[];
   formik?: FormikProps<IBidBond>;
   project_id?: number;
 }
 
 const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions, enterpriseOptions, formik }: IBidBondFormProps) => {
-
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={schemaBidBond} innerRef={formik as any}>
       {({ values, handleBlur, errors, touched, setFieldValue }: FormikProps<IBidBond>) => {
@@ -50,14 +49,14 @@ const BidBondForm = ({ initialValues, onSubmit, type, optionType, projectOptions
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Tên dự án" required>
                   <FormTreeSelect
-                    isDisabled={type === "view" }
+                    isDisabled={type === "view"}
                     value={values?.project_id as any}
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id || !values?.project_id ? errors.project_id : ""}
                     onChange={(value) => {
                       setFieldValue("project_id", value as string);
                     }}
-                    treeData={projectOptions as any}
+                    treeData={projectOptions}
                   />
                 </FormGroup>
               </Col>

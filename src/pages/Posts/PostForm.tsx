@@ -153,7 +153,7 @@ const PostForm = ({ formikRef, type, post }: IPostFormProps) => {
                     isDisabled={type === "view"}
                     value={values.title}
                     name="title"
-                    error={touched.title || !values.title  ? errors.title : ""}
+                    error={touched.title || !values.title ? errors.title : ""}
                     placeholder="Nhập tiêu đề..."
                     onChange={(value) => setFieldValue("title", value)}
                     onBlur={handleBlur}

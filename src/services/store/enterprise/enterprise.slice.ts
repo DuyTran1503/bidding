@@ -54,9 +54,11 @@ const enterpriseSlice = createSlice({
     },
     resetMessageError(state) {
       state.message = "";
+      state.status = EFetchStatus.IDLE;
     },
     resetStatus(state) {
       state.status = EFetchStatus.IDLE;
+      state.message = "";
     },
   },
 
