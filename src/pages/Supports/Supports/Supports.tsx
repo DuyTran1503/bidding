@@ -110,8 +110,7 @@ const Supports = () => {
           </div>
         );
       },
-    }
-
+    },
   ];
   const statusOption = Object.entries({
     sent: "Đã gửi",
@@ -157,14 +156,14 @@ const Supports = () => {
       placeholder: "Chọn loại yêu cầu...",
       label: "Loại yêu cầu",
       type: "select",
-      options: typeOption
+      options: typeOption,
     },
     {
       id: "status",
       placeholder: "Chọn trạng thái...",
       label: "Trạng thái",
       type: "select",
-      options: statusOption
+      options: statusOption,
     },
   ];
 
@@ -172,18 +171,18 @@ const Supports = () => {
     () =>
       state.supports && state.supports.length > 0
         ? state.supports.map(({ id, title, email, phone, sender, content, document, type, status }, index) => ({
-          index: index + 1,
-          key: id,
-          id: id,
-          title: title,
-          email,
-          phone,
-          sender,
-          content,
-          document,
-          type,
-          status,
-        }))
+            index: index + 1,
+            key: id,
+            id: id,
+            title: title,
+            email,
+            phone,
+            sender,
+            content,
+            document,
+            type,
+            status,
+          }))
         : [],
     [state.supports],
   );

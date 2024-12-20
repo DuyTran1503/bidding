@@ -13,7 +13,7 @@ import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
 import { IGridButton, IOption } from "@/shared/utils/shared-interfaces";
 import { Tag } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { convertDataOptions } from "../Project/helper";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
@@ -24,6 +24,8 @@ const ProjectApproval = () => {
   const { state: state, dispatch: dispatch } = useArchive<IProjectApprovalState>("project_approval");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.projectApprovals)
       ? state?.projectApprovals?.map(({ id, name, investor, total_amount, upload_time, status }, index) => ({
@@ -162,7 +164,16 @@ const ProjectApproval = () => {
     dispatch(getProjectApprovalByStaff({ query: state.filter }));
     dispatchEnterprise(getListEnterprise());
   }, [state.filter]);
-  if (data.length <= 0) {
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
     return <Loading />;
   }
   return (

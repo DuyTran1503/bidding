@@ -118,7 +118,7 @@ const Tasks = () => {
       id: "project",
       placeholder: "Chọn dự án ...",
       label: "Tên dự án",
-      isMultiple: true,
+      isMultiple: false,
       type: "treeSelect",
       treeData: treeData,
     },
