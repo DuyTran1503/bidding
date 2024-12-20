@@ -6,7 +6,7 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import { IBidDocumentInitialState } from "@/services/store/bid_document/bid_document.slice";
-import { getListBidDocument, getListBidDocumentWithoutBidResultWithoutBidResult } from "@/services/store/bid_document/bid_document.thunk";
+import {  getListBidDocumentWithoutBidResultWithoutBidResult } from "@/services/store/bid_document/bid_document.thunk";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 import { IBiddingResultInitialState, resetStatus } from "@/services/store/biddingResult/biddingResult.slice";
 import { createBiddingResult, updateBiddingResult } from "@/services/store/biddingResult/biddingResult.thunk";
