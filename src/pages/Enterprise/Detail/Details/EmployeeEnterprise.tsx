@@ -9,6 +9,14 @@ import { getAllEmployee } from "@/services/store/employee/employee.thunk";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+export const educationLevelMapping: Record<string, string> = {
+  after_university: "Sau đại học",
+  college: "Cao đẳng",
+  high_school: "Trung học phổ thông",
+  primary_school: "Tiểu học",
+  secondary_school: "Trung học cơ sở",
+  university: "Đại học",
+};
 const EmployeeEnterprise = () => {
   const { state, dispatch } = useArchive<IEmployeeInitialState>("employee");
   const { state: stateChart, dispatch: dispatchChart } = useArchive<IChartInitialState>("chart");
@@ -69,15 +77,6 @@ const EmployeeEnterprise = () => {
       }),
     );
   }, []);
-
-  const educationLevelMapping: Record<string, string> = {
-    after_university: "Sau đại học",
-    college: "Cao đẳng",
-    high_school: "Trung học phổ thông",
-    primary_school: "Tiểu học",
-    secondary_school: "Trung học cơ sở",
-    university: "Đại học",
-  };
 
   const names = Object.keys(stateChart.employeeEducationLevelStatisticByEnterprise || {});
   const mappedNames = names.map((name) => educationLevelMapping[name] || name);
