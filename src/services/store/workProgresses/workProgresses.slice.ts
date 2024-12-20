@@ -14,17 +14,21 @@ import {
   getWorkProgressById,
   updateWorkProgress,
 } from "./workProgresses.thunk";
+import { ITask } from "../task/task.model";
+import { getTaskOfProject } from "../task/task.thunk";
 
 export interface IWorkProgressInitialState extends IInitialState {
   workProgresses: IWorkProgress[];
   workProgress?: IWorkProgress | any;
   getListworkProgress: IWorkProgress[];
+  getTaskOfProject?: ITask[];
 }
 
 const initialState: IWorkProgressInitialState = {
   status: EFetchStatus.IDLE,
   workProgresses: [],
   getListworkProgress: [],
+  getTaskOfProject: [],
   workProgress: undefined,
   message: "",
   filter: {
@@ -114,6 +118,15 @@ const workProgressSlice = createSlice({
       })
       .addCase(deleteWorkProgress.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
+        state.message = transformPayloadErrors(payload?.errors);
+      });
+    builder
+      .addCase(getTaskOfProject.fulfilled, (state, { payload }: PayloadAction<IResponse<ITask[]> | any>) => {
+        if (payload.data) {
+          state.getTaskOfProject = payload.data;
+        }
+      })
+      .addCase(getTaskOfProject.rejected, (state, { payload }: PayloadAction<IResponse<ITask[]> | any>) => {
         state.message = transformPayloadErrors(payload?.errors);
       });
   },

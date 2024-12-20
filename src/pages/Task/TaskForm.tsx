@@ -102,7 +102,7 @@ const TaskForm = ({ visible, type, setVisible, item, treeData }: ITaskFormProps)
               text={"Lưu"}
               onClick={() => {
                 if (formikRef.current) {
-                  formikRef.current.validateForm().then((errors) => {O
+                  formikRef.current.validateForm().then((errors) => {
                     if (Object.keys(errors).length === 0) {
                       formikRef.current?.handleSubmit();
                     }

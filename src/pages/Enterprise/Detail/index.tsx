@@ -16,6 +16,7 @@ import Employee from "./Details/EmployeeEnterprise";
 import Investor from "./Details/Investor";
 import Tenderer from "./Details/Tenderer";
 import Win from "./Details/Win";
+import Loading from "@/pages/Loading/Loading";
 const DetailEnterprise = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IEnterpriseInitialState>("enterprise");
@@ -120,7 +121,9 @@ const DetailEnterprise = () => {
       ),
     },
   ];
-
+  if (!data) {
+    return <Loading />;
+  }
   return (
     <>
       <Heading

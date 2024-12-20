@@ -120,3 +120,11 @@ export const getListTask = createAsyncThunk("staff/tasks", async (_, { rejectWit
     return rejectWithValue(error.response.data);
   }
 });
+export const getTaskOfProject = createAsyncThunk("get-task-of-projects", async (id: number | string, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.get<ITask[]>(`/api/admin/get-task-of-project/${id}`);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});

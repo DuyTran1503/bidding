@@ -10,6 +10,7 @@ import {
   getAllBidDocument,
   getBidDocumentById,
   getListBidDocument,
+  getListBidDocumentWithoutBidResultWithoutBidResult,
   updateBidDocument,
 } from "./bid_document.thunk";
 import { IError } from "@/shared/interface/error";
@@ -19,6 +20,7 @@ export interface IBidDocumentInitialState extends IInitialState {
   bidDocuments: IBidDocument[];
   bidDocument?: IBidDocument;
   listDocuments?: IBidDocument[];
+  getListBidDocumentWithoutBidResultWithoutBidResult?: IBidDocument[];
 }
 
 const initialState: IBidDocumentInitialState = {
@@ -139,6 +141,21 @@ const bidDocumentSlice = createSlice({
       .addCase(deleteBidDocument.rejected, (state, { payload }: PayloadAction<IError | any>) => {
         state.status = EFetchStatus.REJECTED;
         state.message = transformPayloadErrors(payload?.errors || payload?.message);
+      });
+    builder
+      .addCase(getListBidDocumentWithoutBidResultWithoutBidResult.fulfilled, (state, { payload }: PayloadAction<IBidDocument[]> | any) => {
+        if (payload.data) {
+          state.getListBidDocumentWithoutBidResultWithoutBidResult = payload.data.map((item: IBidDocument) => ({
+            id: item.id,
+            name: item.name,
+          }));
+          state.loading = false;
+        }
+      })
+      .addCase(getListBidDocumentWithoutBidResultWithoutBidResult.rejected, (state, { payload }: PayloadAction<IBidDocument> | any) => {
+        state.bidDocument = payload.data;
+        state.message = transformPayloadErrors(payload?.errors);
+        state.loading = true;
       });
   },
 });

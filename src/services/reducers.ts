@@ -42,6 +42,7 @@ import { workProgressSlice } from "./store/workProgresses/workProgresses.slice";
 import { projectApprovalSlice } from "./store/project-approval/project-approval.slice";
 import { editProfileSlice } from "./store/profile/profile.slice";
 import { systemSlice } from "./store/system/system.slice";
+import { totalStatisticalSlice } from "./store/totalStatistical/totalStatistical.slice";
 
 export const reducers = combineReducers({
   app: appSlice.reducer,
@@ -84,8 +85,9 @@ export const reducers = combineReducers({
   task: taskSlice.reducer,
   work_progress: workProgressSlice.reducer,
   evaluate: evaluateSlice.reducer,
-  project_approval:projectApprovalSlice.reducer,
-  system:systemSlice.reducer
+  project_approval: projectApprovalSlice.reducer,
+  system: systemSlice.reducer,
+  total_statistical: totalStatisticalSlice.reducer,
 });
 
 export type RootStateType = ReturnType<typeof reducers>;

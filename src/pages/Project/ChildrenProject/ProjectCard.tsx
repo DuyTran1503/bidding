@@ -1,4 +1,7 @@
+import { useArchive } from "@/hooks/useArchive";
 import { INewProject } from "@/services/store/project/project.model";
+import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { deleteProject } from "@/services/store/project/project.thunk";
 import { Card, Modal, Tooltip } from "antd";
 import { HiOutlinePencil } from "react-icons/hi2";
 import { IoTrashBinOutline } from "react-icons/io5";
@@ -12,7 +15,9 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit }) => {
-  const handleRemove = (index: number) => {
+  const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+
+  const handleRemove = (id: number) => {
     confirm({
       title: "Xóa gói thầu",
       content: "Bạn chắc chắn muốn xóa gói thầu này không?",
@@ -20,7 +25,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit }) => {
       cancelText: "Hủy",
       okButtonProps: { className: "bg-red-500 hover:bg-red-600" },
       onOk: () => {
-        console.log(index);
+        dispatchProject(deleteProject(id.toString()));
+        console.log(id);
       },
     });
   };
@@ -45,13 +51,21 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ children, onEdit }) => {
 
               <div className="ml-4 flex gap-2">
                 <Tooltip title="Cập nhật">
-                  <button type="button" className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100" onClick={() => handleEdit(child)}>
+                  <button
+                    type="button"
+                    className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100"
+                    onClick={() => handleEdit(child)}
+                  >
                     <HiOutlinePencil className="text-xl text-yellow-500" />
                   </button>
                 </Tooltip>
 
                 <Tooltip title="Xóa">
-                  <button className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100" onClick={() => handleRemove(index)}>
+                  <button
+                    type="button"
+                    className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100"
+                    onClick={() => handleRemove(child.id)}
+                  >
                     <IoTrashBinOutline className="text-xl text-red-500" />
                   </button>
                 </Tooltip>

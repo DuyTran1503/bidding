@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import SearchComponent, { ISearchProps } from "./SearchComponent";
 import CustomTabs from "./CustomTabs";
 import { useLocation } from "react-router-dom";
+import { BsDatabaseFillX } from "react-icons/bs";
 export interface ITableData {
   key: React.Key;
   [key: string]: unknown;
@@ -115,9 +116,14 @@ const PrimaryTable = <T extends ISearchParams>({
       dispatch(fetching());
     }
   }, [dispatch]);
-
+  const emptyText = (
+    <div className="flex items-center justify-center">
+      <BsDatabaseFillX style={{ marginRight: 8 }} size={24} color="#535353" />
+      <div className="text-[#535353]">Không có dữ liệu</div>
+    </div>
+  );
   return (
-    <div className="primary-table flex w-full flex-col gap-6">
+    <div className="primary-table flex w-full flex-col gap-5">
       {search && <SearchComponent search={search} setFilter={setFilter} filter={filter} />}
       {additionalTabs.length > 0 ? (
         <CustomTabs items={tabItems} />
@@ -130,6 +136,7 @@ const PrimaryTable = <T extends ISearchParams>({
           scroll={scroll}
           rowKey="key"
           className="shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]"
+          locale={{ emptyText }}
         />
       )}
       {/* <div className="flex items-center justify-between">

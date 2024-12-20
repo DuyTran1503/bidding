@@ -38,6 +38,8 @@ import BidBondForm from "@/pages/BidBond/components/BidBondForm";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import { getListProject } from "@/services/store/project/project.thunk";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { IBidDocumentInitialState } from "@/services/store/bid_document/bid_document.slice";
+import { getListBidDocumentWithoutBidResultWithoutBidResult } from "@/services/store/bid_document/bid_document.thunk";
 const CreateProject = () => {
   const navigate = useNavigate();
   const formikRef = useRef<FormikProps<INewProject>>(null);
@@ -51,6 +53,8 @@ const CreateProject = () => {
   const { state: stateProcurement, dispatch: dispatchProcurement } = useArchive<IProcurementInitialState>("procurement");
   const [selectedChild, setSelectedChild] = useState<INewProject | null>(null);
   const { dispatch: dispatchBidBond } = useArchive<IBidBondInitialState>("bid_bond");
+  const { state: stateBidDoc, dispatch: dispatchBidDoc } = useArchive<IBidDocumentInitialState>("bid_document");
+
   const [activeTabKey, setActiveTabKey] = useState<string>("1");
   const formikRefBidDoc = useRef<FormikProps<IBiddingResult>>(null);
   const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[] | undefined>(undefined);
@@ -102,6 +106,9 @@ const CreateProject = () => {
     };
     dispatchBidBond(createBidBond({ body: body }));
   };
+  useEffect(() => {
+    +activeTabKey === 6 && dispatchBidDoc(getListBidDocumentWithoutBidResultWithoutBidResult());
+  }, [activeTabKey]);
   useEffect(() => {
     return () => {
       dispatch(resetStatus());
@@ -313,9 +320,12 @@ const CreateProject = () => {
                 type: "secondary",
                 text: "Quay lại",
                 icon: <IoClose className="text-[18px]" />,
+                onClick: () => {
+                  navigate(-1);
+                },
               },
               {
-                isLoading: state.status === EFetchStatus.PENDING,
+                isLoading: stateBidDoc.status === EFetchStatus.PENDING,
                 text: "Tạo mới",
                 icon: <FaPlus className="text-[18px]" />,
                 onClick: () => {
@@ -326,7 +336,13 @@ const CreateProject = () => {
               },
             ]}
           />
-          <BiddingResultForm formikRef={formikRefBidDoc} type={EButtonTypes.CREATE} isOutSide listEnterprises={stateEnterprise.listEnterprise!} />
+          <BiddingResultForm
+            optionDocs={convertDataOptions((stateBidDoc.getListBidDocumentWithoutBidResultWithoutBidResult as { id: string; name: string }[]) || [])}
+            formikRef={formikRefBidDoc}
+            type={EButtonTypes.CREATE}
+            isOutSide
+            listEnterprises={stateEnterprise.listEnterprise!}
+          />
         </>
       ),
     },

@@ -11,6 +11,7 @@ import { EPageTypes } from "@/shared/enums/page";
 import { getEmployeeById } from "@/services/store/employee/employee.thunk";
 import { IEmployee } from "@/services/store/employee/employee.model";
 import { IEmployeeInitialState, resetStatus } from "@/services/store/employee/employee.slice";
+import Loading from "@/pages/Loading/Loading";
 
 const UpdateEmployee = () => {
   const { id } = useParams();
@@ -34,6 +35,9 @@ const UpdateEmployee = () => {
   useEffect(() => {
     if (id) dispatch(getEmployeeById(id));
   }, [id]);
+  if (!state.employee) {
+    return <Loading />;
+  }
   return (
     <>
       <Heading

@@ -2,7 +2,7 @@ export enum LEVELTASK {
   EASY = "easy",
   MEDIUM = "medium",
   HARD = "hard",
-  VERYHARD = "very_hard",
+  VERYHARD = "veryhard",
 }
 
 export const levelTaskEnumArray: LEVELTASK[] = [LEVELTASK.EASY, LEVELTASK.MEDIUM, LEVELTASK.HARD, LEVELTASK.VERYHARD];

@@ -118,3 +118,16 @@ export const getListBidDocument = createAsyncThunk("bid_document/get-list-bid-do
     return rejectWithValue(error.response.data);
   }
 });
+
+export const getListBidDocumentWithoutBidResultWithoutBidResult = createAsyncThunk(
+  "bid_document/get-bid-documents-without-bid-result",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { response, data } = await client.get(`/api/admin/list-bid-documents/get-bid-documents-without-bid-result`);
+
+      return response.status >= 400 ? rejectWithValue(data) : data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  },
+);

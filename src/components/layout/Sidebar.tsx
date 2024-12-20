@@ -19,7 +19,7 @@ import {
   IoPodiumOutline,
   IoReceiptOutline,
   IoSettingsOutline,
-  IoTimerOutline
+  IoTimerOutline,
 } from "react-icons/io5";
 
 import { checkPermission } from "@/helpers/checkPermission";
@@ -295,7 +295,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
       path: "supports",
       permissions: EPermissions.LIST_SUPPORT,
       icon: { component: IoHeadsetOutline },
-
     },
     // {
     //   id: "10",
@@ -324,8 +323,9 @@ const Sidebar = ({ children }: PropsWithChildren) => {
 
       <div className="flex h-dvh select-none bg-gray-25">
         <div
-          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 ${isSidebarVisible ? "translate-x-0" : "-translate-x-full"
-            }`}
+          className={`fixed bottom-0 left-0 top-0 z-40 flex w-[264px] flex-col bg-white transition-transform duration-300 md:translate-x-0 ${
+            isSidebarVisible ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
           <div className="flex cursor-pointer items-center gap-x-3 px-5 py-4 uppercase" onClick={() => navigate("/dashboard")}>
             <img src={stateSystem.system?.logo} alt={stateSystem.system?.name} className="w-20" />
@@ -370,7 +370,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           </nav>
         </div>
 
-        <main className="ml-0 flex grow flex-col gap-6 overflow-y-scroll p-6 md:ml-[264px]">{children}</main>
+        <main className="ml-0 flex grow flex-col gap-2 overflow-y-scroll p-6 md:ml-[264px]">{children}</main>
       </div>
     </>
   );

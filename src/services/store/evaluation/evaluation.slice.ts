@@ -13,6 +13,8 @@ import {
 import { transformPayloadErrors } from "@/shared/utils/common/function";
 import { IError } from "@/shared/interface/error";
 import { IEvaluationCriteria } from "./evaluation.model";
+import { getTaskOfProject } from "../task/task.thunk";
+import { ITask } from "../task/task.model";
 
 export interface IEvaluationCriteriaInitialState extends IInitialState {
   evaluations: IEvaluationCriteria[];
@@ -25,6 +27,7 @@ const initialState: IEvaluationCriteriaInitialState = {
   message: "",
   evaluations: [],
   listEvaluation: [],
+
   evaluation: undefined,
   totalRecords: 0,
   totalPages: 0,

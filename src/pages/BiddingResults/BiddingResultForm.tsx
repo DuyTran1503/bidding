@@ -6,7 +6,7 @@ import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { IBidDocument } from "@/services/store/bid_document/bid_document.model";
 import { IBidDocumentInitialState } from "@/services/store/bid_document/bid_document.slice";
-import { getListBidDocument } from "@/services/store/bid_document/bid_document.thunk";
+import {  getListBidDocumentWithoutBidResultWithoutBidResult } from "@/services/store/bid_document/bid_document.thunk";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 import { IBiddingResultInitialState, resetStatus } from "@/services/store/biddingResult/biddingResult.slice";
 import { createBiddingResult, updateBiddingResult } from "@/services/store/biddingResult/biddingResult.thunk";
@@ -100,7 +100,7 @@ const BiddingResultForm = ({
   };
   useEffect(() => {
     dispatchProject(getListProject());
-    dispatchBidDoc(getListBidDocument());
+    dispatchBidDoc(getListBidDocumentWithoutBidResultWithoutBidResult());
     if (!isOutSide) {
       dispatchEnterprise(getListEnterprise());
     }
@@ -159,7 +159,10 @@ const BiddingResultForm = ({
               <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Hồ sơ trúng thầu" required>
                   <FormSelect
-                    options={convertDataOptions((stateBidDoc.listDocuments as { id: string; name: string }[]) || []) || optionDocs}
+                    options={
+                      convertDataOptions((stateBidDoc.getListBidDocumentWithoutBidResultWithoutBidResult as { id: string; name: string }[]) || []) ||
+                      optionDocs
+                    }
                     isDisabled={type === "view"}
                     value={values.bid_document_id}
                     id="bid_document_id"

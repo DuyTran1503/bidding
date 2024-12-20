@@ -21,6 +21,7 @@ import FormCkEditor from "@/components/form/FormCkEditor";
 import FormInput from "@/components/form/FormInput";
 import { mixed, object } from "yup";
 import ProjectDetailsCard from "@/pages/Project/Detail/ProjectDetailsCard";
+import Loading from "@/pages/Loading/Loading";
 
 interface IApprove {
   status?: STATUS_PROJECT;
@@ -78,6 +79,7 @@ const ApproveProjectByStaff = () => {
       setData(state.project);
     }
   }, [JSON.stringify(state.project)]);
+
   return (
     <>
       <Heading

@@ -31,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { convertDataOptions } from "./helper";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import { unwrapResult } from "@reduxjs/toolkit";
+import Loading from "../Loading/Loading";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 
@@ -44,6 +45,7 @@ const ProjectPage = () => {
   const [isModal, setIsModal] = useState(false);
   const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const columns: ColumnsType = [
     {
@@ -104,8 +106,8 @@ const ProjectPage = () => {
         <GenericChart
           chartType="bar"
           title="Biểu đồ số lượng dự án theo ngành"
-          name={stateIndustry.industryData.map(({ name }) => name)}
-          value={stateIndustry.industryData.map(({ value }) => value)}
+          name={stateIndustry?.industryData?.map(({ name }) => name)}
+          value={stateIndustry?.industryData?.map(({ value }) => value)}
           seriesName="Dữ liệu Biểu đồ"
         />
       ),
@@ -175,12 +177,10 @@ const ProjectPage = () => {
 
   const search: ISearchTypeTable[] = [
     {
-      id: "project",
-      placeholder: "Chọn dự án ...",
+      id: "name",
+      placeholder: "Nhập dự án ...",
       label: "Tên dự án ",
-      isMultiple: true,
-      type: "treeSelect",
-      treeData: treeData,
+      type: "text",
     },
     {
       id: "staff",
@@ -279,6 +279,16 @@ const ProjectPage = () => {
       error: { message: stateProject.message },
     },
   });
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setLoading(false);
+  //   }, 2000);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
+  // if (data.length <= 0) {
+  //   return <Loading />;
+  // }
   return (
     <>
       <Heading
@@ -301,6 +311,7 @@ const ProjectPage = () => {
         setVisible={setIsModal}
         // onConfirm={onConfirmStatus}
       />
+
       <ManagementGrid
         columns={columns}
         data={data}
