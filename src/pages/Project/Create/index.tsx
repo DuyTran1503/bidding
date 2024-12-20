@@ -2,7 +2,7 @@ import Heading from "@/components/layout/Heading";
 import { useArchive } from "@/hooks/useArchive";
 import useFetchStatus from "@/hooks/useFetchStatus";
 import { INewProject } from "@/services/store/project/project.model";
-import { IProjectInitialState, resetStatus } from "@/services/store/project/project.slice";
+import { IProjectInitialState, resetChildren, resetStatus } from "@/services/store/project/project.slice";
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import { FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
@@ -57,7 +57,7 @@ const CreateProject = () => {
 
   useFetchStatus({
     module: "project",
-    reset: resetStatus,
+    reset: resetChildren,
     actions: {
       success: {
         message: state.message,
@@ -184,12 +184,13 @@ const CreateProject = () => {
             ]}
           />
           <ActionModule
-            type={EPageTypes.UPDATE}
+            type={EPageTypes.CREATE}
             isChildren
-            item={selectedChild!}
+            isCreateChild={true}
+            // item={selectedChild!}
             project={state.dataCreateProject}
             formikRef={formikRef}
-            parent_id={state.project?.id}
+            parent_id={state.dataCreateProject?.id}
             listIndustry={stateIndustry.listIndustry}
             listSelectionMethods={stateMethod.listSelectionMethods}
             listFundingSources={stateFundingSource.listFundingSources}
@@ -259,14 +260,14 @@ const CreateProject = () => {
             title="Tạo mới "
             hasBreadcrumb
             buttons={[
-              {
-                type: "secondary",
-                text: "Quay lại",
-                icon: <IoClose className="text-[18px]" />,
-                onClick: () => {
-                  navigate("/bid-document");
-                },
-              },
+              // {
+              //   type: "secondary",
+              //   text: "Quay lại",
+              //   icon: <IoClose className="text-[18px]" />,
+              //   // onClick: () => {
+              //   //   navigate("/bid-document");
+              //   // },
+              // },
               {
                 isLoading: state.status === EFetchStatus.PENDING,
                 text: "Tạo mới",

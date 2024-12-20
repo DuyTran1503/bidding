@@ -38,6 +38,7 @@ const ProjectPage = () => {
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateIndustry, dispatch: dispatchIndustry } = useArchive<IChartInitialState>("chart");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+
   const { state: stateStaff, dispatch: dispatchStaff } = useArchive<IAccountInitialState>("account");
   const navigate = useNavigate();
   const [isModal, setIsModal] = useState(false);
@@ -227,16 +228,16 @@ const ProjectPage = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(stateProject.projects)
       ? stateProject.projects.map(({ id, name, investor, total_amount, upload_time, bid_submission_start, bid_opening_date, status }, index) => ({
-        index: index + 1,
-        key: id,
-        name,
-        investor,
-        total_amount,
-        upload_time,
-        bid_submission_start,
-        bid_opening_date,
-        status,
-      }))
+          index: index + 1,
+          key: id,
+          name,
+          investor,
+          total_amount,
+          upload_time,
+          bid_submission_start,
+          bid_opening_date,
+          status,
+        }))
       : [];
   }, [JSON.stringify(stateProject.projects)]);
 
@@ -298,7 +299,7 @@ const ProjectPage = () => {
         content={"Bạn chắc chắn muốn thay đổi trạng thái không"}
         visible={isModal}
         setVisible={setIsModal}
-      // onConfirm={onConfirmStatus}
+        // onConfirm={onConfirmStatus}
       />
       <ManagementGrid
         columns={columns}

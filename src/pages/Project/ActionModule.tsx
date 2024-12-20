@@ -48,6 +48,7 @@ interface IPropProject {
   parent_id?: number;
   parent_name?: string;
   activeTabKey?: string;
+  isCreateChild?: boolean;
 }
 type FileObject = {
   path: string;
@@ -70,10 +71,11 @@ const ActionModule = ({
   parent_id,
   parent_name,
   activeTabKey,
+  isCreateChild,
 }: IPropProject) => {
   const { dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const [children, setChildren] = useState<INewProject[]>([]);
-
+  const [isCreateChildProject, setIsCreateChildProject] = useState(false);
   const initialValues: INewProject = useMemo(
     () => ({
       id: isChildren && type === EPageTypes.CREATE ? 0 : item && isChildren && type === EPageTypes.UPDATE ? item.id : project?.id ?? 0,
@@ -91,48 +93,52 @@ const ActionModule = ({
 
       selection_method_id:
         isChildren && type === EPageTypes.CREATE
-          ? undefined
+          ? project?.selection_method?.id
           : item && isChildren && type === EPageTypes.UPDATE
             ? item?.selection_method?.id
             : project?.selection_method ?? undefined,
 
       location:
-        isChildren && type === EPageTypes.CREATE ? "" : item && isChildren && type === EPageTypes.UPDATE ? item.location : project?.location ?? "",
+        isChildren && type === EPageTypes.CREATE
+          ? project?.location!
+          : item && isChildren && type === EPageTypes.UPDATE
+            ? item.location
+            : project?.location ?? "",
 
       tenderer_id:
         isChildren && type === EPageTypes.CREATE
-          ? null
+          ? +project?.tenderer_id!
           : item && isChildren && type === EPageTypes.UPDATE
             ? +item.tenderer.id! || null
-            : +project?.tenderer! || null,
+            : +project?.tenderer || null,
 
       investor_id:
         isChildren && type === EPageTypes.CREATE
-          ? null
+          ? +project?.investor_id!
           : item && isChildren && type === EPageTypes.UPDATE
             ? +item.investor.id! || null
-            : +project?.investor! || null,
+            : +project?.investor || null,
 
       funding_source_id:
         isChildren && type === EPageTypes.CREATE
-          ? undefined
+          ? project?.funding_source_id
           : item && isChildren && type === EPageTypes.UPDATE
             ? item.funding_source.id
             : project?.funding_source ?? undefined,
 
       staff_id:
         isChildren && type === EPageTypes.CREATE
-          ? undefined
+          ? project?.staff.id
           : item && isChildren && type === EPageTypes.UPDATE
             ? item.staff.id
             : project?.staff ?? undefined,
 
       industry_id:
         isChildren && type === EPageTypes.CREATE
-          ? []
+          ? project?.industries?.map((item: any) => item.id)
           : item && isChildren && type === EPageTypes.UPDATE
             ? item.industries?.map((item: any) => item.id)
-            : project?.industries ?? [],
+            : project?.industries?.map((item: any) => item.id) ?? [],
 
       is_domestic:
         isChildren && type === EPageTypes.CREATE
@@ -164,21 +170,21 @@ const ActionModule = ({
       })(),
       receiving_place:
         isChildren && type === EPageTypes.CREATE
-          ? ""
+          ? project?.receiving_place!
           : item && isChildren && type === EPageTypes.UPDATE
             ? item.receiving_place
             : project?.receiving_place ?? "",
 
       bid_submission_start:
         isChildren && type === EPageTypes.CREATE
-          ? ""
+          ? project?.bid_submission_start!
           : item && isChildren && type === EPageTypes.UPDATE
             ? item.bid_submission_start
             : project?.bid_submission_start ?? "",
 
       bid_submission_end:
         isChildren && type === EPageTypes.CREATE
-          ? ""
+          ? project?.bid_submission_end!
           : item && isChildren && type === EPageTypes.UPDATE
             ? item.bid_submission_end
             : project?.bid_submission_end ?? "",
@@ -209,7 +215,7 @@ const ActionModule = ({
 
       decision_number_approve:
         isChildren && type === EPageTypes.CREATE
-          ? ""
+          ? project?.decision_number_approve!
           : item && isChildren && type === EPageTypes.UPDATE
             ? item.decision_number_approve
             : project?.decision_number_approve ?? "",
@@ -225,7 +231,7 @@ const ActionModule = ({
 
       procurement_id:
         isChildren && type === EPageTypes.CREATE
-          ? []
+          ? project?.procurement_categories?.map((item: any) => item.id)
           : item && isChildren && type === EPageTypes.UPDATE
             ? item.procurement_categories?.map((item: any) => item.id)
             : project?.procurement_categories ?? [],
@@ -233,7 +239,7 @@ const ActionModule = ({
       submission_method: project?.submission_method ?? undefined,
 
       files:
-        isChildren && type === EPageTypes.CREATE
+        (isChildren && type === EPageTypes.CREATE) || isCreateChild
           ? []
           : item && isChildren && type === EPageTypes.UPDATE && activeTabKey && +activeTabKey === 2
             ? item.attachments
@@ -241,14 +247,14 @@ const ActionModule = ({
 
       decision_number_issued:
         isChildren && type === EPageTypes.CREATE
-          ? ""
+          ? project?.decision_number_issued!
           : item && isChildren && type === EPageTypes.UPDATE
             ? item.decision_number_issued
             : project?.decision_number_issued ?? "",
 
       fileChildren: undefined,
     }),
-    [project],
+    [project, isCreateChildProject],
   );
 
   const optionDomestic = domesticEnumArray.map((item) => ({
@@ -265,7 +271,7 @@ const ActionModule = ({
     onChildSelect && onChildSelect(child);
     setActiveTabKey && setActiveTabKey("2");
   };
-  const handleSaveChild = (values: INewProject) => {
+  const handleSaveChild = async (values: INewProject) => {
     const data = {
       ...lodash.omit(values, "children", "id"),
       files: values.files,
@@ -285,13 +291,18 @@ const ActionModule = ({
     //   ...sanitizedProject,
     //   children: [newData],
     // };
-    if (type === EPageTypes.UPDATE && item && activeTabKey && +activeTabKey === 2) {
-      return dispatchProject(updateProject({ body: newData, param: String(values.id) }));
+
+    if (type === EPageTypes.UPDATE && item && activeTabKey && +activeTabKey !== 2) {
+      return await dispatchProject(updateProject({ body: newData, param: String(values.id) }));
     } else {
-      return dispatchProject(createProject({ ...data, parent_id: parent_id } as Omit<INewProject, "id">));
+      return await dispatchProject(createProject({ ...data, parent_id: parent_id } as Omit<INewProject, "id">));
     }
   };
-
+  useEffect(() => {
+    if (activeTabKey && +activeTabKey === 6 && !!parent_id) {
+      setIsCreateChildProject(true);
+    }
+  }, [isCreateChildProject]);
   useEffect(() => {
     if (project?.children) {
       setChildren(project.children);
@@ -308,7 +319,7 @@ const ActionModule = ({
           ...lodash.omit(values, "id", "children", "fileChildren"),
         };
 
-        if (isChildren) {
+        if (!!isChildren) {
           handleSaveChild(values); // Sử dụng lại `handleSaveChild`
           return;
         }
@@ -319,6 +330,7 @@ const ActionModule = ({
         if (type === EPageTypes.APPROVE) {
           return;
         }
+
         if (type === EPageTypes.UPDATE && project?.id && activeTabKey && +activeTabKey === 1) {
           const updatedFiles =
             initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
@@ -342,7 +354,7 @@ const ActionModule = ({
                     placeholder="Nhập tên dự án..."
                     name="name"
                     value={values.name}
-                    error={touched.name || !values.name ? errors.name : ""}
+                    error={touched.name ? errors.name : ""}
                     onChange={(e) => setFieldValue("name", e)}
                     onBlur={handleBlur}
                   />
@@ -355,7 +367,7 @@ const ActionModule = ({
                     placeholder="Chọn phương thức..."
                     id="selection_method_id"
                     value={values.selection_method_id as string}
-                    error={touched.selection_method_id  || !values.selection_method_id? errors.selection_method_id : ""}
+                    error={touched.selection_method_id ? errors.selection_method_id : ""}
                     onChange={(e) => setFieldValue("selection_method_id", e)}
                     options={convertDataOptions((listSelectionMethods as any) || [])}
                   />
@@ -368,7 +380,7 @@ const ActionModule = ({
                     placeholder="Chọn hình thức..."
                     id="submission_method"
                     value={values.submission_method as string}
-                    error={touched.submission_method || !values.selection_method ? errors.submission_method : ""}
+                    error={touched.submission_method ? errors.submission_method : ""}
                     onChange={(e) => {
                       setFieldValue("submission_method", e);
                       // Nếu là online, xóa giá trị Địa Điểm Nhận Hồ Sơ
@@ -404,7 +416,7 @@ const ActionModule = ({
                     placeholder="Nhập địa điểm..."
                     name="location"
                     value={values.location}
-                    error={touched.location || !values.location ? errors.location : ""}
+                    error={touched.location ? errors.location : ""}
                     onChange={(e) => setFieldValue("location", e)}
                     onBlur={handleBlur}
                   />
@@ -418,7 +430,6 @@ const ActionModule = ({
                     id="tenderer_id"
                     error={touched.tenderer_id ? errors.tenderer_id : ""}
                     value={values.tenderer_id!}
-                    // error={touched.tenderer_id || !values.tenderer_id ? errors.tenderer_id : ""}
                     onChange={(e) => setFieldValue("tenderer_id", e)}
                     options={convertDataOptions(listEnterprise || [])}
                   />
@@ -433,7 +444,6 @@ const ActionModule = ({
                     id="investor_id"
                     error={touched.investor_id ? errors.investor_id : ""}
                     value={values.investor_id!}
-                    // error={touched.investor_id || !values.investor_id ? errors.investor_id : ""}
                     options={convertDataOptions(listEnterprise || [])}
                     onChange={(e) => setFieldValue("investor_id", e)}
                   />
@@ -446,7 +456,7 @@ const ActionModule = ({
                     placeholder="Chọn nguồn tài trợ..."
                     id="funding_source_id"
                     value={values.funding_source_id as string}
-                    error={touched.funding_source_id || !values.funding_source_id ? errors.funding_source_id : ""}
+                    error={touched.funding_source_id ? errors.funding_source_id : ""}
                     onChange={(e) => setFieldValue("funding_source_id", e)}
                     options={convertDataOptions(listFundingSources || [])}
                   />
@@ -460,14 +470,14 @@ const ActionModule = ({
                     placeholder="Chọn người phê duyệt..."
                     id="staff_id"
                     value={values.staff_id as string}
-                    error={touched.staff_id || !values.staff_id ? errors.staff_id : ""}
+                    error={touched.staff_id ? errors.staff_id : ""}
                     options={convertDataOptions(getListStaff!)}
                     onChange={(e) => setFieldValue("staff_id", e)}
                   />
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title=" Dịch vụ mua sắm đấu thầu công">
+                <FormGroup title=" Dịch vụ mua sắm đấu thầu công" required>
                   <FormSelect
                     isDisabled={type === EPageTypes.VIEW}
                     isMultiple
@@ -488,7 +498,7 @@ const ActionModule = ({
                     placeholder="Chọn ngành nghề..."
                     id="industry_id"
                     value={values.industry_id}
-                    error={touched.industry_id || values.industry_id?.length === 0 ? errors.industry_id : ""}
+                    error={touched.industry_id ? errors.industry_id : ""}
                     onChange={(e) => {
                       setFieldValue("industry_id", e);
                     }}
@@ -497,13 +507,13 @@ const ActionModule = ({
                 </FormGroup>
               </Col>
               <Col xs={24} sm={24} md={12} xl={8}>
-                <FormGroup title="Số quyết định ban hành">
+                <FormGroup title="Số quyết định ban hành" required>
                   <FormInput
                     isDisabled={type === EPageTypes.VIEW || type === EPageTypes.APPROVE}
                     placeholder="Nhập số quyết định ban hành..."
                     name="decision_number_issued"
                     value={values.decision_number_issued || ""}
-                    error={touched.decision_number_issued || !values.decision_number_issued ? errors.decision_number_issued : ""}
+                    error={touched.decision_number_issued ? errors.decision_number_issued : ""}
                     onChange={(e) => setFieldValue("decision_number_issued", e)}
                     onBlur={handleBlur}
                   />
@@ -533,7 +543,7 @@ const ActionModule = ({
                         ? Number(convertMoney(values.amount as unknown as string)) // Ép kiểu về number
                         : (values.amount as unknown as number) || 0
                     }
-                    error={touched.amount || !values.amount ? errors.amount : ""}
+                    error={touched.amount ? errors.amount : ""}
                     onChange={(e) => {
                       setFieldValue("amount", e);
                     }}
@@ -552,7 +562,7 @@ const ActionModule = ({
                         ? Number(convertMoney(values.total_amount as unknown as string)) // Ép kiểu về number
                         : (values.total_amount as unknown as number) || 0
                     }
-                    error={touched.total_amount || !values.total_amount ? errors.total_amount : ""}
+                    error={touched.total_amount ? errors.total_amount : ""}
                     onChange={(e) => {
                       setFieldValue("total_amount", e);
                     }}
@@ -598,6 +608,7 @@ const ActionModule = ({
                 <FormGroup title="Ngày bắt đầu dự án" required>
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
+                    error={touched.start_time || !values.start_time ? errors.start_time : ""}
                     minDate={values.bid_submission_end ? dayjs(values.bid_submission_end) : undefined}
                     value={values.start_time ? dayjs(values.start_time) : null}
                     onChange={(date) => setFieldValue("start_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}
@@ -608,6 +619,7 @@ const ActionModule = ({
                 <FormGroup title="Ngày kết thúc dự án" required>
                   <FormDate
                     disabled={type === EPageTypes.VIEW}
+                    error={touched.end_time || !values.end_time ? errors.end_time : ""}
                     minDate={values.start_time ? dayjs(values.bid_submission_end) : undefined}
                     value={values.end_time ? dayjs(values.end_time) : null}
                     onChange={(date) => setFieldValue("end_time", dayjs(date?.toISOString()).format("YYYY-MM-DD"))}

@@ -23,12 +23,16 @@ import { formatTreeData } from "../BiddingFields/BiddingFields/BiddingFields";
 import { convertDataOptions } from "../Project/helper";
 import { optionWorkProgress } from "./ActionModule";
 import { EPermissions } from "@/shared/enums/permissions";
+import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 
 const WorkProgresses = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useArchive<IWorkProgressInitialState>("work_progress");
   const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
+  const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
+
   const [parentOptions, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
 
   const feedbackColors: { [key in TypeFeedback]: string } = {
@@ -132,18 +136,18 @@ const WorkProgresses = () => {
       type: "text",
     },
     {
-      id: "project_id",
+      id: "project",
       placeholder: "Chọn dự án ...",
-      label: "Tên dự án",
+      label: "Chọn dự án",
       type: "treeSelect",
       treeData: parentOptions,
     },
     {
-      id: "task",
-      placeholder: "Chọn nhiệm vụ...",
-      label: "Nhiệm vụ ",
+      id: "enterprise",
+      placeholder: "Chọn doanh nghiệp thực hiện...",
+      label: "Doanh nghiệp thực hiện ",
       type: "select",
-      options: convertDataOptions(Array.isArray(stateTask?.listTasks) ? stateTask.listTasks : []),
+      options: convertDataOptions(stateEnterprise.listEnterprise || []),
     },
     {
       id: "feedback",
@@ -158,18 +162,18 @@ const WorkProgresses = () => {
     () =>
       state.workProgresses && state.workProgresses.length > 0
         ? state.workProgresses.map(({ id, project, name, progress, expense, start_date, end_date, task, feedback, description }, index) => ({
-          index: index + 1,
-          key: id,
-          project,
-          name,
-          progress,
-          expense,
-          start_date,
-          end_date,
-          feedback,
-          description,
-          task,
-        }))
+            index: index + 1,
+            key: id,
+            project,
+            name,
+            progress,
+            expense,
+            start_date,
+            end_date,
+            feedback,
+            description,
+            task,
+          }))
         : [],
     [state.workProgresses],
   );
@@ -188,9 +192,12 @@ const WorkProgresses = () => {
   }, [stateProject?.listProjects]);
   useEffect(() => {
     dispatch(getAllWorkProgresses({ query: state.filter }));
+  }, [state.filter]);
+  useEffect(() => {
     dispatchTask(getListTask());
     dispatchProject(getListProject());
-  }, [state.filter]);
+    dispatchEnterprise(getListEnterprise());
+  }, []);
   return (
     <>
       <Heading

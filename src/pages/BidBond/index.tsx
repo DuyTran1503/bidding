@@ -30,7 +30,7 @@ const BidBonds = () => {
   const { state, dispatch } = useArchive<IBidBondInitialState>("bid_bond");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateEnterprise, dispatch: dispatchEnterprise } = useArchive<IEnterpriseInitialState>("enterprise");
-  const [ treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
+  const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
   const enterpriseName = (value: number) => {
     if (stateEnterprise.listEnterprise!.length > 0 && !!value) {
       return stateEnterprise.listEnterprise!.find((item) => item.id === value)?.name;
@@ -87,9 +87,9 @@ const BidBonds = () => {
     {
       dataIndex: "bond_amount",
       title: "Số tiền bảo lãnh",
-       render: (_, record) => {
-              return convertMoney(record.bond_amount);
-            },
+      render: (_, record) => {
+        return convertMoney(record.bond_amount);
+      },
     },
   ];
 
@@ -97,26 +97,39 @@ const BidBonds = () => {
     () =>
       state.bidBonds && state.bidBonds.length > 0
         ? state.bidBonds.map(
-          (
-            { id, project_id, bond_amount, bond_type, project, enterprise, bond_number, enterprise_id, issue_date, expiry_date, description, bond_amount_in_words },
-            index,
-          ) => ({
-            index: index + 1,
-            key: id,
-            id,
-            project_id,
-            project:projectName(project_id as number),
-            bond_amount,
-            bond_type,
-            bond_number,
-            enterprise_id,
-            enterprise:enterpriseName(enterprise_id as number),
-            issue_date,
-            expiry_date,
-            description,
-            bond_amount_in_words,
-          }),
-        )
+            (
+              {
+                id,
+                project_id,
+                bond_amount,
+                bond_type,
+                project,
+                enterprise,
+                bond_number,
+                enterprise_id,
+                issue_date,
+                expiry_date,
+                description,
+                bond_amount_in_words,
+              },
+              index,
+            ) => ({
+              index: index + 1,
+              key: id,
+              id,
+              project_id,
+              project: projectName(project_id as number),
+              bond_amount,
+              bond_type,
+              bond_number,
+              enterprise_id,
+              enterprise: enterpriseName(enterprise_id as number),
+              issue_date,
+              expiry_date,
+              description,
+              bond_amount_in_words,
+            }),
+          )
         : [],
     [JSON.stringify(state.bidBonds), JSON.stringify(stateEnterprise?.listEnterprise)],
   );
@@ -130,7 +143,7 @@ const BidBonds = () => {
       dispatch(getAllBidBonds({ query: state.filter }));
     }
   }, [JSON.stringify(state.status)]);
- 
+
   useEffect(() => {
     dispatchEnterprise(getListEnterprise());
     dispatchProject(getListProject())
@@ -193,12 +206,9 @@ const BidBonds = () => {
     <>
       <Heading
         title="Bảo lãnh dự thầu"
-        ModalContent={(props) =>
-          <ActionModuleBidBod
-            {...(props as any)}
-            listEnterprise={stateEnterprise.listEnterprise}
-            listProjects={stateProject.listProjects}
-          />}
+        ModalContent={(props) => (
+          <ActionModuleBidBod {...(props as any)} listEnterprise={stateEnterprise.listEnterprise} listProjects={stateProject.listProjects} />
+        )}
         hasBreadcrumb
         buttons={[
           {
@@ -221,12 +231,9 @@ const BidBonds = () => {
         }}
         setFilter={setFilter}
         filter={state.filter}
-        ModalContent={(props) =>
-          <ActionModuleBidBod
-            {...(props as any)}
-            listEnterprise={stateEnterprise.listEnterprise}
-            listProjects={stateProject.listProjects}
-          />}
+        ModalContent={(props) => (
+          <ActionModuleBidBod {...(props as any)} listEnterprise={stateEnterprise.listEnterprise} listProjects={stateProject.listProjects} />
+        )}
       />
     </>
   );

@@ -37,7 +37,7 @@ const CreateBidDocument: React.FC<IProps> = ({ project_id, isCreateFromProject }
   return (
     <div className={`${isCreateFromProject ? "flex flex-col gap-3" : "flex flex-col gap-3"}`}>
       <Heading
-        title="Tạo mới "
+        title="Tạo mới hồ sơ dự thầu"
         hasBreadcrumb
         buttons={[
           {

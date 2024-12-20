@@ -24,17 +24,18 @@ const FormDate: React.FC<FormDateProps> = ({ label, onChange, error, defaultValu
     }
   };
   return (
-    <div className={clsx("flex flex-col items-start ")}>
+    <div className={clsx("flex flex-col items-start")}>
       {label && <div className="text-m-medium mb-1 text-black-300">{label}</div>}
 
       <DatePicker
         onChange={handleChange}
         defaultValue={defaultValue}
         minDate={minDate}
+        placeholder="Chọn thời gian..."
         maxDate={maxDate}
         value={value}
         disabled={disabled}
-        className="custom-datepicker w-full rounded-md bg-gray-25 !h-[35px]"
+        className="custom-datepicker !h-[35px] w-full rounded-md bg-gray-25"
       />
       {!!error && (
         <div className={clsx("placeholder:text-m-medium flex-1 grow border-red-500 py-[10px] font-normal text-red-500 outline-none focus:bg-white")}>

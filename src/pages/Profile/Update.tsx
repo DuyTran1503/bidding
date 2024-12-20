@@ -34,7 +34,6 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
     gender: item?.gender || state.editProfiles?.profile?.gender,
   };
   const handleSubmit = (data: IEditProfile) => {
-
     const newData: IEditProfile = {
       id: data.id,
       email: state.editProfiles?.email,
@@ -51,7 +50,6 @@ const Update = ({ formikRef, type, item }: IIEditProfileFormProps) => {
     }
 
     dispatch(updateEditProfile({ body: newData, param: String(newData?.id) }));
-
   };
 
   useEffect(() => {
