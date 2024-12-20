@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { convertDataOptions } from "../Project/helper";
 import { getListEnterprise } from "@/services/store/enterprise/enterprise.thunk";
 import { IEnterpriseInitialState } from "@/services/store/enterprise/enterprise.slice";
+import Loading from "../Loading/Loading";
 
 const ProjectApproval = () => {
   const { state: state, dispatch: dispatch } = useArchive<IProjectApprovalState>("project_approval");
@@ -161,6 +162,9 @@ const ProjectApproval = () => {
     dispatch(getProjectApprovalByStaff({ query: state.filter }));
     dispatchEnterprise(getListEnterprise());
   }, [state.filter]);
+  if (data.length <= 0) {
+    return <Loading />;
+  }
   return (
     <>
       <Heading title="Phê duyệt dự án" hasBreadcrumb />

@@ -21,6 +21,7 @@ import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
+import Loading from "@/pages/Loading/Loading";
 
 interface TreeNode {
   title: string;
@@ -188,6 +189,9 @@ const Tasks = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
+  if (!data.length) {
+    return <Loading />;
+  }
   return (
     <>
       <Heading

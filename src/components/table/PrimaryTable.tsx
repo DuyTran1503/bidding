@@ -117,7 +117,7 @@ const PrimaryTable = <T extends ISearchParams>({
   }, [dispatch]);
 
   return (
-    <div className="primary-table flex w-full flex-col gap-6">
+    <div className="primary-table flex w-full flex-col gap-5">
       {search && <SearchComponent search={search} setFilter={setFilter} filter={filter} />}
       {additionalTabs.length > 0 ? (
         <CustomTabs items={tabItems} />

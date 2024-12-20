@@ -40,7 +40,7 @@ import BiddingResultForm from "@/pages/BiddingResults/BiddingResultForm";
 import { IBiddingResult } from "@/services/store/biddingResult/biddingResult.model";
 import { resetStatus } from "@/services/store/biddingResult/biddingResult.slice";
 import { IBidDocumentInitialState } from "@/services/store/bid_document/bid_document.slice";
-import { getListBidDocument } from "@/services/store/bid_document/bid_document.thunk";
+import { getListBidDocument, getListBidDocumentWithoutBidResultWithoutBidResult } from "@/services/store/bid_document/bid_document.thunk";
 import Loading from "@/pages/Loading/Loading";
 const UpdateProject = () => {
   const navigate = useNavigate();
@@ -113,7 +113,7 @@ const UpdateProject = () => {
     dispatchProcurement(getListProcurement());
   }, []);
   useEffect(() => {
-    +activeTabKey === 6 && dispatchBidDoc(getListBidDocument());
+    +activeTabKey === 6 && dispatchBidDoc(getListBidDocumentWithoutBidResultWithoutBidResult());
   }, [activeTabKey]);
   const initialValues: IBidBond = {
     id: "",
@@ -370,7 +370,7 @@ const UpdateProject = () => {
           <BiddingResultForm
             isCreateBiddingResult
             formikRef={formikBidResultRef}
-            optionDocs={convertDataOptions((stateBidDoc.listDocuments as { id: string; name: string }[]) || [])}
+            optionDocs={convertDataOptions((stateBidDoc.getListBidDocumentWithoutBidResultWithoutBidResult as { id: string; name: string }[]) || [])}
           />
         </>
       ),

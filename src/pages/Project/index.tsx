@@ -31,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { convertDataOptions } from "./helper";
 import { formatTreeSelect } from "@/shared/enums/formatTreeSelect";
 import { unwrapResult } from "@reduxjs/toolkit";
+import Loading from "../Loading/Loading";
 
 const yearOptions = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(String);
 
@@ -279,6 +280,9 @@ const ProjectPage = () => {
       error: { message: stateProject.message },
     },
   });
+  if (data.length <= 0) {
+    return <Loading />;
+  }
   return (
     <>
       <Heading
@@ -301,6 +305,7 @@ const ProjectPage = () => {
         setVisible={setIsModal}
         // onConfirm={onConfirmStatus}
       />
+
       <ManagementGrid
         columns={columns}
         data={data}
