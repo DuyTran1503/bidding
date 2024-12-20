@@ -260,7 +260,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
           id: "8.8",
           label: "Hướng dẫn",
           path: "instructs",
-          permissions: EPermissions.LIST_INDUSTRY,
+          permissions: EPermissions.LIST_INSTRUCT,
         },
         {
           id: "8.9",
