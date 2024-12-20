@@ -41,6 +41,9 @@ const keyMappings = {
   evaluateKeys: {
     total_evaluates: "Tổng số đánh giá",
   },
+  total_selection_methodKeys: {
+    total_selection_method: "Tổng số hình thức",
+  },
 
   evaluationCriteriaKeys: {
     total_evaluation_criterias: "Tổng số tiêu chí đánh giá",
