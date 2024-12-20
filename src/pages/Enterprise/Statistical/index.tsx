@@ -12,6 +12,7 @@ import { IChartEnterpriseInitialState } from "@/services/store/enterprise_chart/
 import {
   averageDifficultyLevelTasksByEnterprise,
   detailEnterpriseByIds,
+  employeeEducationLevel,
   getEmployeeProjectStatistic,
   getEmployeeResultBiddingStatistic,
   projectCompletedByEnterprise,
@@ -23,6 +24,9 @@ import React, { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import EnterpriseDetail from "./EnterpriseTable";
+import GenericChart from "@/components/chart/GenericChart";
+import { educationLevelMapping } from "../Detail/Details/EmployeeEnterprise";
+import EmployeeEducationCharts from "./EmployeeEducationCharts";
 
 interface IProp {
   ids: string[] | number[];
@@ -97,8 +101,8 @@ const StatisticalEnterprise: React.FC = () => {
         dispatchChartEnterprise(projectCompletedByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
       } else if (selectedTabKey === "6") {
         dispatchChartEnterprise(projectWonByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
-        // } else if (selectedTabKey === "7") {
-        //   dispatchChartEnterprise(evaluationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
+      } else if (selectedTabKey === "7") {
+        dispatchChartEnterprise(employeeEducationLevel({ body: { enterprise_ids: enterpriseIds } }));
         // } else if (selectedTabKey === "8") {
         //   dispatchChartEnterprise(reputationsStatisticsByEnterprise({ body: { ids: enterpriseIds, year: selectedYear } }));
         // } else if (selectedTabKey === "8") {
@@ -118,7 +122,9 @@ const StatisticalEnterprise: React.FC = () => {
   //   const monthB = parseInt(b.split(' ')[1]);
   //   return monthA - monthB;  // Sắp xếp tháng từ nhỏ đến lớn
   // });
-
+  const names = Object.keys(stateChartEnterprise.employeeEducationLevel || {});
+  const mappedNames = names.map((name) => educationLevelMapping[name] || name);
+  const values = Object.values(stateChartEnterprise.employeeEducationLevel || {});
   const enterpriseId = stateEnterprise.enterprise?.id;
   const tabItems = [
     {
@@ -155,7 +161,7 @@ const StatisticalEnterprise: React.FC = () => {
         />
       ),
     },
-    
+
     {
       key: "5",
       label: "Biểu đồ điểm uy tín",
@@ -187,6 +193,11 @@ const StatisticalEnterprise: React.FC = () => {
           title="Biểu đồ thể hiện số lượng đánh giá và đánh giá trung bình doanh nghiệp nhận được"
         />
       ),
+    },
+    {
+      key: "7",
+      label: "Biểu đồ hồ sơ năng lực của nhân viên",
+      content: <EmployeeEducationCharts stateChartEnterprise={stateChartEnterprise?.employeeEducationLevel} />,
     },
     // {
     //   key: "7",

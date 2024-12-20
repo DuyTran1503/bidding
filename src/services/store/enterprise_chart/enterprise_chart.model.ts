@@ -33,18 +33,31 @@ export interface IChartEnterprise {
   account_ban_at: string | null;
   representative: string;
   avatar: string;
-  phone: string; 
-  address: string; 
-  website: string; 
+  phone: string;
+  address: string;
+  website: string;
   description: string | null;
   establish_date: string;
-  avg_document_rating: string; 
-  registration_date: string; 
-  registration_number: string; 
+  avg_document_rating: string;
+  registration_date: string;
+  registration_number: string;
   organization_type: string;
-  reputation: number; 
-  is_active: number; 
+  reputation: number;
+  is_active: number;
   is_blacklist: number;
   created_at: string;
-  updated_at: string; 
+  updated_at: string;
+}
+interface EducationLevels {
+  primary_school: number;
+  secondary_school: number;
+  high_school: number;
+  college: number;
+  university: number;
+  after_university: number;
+}
+
+export interface IChartEducation {
+  enterprise_name: string;
+  education_levels: EducationLevels;
 }

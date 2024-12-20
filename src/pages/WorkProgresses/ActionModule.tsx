@@ -8,7 +8,7 @@ import { IProjectInitialState } from "@/services/store/project/project.slice";
 import { getListProject } from "@/services/store/project/project.thunk";
 import { ITask } from "@/services/store/task/task.model";
 import { ITaskInitialState } from "@/services/store/task/task.slice";
-import { getListTask } from "@/services/store/task/task.thunk";
+import { getListTask, getTaskOfProject } from "@/services/store/task/task.thunk";
 import { IWorkProgressInitialState } from "@/services/store/workProgresses/workProgresses.slice";
 import { createWorkProgress, updateWorkProgress } from "@/services/store/workProgresses/workProgresses.thunk";
 import { EPageTypes } from "@/shared/enums/page";
@@ -49,7 +49,7 @@ export const optionWorkProgress = typeTypeFeedbackEnumArray.map((item) => ({
   label: mappingTypeFeedback[item],
 }));
 const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormProps) => {
-  const { dispatch: dispatchWorkProgress } = useArchive<IWorkProgressInitialState>("work_progress");
+  const { state, dispatch: dispatchWorkProgress } = useArchive<IWorkProgressInitialState>("work_progress");
   const { state: stateProject, dispatch: dispatchProject } = useArchive<IProjectInitialState>("project");
   const { state: stateTask, dispatch: dispatchTask } = useArchive<ITaskInitialState>("task");
   const [treeData, setTreeData] = useState<{ title: string; value: string; key: string; children?: any[] }[]>([]);
@@ -134,7 +134,13 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     placeholder="Nhập tên dự án..."
                     error={touched.project_id || !values.project_id ? errors.project_id : ""}
                     onChange={(value) => {
-                      setFieldValue("project_id", value as string);
+                      const projectId = value as string;
+                      setFieldValue("project_id", projectId);
+
+                      // Gọi hàm getTaskOfProject sau khi đặt project_id
+                      if (projectId) {
+                        dispatchWorkProgress(getTaskOfProject(projectId));
+                      }
                     }}
                     treeData={treeData}
                   />
@@ -160,12 +166,18 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
                     placeholder="Chọn nhiệm vụ..."
                     isMultiple
                     value={values.task_ids}
-                    error={touched.task_ids || values.task_ids?.length === 0 ? errors.task_ids : ""}
+                    error={
+                      touched.task_ids || state.getTaskOfProject?.length === 0
+                        ? "Dự án chưa có nhiệm vụ vui lòng chọn dự án khác"
+                        : values.task_ids?.length === 0
+                          ? errors.task_ids
+                          : ""
+                    }
                     id="task_ids"
                     onChange={(e) => {
                       setFieldValue("task_ids", e);
                     }}
-                    options={convertDataOptions(tasks)}
+                    options={convertDataOptions(state.getTaskOfProject as any)}
                   />
                 </FormGroup>
               </Col>

@@ -158,11 +158,20 @@ export const reputationsStatisticsByEnterprise = createAsyncThunk(
 );
 
 // detail-enterprise-by-ids
-export const detailEnterpriseByIds = createAsyncThunk(
-  "detail-enterprise-by-ids",
+export const detailEnterpriseByIds = createAsyncThunk("detail-enterprise-by-ids", async (payload: IThunkPayload, { rejectWithValue }) => {
+  try {
+    const { response, data } = await client.post(prefix + "detail-enterprise-by-ids", payload);
+    return response.status >= 400 ? rejectWithValue(data) : data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+// detail-enterprise-by-ids
+export const employeeEducationLevel = createAsyncThunk(
+  "employee-education-level-statistic-by-enterprises",
   async (payload: IThunkPayload, { rejectWithValue }) => {
     try {
-      const { response, data } = await client.post(prefix + "detail-enterprise-by-ids", payload);
+      const { response, data } = await client.post(prefix + "employee-education-level-statistic-by-enterprises", payload);
       return response.status >= 400 ? rejectWithValue(data) : data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
