@@ -49,17 +49,19 @@ export const renderFileIcon = (file: File | FileData | any) => {
   const isRar = fileType === "application/x-rar-compressed" || fileName.endsWith(".rar");
   const isText = fileType.startsWith("text/") || fileName.endsWith(".txt");
 
-  if (isImage) {
-    return (
-      <img
-        src={URL.createObjectURL(file)}
-        alt={file.name}
-        className="h-[100px] rounded-lg object-cover"
-        onError={(e) => {
-          e.currentTarget.src = imageError; // Fallback image
-        }}
-      />
-    );
+  if (file instanceof File) {
+    if (isImage) {
+      return (
+        <img
+          src={URL.createObjectURL(file)}
+          alt={file.name}
+          className="h-[100px] rounded-lg object-cover"
+          onError={(e) => {
+            e.currentTarget.src = imageError; // Fallback image
+          }}
+        />
+      );
+    }
   }
 
   if (isWord) {
@@ -117,9 +119,7 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id, classNameFilMa
     const updatedFileList = fileList.filter((file: File, i: number) => i !== index);
     setFileList(updatedFileList);
   };
- 
-  
-  
+
   useEffect(() => {
     value && value.length && setFileList(value);
   }, [JSON.stringify(value)]);
