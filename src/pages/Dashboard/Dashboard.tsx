@@ -31,6 +31,7 @@ import { Col, Row, Select, Spin } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import SystemSynthesis from "../system_synthesis";
 
 const yearOptions = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Dashboard: React.FC = () => {
@@ -131,6 +132,7 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <Heading title="Tổng quan về đấu thầu" hasBreadcrumb />
+      <SystemSynthesis />
       <div className="w-full">
         <h2 className="mb-4 text-xl font-semibold">1. Tổng quan về thị trường đấu thầu</h2>
         <Row gutter={[16, 16]}>
