@@ -4,7 +4,7 @@ import PaginatedTable from "@/components/table/PaginatedTable";
 import { useArchive } from "@/hooks/useArchive";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
 import { employeeEducationLevelStatisticByEnterprise } from "@/services/store/chart/chart.thunk";
-import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
+import { IEmployeeInitialState, setFilter } from "@/services/store/employee/employee.slice";
 import { getAllEmployee } from "@/services/store/employee/employee.thunk";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
@@ -15,10 +15,7 @@ const EmployeeEnterprise = () => {
   const { id } = useParams();
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const handlePageChange = (page: number, pageSize: number) => {
-    dispatch({
-      type: "employee/updateFilter",
-      payload: { page, size: pageSize },
-    });
+    dispatch(setFilter({ page, size: pageSize }));
   };
 
   useEffect(() => {
@@ -68,7 +65,7 @@ const EmployeeEnterprise = () => {
         },
       }),
     );
-  }, []);
+  }, [dispatch, state.filter.page, state.filter.size, id]);
 
   const educationLevelMapping: Record<string, string> = {
     after_university: "Sau đại học",

@@ -8,10 +8,10 @@ interface FooterProps {
     systemData: any;  // Thêm kiểu dữ liệu cho props
   }
   const Footer: React.FC<FooterProps> = ({ systemData }) => {
-    return <footer className=" bg-gray-800 text-gray-300 mt-8 py-4">
+    return <footer className=" bg-gray-800 text-gray-300 mt-8 pt-4 pb-8">
         <div className=" max-w-screen-xl mx-4 xl:mx-auto space-y-4">
             <div className="flex gap-x-4">
-                <Link to="/" className="text-center font-bold text-xl gap-2 hover:text-gray-200 uppercase">
+                <Link to="/" className="text-center font-bold text-xl gap-2 text-white hover:text-gray-200 uppercase">
                     <Image src={systemData?.logo} preview={false} alt="Logo" className="!w-16" />
                     <p className="text-nowrap">{systemData?.name}</p>
                 </Link>
@@ -30,7 +30,7 @@ interface FooterProps {
                                 to={`https://www.facebook.com/profile.php?id=61561550069529`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-gray-600 text-gray-300 hover:text-gray-100 rounded-full  p-3 flex items-center justify-center transition"
+                                className="bg-gray-600 text-gray-300 hover:text-white hover:bg-gray-300 rounded-full  p-3 flex items-center justify-center transition"
                             >
                                 <FaFacebookF />
                             </Link>
@@ -40,7 +40,7 @@ interface FooterProps {
                                 to={`https://zalo.me/0338475943`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-gray-600 text-gray-300 hover:text-gray-100 rounded-full  p-3 flex items-center justify-center transition"
+                                className="bg-gray-600 text-gray-300 hover:text-white hover:bg-gray-300 rounded-full  p-3 flex items-center justify-center transition"
                             >
                                 <SiZalo />
                             </Link>
@@ -55,30 +55,30 @@ interface FooterProps {
                     <h1 className="text-xl font-bold text-nowrap mb-4">Dành cho doanh nghiệp</h1>
                     <ul className="space-y-1">
                         {/* <li><Link to={`/`} className="hover:text-gray-400">Thông báo mời thầu</Link></li> */}
-                        <li><Link to={`/bidding-results`} className="hover:text-gray-400">Kết quả đấu thầu</Link></li>
-                        <li><Link to={`/project`} className="hover:text-gray-400">So sánh thông tin dự án</Link></li>
-                        <li><Link to={`/enterprise`} className="hover:text-gray-400">So sánh thông tin doanh nghiệp</Link></li>
-                        <li><Link to={`/project`} className="hover:text-gray-400">Tìm kiếm thông tin dự án</Link></li>
+                        <li><Link to={`/bidding-results`} className="hover:text-gray-100">Kết quả đấu thầu</Link></li>
+                        <li><Link to={`/project`} className="hover:text-gray-100">So sánh thông tin dự án</Link></li>
+                        <li><Link to={`/enterprise`} className="hover:text-gray-100">So sánh thông tin doanh nghiệp</Link></li>
+                        <li><Link to={`/project`} className="hover:text-gray-100">Tìm kiếm thông tin dự án</Link></li>
                     </ul>
                 </div>
                 <div>
                     <h1 className="text-xl font-bold text-nowrap mb-4">Dịch vụ của chúng tôi</h1>
                     <ul className="space-y-1">
-                        <li className="hover:text-gray-400">Phân tích quan hệ thầu</li>
-                        <li className="hover:text-gray-400">Phân tích tình trạng thầu</li>
-                        <li><Link to={`/dashboard`} className="hover:text-gray-400">Biểu đồ hóa</Link></li>
-                        <li><Link to={`/project`} className="hover:text-gray-400">Tra cứu thông tin thầu</Link></li>
-                        <li className="hover:text-gray-400">Quản lý bộ lọc</li>
+                        <li className="hover:text-gray-100">Phân tích quan hệ thầu</li>
+                        <li className="hover:text-gray-100">Phân tích tình trạng thầu</li>
+                        <li><Link to={`/dashboard`} className="hover:text-gray-100">Biểu đồ hóa</Link></li>
+                        <li><Link to={`/project`} className="hover:text-gray-100">Tra cứu thông tin thầu</Link></li>
+                        <li className="hover:text-gray-100">Quản lý bộ lọc</li>
                     </ul>
                 </div>
                 <div>
                     <h1 className="text-xl font-bold text-nowrap mb-4">Tiện ích</h1>
                     <ul className="space-y-1">
-                        <li><Link to={`/introduce`} className="hover:text-gray-400">Về chúng tôi</Link></li>
-                        <li><Link to={`/news`} className="hover:text-gray-400">Tin tức</Link></li>
-                        <li><Link to={`/support`} className="hover:text-gray-400">Liên hệ</Link></li>
-                        <li><Link to={`/instruct`} className="hover:text-gray-400">Hướng dẫn</Link></li>
-                        <li><Link to={`/support/create`} className="hover:text-gray-400">Đăng ký cấp tài khoản</Link></li>
+                        <li><Link to={`/introduce`} className="hover:text-gray-100">Về chúng tôi</Link></li>
+                        <li><Link to={`/news`} className="hover:text-gray-100">Tin tức</Link></li>
+                        <li><Link to={`/support`} className="hover:text-gray-100">Liên hệ</Link></li>
+                        <li><Link to={`/instruct`} className="hover:text-gray-100">Hướng dẫn</Link></li>
+                        <li><Link to={`/support/create`} className="hover:text-gray-100">Đăng ký cấp tài khoản</Link></li>
                     </ul>
                 </div>
                 <div className="max-w-[350px] space-y-1">
