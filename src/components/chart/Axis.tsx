@@ -64,7 +64,7 @@ const AbleBarChart: React.FC<AbleBarChartProps> = ({ data, title, xAxisData }) =
       fontSize: 13,
       formatter: (params) => {
         // Dùng toán tử optional chaining và thay thế undefined bằng chuỗi rỗng
-        const truncatedName = (params.seriesName ?? "").length > 30 ? (params.seriesName ?? "").substring(0, 30) + "..." : params.seriesName ?? ""; 
+        const truncatedName = (params.seriesName ?? "").length > 30 ? (params.seriesName ?? "").substring(0, 30) + "..." : params.seriesName ?? "";
         return `${params.value}  ${truncatedName}`; // Hiển thị giá trị và tên đã cắt ngắn
       },
       rich: { name: {} },
