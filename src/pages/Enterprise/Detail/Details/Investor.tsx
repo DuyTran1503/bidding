@@ -1,6 +1,6 @@
 import PaginatedTable from "@/components/table/PaginatedTable";
 import { useArchive } from "@/hooks/useArchive";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { IProjectInitialState, setFilter } from "@/services/store/project/project.slice";
 import { getAllProjectInvestor } from "@/services/store/project/project.thunk";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
@@ -14,10 +14,7 @@ const Investor = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
 
     const handlePageChange = (page: number, pageSize: number) => {
-        projectDispatch({
-            type: "project/updateFilter",
-            payload: { page, size: pageSize },
-        });
+        projectDispatch(setFilter({ page, size: pageSize }));
     };
 
     const handleRowSelection = {

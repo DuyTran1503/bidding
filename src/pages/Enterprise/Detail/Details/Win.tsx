@@ -1,6 +1,6 @@
 import PaginatedTable from "@/components/table/PaginatedTable";
 import { useArchive } from "@/hooks/useArchive";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { IProjectInitialState, setFilter } from "@/services/store/project/project.slice";
 import { getAllProjectWin } from "@/services/store/project/project.thunk";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
@@ -11,11 +11,9 @@ const Win = () => {
     const { state: projectState, dispatch: projectDispatch } = useArchive<IProjectInitialState>("project");
     const { id } = useParams();
     const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+
     const handlePageChange = (page: number, pageSize: number) => {
-        projectDispatch({
-            type: "project/updateFilter",
-            payload: { page, size: pageSize },
-        });
+        projectDispatch(setFilter({ page, size: pageSize }));
     };
 
     const handleRowSelection = {
@@ -61,30 +59,30 @@ const Win = () => {
     // Thêm key cho mỗi record nếu chưa có
     const dataSourceWithKey = projectState.winProjects.map((item, index) => ({
         ...item,
-         key: `key_${index}`, // Dùng id hoặc tên làm key duy nhất
+        key: `key_${index}`, // Dùng id hoặc tên làm key duy nhất
     }));
 
     return (
-            <div className="pt-2">
-                <h2 className="my-4 text-xl font-medium">
-                    Danh sách dự án đã trúng thầu <span className="ml-2 text-sm text-gray-500">
-                        Tổng: ({projectState.totalRecordWin} dự án)
-                    </span>
-                </h2>
+        <div className="pt-2">
+            <h2 className="my-4 text-xl font-medium">
+                Danh sách dự án đã trúng thầu <span className="ml-2 text-sm text-gray-500">
+                    Tổng: ({projectState.totalRecordWin} dự án)
+                </span>
+            </h2>
 
-                <PaginatedTable
-                    columns={columns}
-                    dataSource={dataSourceWithKey}
-                    // loading={projectState.isLoading}
-                    currentPage={projectState.filter.page}
-                    pageSize={projectState.filter.size}
-                    totalRecords={projectState.totalRecordWin as number}
-                    onPageChange={handlePageChange}
-                    rowSelection={handleRowSelection} // Hỗ trợ chọn hàng
-                    bordered={true} // Hiển thị border bảng
-                />
+            <PaginatedTable
+                columns={columns}
+                dataSource={dataSourceWithKey}
+                // loading={projectState.isLoading}
+                currentPage={projectState.filter.page}
+                pageSize={projectState.filter.size}
+                totalRecords={projectState.totalRecordWin as number}
+                onPageChange={handlePageChange}
+                rowSelection={handleRowSelection} // Hỗ trợ chọn hàng
+                bordered={true} // Hiển thị border bảng
+            />
 
-            </div>
+        </div>
     );
 };
 

@@ -102,10 +102,10 @@ export const schemaWorkProgresses = Yup.object().shape({
   feedback: Yup.string().trim().required("Nhận xét là bắt buộc"),
   end_date: Yup.date().required("Ngày kết thúc là bắt buộc"),
   project_id: Yup.string().trim().required("Dự án là bắt buộc"),
-  task_ids: Yup.array()
-    .of(Yup.number().required("Mỗi nhiệm vụ phải là một số hợp lệ"))
-    .min(1, "Ít nhất một nhiệm vụ là bắt buộc")
-    .required("Nhiệm vụ là bắt buộc"),
+  // task_ids: Yup.array()
+  //   .of(Yup.number().required("Mỗi nhiệm vụ phải là một số hợp lệ"))
+  //   .min(1, "Ít nhất một nhiệm vụ là bắt buộc")
+  //   .required("Nhiệm vụ là bắt buộc"),
 });
 
 // ===========> Enterprice

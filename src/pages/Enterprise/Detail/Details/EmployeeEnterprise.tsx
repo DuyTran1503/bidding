@@ -4,21 +4,26 @@ import PaginatedTable from "@/components/table/PaginatedTable";
 import { useArchive } from "@/hooks/useArchive";
 import { IChartInitialState } from "@/services/store/chart/chart.slice";
 import { employeeEducationLevelStatisticByEnterprise } from "@/services/store/chart/chart.thunk";
-import { IEmployeeInitialState } from "@/services/store/employee/employee.slice";
+import { IEmployeeInitialState, setFilter } from "@/services/store/employee/employee.slice";
 import { getAllEmployee } from "@/services/store/employee/employee.thunk";
 import { ColumnsType } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+export const educationLevelMapping: Record<string, string> = {
+  after_university: "Sau đại học",
+  college: "Cao đẳng",
+  high_school: "Trung học phổ thông",
+  primary_school: "Tiểu học",
+  secondary_school: "Trung học cơ sở",
+  university: "Đại học",
+};
 const EmployeeEnterprise = () => {
   const { state, dispatch } = useArchive<IEmployeeInitialState>("employee");
   const { state: stateChart, dispatch: dispatchChart } = useArchive<IChartInitialState>("chart");
   const { id } = useParams();
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const handlePageChange = (page: number, pageSize: number) => {
-    dispatch({
-      type: "employee/updateFilter",
-      payload: { page, size: pageSize },
-    });
+    dispatch(setFilter({ page, size: pageSize }));
   };
 
   useEffect(() => {
@@ -68,16 +73,7 @@ const EmployeeEnterprise = () => {
         },
       }),
     );
-  }, []);
-
-  const educationLevelMapping: Record<string, string> = {
-    after_university: "Sau đại học",
-    college: "Cao đẳng",
-    high_school: "Trung học phổ thông",
-    primary_school: "Tiểu học",
-    secondary_school: "Trung học cơ sở",
-    university: "Đại học",
-  };
+  }, [dispatch, state.filter.page, state.filter.size, id]);
 
   const names = Object.keys(stateChart.employeeEducationLevelStatisticByEnterprise || {});
   const mappedNames = names.map((name) => educationLevelMapping[name] || name);
