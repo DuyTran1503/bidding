@@ -136,7 +136,6 @@ const Dashboard: React.FC = () => {
     <>
       <Heading title="Tổng quan về đấu thầu" hasBreadcrumb />
       {checkPermission(stateAuth?.profile?.permissions, EPermissions.SUPPER_AMIN_DASHBOARD) && <SystemSynthesis />}
-      <SystemSynthesis />
       <div className="w-full">
         <h2 className="mb-4 text-xl font-semibold">1. Tổng quan về thị trường đấu thầu</h2>
         <Row gutter={[16, 16]}>
