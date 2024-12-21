@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from 'react';
-import * as echarts from 'echarts';
-import { LEVELTASK, mappingLevelTask } from '@/shared/enums/level';
+import React, { useEffect, useRef } from "react";
+import * as echarts from "echarts";
+import { LEVELTASK, mappingLevelTask } from "@/shared/enums/level";
 
 interface DataItem {
   project: string;
   easy: number;
   medium: number;
   hard: number;
-  very_hard: number;
+  veryhard: number;
   [key: string]: string | number; // For any additional properties
 }
 
@@ -19,27 +19,21 @@ interface BarChartProps {
 
 const transformData = (rawData: (DataItem | string[])[]) => {
   if (!rawData || rawData.length === 0) return [];
-  
+
   const transformedData: (string | number)[][] = [];
   const headers = rawData[0] as string[];
-  const mappedHeaders = headers.map(header => 
-    mappingLevelTask[header as LEVELTASK] || header // Sử dụng mappingLevelTask nếu có, hoặc giữ nguyên
+  const mappedHeaders = headers.map(
+    (header) => mappingLevelTask[header as LEVELTASK] || header, // Sử dụng mappingLevelTask nếu có, hoặc giữ nguyên
   );
 
   transformedData.push(mappedHeaders);
 
   for (let i = 1; i < rawData.length; i++) {
     const item = rawData[i] as DataItem;
-    const row = [
-      item.project,
-      item.easy,
-      item.medium,
-      item.hard,
-      item.very_hard
-    ];
+    const row = [item.project, item.easy, item.medium, item.hard, item.veryhard];
     transformedData.push(row);
   }
-  
+
   return transformedData;
 };
 
@@ -49,19 +43,15 @@ const calculateBarWidth = (length: number) => {
   return 15; // Minimum width
 };
 
-const LineChartNew: React.FC<BarChartProps> = ({ 
-  data, 
-  height = '500px', 
-  width = '100%' 
-}) => {
+const LineChartNew: React.FC<BarChartProps> = ({ data, height = "500px", width = "100%" }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts | null>(null);
 
   useEffect(() => {
     if (!chartRef.current) return;
-    
+
     chartInstance.current = echarts.init(chartRef.current);
-    
+
     return () => {
       chartInstance.current?.dispose();
     };
@@ -73,44 +63,44 @@ const LineChartNew: React.FC<BarChartProps> = ({
     const transformedData = transformData(data);
 
     const barWidth = calculateBarWidth(transformedData.length); // Calculate dynamic barWidth
-    
+
     const option: echarts.EChartsOption = {
       legend: {},
       tooltip: {},
       dataset: {
-        source: transformedData
+        source: transformedData,
       },
-      xAxis: { 
-        type: 'category',
+      xAxis: {
+        type: "category",
         axisLabel: {
           rotate: 0,
-          overflow: 'break',
-          fontSize: 12
-        }
+          overflow: "break",
+          fontSize: 12,
+        },
       },
       yAxis: {},
       series: [
-        { 
-          type: 'bar',
-          barWidth,  // Use dynamic barWidth
-          barGap: '30%'
-        }, 
-        { 
-          type: 'bar',
+        {
+          type: "bar",
+          barWidth, // Use dynamic barWidth
+          barGap: "30%",
+        },
+        {
+          type: "bar",
           barWidth,
-          barGap: '30%'
-        }, 
-        { 
-          type: 'bar',
+          barGap: "30%",
+        },
+        {
+          type: "bar",
           barWidth,
-          barGap: '30%'
-        }, 
-        { 
-          type: 'bar',
+          barGap: "30%",
+        },
+        {
+          type: "bar",
           barWidth,
-          barGap: '30%'
-        }
-      ]
+          barGap: "30%",
+        },
+      ],
     };
 
     chartInstance.current.setOption(option);
@@ -118,21 +108,21 @@ const LineChartNew: React.FC<BarChartProps> = ({
     const handleResize = () => {
       chartInstance.current?.resize();
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, [data]);
 
   return (
-    <div 
-      ref={chartRef} 
-      style={{ 
-        width, 
+    <div
+      ref={chartRef}
+      style={{
+        width,
         height,
-        minHeight: '300px'
-      }} 
+        minHeight: "300px",
+      }}
     />
   );
 };

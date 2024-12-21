@@ -293,9 +293,12 @@ const ActionModule = ({
     // };
 
     if (type === EPageTypes.UPDATE && item && activeTabKey && +activeTabKey !== 2) {
+      console.log(newData);
+
       return await dispatchProject(updateProject({ body: newData, param: String(values.id) }));
     } else {
-      return await dispatchProject(createProject({ ...data, parent_id: parent_id } as Omit<INewProject, "id">));
+      // return await dispatchProject(createProject({ ...data, parent_id: parent_id } as Omit<INewProject, "id">));
+      console.log(data);
     }
   };
   useEffect(() => {
@@ -311,7 +314,7 @@ const ActionModule = ({
 
   return (
     <Formik
-      validationSchema={schemaProject}
+      // validationSchema={schemaProject}
       enableReinitialize
       initialValues={initialValues}
       onSubmit={(values) => {
@@ -325,18 +328,40 @@ const ActionModule = ({
         }
 
         if (type === EPageTypes.CREATE) {
-          return dispatchProject(createProject(data as Omit<INewProject, "id">));
+          // return dispatchProject(createProject(data as Omit<INewProject, "id">));
+          console.log(data);
         }
         if (type === EPageTypes.APPROVE) {
           return;
         }
-
+        const sanitizedProject = {
+          ...lodash.omit(project, ["files", "attachments", "funding_source", "industries", "procurement_categories", "investor", "tenderer"]),
+          funding_source_id: project?.funding_source || undefined,
+          industry_id: project?.industry_id || [],
+          procurement_id: project?.procurement_categories || [],
+          investor_id: project?.investor || undefined,
+          tenderer_id: project?.tenderer || undefined,
+        };
+        const updatedFiles =
+          initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
+        const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ ...rest }) => rest)(data);
+        const newChild = {
+          ...sanitizedProject,
+          children: [newData],
+        };
         if (type === EPageTypes.UPDATE && project?.id && activeTabKey && +activeTabKey === 1) {
-          const updatedFiles =
-            initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
-          const newData = convertToFiles(data.files as any)?.length
-            ? { ...data, files: convertToFiles(data.files as any) }
-            : (({ ...rest }) => rest)(data);
+          // const updatedFiles =
+          //   initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
+          // const newData = convertToFiles(data.files as any)?.length
+          //   ? { ...data, files: convertToFiles(data.files as any) }
+          //   : (({ ...rest }) => rest)(data);
+          // console.log(newData);
+          // const updatedFiles = initialValues.files?.length && data.files?.length ? mergeFiles(initialValues?.files as any, data.files as any) : data.files;
+          // const newData = updatedFiles?.length ? { ...data, files: updatedFiles } : (({ ...rest }) => rest)(data);
+          // const newChild = {
+          //   ...sanitizedProject,
+          //   children: [newData],
+          // };
           dispatchProject(updateProject({ body: newData, param: String(project.id) }));
         }
       }}

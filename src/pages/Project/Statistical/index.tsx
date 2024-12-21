@@ -165,13 +165,15 @@ const Statistical: React.FC = () => {
           weight: child.weight,
         })),
       }));
-  }, [stateCompare.comparePieChartTotalAmount]);
+  }, [JSON.stringify(stateCompare.getWeightOfEvaliationCriteriByProject)]);
 
   const handleTabChange = (key: string) => {
     setActiveTab(key);
     // fetchTabData(projectId, key);
   };
   const projectId = stateProject.project?.id;
+  console.log(stateCompare.getWeightOfEvaliationCriteriByProject);
+
   const tabItems = [
     {
       key: "1",
@@ -333,9 +335,7 @@ const Statistical: React.FC = () => {
     {
       key: "7",
       label: "Biểu đồ độ khó trung bình của nhiệm vụ",
-      content: (
-        <LineChartNew data={stateCompare.getDifficultyOfProject} />
-      ),
+      content: <LineChartNew data={stateCompare.getDifficultyOfProject as any} />,
     },
     {
       key: "8",
@@ -385,7 +385,6 @@ const Statistical: React.FC = () => {
               </Col>
             ))}
         </Row>
-
       ),
     },
   ];
@@ -417,7 +416,7 @@ const Statistical: React.FC = () => {
             setSelectedIds(updatedValues);
             treeSelectIdsRef.current = updatedValues;
           }}
-        // isDisabled={selectedIds.length > 20}
+          // isDisabled={selectedIds.length > 20}
         />
         <Button type="primary" text="Thêm vào so sánh" onClick={handleAddToCompare} className="w-40" />
       </div>

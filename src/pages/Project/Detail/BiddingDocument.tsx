@@ -1,3 +1,4 @@
+import { emptyText } from "@/components/table/PrimaryTable";
 import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
@@ -26,8 +27,9 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
 
   const columns: ColumnsType = [
     {
+      dataIndex: "index",
       title: "STT",
-      dataIndex: "stt",
+      className: "w-[40px]",
     },
     {
       title: "Doanh nghiệp",
@@ -104,6 +106,7 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
         bordered
         columns={columns}
         dataSource={data}
+        locale={{ emptyText }}
         onRow={(record) => ({
           onClick: () => handleRedirect(record?.enterprise.id),
         })}

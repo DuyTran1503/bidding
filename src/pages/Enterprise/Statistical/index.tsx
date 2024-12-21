@@ -266,7 +266,7 @@ const StatisticalEnterprise: React.FC = () => {
           return (
             <Form>
               <Row className="items-center">
-                <Col xs={24} sm={24} md={24} xl={24}>
+                <Col xs={24} sm={24} md={24} xl={12}>
                   <FormGroup title="Doanh nghiệp" className="bg-[#f9f9fc]">
                     <div className="flex w-full gap-4">
                       <FormSelect
@@ -283,7 +283,7 @@ const StatisticalEnterprise: React.FC = () => {
                           setIds(e as any);
                         }}
                       />
-                      <Select
+                      {/* <Select
                         // showLabel={false}
                         className="w-72"
                         placeholder="Chọn năm..."
@@ -293,7 +293,7 @@ const StatisticalEnterprise: React.FC = () => {
                           setFieldValue("year", e);
                           setYear(e as any);
                         }}
-                      />
+                      /> */}
                       <Button className="w-48" type="primary" text="So sánh" kind="submit" isDisabled={ids.length === 0} />
                     </div>
                   </FormGroup>

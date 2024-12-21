@@ -192,7 +192,7 @@ const WorkProgresses = () => {
   }, [stateProject?.listProjects]);
   useEffect(() => {
     dispatch(getAllWorkProgresses({ query: state.filter }));
-  }, [state.filter]);
+  }, [state.filter, state.status]);
   useEffect(() => {
     dispatchTask(getListTask());
     dispatchProject(getListProject());
