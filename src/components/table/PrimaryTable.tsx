@@ -48,7 +48,12 @@ interface IPrimaryTableProps<T extends ISearchParams> extends ISearchProps<T> {
   tabLabel?: string;
   additionalTabs?: IAdditionalTab[];
 }
-
+export const emptyText = (
+  <div className="flex items-center justify-center">
+    <BsDatabaseFillX style={{ marginRight: 8 }} size={24} color="#535353" />
+    <div className="text-[#535353]">Không có dữ liệu</div>
+  </div>
+);
 const PrimaryTable = <T extends ISearchParams>({
   search,
   columns,
@@ -116,12 +121,7 @@ const PrimaryTable = <T extends ISearchParams>({
       dispatch(fetching());
     }
   }, [dispatch]);
-  const emptyText = (
-    <div className="flex items-center justify-center">
-      <BsDatabaseFillX style={{ marginRight: 8 }} size={24} color="#535353" />
-      <div className="text-[#535353]">Không có dữ liệu</div>
-    </div>
-  );
+
   return (
     <div className="primary-table flex w-full flex-col gap-5">
       {search && <SearchComponent search={search} setFilter={setFilter} filter={filter} />}

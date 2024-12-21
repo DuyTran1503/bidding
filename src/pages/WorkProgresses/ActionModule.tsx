@@ -80,7 +80,9 @@ const WorkProgressForm = ({ formikRef, type, workProgress }: IWorkProgressFormPr
     dispatchProject(getListProject());
     dispatchTask(getListTask());
   }, []);
-
+  useEffect(() => {
+    workProgress?.project_id && dispatchWorkProgress(getTaskOfProject(workProgress?.project_id));
+  }, [workProgress?.project_id]);
   return (
     <Formik
       enableReinitialize

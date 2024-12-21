@@ -1,5 +1,6 @@
 import React from "react";
 import { Table } from "antd";
+import { emptyText } from "./PrimaryTable";
 
 interface PaginatedTableProps {
   columns: any[]; // Cấu trúc cột của Table
@@ -23,7 +24,6 @@ const PaginatedTable: React.FC<PaginatedTableProps> = ({
   rowKey = "id", // Giá trị mặc định là "id"
   bordered = false,
 }) => {
-  
   const columnsWithIndex = [
     {
       dataIndex: "index",
@@ -49,12 +49,12 @@ const PaginatedTable: React.FC<PaginatedTableProps> = ({
         total: totalRecords, // Tổng số bản ghi
         showSizeChanger: false, // Hiển thị dropdown chọn số bản ghi mỗi trang
         onChange: (page, size) => onPageChange(page, size), // Xử lý thay đổi trang hoặc pageSize
-        showTotal: (total, range) =>
-          `Hiển thị ${range[0]}-${range[1]} trên tổng ${total} bản ghi`,
+        showTotal: (total, range) => `Hiển thị ${range[0]}-${range[1]} trên tổng ${total} bản ghi`,
       }}
       rowKey={rowKey} // Key duy nhất cho mỗi hàng
       bordered={bordered} // Border của bảng
       scroll={{ x: "max-content" }} // Hỗ trợ cuộn ngang nếu dữ liệu dài
+      locale={{ emptyText }}
     />
   );
 };

@@ -1,3 +1,4 @@
+import { emptyText } from "@/components/table/PrimaryTable";
 import { Button, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 
@@ -27,7 +28,7 @@ const SecondTab = () => {
 
   return (
     <>
-      <Table columns={columns} />
+      <Table columns={columns} locale={{ emptyText }} />
       <div className="mt-4 flex justify-between">
         <Button children="Thông báo mời thầu" type="primary" size="large" />
         <Button children="Xem thêm" danger type="primary" size="large" />
