@@ -297,7 +297,7 @@ const ActionModule = ({
 
       return await dispatchProject(updateProject({ body: newData, param: String(values.id) }));
     } else {
-      // return await dispatchProject(createProject({ ...data, parent_id: parent_id } as Omit<INewProject, "id">));
+      return await dispatchProject(createProject({ ...data, parent_id: parent_id } as Omit<INewProject, "id">));
       console.log(data);
     }
   };
@@ -328,7 +328,7 @@ const ActionModule = ({
         }
 
         if (type === EPageTypes.CREATE) {
-          // return dispatchProject(createProject(data as Omit<INewProject, "id">));
+          return dispatchProject(createProject(data as Omit<INewProject, "id">));
           console.log(data);
         }
         if (type === EPageTypes.APPROVE) {
