@@ -32,7 +32,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SystemSynthesis from "../system_synthesis";
-
+import { EPermissions } from "@/shared/enums/permissions";
+import { IAuthInitialState } from "@/services/store/auth/auth.slice";
+import { checkPermission } from "@/helpers/checkPermission";
+import BoxInvestors from "./BoxInvestor";
 const yearOptions = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Dashboard: React.FC = () => {
   const { state, dispatch } = useArchive<IChartInitialState>("chart");
@@ -41,6 +44,7 @@ const Dashboard: React.FC = () => {
   const [selectedYearIndustryEnterprise, setSelectedYearIndustryEnterprise] = useState<string>(yearOptions[0]);
   const [selectedYearIndustryProject, setSelectedYearIndustryProject] = useState<string>(yearOptions[0]);
   const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
+  const { state: stateAuth } = useArchive<IAuthInitialState>("auth");
 
   const [loadMore, setLoadMore] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -132,6 +136,7 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <Heading title="Tổng quan về đấu thầu" hasBreadcrumb />
+      {checkPermission(stateAuth?.profile?.permissions, EPermissions.SUPPER_AMIN_DASHBOARD) && <SystemSynthesis />}
       <SystemSynthesis />
       <div className="w-full">
         <h2 className="mb-4 text-xl font-semibold">1. Tổng quan về thị trường đấu thầu</h2>

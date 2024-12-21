@@ -1,3 +1,4 @@
+import { emptyText } from "@/components/table/PrimaryTable";
 import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
@@ -24,8 +25,9 @@ const EvaluationCriteria: React.FC<IProps> = ({ listEvaluationCriteria, title })
 
   const columns: ColumnsType = [
     {
+      dataIndex: "index",
       title: "STT",
-      dataIndex: "stt",
+      className: "w-[40px]",
     },
     {
       title: "Tên tiêu chí đánh giá",
@@ -66,6 +68,7 @@ const EvaluationCriteria: React.FC<IProps> = ({ listEvaluationCriteria, title })
         bordered
         columns={columns}
         dataSource={data}
+        locale={{ emptyText }}
         onRow={(record) => ({
           onClick: () => handleRedirect(record?.id),
         })}

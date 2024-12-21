@@ -261,4 +261,5 @@ export enum EPermissions {
   COMPARE_BAR_CHART_BID_SUBMISSION_TIME = "compare_bar_chart_bid_submission_time",
   COMPARE_PIE_CHART_TOTAL_AMOUNT = "compare_pie_chart_total_amount",
   COMPARE_BAR_CHART_BIDDER_COUNT = "compare_bar_chart_bidder_count",
+  SUPPER_AMIN_DASHBOARD = "supper_admin_dashboard",
 }

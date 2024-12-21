@@ -1,4 +1,4 @@
-import { ITableData } from "@/components/table/PrimaryTable";
+import { emptyText, ITableData } from "@/components/table/PrimaryTable";
 import { checkPermission } from "@/helpers/checkPermission";
 import { useArchive } from "@/hooks/useArchive";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
@@ -91,6 +91,7 @@ const ListChildrenProject: React.FC<IProps> = ({ listChildrenProject, title }) =
         bordered
         columns={columns}
         dataSource={data}
+        locale={{ emptyText }}
         onRow={(record) => ({
           onClick: () => handleRedirect(record?.key),
         })}
