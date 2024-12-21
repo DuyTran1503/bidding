@@ -35,7 +35,6 @@ import SystemSynthesis from "../system_synthesis";
 import { EPermissions } from "@/shared/enums/permissions";
 import { IAuthInitialState } from "@/services/store/auth/auth.slice";
 import { checkPermission } from "@/helpers/checkPermission";
-import BoxInvestors from "./BoxInvestor";
 const yearOptions = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i).map(String);
 const Dashboard: React.FC = () => {
   const { state, dispatch } = useArchive<IChartInitialState>("chart");
