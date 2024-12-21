@@ -1,3 +1,4 @@
+import Button from "@/components/common/Button";
 import FormCkEditor from "@/components/form/FormCkEditor";
 import FormGroup from "@/components/form/FormGroup";
 import FormInput from "@/components/form/FormInput";
@@ -9,7 +10,8 @@ import { ISupport } from "@/services/store/support/support.model";
 import { ISupportInitialState, resetStatus } from "@/services/store/support/support.slice";
 import { createSupports } from "@/services/store/support/support.thunk";
 import { EButtonTypes } from "@/shared/enums/button";
-import { Button, Col, Row } from "antd";
+import { EFetchStatus } from "@/shared/enums/fetchStatus";
+import { Col, message, Row } from "antd";
 import { Form, Formik } from "formik";
 import lodash from "lodash";
 import { AiFillCaretRight } from "react-icons/ai";
@@ -38,6 +40,7 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
     const body = {
       ...lodash.omit(data, "key", "index"),
     };
+    // message.success("Gửi yêu cầu thành co")
     dispatch(createSupports(body as Omit<ISupport, "id">))
       .unwrap()
       .catch((error) => {
@@ -147,9 +150,16 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
                 </FormGroup>
               </Col>
             </Row>
-            <Button type="primary" htmlType="submit" className="mx-auto mt-5 flex h-12 w-36 bg-cyan-500 text-lg font-medium">
+            <Button
+              type="primary"
+              kind="submit"
+              isLoading={state.status === EFetchStatus.PENDING}
+              text="Gửi yêu cầu"
+              className="mx-auto mt-5 flex h-12 w-36 text-lg font-medium"
+            />
+            {/* <Button type="primary" htmlType="submit" is className="mx-auto mt-5 flex h-12 w-36 bg-cyan-500 text-lg font-medium">
               Gửi yêu cầu
-            </Button>
+            </Button> */}
           </Form>
         )}
       </Formik>
