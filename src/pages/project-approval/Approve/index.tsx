@@ -91,7 +91,7 @@ const ApproveProjectByStaff = () => {
             text: "Trở lại",
             icon: <IoClose className="text-[18px]" />,
             onClick: () => {
-              navigate(-1);
+              navigate("/project-approval");
             },
           },
           {
