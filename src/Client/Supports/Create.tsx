@@ -127,7 +127,7 @@ const SupportForm = ({ formikRef, type, item }: ISupportFormProps) => {
               <Col xs={24} sm={24} md={24} xl={12}>
                 <FormGroup title="Nội dung hỗ trợ">
                   <FormCkEditor
-                    placeholder="Nhập nội dung cần hỗ trợ..."
+                    placeholder="Nhập thông tin doanh nghiệp bao gồn: tên doanh nghiệp, tên người đại diện, mã số thuế..."
                     id="content"
                     direction="vertical"
                     value={values.content}
