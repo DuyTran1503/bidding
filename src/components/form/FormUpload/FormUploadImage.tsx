@@ -13,6 +13,7 @@ interface FileData {
   type: string;
   path: string;
   name: string;
+  size: number | string | any;
 }
 interface IProps {
   value?: File | File[] | string;
@@ -25,10 +26,9 @@ interface IProps {
 export const convertToFiles = (dataArray: FileData[]): File[] => {
   const currentTime = new Date().getTime();
 
-  return dataArray.map(item => {
+  return dataArray.map((item) => {
     const fileType = item.type === "pdf" ? "application/pdf" : "application/octet-stream";
-    const blob = new Blob([], { type: fileType });
-
+    const blob = new Blob([new Uint8Array(item.size)], { type: fileType });
     return new File([blob], item.name, {
       type: blob.type,
       lastModified: currentTime,
@@ -40,8 +40,7 @@ export const renderFileIcon = (file: File | FileData | any) => {
   const fileName = file.name?.toLowerCase() || "";
   const fileType = file.type?.toLowerCase() || "";
 
-  const isImage =
-    fileType.startsWith("image/") || validImageExtensions.some((ext) => fileName.endsWith(`.${ext}`));
+  const isImage = fileType.startsWith("image/") || validImageExtensions.some((ext) => fileName.endsWith(`.${ext}`));
   const isWord = fileType.startsWith("application/msword") || fileName.endsWith(".doc") || fileName.endsWith(".docx");
   const isExcel = fileType.startsWith("application/vnd.ms-excel") || fileName.endsWith(".xls") || fileName.endsWith(".xlsx");
   const isPDF = fileType === "application/pdf" || fileName.endsWith(".pdf");
@@ -133,7 +132,7 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id, classNameFilMa
             <div key={index} className="relative mx-2 inline-block text-center">
               {renderFileIcon(file)}
               <button onClick={() => handleDeleteImage(index)} type="button">
-                <IoIosCloseCircle className={clsx("absolute right-1 top-1 h-[24px] w-[24px] rounded-circle text-green-100", { "hidden": disabled })} />
+                <IoIosCloseCircle className={clsx("absolute right-1 top-1 h-[24px] w-[24px] rounded-circle text-green-100", { hidden: disabled })} />
               </button>
             </div>
           ))}
@@ -142,10 +141,7 @@ const FormUploadImage: React.FC<IProps> = ({ onChange, value, id, classNameFilMa
         <div className="mt-4 flex justify-center">
           <label
             htmlFor={`file-upload-${id}`}
-            className={clsx(
-              "text-m-medium inline-block cursor-pointer rounded bg-cyan-50 px-[14px] py-[10px] text-cyan-600",
-              { "hidden": disabled }
-            )}
+            className={clsx("text-m-medium inline-block cursor-pointer rounded bg-cyan-50 px-[14px] py-[10px] text-cyan-600", { hidden: disabled })}
           >
             Tải file lên
           </label>
