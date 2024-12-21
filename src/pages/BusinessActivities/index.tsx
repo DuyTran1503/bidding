@@ -70,7 +70,7 @@ const BusinessActivities = () => {
         setModalContent(<DetailBusinessActivity record={record} />);
         setIsModalOpen(true);
       },
-      permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.DETAIL_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
@@ -150,6 +150,7 @@ const BusinessActivities = () => {
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE  ,
             onClick: () => {
               navigate("create");
             },

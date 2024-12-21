@@ -176,6 +176,7 @@ const FundingSources = () => {
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_FUNDING_SOURCE,
             onClick: () => {
               navigate("create");
             },

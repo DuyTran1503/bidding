@@ -14,12 +14,14 @@ interface ICustomEditorProps {
   size?: "sm" | "lg";
   noBorder?: boolean;
   onChange?: (value: string) => void;
+  placeholder?: string; // Thêm placeholder
 }
 
 const CustomFormikEditor = (props: ICustomEditorProps) => {
-  const { readonly, setFieldValue, value, name, size, noBorder, id, onChange } = props;
+  const { readonly, setFieldValue, value, name, size, noBorder, id, onChange, placeholder } = props;
   const ckEditorConfig = {
     removePlugins: ["Title", "MediaEmbedToolbar"],
+    placeholder,
     toolbar: {
       shouldNotGroupWhenFull: true,
       items: [

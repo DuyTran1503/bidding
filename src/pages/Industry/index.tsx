@@ -160,6 +160,7 @@ const Industry = () => {
         buttons={[
           {
             text: "Thêm mới",
+            permission: EPermissions.CREATE_INDUSTRY,
             icon: <FaPlus className="text-[18px]" />,
             onClick: () => {
               navigate("/industry/create");
