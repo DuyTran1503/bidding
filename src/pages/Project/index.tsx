@@ -298,6 +298,7 @@ const ProjectPage = () => {
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_PROJECT,
             onClick: () => {
               navigate("/project/create");
             },

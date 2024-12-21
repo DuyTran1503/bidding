@@ -14,6 +14,7 @@ import { createSupport } from "@/services/store/support/support.thunk";
 import FormSelect from "@/components/form/FormSelect";
 import FormGroup from "@/components/form/FormGroup";
 import FormUploadFile from "@/components/form/FormUpload/FormUploadFile";
+import FormCkEditor from "@/components/form/FormCkEditor";
 
 interface ISupportFormProps {
   type?: EButtonTypes;
@@ -147,22 +148,19 @@ const SupportForm = ({ visible, type, setVisible, item }: ISupportFormProps) => 
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={24} xl={24}>
+              <Col xs={24} sm={24} md={24} xl={12}>
                 <FormGroup title="Nội dung hỗ trợ">
-                  <FormInput
-                    type="text"
-                    isDisabled={type === "view"}
+                  <FormCkEditor
+                    id="content"
+                    direction="vertical"
                     value={values.content}
-                    name="content"
-                    error={touched.content ? errors.content : ""}
-                    placeholder="Nhập nội dung hỗ trợ..."
-                    onChange={(value) => setFieldValue("content", value)}
-                    onBlur={handleBlur}
+                    setFieldValue={setFieldValue}
+                    disabled={type === "view"}
                   />
                 </FormGroup>
               </Col>
 
-              <Col xs={24} sm={24} md={24} xl={24}>
+              <Col xs={24} sm={24} md={12} xl={12}>
                 <FormGroup title="Hình ảnh">
                   <FormUploadFile
                     disabled={type === "view"}

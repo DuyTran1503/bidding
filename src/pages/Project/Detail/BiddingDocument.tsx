@@ -19,7 +19,7 @@ const BiddingDocument: React.FC<IProps> = ({ listBidDocument, title }) => {
   const { state } = useArchive<IAuthInitialState>("auth");
 
   const navigate = useNavigate();
-  const hasPermission = checkPermission(state?.profile?.permissions, EPermissions.DETAIL_ENTERPRISE);
+  const hasPermission = checkPermission(state?.profile?.permissions, EPermissions.UPDATE_BID_DOCUMENT);
 
   const handleRedirect = (id: string) => {
     hasPermission && navigate(`/enterprise/detail/${id}`, { replace: true });
