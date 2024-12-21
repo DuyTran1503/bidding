@@ -17,17 +17,21 @@ import { changeStatusSelectionMethod, deleteSelectionMethod, getAllSelectionMeth
 
 import SelectionMethodForm from "../SelectionMethodForm";
 import { EPermissions } from "@/shared/enums/permissions";
+import { IAuthInitialState } from "@/services/store/auth/auth.slice";
+import { checkPermission } from "@/helpers/checkPermission";
 
 const SelectionMethods = () => {
   const { state, dispatch } = useArchive<ISelectionMethodInitialState>("selection_method");
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>(null);
+  const { state: statePermission } = useArchive<IAuthInitialState>("auth");
+  const hasPermission = checkPermission(statePermission?.profile?.permissions, EPermissions.UPDATE_SELECTION_METHOD);
 
   const buttons: IGridButton[] = [
     {
       type: EButtonTypes.VIEW,
 
-        permission: EPermissions.DETAIL_SELECTION_METHOD,
+      permission: EPermissions.DETAIL_SELECTION_METHOD,
     },
     {
       type: EButtonTypes.UPDATE,
@@ -75,8 +79,10 @@ const SelectionMethods = () => {
   ];
 
   const handleChangeStatus = (item: ITableData) => {
-    setIsModal(true);
-    setConfirmItem(item);
+    if (hasPermission) {
+      setIsModal(true);
+      setConfirmItem(item);
+    }
   };
 
   const onConfirmStatus = () => {
@@ -98,13 +104,13 @@ const SelectionMethods = () => {
     () =>
       state.selectionMethods && state.selectionMethods.length > 0
         ? state.selectionMethods.map(({ id, method_name, description, is_active }, index) => ({
-            index: index + 1,
-            key: id,
-            id: id,
-            method_name,
-            description,
-            is_active,
-          }))
+          index: index + 1,
+          key: id,
+          id: id,
+          method_name,
+          description,
+          is_active,
+        }))
         : [],
     [JSON.stringify(state.selectionMethods)],
   );

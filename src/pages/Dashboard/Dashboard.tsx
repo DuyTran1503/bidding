@@ -45,7 +45,6 @@ const Dashboard: React.FC = () => {
   const [selectedYearProjectStatus, setSelectedYearProjectStatus] = useState<string>(yearOptions[0]);
   const { state: stateAuth } = useArchive<IAuthInitialState>("auth");
 
-  const [loadMore, setLoadMore] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
   const observerRef = useRef<HTMLDivElement>(null);
@@ -59,7 +58,6 @@ const Dashboard: React.FC = () => {
   }, [initialLoad, dispatch]);
 
   useEffect(() => {
-    if (loadMore) {
       dispatch(averageProjectPurationByIndustry({}));
       dispatch(projectByDomestic({}));
       dispatch(projectByOrganizationType({}));
@@ -71,16 +69,13 @@ const Dashboard: React.FC = () => {
       dispatch(topInvestorsByProjectPartial({}));
       dispatch(topInvestorsByProjectFull({}));
       dispatch(topInvestorsByProjectTotalAmount({}));
-      setLoadMore(false);
-    }
-  }, [loadMore, dispatch]);
+  }, [ dispatch]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
         if (entry.isIntersecting) {
-          setLoadMore(true);
         }
       },
       { threshold: 1.0 },

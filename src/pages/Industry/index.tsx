@@ -20,11 +20,15 @@ import { changeStatusIndustry, deleteIndustry, getAllIndustry } from "@/services
 import { IBusinessActivityInitialState } from "@/services/store/business-activity/business-activity.slice";
 import { convertDataOption } from "@/shared/utils/common/function";
 import { getListBusinessActivity } from "@/services/store/business-activity/business-activity.thunk";
+import { IAuthInitialState } from "@/services/store/auth/auth.slice";
+import { checkPermission } from "@/helpers/checkPermission";
 
 const Industry = () => {
   const navigate = useNavigate();
   const { state: industryState, dispatch } = useArchive<IIndustryInitialState>("industry");
   const { state: businessState } = useArchive<IBusinessActivityInitialState>("business");
+  const { state } = useArchive<IAuthInitialState>("auth");
+  const hasPermission = checkPermission(state?.profile?.permissions, EPermissions.UPDATE_INDUSTRY);
 
   const [isModal, setIsModal] = useState(false);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
@@ -108,19 +112,22 @@ const Industry = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(industryState.industries)
       ? industryState.industries.map(({ id, name, business_activity_type, business_activity_type_id, description, is_active }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          business_activity_type,
-          business_activity_type_id,
-          description,
-          is_active,
-        }))
+        index: index + 1,
+        key: id,
+        name,
+        business_activity_type,
+        business_activity_type_id,
+        description,
+        is_active,
+      }))
       : [];
   }, [JSON.stringify(industryState.industries)]);
   const handleChangeStatus = (item: ITableData) => {
-    setIsModal(true);
-    setConfirmItem(item);
+    if (hasPermission) {
+
+      setIsModal(true);
+      setConfirmItem(item);
+    }
   };
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
