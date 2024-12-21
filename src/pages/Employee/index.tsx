@@ -20,7 +20,6 @@ import { useEffect, useMemo } from "react";
 import { FaPlus } from "react-icons/fa6";
 
 import { useNavigate } from "react-router-dom";
-import Loading from "../Loading/Loading";
 
 const Employee = () => {
   const navigate = useNavigate();
@@ -75,9 +74,6 @@ const Employee = () => {
       dataIndex: "enterprise",
       title: "Công ty làm việc",
       className: "w-[250px]",
-      render(_, record) {
-        return <>{record?.enterprise}</>;
-      },
     },
   ];
   const buttons: IGridButton[] = [
@@ -212,7 +208,7 @@ const Employee = () => {
           pageSize: state.filter.size ?? 2,
           total: state.totalRecords,
         }}
-        setFilter={setFilter}
+        setFilter={setFilter as any}
         filter={state.filter}
       />
     </>

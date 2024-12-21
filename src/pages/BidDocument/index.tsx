@@ -83,7 +83,7 @@ const BidDocument = () => {
       onClick(record) {
         navigate(`/bid-document/detail/${record?.id}`);
       },
-      permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.DETAIL_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
@@ -201,6 +201,7 @@ const BidDocument = () => {
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_BID_DOCUMENT,
             onClick: () => {
               navigate("/bid-document/create");
             },

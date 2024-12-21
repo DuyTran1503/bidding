@@ -387,6 +387,7 @@ const Enterprise = () => {
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_ENTERPRISE,
             onClick: () => {
               navigate("/enterprise/create");
             },

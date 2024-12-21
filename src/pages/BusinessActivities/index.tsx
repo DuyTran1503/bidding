@@ -23,6 +23,8 @@ import { IBusinessActivityInitialState, resetStatus, setFilter } from "@/service
 import { EFetchStatus } from "@/shared/enums/fetchStatus";
 import DetailBusinessActivity from "./Detail";
 import FormModal from "@/components/form/FormModal";
+import { IAuthInitialState } from "@/services/store/auth/auth.slice";
+import { checkPermission } from "@/helpers/checkPermission";
 
 const BusinessActivities = () => {
   const navigate = useNavigate();
@@ -31,6 +33,8 @@ const BusinessActivities = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<ReactNode>(null);
   const [confirmItem, setConfirmItem] = useState<ITableData | null>();
+  const { state: statePermission } = useArchive<IAuthInitialState>("auth");
+  const hasPermission = checkPermission(statePermission?.profile?.permissions, EPermissions.UPDATE_BUSINESS_ACTIVITY_TYPE);
   const columns: ColumnsType = [
     {
       dataIndex: "index",
@@ -70,7 +74,7 @@ const BusinessActivities = () => {
         setModalContent(<DetailBusinessActivity record={record} />);
         setIsModalOpen(true);
       },
-      permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
+      permission: EPermissions.DETAIL_BUSINESS_ACTIVITY_TYPE,
     },
     {
       type: EButtonTypes.UPDATE,
@@ -98,17 +102,20 @@ const BusinessActivities = () => {
   const data: ITableData[] = useMemo(() => {
     return Array.isArray(state.businessActivities)
       ? state.businessActivities.map(({ id, name, description, is_active }, index) => ({
-          index: index + 1,
-          key: id,
-          name,
-          description,
-          is_active,
-        }))
+        index: index + 1,
+        key: id,
+        name,
+        description,
+        is_active,
+      }))
       : [];
   }, [JSON.stringify(state.businessActivities)]);
   const handleChangeStatus = (item: ITableData) => {
-    setIsModal(true);
-    setConfirmItem(item);
+    if (hasPermission) {
+      setIsModal(true);
+      setConfirmItem(item);
+
+    }
   };
   const onConfirmStatus = () => {
     if (confirmItem && confirmItem.key) {
@@ -150,6 +157,7 @@ const BusinessActivities = () => {
           {
             text: "Thêm mới",
             icon: <FaPlus className="text-[18px]" />,
+            permission: EPermissions.CREATE_BUSINESS_ACTIVITY_TYPE,
             onClick: () => {
               navigate("create");
             },

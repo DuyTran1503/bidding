@@ -17,10 +17,25 @@ interface Props {
   touched?: FormikTouched<any>;
   className?: string;
   error?: string;
+  placeholder?: string; // Thêm placeholder
 }
 
 const FormCkEditor = forwardRef(function FormCkEditor(props: Props, ref?: ForwardedRef<any>) {
-  const { id, label, value, setFieldValue, onChange, disabled, direction = "vertical", isRequired,error, errors, touched, className } = props;
+  const { 
+    id, 
+    label, 
+    value, 
+    setFieldValue, 
+    onChange, 
+    disabled, 
+    direction = "vertical", 
+    isRequired, 
+    error, 
+    errors, 
+    touched, 
+    className,
+    placeholder // Sử dụng placeholder
+  } = props;
 
   const Label = () =>
     label ? (
@@ -30,8 +45,18 @@ const FormCkEditor = forwardRef(function FormCkEditor(props: Props, ref?: Forwar
     ) : null;
 
   const Editor = useMemo(
-    () => <CustomFormikEditor id={id} name={id} value={value} onChange={onChange} setFieldValue={setFieldValue} readonly={disabled} />,
-    [disabled, id, setFieldValue, value],
+    () => (
+      <CustomFormikEditor 
+        id={id} 
+        name={id} 
+        value={value} 
+        onChange={onChange} 
+        setFieldValue={setFieldValue} 
+        readonly={disabled} 
+        placeholder={placeholder} // Truyền placeholder vào CustomFormikEditor
+      />
+    ),
+    [disabled, id, setFieldValue, value, placeholder]
   );
 
   const Error = () => errors?.[id] && touched?.[id] && <div className="block text-red-500">{`${errors[id]}`}</div>;
