@@ -198,22 +198,22 @@ const Dashboard: React.FC = () => {
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
-              title="2.3 Top 10 đơn vị trúng thầu nhiều nhất theo từng phần"
-              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo từng phần"
+              title="2.3 Top 10 đơn vị trúng thầu nhiều nhất theo gói thầu"
+              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo gói thầu"
               data={state.topinvestorsbyprojectpartialData}
               chartType="bar"
               barWidth={50}
               valueType="quantity"
               description={[
-                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo từng phần.",
+                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.",
                 "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
               ]}
             />
           </Col>
           <Col xs={24} sm={24} md={24} xl={12}>
             <ChartSection
-              title="2.4 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
-              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
+              title="2.4 Top 10 đơn vị trúng thầu nhiều nhất theo gói thầu"
+              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo gói thầu"
               data={state.topinvestorsbyprojectfullData}
               chartType="bar"
               barWidth={50}
@@ -226,14 +226,14 @@ const Dashboard: React.FC = () => {
           </Col>
           <Col xs={24} sm={24} md={24} xl={24}>
             <ChartSection
-              title="2.5 Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
-              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo trọn gói"
+              title="2.5 Top 10 đơn vị trúng thầu nhiều nhất theo giá"
+              chartTitle="Top 10 đơn vị trúng thầu nhiều nhất theo giá"
               data={state.topinvestorsbyprojecttotalamountData}
               chartType="bar"
               barWidth={50}
               valueType="currency"
               description={[
-                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo gói thầu.",
+                "Đây là biểu đồ thể hiện 10 đơn vị trúng thầu nhiều nhất theo giá.",
                 "Giúp doanh nghiệp có thể tạo ra các cơ hội phát triển và cải thiện vị thế cạnh tranh trong ngành của mình.",
               ]}
             />
@@ -337,7 +337,7 @@ const Dashboard: React.FC = () => {
               title="3.8 Thời gian trung bình của dự án theo ngành"
               chartTitle="Thời gian trung bình của dự án theo ngành"
               data={state.durationData}
-              chartType="pie"
+              chartType="bar"
               valueType="date"
               description={[
                 "Biểu đồ này thể hiện thời gian trung bình hoàn thành các dự án trong từng ngành khác nhau, giúp nhận biết ngành nào có chu kỳ dự án dài hoặc ngắn hơn.",
@@ -366,7 +366,7 @@ const Dashboard: React.FC = () => {
                 },
               ]}
               categories={Object.keys(state.timeJoiningWebsiteOfEnterprise)}
-              title="Biểu đồ thể hiện số lượng doanh nghiệp tham gia hệ thống theo tháng trong năm"
+              title="Thống kê số lượng doanh nghiệp tham gia hệ thống theo tháng trong năm"
             />
           </div>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
@@ -381,7 +381,7 @@ const Dashboard: React.FC = () => {
               name={state.industryHasTheMostEnterprise.map(({ industry }) => industry)}
               value={state.industryHasTheMostEnterprise.map(({ total_enterprise }) => total_enterprise)}
               chartType="bar"
-              title="Biểu đồ thể hiện số lượng doanh nghiệp theo ngành nghề"
+              title="Thống kê số lượng doanh nghiệp theo ngành nghề"
             />
           </div>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
@@ -396,7 +396,7 @@ const Dashboard: React.FC = () => {
               name={state.industryHasTheMostProject.map(({ industry }) => industry)}
               value={state.industryHasTheMostProject.map(({ total_project }) => total_project)}
               chartType="bar"
-              title="Biểu đồ thể hiện số lượng dự án theo ngành nghề"
+              title="Thống kê lượng dự án theo ngành nghề"
             />
           </div>
           <div className="flex w-full flex-col rounded-xl bg-white p-4 shadow-[0px_4px_30px_0px_rgba(46,45,116,0.05)]">
@@ -409,7 +409,7 @@ const Dashboard: React.FC = () => {
             />
             <AbleBarChart
               xAxisData={names}
-              title="Biểu đồ thể hiện số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
+              title="Thống kê số lượng dự án hoàn thành, số lượng dự án được phê duyệt , số lượng dự án mở thầu theo từng tháng"
               data={[
                 { name: "Hoàn thành", values: completedValues },
                 { name: "Phê duyệt", values: approvedValues },

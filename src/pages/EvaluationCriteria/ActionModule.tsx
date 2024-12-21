@@ -17,7 +17,7 @@ import { Col, Row } from "antd";
 import { Form, Formik, FormikProps } from "formik";
 import lodash from "lodash";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { number, object, string } from "yup";
+import { object, string } from "yup";
 
 interface IEvaluationCriteriaFormProps {
   type?: EPageTypes;
@@ -54,9 +54,7 @@ const ActionModuleEvaluationCriteria = ({ visible, type, setVisible, item, listP
     name: string().trim().matches(stringRegex, "Không được chứa ký tự đặc biệt ").required("Vui lòng nhập tên tiêu chí đánh giá"),
     weight: string()
       .required("Vui lòng nhập trọng số đánh giá")
-      .matches(/^\d+(\.\d+)?$/, "Trường này phải là số")
-      .transform((value) => (value ? Number(value) : value)) // Chuyển đổi chuỗi sang số
-      .typeError("Chỉ chấp nhận là số"),
+    
   });
 
   const handleSubmit = (data: IEvaluationCriteria, { setErrors }: any) => {

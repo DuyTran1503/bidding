@@ -1,6 +1,6 @@
 import PaginatedTable from "@/components/table/PaginatedTable";
 import { useArchive } from "@/hooks/useArchive";
-import { IProjectInitialState } from "@/services/store/project/project.slice";
+import { IProjectInitialState, setFilter } from "@/services/store/project/project.slice";
 import { getAllProjectTenderer } from "@/services/store/project/project.thunk";
 import { convertMoney } from "@/shared/utils/common/convertMoney";
 import { convertTimestamp } from "@/shared/utils/common/convertTimestamp";
@@ -11,12 +11,10 @@ const Tenderer = () => {
     const { state: projectState, dispatch: projectDispatch } = useArchive<IProjectInitialState>("project");
     const { id } = useParams();
     const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
-    const handlePageChange = (page: number, pageSize: number) => {
-        projectDispatch({
-            type: "project/updateFilter",
-            payload: { page, size: pageSize },
-        });
-    };
+ 
+     const handlePageChange = (page: number, pageSize: number) => {
+         projectDispatch(setFilter({ page, size: pageSize }));
+     };
 
     const handleRowSelection = {
         selectedRowKeys, // Các hàng đang được chọn

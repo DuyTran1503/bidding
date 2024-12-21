@@ -85,6 +85,10 @@ const projectSlice = createSlice({
       state.project = undefined;
       state.dataCreateProject = undefined;
     },
+    setFilter(state, action: PayloadAction<{ page: number; size: number }>) {
+      state.filter.page = action.payload.page;
+      state.filter.size = action.payload.size;
+    },
     resetChildren(state) {
       state.status = EFetchStatus.IDLE;
       state.message = "";

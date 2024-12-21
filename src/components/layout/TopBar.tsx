@@ -2,6 +2,7 @@ import IconHasBadge from "@/components/common/IconHasBadge";
 import { IoHome, IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import UserSettings from "./UserSettings";
+import { Tooltip } from "antd";
 
 const TopBar = () => {
   return (
@@ -21,7 +22,7 @@ const TopBar = () => {
 
       {/* Actions */}
       <div className="flex h-full items-center gap-2">
-        <IconHasBadge icon={<Link to={`/`}><IoHome className="text-[18px] text-gray-400" /></Link>} badge={0} />
+        <IconHasBadge icon={<Link to={`/`}><Tooltip title="Trang chủ"><IoHome className="text-[18px] text-gray-400" /></Tooltip></Link>} badge={0} />
         {/* <IconHasBadge icon={<PiBell className="text-[18px] text-gray-400" />} badge={2} /> */}
         {/* <IconHasBadge icon={<IoMailOutline className="text-[18px] text-gray-400" />} badge={2} /> */}
         <div className="h-full border border-gray-50"></div>

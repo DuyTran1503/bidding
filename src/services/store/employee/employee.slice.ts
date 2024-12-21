@@ -45,6 +45,10 @@ const employeeSlice = createSlice({
       state.status = EFetchStatus.IDLE;
       state.message = "";
     },
+    setFilter(state, action: PayloadAction<{ page: number; size: number }>) {
+      state.filter.page = action.payload.page;
+      state.filter.size = action.payload.size;
+    },
   },
 
   extraReducers(builder) {
@@ -52,8 +56,10 @@ const employeeSlice = createSlice({
       .addCase(getAllEmployee.fulfilled, (state, { payload }: PayloadAction<IResponse<IEmployee[]> | any>) => {
         if (payload.data) {
           state.employees = payload.data.data;
-          state.totalRecords = payload?.data?.total_elements;
-          state.number_of_elements = payload?.data?.number_of_elements;
+          state.totalRecords = payload.data.total_elements;
+          state.totalPages = payload.data.total_pages;
+          state.pageSize = payload.data.page_size;
+          state.currentPage = payload.data.current_page;
         }
       })
       .addCase(getAllEmployee.rejected, (state, { payload }: PayloadAction<IError[] | any>) => {
